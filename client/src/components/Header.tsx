@@ -9,7 +9,7 @@ import {
 import color from '../color';
 import styled from 'styled-components';
 const { ivory } = color;
-const Container = styled.header``;
+const Container = styled.div``;
 const HeaderBox = styled.div`
   width: 100%;
   height: 70px;
@@ -21,24 +21,24 @@ const HeaderLeftBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0px 10px 0px 10px;
+  margin-left: 8px;
 `;
 const HeaderBlank = styled.div`
-  width: 70%;
+  width: 100%;
 `;
 const HeaderRightBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0px 12px 0px 12px;
+  margin-right: 12px;
 `;
 const HeaderIconImg = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 43.75px;
+  height: 37.5px;
 `;
 const HeaderTextImg = styled.img`
-  width: 145px;
-  height: 45px;
+  width: 109px;
+  height: 41px;
 `;
 const HeaderMapImg = styled.img`
   width: 45px;
