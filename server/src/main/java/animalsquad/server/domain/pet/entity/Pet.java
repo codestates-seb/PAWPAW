@@ -23,7 +23,7 @@ public class Pet extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long petId;
+    private long id;
 
     private String loginId;
     private String password;

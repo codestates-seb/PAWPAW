@@ -23,7 +23,7 @@ public class Address extends Auditable {
     private int code;
     private int name;
 
-    @OneToOne(mappedBy = "pet")
+    @OneToOne(mappedBy = "address")
     private Pet pet;
 
     @OneToMany(mappedBy = "address")

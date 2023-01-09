@@ -33,7 +33,7 @@ public class PetDetailsService implements UserDetailsService {
 
     private final class PetDetails extends Pet implements UserDetails {
         PetDetails(Pet pet) {
-            setPetId(pet.getPetId());
+            setId(pet.getId());
             setLoginId(pet.getLoginId());
             setPassword(pet.getPassword());
             setRoles(pet.getRoles());
