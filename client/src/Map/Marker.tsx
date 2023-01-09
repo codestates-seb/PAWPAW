@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import color from '../color';
 import styled from 'styled-components';
-import { MapMarker, Map, MapInfoWindow, CustomOverlayMap } from 'react-kakao-maps-sdk';
-import { Icon } from '@iconify/react';
+import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import ParkMarker from './Marker/ParkMarker';
 import CafeMarker from './Marker/CafeMarker';
 import MyMarker from './Marker/MyMarker';
@@ -37,9 +36,9 @@ const Marker = (detail: IProps['detail']) => {
         return <CampMarker />;
       case 'hospital':
         return <HospitalMarker />;
-      default:
       case 'my':
         return <MyMarker />;
+      default:
         return '';
     }
   }
@@ -47,7 +46,7 @@ const Marker = (detail: IProps['detail']) => {
   return (
     <Container>
       <CustomOverlayMap position={{ lat: detail.lat, lng: detail.lng }}>
-        <MarkContainer className={`${click ? 'focus' : ''}`} onClick={() => selectHandler()}>
+        <MarkContainer className={click ? 'active' : ''} onClick={selectHandler}>
           <div className='center'>
             <WhiteCircleBox>{renderSwitch(detail.tag)}</WhiteCircleBox>
           </div>
@@ -92,9 +91,20 @@ const MarkContainer = styled.div`
     position: absolute;
     left: 45%;
     top: 100%;
+
+  }
+  &.active::after{
+      border-top: 10px solid ${yellow};
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    content: '';
+    position: absolute;
+    left: 45%;
+    top: 100%;
   }
 
-  .focus {
+  &.active {
     background-color: ${yellow};
   }
 `;
