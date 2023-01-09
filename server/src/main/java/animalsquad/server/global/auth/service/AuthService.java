@@ -104,7 +104,7 @@ public class AuthService {
 
     public AuthResponseDto.TokenInfo doGenerateToken(Pet pet) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("petId", pet.getPetId());
+        claims.put("petId", pet.getId());
         claims.put("roles", pet.getRoles());
         claims.put("petName",pet.getPetName());
 
