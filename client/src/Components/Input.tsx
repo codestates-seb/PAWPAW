@@ -8,12 +8,13 @@ type Props = {
   type: string;
   placeholder: string;
   paddingRight?: string;
+  marginBottom?: string;
 };
 
 const StyledInput = styled.input<Props>`
   width: 233px;
   height: 50px;
-  margin-bottom: 28px;
+  margin-bottom: ${(props) => (props.marginBottom ? '40px' : '28px')};
   padding: 12px 16px 7px 16px;
   padding-right: ${(props) => props.paddingRight};
   border: 1px solid ${bordergrey};
@@ -27,10 +28,15 @@ const StyledInput = styled.input<Props>`
   }
 `;
 
-const Input = ({ type, placeholder, paddingRight }: Props) => {
+const Input = ({ type, placeholder, paddingRight, marginBottom }: Props) => {
   return (
     <>
-      <StyledInput type={type} placeholder={placeholder} paddingRight={paddingRight} />
+      <StyledInput
+        type={type}
+        placeholder={placeholder}
+        paddingRight={paddingRight}
+        marginBottom={marginBottom}
+      />
     </>
   );
 };

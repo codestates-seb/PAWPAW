@@ -31,7 +31,8 @@ export const LeftDiv = styled.div`
   background-color: ${coral};
 
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   flex: 1;
 `;
 
