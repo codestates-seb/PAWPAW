@@ -1,19 +1,17 @@
-import React from 'react';
-import {
-  MarkerIcon,
-  TimeIcon,
-  PhoneIcon,
-  HomeIcon,
-  ModalBookmarkIcon,
-  ModalSample,
-} from '../img/modal';
+import React, { useState } from 'react';
+import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 
-const { ivory, lightgrey, brown, bordergrey } = color;
+const { ivory, lightgrey, brown, bordergrey, coral } = color;
 
 const Modal: React.FC = () => {
+  const [bookmark, setBookmark] = useState<boolean>(false);
+  const bookmarkeHandler = () => {
+    setBookmark(!bookmark);
+  };
   return (
     <Container>
       <div>
@@ -22,24 +20,28 @@ const Modal: React.FC = () => {
           <ModalInfoTitleBox>
             <ModalInfoTitle>맑은 공기 공원</ModalInfoTitle>
             <ModalInfoSubTitle>공원</ModalInfoSubTitle>
-            <ModalBookmarkButton>
-              <img src={ModalBookmarkIcon} />
+            <ModalBookmarkButton onClick={bookmarkeHandler}>
+              {bookmark === false ? (
+                <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
+              ) : (
+                <Icon icon='ic:round-star' color={coral} style={{ fontSize: '30px' }} />
+              )}
             </ModalBookmarkButton>
           </ModalInfoTitleBox>
           <ModalInfoContentBox>
-            <img src={MarkerIcon} />
+            <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
             <ModalInfoContent>서울 종로구 숭인동 58-149</ModalInfoContent>
           </ModalInfoContentBox>
           <ModalInfoContentBox>
-            <img src={TimeIcon} />
+            <Icon icon='ic:round-access-time-filled' color={brown} style={{ fontSize: '30px' }} />
             <ModalInfoContent>이용 시간을 알려주세요.</ModalInfoContent>
           </ModalInfoContentBox>
           <ModalInfoContentBox>
-            <img src={PhoneIcon} />
+            <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
             <ModalInfoContent>02-0000-0000</ModalInfoContent>
           </ModalInfoContentBox>
           <ModalInfoContentBox>
-            <img src={HomeIcon} />
+            <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
             <ModalInfoContent>https://seoulpark.com</ModalInfoContent>
           </ModalInfoContentBox>
         </ModalInfoDiv>
@@ -140,6 +142,10 @@ const ModalBookmarkButton = styled.button`
   all: unset;
   width: 20px;
   height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 3px;
 `;
 const ModalInfoContentBox = styled.div`
   display: flex;
@@ -148,7 +154,7 @@ const ModalInfoContentBox = styled.div`
   padding-left: 15px;
 `;
 const ModalInfoContent = styled.div`
-  font-size: 11px;
+  font-size: 14px;
   font-weight: Bold;
   color: ${brown};
   text-align: center;
@@ -195,6 +201,7 @@ const ModalReviewText = styled.div`
   color: ${brown};
   padding-top: 15px;
   font-size: 14px;
+  font-weight: 500;
 `;
 const ModalReviewDate = styled.div`
   text-align: end;
@@ -207,6 +214,7 @@ const ModalReviewInputBox = styled.div`
   color: ${brown};
   padding-top: 20px;
   font-size: 14px;
+  font-weight: 500;
 `;
 type Props = {
   type: string;
