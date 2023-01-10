@@ -128,6 +128,7 @@ public class JwtTokenProvider {
     }
 
     public long getPetId(String token) {
+        token = resolveToken(token);
         Claims body = getClaims(token).getBody();
         return Long.parseLong(String.valueOf(body.get("petId")));
     }

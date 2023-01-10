@@ -27,6 +27,12 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         }
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+
+        return request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1).equals("reissue");
+    }
+
     public void setErrorResponse(HttpServletRequest request, HttpServletResponse response, Throwable ex) throws IOException {
         Gson gson = new Gson();
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, ex.getMessage());

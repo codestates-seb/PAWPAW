@@ -16,7 +16,8 @@ public enum ExceptionCode {
 
     TOKEN_AND_ID_NOT_MATCH(403, "Token and id not match"),
 
-    INFO_MAP_NOT_FOUND(404, "Info map not found");
+    INFO_MAP_NOT_FOUND(404, "Info map not found"),
+    INFO_MAP_COMMENT_NOT_FOUND(404,"Info map comment not found");
     @Getter
     private int status;
 

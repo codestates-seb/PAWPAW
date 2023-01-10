@@ -54,7 +54,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");
 
-        return authorization == null || !authorization.startsWith("Bearer");
+        return authorization == null || !authorization.startsWith("Bearer")
+                || request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1).equals("reissue");
     }
 
     private String resolveToken(HttpServletRequest request) {
