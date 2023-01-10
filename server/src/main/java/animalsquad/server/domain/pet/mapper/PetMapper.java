@@ -14,7 +14,7 @@ import java.util.List;
 public interface PetMapper {
 
     default Pet petPostToPet(PetPostDto petPostDto) {
-        int code = petPostDto.getAddress().getCode();
+        int code = petPostDto.getCode();
         Address address = new Address();
         address.setCode(code);
 
@@ -31,7 +31,7 @@ public interface PetMapper {
         return pet;
     }
     default Pet petPatchToPet(PetPatchDto petPatchDto) {
-        int code = petPatchDto.getAddress().getCode();
+        int code = petPatchDto.getCode();
         Address address = new Address();
         address.setCode(code);
 
@@ -49,13 +49,11 @@ public interface PetMapper {
 
     default PetResponseDto petToPetResponseDto(Pet pet) {
         int code = pet.getAddress().getCode();
-        Address address = new Address();
-        address.setCode(code);
 
         PetResponseDto responseDto = new PetResponseDto();
 
         responseDto.setPetName(pet.getPetName());
-        responseDto.setAddress(address);
+        responseDto.setCode(code);
         responseDto.setProfileImage(pet.getProfileImage());
         responseDto.setAge(pet.getAge());
         responseDto.setGender(pet.getGender());

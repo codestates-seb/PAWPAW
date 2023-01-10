@@ -25,14 +25,14 @@ public class PetController {
     private final PetMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity postPet(@Valid @RequestBody PetPostDto petPostDto) {
+    public ResponseEntity postPet(@Valid PetPostDto petPostDto) {
         Pet pet = petService.createPet(mapper.petPostToPet(petPostDto));
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@PathVariable("pet-id") long id,
-                                   @RequestBody PetPatchDto petPatchDto) {
+                                    PetPatchDto petPatchDto) {
         petPatchDto.setId(id);
 
         Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto));

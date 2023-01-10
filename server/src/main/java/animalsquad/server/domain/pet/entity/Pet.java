@@ -27,7 +27,7 @@ public class Pet extends Auditable {
     private long id;
 
     private String loginId;
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String password;
     @Column(length = 30, nullable = false)
     private String petName;

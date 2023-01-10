@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PetResponseDto {
     private String petName;
-    private Address address;
+    private int code;
     private String profileImage;
     private int age;
     private String gender;
