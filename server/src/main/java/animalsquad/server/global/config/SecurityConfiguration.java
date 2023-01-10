@@ -64,7 +64,9 @@ public class SecurityConfiguration {
                                 .antMatchers("/logout").hasRole("USER")
                                 .antMatchers("/pets/signup").permitAll()
                                 .antMatchers("/reissue").permitAll()
+                                .antMatchers("/pets/signup").permitAll()
                                 .anyRequest().hasRole("USER")
+
                 );
 
         return http.build();

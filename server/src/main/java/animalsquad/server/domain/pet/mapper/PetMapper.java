@@ -13,13 +13,55 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PetMapper {
 
-//    @Mapping(target = "address", source = "address.code")
-    Pet petPostToPet(PetPostDto petPostDto);
-    Pet petPatchToPet(PetPatchDto petPatchDto);
-//    @Mapping(target = "address", source = "address.code")
-    PetResponseDto petToPetResponseDto(Pet pet);
-//    @Mapping(target = "address", source = "address.code")
-    List<PetResponseDto> petsToPetResponses(List<Pet> pets);
+    default Pet petPostToPet(PetPostDto petPostDto) {
+        int code = petPostDto.getCode();
+        Address address = new Address();
+        address.setCode(code);
+
+        Pet pet = new Pet();
+
+        pet.setLoginId(petPostDto.getLoginId());
+        pet.setPassword( petPostDto.getPassword() );
+        pet.setPetName( petPostDto.getPetName() );
+        pet.setAge( petPostDto.getAge() );
+        pet.setGender( petPostDto.getGender() );
+        pet.setProfileImage( petPostDto.getProfileImage() );
+        pet.setAddress(address);
+
+        return pet;
+    }
+    default Pet petPatchToPet(PetPatchDto petPatchDto) {
+        int code = petPatchDto.getCode();
+        Address address = new Address();
+        address.setCode(code);
+
+        Pet pet = new Pet();
+
+        pet.setId(petPatchDto.getId());
+        pet.setPetName(petPatchDto.getPetName());
+        pet.setAge(petPatchDto.getAge());
+        pet.setGender(petPatchDto.getGender());
+        pet.setProfileImage(petPatchDto.getProfileImage());
+        pet.setAddress(address);
+
+        return pet;
+    }
+
+    default PetResponseDto petToPetResponseDto(Pet pet) {
+        int code = pet.getAddress().getCode();
+
+        PetResponseDto responseDto = new PetResponseDto();
+
+        responseDto.setPetName(pet.getPetName());
+        responseDto.setCode(code);
+        responseDto.setProfileImage(pet.getProfileImage());
+        responseDto.setAge(pet.getAge());
+        responseDto.setGender(pet.getGender());
+
+        return responseDto;
+
+    }
+//    List<PetResponseDto> petsToPetResponses(List<Pet> pets);
 
 //    default Pet petPostToPet1(PetPostDto petPostDto) {
 //        int code = petPostDto.getCode(); //ADDress -> code

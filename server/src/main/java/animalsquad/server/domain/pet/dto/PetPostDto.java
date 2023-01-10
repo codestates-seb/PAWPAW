@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 
@@ -21,13 +22,12 @@ public class PetPostDto {
     private String password;
     @NotBlank(message = "이름을 입력해 주세요.")
     private String petName;
-    @NotBlank(message = "나이를 입력해 주세요.")
     private int age;
     @NotBlank(message = "성별을 입력해 주세요.")
     private String gender;
-    @NotBlank(message = "지역을 입력해 주세요.")
-    private Address address;
+    private int code;
     private String profileImage;
 
+//    private MultipartFile profileImage;
 
 }
