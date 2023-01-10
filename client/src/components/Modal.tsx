@@ -19,7 +19,9 @@ const Container = styled.div`
 `;
 const ModalInfoDiv = styled.div`
   width: 100%;
+  height: 215px;
   background: ${ivory};
+  border-bottom: 2px solid #bfbfbf;
 `;
 const ModalInfoTitleBox = styled.div`
   display: flex;
@@ -31,6 +33,7 @@ const ModalInfoTitleBox = styled.div`
 const ModalInfoTitle = styled.div`
   text-align: center;
   font-size: 18px;
+  font-weight: Bold;
   margin-right: 10px;
 `;
 const ModalInfoSubTitle = styled.div`
@@ -49,14 +52,9 @@ const ModalInfoContentBox = styled.div`
   height: 28px;
   margin: 15px 0 15px 0;
 `;
-const ModalInfoContentBottomBox = styled.div`
-  display: flex;
-  height: 28px;
-  margin-top: 15px;
-  border-bottom: 2px solid #bfbfbf;
-`;
 const ModalInfoContent = styled.div`
   font-size: 11px;
+  font-weight: Bold;
   color: ${brown};
   text-align: center;
   padding: 7px 0 3px 0;
@@ -89,6 +87,7 @@ const ModalReviewUserName = styled.div`
   margin-top: 5px;
   color: ${brown};
   font-size: 14px;
+  font-weight: Bold;
 `;
 const ModalReviewTextBox = styled.div`
   display: flex;
@@ -131,6 +130,19 @@ const ModalReviewInput = styled.input<Props>`
     color: ${lightgrey};
   }
 `;
+const ModalReviewButton = styled.button`
+  margin: 50px 0 20px 5px;
+  font-size: 8px;
+  font-weight: Bold;
+  background: ${brown};
+  border-radius: 8px;
+  border: 0;
+  color: white;
+`;
+const ModalReviewInputTextBox = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 const Modal: React.FC = () => {
   return (
     <Container>
@@ -156,10 +168,10 @@ const Modal: React.FC = () => {
             <img src={PhoneIcon} />
             <ModalInfoContent>02-0000-0000</ModalInfoContent>
           </ModalInfoContentBox>
-          <ModalInfoContentBottomBox>
+          <ModalInfoContentBox>
             <img src={HomeIcon} />
             <ModalInfoContent>https://seoulpark.com</ModalInfoContent>
-          </ModalInfoContentBottomBox>
+          </ModalInfoContentBox>
         </ModalInfoDiv>
         <ModalReviewBox>
           <ModalReviewTitle>리뷰</ModalReviewTitle>
@@ -208,11 +220,12 @@ const Modal: React.FC = () => {
               <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
               <ModalReviewUserName>유저 이름</ModalReviewUserName>
             </ModalReviewUserBox>
-            <ModalReviewTextBox>
+            <ModalReviewInputTextBox>
               <ModalReviewInputBox>
                 <ModalReviewInput type='text' placeholder='이 공간이 어땠나요?' />
               </ModalReviewInputBox>
-            </ModalReviewTextBox>
+              <ModalReviewButton>작성</ModalReviewButton>
+            </ModalReviewInputTextBox>
           </ModalReview>
         </ModalReviewBox>
       </div>
