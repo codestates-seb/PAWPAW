@@ -11,7 +11,8 @@ import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
 import styled from 'styled-components';
 
-const { ivory, lightgrey, brown } = color;
+const { ivory, lightgrey, brown, bordergrey } = color;
+
 const Container = styled.div`
   width: 350px;
   height: 955px;
@@ -99,22 +100,37 @@ const ModalReviewText = styled.div`
   color: ${brown};
   padding-top: 15px;
   font-size: 14px;
-  border: 2px solid black;
 `;
 const ModalReviewDate = styled.div`
   text-align: end;
   color: ${lightgrey};
   font-size: 8px;
 `;
-const ModalReviewInput = styled.div`
+const ModalReviewInputBox = styled.div`
   width: 223px;
   height: 100%;
   color: ${brown};
   padding-top: 20px;
   font-size: 14px;
-  border: 2px solid black;
 `;
-
+type Props = {
+  type: string;
+  placeholder: string;
+};
+const ModalReviewInput = styled.input<Props>`
+  width: 100%;
+  height: 50px;
+  font-size: 14px;
+  color: ${brown};
+  border: 1px solid ${bordergrey};
+  border-radius: 10px;
+  &:focus {
+    outline: 1px solid ${bordergrey};
+  }
+  &::placeholder {
+    color: ${lightgrey};
+  }
+`;
 const Modal: React.FC = () => {
   return (
     <Container>
@@ -193,9 +209,9 @@ const Modal: React.FC = () => {
               <ModalReviewUserName>유저 이름</ModalReviewUserName>
             </ModalReviewUserBox>
             <ModalReviewTextBox>
-              <ModalReviewInput>
-                <input type='text' placeholder='본문' />
-              </ModalReviewInput>
+              <ModalReviewInputBox>
+                <ModalReviewInput type='text' placeholder='이 공간이 어땠나요?' />
+              </ModalReviewInputBox>
             </ModalReviewTextBox>
           </ModalReview>
         </ModalReviewBox>
