@@ -21,9 +21,9 @@ public class Address extends Auditable {
     private long id;
 
     private int code;
-    private int name;
+    private String name;
 
-    @OneToOne(mappedBy = "pet")
+    @OneToOne(mappedBy = "address")
     private Pet pet;
 
     @OneToMany(mappedBy = "address")
