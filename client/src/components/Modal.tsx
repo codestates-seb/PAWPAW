@@ -7,6 +7,7 @@ import {
   ModalBookmarkIcon,
   ModalSample,
 } from '../img/modal';
+import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
 import styled from 'styled-components';
 
@@ -61,10 +62,58 @@ const ModalInfoContent = styled.div`
   margin-left: 10px;
 `;
 const ModalReviewBox = styled.div`
-  height: 600px;
-  border: 1px solid black;
+  height: auto;
 `;
-const ModalReview = styled.div``;
+const ModalReview = styled.div`
+  width: 100%;
+  height: 90px;
+  display: flex;
+`;
+const ModalReviewTitle = styled.div`
+  color: ${brown};
+  padding: 5px 0 0 10px;
+`;
+const ModalReviewUserBox = styled.div`
+  width: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const ModalReviewUserImg = styled.img`
+  width: 30px;
+  height: 30px;
+`;
+const ModalReviewUserName = styled.div`
+  margin-top: 5px;
+  color: ${brown};
+  font-size: 14px;
+`;
+const ModalReviewTextBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const ModalReviewText = styled.div`
+  width: 262px;
+  height: 90%;
+  color: ${brown};
+  padding-top: 15px;
+  font-size: 14px;
+  border: 2px solid black;
+`;
+const ModalReviewDate = styled.div`
+  text-align: end;
+  color: ${lightgrey};
+  font-size: 8px;
+`;
+const ModalReviewInput = styled.div`
+  width: 223px;
+  height: 100%;
+  color: ${brown};
+  padding-top: 20px;
+  font-size: 14px;
+  border: 2px solid black;
+`;
 
 const Modal: React.FC = () => {
   return (
@@ -97,7 +146,58 @@ const Modal: React.FC = () => {
           </ModalInfoContentBottomBox>
         </ModalInfoDiv>
         <ModalReviewBox>
-          <ModalReview></ModalReview>
+          <ModalReviewTitle>리뷰</ModalReviewTitle>
+          <ModalReview>
+            <ModalReviewUserBox>
+              <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+              <ModalReviewUserName>유저 이름</ModalReviewUserName>
+            </ModalReviewUserBox>
+            <ModalReviewTextBox>
+              <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
+              <ModalReviewDate>2023-01-10</ModalReviewDate>
+            </ModalReviewTextBox>
+          </ModalReview>
+          <ModalReview>
+            <ModalReviewUserBox>
+              <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+              <ModalReviewUserName>유저 이름</ModalReviewUserName>
+            </ModalReviewUserBox>
+            <ModalReviewTextBox>
+              <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
+              <ModalReviewDate>2023-01-10</ModalReviewDate>
+            </ModalReviewTextBox>
+          </ModalReview>
+          <ModalReview>
+            <ModalReviewUserBox>
+              <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+              <ModalReviewUserName>유저 이름</ModalReviewUserName>
+            </ModalReviewUserBox>
+            <ModalReviewTextBox>
+              <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
+              <ModalReviewDate>2023-01-10</ModalReviewDate>
+            </ModalReviewTextBox>
+          </ModalReview>
+          <ModalReview>
+            <ModalReviewUserBox>
+              <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+              <ModalReviewUserName>유저 이름</ModalReviewUserName>
+            </ModalReviewUserBox>
+            <ModalReviewTextBox>
+              <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
+              <ModalReviewDate>2023-01-10</ModalReviewDate>
+            </ModalReviewTextBox>
+          </ModalReview>
+          <ModalReview>
+            <ModalReviewUserBox>
+              <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+              <ModalReviewUserName>유저 이름</ModalReviewUserName>
+            </ModalReviewUserBox>
+            <ModalReviewTextBox>
+              <ModalReviewInput>
+                <input type='text' placeholder='본문' />
+              </ModalReviewInput>
+            </ModalReviewTextBox>
+          </ModalReview>
         </ModalReviewBox>
       </div>
     </Container>
