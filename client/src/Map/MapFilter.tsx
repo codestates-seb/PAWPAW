@@ -73,12 +73,8 @@ const MapFilter = () => {
 
 const Container = styled.div`
   position: absolute;
-  width: 600px;
-  height: 800px;
-  background-color: gray;
 
   .absolute {
-    margin: 10px 10px 10px 10px;
     position: absolute;
   }
   .flex {
