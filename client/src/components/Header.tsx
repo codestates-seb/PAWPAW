@@ -1,23 +1,19 @@
-import React from 'react';
-import {
-  HeaderIcon,
-  HeaderText,
-  HeaderTabIcon,
-  HeaderMapIcon,
-  HeaderUserIcon,
-} from '../img/header';
+import React, { useState } from 'react';
+import { HeaderText } from '../img/header';
+import { HeaderTabSVG } from '../img/headerTabSVG';
+import { Icon } from '@iconify/react';
 import color from '../color';
 import styled from 'styled-components';
-const { ivory } = color;
-const Container = styled.div``;
-const HeaderBox = styled.div`
+const { ivory, brown, coral } = color;
+const Container = styled.header`
   width: 100%;
   height: 70px;
   background-color: ${ivory};
   display: flex;
   flex-direction: row;
 `;
-const HeaderLeftBox = styled.div`
+const HeaderLeftBox = styled.button`
+  all: unset;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,53 +22,80 @@ const HeaderLeftBox = styled.div`
 const HeaderBlank = styled.div`
   width: 100%;
 `;
-const HeaderRightBox = styled.div`
+const HeaderRightButton = styled.button`
+  all: unset;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 12px;
-`;
-const HeaderIconImg = styled.img`
-  width: 43.75px;
-  height: 37.5px;
+  margin: 0 10px 0 10px;
 `;
 const HeaderTextImg = styled.img`
   width: 109px;
   height: 41px;
 `;
-const HeaderMapImg = styled.img`
-  width: 45px;
-  height: 45px;
-`;
-const HeaderTabImg = styled.img`
-  width: 33px;
-  height: 27px;
-`;
-const HeaderUserImg = styled.img`
-  width: 49px;
-  height: 49px;
-`;
 const Header: React.FC = () => {
+  const [home, setHome] = useState<boolean>(false);
+  const [map, setMap] = useState<boolean>(false);
+  const [tab, setTab] = useState<boolean>(false);
+  const [user, setUser] = useState<boolean>(false);
+  const mouseOverHomeHandler = () => {
+    setHome(true);
+  };
+  const mouseOutHomeHandler = () => {
+    setHome(false);
+  };
+  const mouseOverMapHandler = () => {
+    setMap(true);
+  };
+  const mouseOutMapHandler = () => {
+    setMap(false);
+  };
+  const mouseOverTabHandler = () => {
+    setTab(true);
+  };
+  const mouseOutTabHandler = () => {
+    setTab(false);
+  };
+  const mouseOverUserHandler = () => {
+    setUser(true);
+  };
+  const mouseOutUserHandler = () => {
+    setUser(false);
+  };
   return (
     <Container>
-      <HeaderBox>
-        <HeaderLeftBox>
-          <HeaderIconImg src={HeaderIcon} />
-        </HeaderLeftBox>
-        <HeaderLeftBox>
-          <HeaderTextImg src={HeaderText} />
-        </HeaderLeftBox>
-        <HeaderBlank />
-        <HeaderRightBox>
-          <HeaderMapImg src={HeaderMapIcon} />
-        </HeaderRightBox>
-        <HeaderRightBox>
-          <HeaderTabImg src={HeaderTabIcon} />
-        </HeaderRightBox>
-        <HeaderRightBox>
-          <HeaderUserImg src={HeaderUserIcon} />
-        </HeaderRightBox>
-      </HeaderBox>
+      <HeaderLeftBox onMouseOver={mouseOverHomeHandler} onMouseOut={mouseOutHomeHandler}>
+        {home === false ? (
+          <Icon icon='ph:paw-print-fill' style={{ fontSize: '50px' }} color={brown} />
+        ) : (
+          <Icon icon='ph:paw-print-fill' style={{ fontSize: '50px' }} color={coral} />
+        )}
+      </HeaderLeftBox>
+      <HeaderLeftBox>
+        <HeaderTextImg src={HeaderText} />
+      </HeaderLeftBox>
+      <HeaderBlank />
+      <HeaderRightButton onMouseOver={mouseOverMapHandler} onMouseOut={mouseOutMapHandler}>
+        {map === false ? (
+          <Icon icon='material-symbols:map' style={{ fontSize: '50px' }} color={brown} />
+        ) : (
+          <Icon icon='material-symbols:map' style={{ fontSize: '50px' }} color={coral} />
+        )}
+      </HeaderRightButton>
+      <HeaderRightButton onMouseOver={mouseOverTabHandler} onMouseOut={mouseOutTabHandler}>
+        {tab === false ? (
+          <HeaderTabSVG width='33' height='27' fill={brown} />
+        ) : (
+          <HeaderTabSVG width='33' height='27' fill={coral} />
+        )}
+      </HeaderRightButton>
+      <HeaderRightButton onMouseOver={mouseOverUserHandler} onMouseOut={mouseOutUserHandler}>
+        {user === false ? (
+          <Icon icon='mdi:user-circle' style={{ fontSize: '50px' }} color={brown} />
+        ) : (
+          <Icon icon='mdi:user-circle' style={{ fontSize: '50px' }} color={coral} />
+        )}
+      </HeaderRightButton>
     </Container>
   );
 };
