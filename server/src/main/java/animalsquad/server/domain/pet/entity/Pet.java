@@ -26,8 +26,13 @@ public class Pet extends Auditable {
     private long id;
 
     private String loginId;
+    @Column(length = 50, nullable = false)
     private String password;
+    @Column(length = 30, nullable = false)
     private String petName;
+    private int age;
+    private String gender;
+    private String profileImage;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADDRESS_ID")

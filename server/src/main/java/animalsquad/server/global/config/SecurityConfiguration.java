@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                                 .antMatchers("/pets/test").hasRole("USER") //권한 테스트용
                                 .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")
+                                .antMatchers("/h2/**").permitAll() // h2 데이터베이스 확인 가능하게
                                 .anyRequest().permitAll()
                 );
 
