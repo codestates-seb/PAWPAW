@@ -11,6 +11,7 @@ public enum ExceptionCode {
     REFRESH_TOKEN_NOT_FOUND(400, "Refresh token not found"),
     INVALID_REFRESH_TOKEN(400,"Invalid refresh token"),
 
+    ADDRESS_NOT_FOUND(400, "Address not found"),
     FILTER_NAME_INCORRECT(400, "Filter name incorrect"),
 
     TOKEN_AND_ID_NOT_MATCH(403, "Token and id not match"),

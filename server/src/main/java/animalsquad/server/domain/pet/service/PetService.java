@@ -1,5 +1,6 @@
 package animalsquad.server.domain.pet.service;
 
+import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.repository.PetRepository;
@@ -35,7 +36,11 @@ public class PetService {
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
 
         int code = pet.getAddress().getCode();
-        pet.setAddress(addressRepository.findByCode(code));
+
+        Optional<Address> optionalAddress = addressRepository.findByCode(code);
+        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
+
+        pet.setAddress(address);
 
         return petRepository.save(pet);
     }
