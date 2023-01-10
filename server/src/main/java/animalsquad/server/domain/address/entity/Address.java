@@ -3,7 +3,6 @@ package animalsquad.server.domain.address.entity;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.global.audit.Auditable;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +20,7 @@ public class Address extends Auditable {
     private long id;
 
     private int code;
-    private int name;
+    private String name;
 
     @OneToOne(mappedBy = "address")
     private Pet pet;
