@@ -6,6 +6,7 @@ import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.domain.petmap.entity.PetMap;
 import animalsquad.server.global.audit.Auditable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

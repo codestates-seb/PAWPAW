@@ -63,7 +63,9 @@ public class SecurityConfiguration {
                                 .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")
                                 .antMatchers("/reissue").permitAll()
+                                .antMatchers("/members/signup").permitAll()
                                 .anyRequest().hasRole("USER")
+
                 );
 
         return http.build();
