@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -55,5 +56,10 @@ public class InfoMapService {
 
     public InfoMap createMaps(InfoMap infoMap) {
         return infoMapRepository.save(infoMap);
+    }
+
+    public InfoMap findVerifiedInfoMap(long id) {
+        Optional<InfoMap> optionalInfoMap = infoMapRepository.findById(id);
+        return optionalInfoMap.orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFO_MAP_NOT_FOUND));
     }
 }

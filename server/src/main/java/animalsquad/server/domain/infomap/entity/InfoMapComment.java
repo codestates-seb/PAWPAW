@@ -24,5 +24,7 @@ public class InfoMapComment extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INFO_MAP_ID")
     private InfoMap infoMap;
+
+    private String content;
     
 }
