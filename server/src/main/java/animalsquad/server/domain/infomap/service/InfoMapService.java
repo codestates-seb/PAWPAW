@@ -25,8 +25,7 @@ public class InfoMapService {
     public List<InfoMap> findInfos(String token,String filter) {
         token = jwtTokenProvider.resolveToken(token);
 
-        Claims body = jwtTokenProvider.getClaims(token).getBody();
-        long petId = Long.parseLong(String.valueOf(body.get("petId")));
+        long petId = jwtTokenProvider.getPetId(token);
 
         List<InfoMap> infoMaps = new ArrayList<>();
 
