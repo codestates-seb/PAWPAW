@@ -10,7 +10,6 @@ public enum ExceptionCode {
     INVALID_TOKEN(400, "Invalid token"),
     REFRESH_TOKEN_NOT_FOUND(400, "Refresh token not found"),
     INVALID_REFRESH_TOKEN(400,"Invalid refresh token"),
-
     FILTER_NAME_INCORRECT(400, "Filter name incorrect");
     @Getter
     private int status;
