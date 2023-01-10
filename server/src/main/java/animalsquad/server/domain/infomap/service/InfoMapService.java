@@ -6,7 +6,6 @@ import animalsquad.server.domain.infomap.repository.InfoMapRepository;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,6 @@ public class InfoMapService {
     private final InfoMapRepository infoMapRepository;
 
     public List<InfoMap> findInfos(String token,String filter) {
-        token = jwtTokenProvider.resolveToken(token);
 
         long petId = jwtTokenProvider.getPetId(token);
 
@@ -42,14 +40,6 @@ public class InfoMapService {
 
         }
 
-//        if(filter.equals("none")) {
-//            infoMaps = infoMapRepository.findInfoMaps(petId);
-//        }/*else if (filter.equals("pick")) {
-//            //
-//        }*/ else if (filter.equals("PARK") || filter.equals("CAFE" || filter.equals("CAFE"))){
-//            InfoMapCategory from = InfoMapCategory.valueOf(filter);
-//            infoMaps = infoMapRepository.findInfoMapsWithFilter(petId, from);
-//        }
 
         return infoMaps;
     }

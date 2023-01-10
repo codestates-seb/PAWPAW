@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -23,11 +25,10 @@ public class InfoMapCommentService {
     private final PetService petService;
 
 
-
     public InfoMapComment createComment(InfoMapComment infoMapComment, String token) {
 
         long petId = jwtTokenProvider.getPetId(token);
-        if(petId != infoMapComment.getPet().getId()) {
+        if (petId != infoMapComment.getPet().getId()) {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
@@ -39,4 +40,42 @@ public class InfoMapCommentService {
 
         return infoMapCommentRepository.save(infoMapComment);
     }
+
+    public InfoMapComment updateComment(InfoMapComment infoMapComment, String token) {
+        long petId = jwtTokenProvider.getPetId(token);
+
+        if (petId != infoMapComment.getPet().getId()) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
+
+        InfoMapComment findComment = findVerifiedComment(infoMapComment.getId());
+
+        if (petId != findComment.getPet().getId()) {
+            throw new BusinessLogicException(ExceptionCode.NOT_HAVE_PERMISSION_TO_EDIT);
+        }
+
+
+        Optional.ofNullable(infoMapComment.getContents())
+                .ifPresent(findComment::setContents);
+
+        return findComment;
+    }
+
+    public void deleteComment(long id, String token) {
+        long petId = jwtTokenProvider.getPetId(token);
+
+        InfoMapComment findComment = findVerifiedComment(id);
+
+        if (petId != findComment.getPet().getId()) {
+            throw new BusinessLogicException(ExceptionCode.NOT_HAVE_PERMISSION_TO_EDIT);
+        }
+
+        infoMapCommentRepository.deleteById(id);
+    }
+
+    public InfoMapComment findVerifiedComment(long id) {
+        return infoMapCommentRepository.findById(id).orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFO_MAP_COMMENT_NOT_FOUND));
+    }
+
+
 }

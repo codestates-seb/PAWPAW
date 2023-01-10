@@ -25,6 +25,6 @@ public class InfoMapComment extends Auditable {
     @JoinColumn(name = "INFO_MAP_ID")
     private InfoMap infoMap;
 
-    private String content;
+    private String contents;
     
 }

@@ -15,6 +15,7 @@ public enum ExceptionCode {
     FILTER_NAME_INCORRECT(400, "Filter name incorrect"),
 
     TOKEN_AND_ID_NOT_MATCH(403, "Token and id not match"),
+    NOT_HAVE_PERMISSION_TO_EDIT(403, "Not have permission to edit"),
 
     INFO_MAP_NOT_FOUND(404, "Info map not found"),
     INFO_MAP_COMMENT_NOT_FOUND(404,"Info map comment not found");
