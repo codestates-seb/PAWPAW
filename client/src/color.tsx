@@ -1,5 +1,5 @@
 const color = {
-  coral: '#F79843',
+  coral: '#F79483',
   ivory: '#FFF8F0',
   darkivory: '#FFEEDB', // ivory hover시
   brown: '#7D5A5A',
