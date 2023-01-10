@@ -23,10 +23,12 @@ public class InfoMap extends Auditable {
 
     private String name;
 
+    @Column(precision = 8, scale = 6)
     private BigDecimal latitude;
+    @Column(precision = 9, scale = 6)
     private BigDecimal longitude;
-
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private InfoMapCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADDRESS_ID")

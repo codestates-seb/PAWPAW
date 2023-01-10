@@ -2,7 +2,6 @@ package animalsquad.server.domain.infomap.entity;
 
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.global.audit.Auditable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

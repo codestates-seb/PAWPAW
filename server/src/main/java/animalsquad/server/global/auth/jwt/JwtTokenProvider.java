@@ -100,6 +100,7 @@ public class JwtTokenProvider {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
+            throw new JwtException("Expired JWT Token");
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
@@ -124,6 +125,11 @@ public class JwtTokenProvider {
             return token.substring(7);
         }
         return null;
+    }
+
+    public long getPetId(String token) {
+        Claims body = getClaims(token).getBody();
+        return Long.parseLong(String.valueOf(body.get("petId")));
     }
 
 }

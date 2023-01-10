@@ -5,6 +5,7 @@ import animalsquad.server.global.auth.handler.PetAuthenticationEntryPoint;
 import animalsquad.server.global.auth.handler.PetAuthenticationFailureHandler;
 import animalsquad.server.global.auth.handler.PetAuthenticationSuccessHandler;
 import animalsquad.server.global.auth.jwt.JwtAuthenticationFilter;
+import animalsquad.server.global.auth.jwt.JwtExceptionFilter;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.auth.jwt.JwtVerificationFilter;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,8 @@ public class SecurityConfiguration {
                                 .antMatchers("/pets/test").hasRole("USER") //권한 테스트용
                                 .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")
-                                .antMatchers("/h2/**").permitAll() // h2 데이터베이스 확인 가능하게
-                                .anyRequest().permitAll()
+                                .antMatchers("/reissue").permitAll()
+                                .anyRequest().hasRole("USER")
                 );
 
         return http.build();
@@ -93,8 +94,10 @@ public class SecurityConfiguration {
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenProvider, redisTemplate);
 
+            JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter();
             builder.addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterBefore(jwtExceptionFilter, JwtVerificationFilter.class);
         }
     }
 
