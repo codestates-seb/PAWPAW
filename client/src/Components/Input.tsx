@@ -9,6 +9,7 @@ type Props = {
   placeholder: string;
   paddingRight?: string;
   marginBottom?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const StyledInput = styled.input<Props>`

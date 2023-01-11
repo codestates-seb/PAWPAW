@@ -6,6 +6,7 @@ const { brown, darkbrown } = color;
 
 type Props = {
   text: string;
+  onClick?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const StyledButton = styled.button`
