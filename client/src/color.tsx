@@ -10,6 +10,12 @@ const color = {
   lightgrey: '#B8B8B8', // placeholder
   bordergrey: '#E0E0E0', // border
   red: '#EA6363', // 취소, 회원 탈퇴
+  park: '#5B8A72',
+  food: '#FEA572',
+  pool: '#6CB2F2',
+  camping: '#93C246',
+  hospital: '#FF6C6C',
+  myfavo: '#FCB838'
 };
 
 export default color;
