@@ -28,29 +28,30 @@ public class PetMapService {
     public PetMap addPlace(PetMap petMap, String token) {
         long petId = jwtTokenProvider.getPetId(token);
 
-        if(petId != petMap.getPet().getId()) {
+        if (petId != petMap.getPet().getId()) {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
-        Pet pet = petService.findPet(petMap.getPet().getId());
+        Pet pet = petService.findPet(petMap.getPet().getId(), token);
 
-        findExistsPlace(infoMap,pet);
+        findExistsPlace(infoMap, pet);
 
         petMap.setInfoMap(infoMap);
         petMap.setPet(pet);
 
         return petMapRepository.save(petMap);
     }
+
     public void deletePlace(PetMap petMap, String token) {
         long petId = jwtTokenProvider.getPetId(token);
 
-        if(petId != petMap.getPet().getId()) {
+        if (petId != petMap.getPet().getId()) {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
-        Pet pet = petService.findPet(petMap.getPet().getId());
+        Pet pet = petService.findPet(petMap.getPet().getId(), token);
 
         PetMap findPetMap = findVerifiedPetMap(infoMap, pet);
         petMapRepository.delete(findPetMap);
@@ -60,7 +61,7 @@ public class PetMapService {
     public void findExistsPlace(InfoMap infoMap, Pet pet) {
         Optional<PetMap> optionalPetMap = petMapRepository.findByPet_IdAndInfoMap_Id(pet.getId(), infoMap.getId());
 
-        if(optionalPetMap.isPresent()) {
+        if (optionalPetMap.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.EXISTS_MY_PLACE);
         }
     }
