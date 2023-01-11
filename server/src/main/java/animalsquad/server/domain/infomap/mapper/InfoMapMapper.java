@@ -1,15 +1,10 @@
 package animalsquad.server.domain.infomap.mapper;
 
 import animalsquad.server.domain.address.entity.Address;
-import animalsquad.server.domain.infomap.dto.InfoMapCommentPostDto;
 import animalsquad.server.domain.infomap.dto.InfoMapPostDto;
 import animalsquad.server.domain.infomap.dto.InfoMapsResponseDto;
 import animalsquad.server.domain.infomap.entity.InfoMap;
-import animalsquad.server.domain.infomap.entity.InfoMapComment;
-import animalsquad.server.domain.pet.entity.Pet;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,17 +39,5 @@ public interface InfoMapMapper {
                 }).collect(Collectors.toList());
     }
 
-    default InfoMapComment infoMapCommentPostToInfoMap(InfoMapCommentPostDto infoMapCommentPostDto) {
-        InfoMapComment infoMapComment = new InfoMapComment();
-        Pet pet = new Pet();
-        pet.setId(infoMapCommentPostDto.getPetId());
-        InfoMap infoMap = new InfoMap();
-        infoMap.setId(infoMapCommentPostDto.getInfoMapId());
 
-        infoMapComment.setContent(infoMapCommentPostDto.getContent());
-        infoMapComment.setInfoMap(infoMap);
-        infoMapComment.setPet(pet);
-
-        return infoMapComment;
-    }
 }

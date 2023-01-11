@@ -6,7 +6,7 @@ spring:
     port: 6379
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
