@@ -1,13 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
-
+import axios from 'axios';
 const { brown } = color;
-
+const url = 'http://localhost:8080';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -57,6 +58,37 @@ const SignUpA = styled.a`
 `;
 
 const Login: FC = () => {
+  const [userId, setUserId] = useState<string>('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const newValue = (e.target as HTMLInputElement).value;
+    setUserId(newValue);
+  };
+
+  const passwordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = (e.target as HTMLInputElement).value;
+    setPassword(newValue);
+  };
+  const submitHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(`${url}/login`, {
+        loginId: userId,
+        password: password,
+      });
+
+      const jwtToken = response.headers.authorization as string;
+      localStorage.setItem('Authorization', jwtToken);
+      navigate('/map');
+      // 지금은 map이 초기 화면 이니까
+      window.location.reload();
+    } catch (error) {
+      alert(error);
+    }
+  };
   return (
     <Container>
       <Background />
@@ -73,12 +105,12 @@ const Login: FC = () => {
           </IconDiv>
 
           <InputDiv>
-            <Input type='text' placeholder='아이디' />
-            <Input type='password' placeholder='비밀번호' />
+            <Input type='text' placeholder='아이디' onChange={userIdHandler} />
+            <Input type='password' placeholder='비밀번호' onChange={passwordHandler} />
           </InputDiv>
 
           <ButtonDiv>
-            <Button text='로그인' />
+            <Button text='로그인' onClick={submitHandler} />
           </ButtonDiv>
           <SignUpA>회원가입</SignUpA>
         </RightDiv>
