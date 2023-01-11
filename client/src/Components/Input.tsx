@@ -29,7 +29,7 @@ const StyledInput = styled.input<Props>`
   }
 `;
 
-const Input = ({ type, placeholder, paddingRight, marginBottom }: Props) => {
+const Input = ({ type, placeholder, paddingRight, marginBottom, onChange }: Props) => {
   return (
     <>
       <StyledInput
@@ -37,6 +37,7 @@ const Input = ({ type, placeholder, paddingRight, marginBottom }: Props) => {
         placeholder={placeholder}
         paddingRight={paddingRight}
         marginBottom={marginBottom}
+        onChange={onChange}
       />
     </>
   );
