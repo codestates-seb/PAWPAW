@@ -1,6 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -57,36 +57,38 @@ const SignUpA = styled.a`
   }
 `;
 
-const Login: FC = () => {
+const Login: React.FC = () => {
   const [userId, setUserId] = useState<string>('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
   const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const newValue = (e.target as HTMLInputElement).value;
-    setUserId(newValue);
+    setUserId((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
   };
 
   const passwordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = (e.target as HTMLInputElement).value;
-    setPassword(newValue);
+    setPassword((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
   };
-  const submitHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(`${url}/login`, {
-        loginId: userId,
-        password: password,
-      });
-
-      const jwtToken = response.headers.authorization as string;
-      localStorage.setItem('Authorization', jwtToken);
-      navigate('/map');
-      // 지금은 map이 초기 화면 이니까
-      window.location.reload();
-    } catch (error) {
-      alert(error);
+    if (userId !== '' || password !== '') {
+      try {
+        const response = await axios.post(`${url}/login`, {
+          loginId: userId,
+          password: password,
+        });
+        const jwtToken = response.headers.authorization as string;
+        localStorage.setItem('Authorization', jwtToken);
+        navigate('/map');
+        // 지금은 map이 초기 화면 이니까
+        window.location.reload();
+      } catch (error) {
+        alert(error);
+      }
+    } else {
+      alert('공란이 없어야 합니다');
     }
   };
   return (
@@ -112,9 +114,7 @@ const Login: FC = () => {
           <ButtonDiv>
             <Button text='로그인' onClick={submitHandler} />
           </ButtonDiv>
-          <Link to={'/signup'}>
-            <SignUpA>회원가입</SignUpA>
-          </Link>
+          <SignUpA href='/signup'>회원가입</SignUpA>
         </RightDiv>
       </Box>
     </Container>
