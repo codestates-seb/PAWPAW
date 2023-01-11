@@ -33,7 +33,7 @@ public class InfoMapCommentService {
         }
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(infoMapComment.getInfoMap().getId());
-        Pet pet = petService.findPet(infoMapComment.getPet().getId());
+        Pet pet = petService.findPet(infoMapComment.getPet().getId(), token);
 
         infoMapComment.setPet(pet);
         infoMapComment.setInfoMap(infoMap);

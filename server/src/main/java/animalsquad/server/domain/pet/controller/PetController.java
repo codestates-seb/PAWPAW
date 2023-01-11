@@ -31,25 +31,28 @@ public class PetController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
     @PatchMapping("/{pet-id}")
-    public ResponseEntity patchPet(@PathVariable("pet-id") long id,
+    public ResponseEntity patchPet(@RequestHeader("Authorization") String token,
+                                   @PathVariable("pet-id") long id,
                                     PetPatchDto petPatchDto) {
         petPatchDto.setId(id);
 
-        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto));
+        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto), token);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{pet-id}")
-    public ResponseEntity getPet(@PathVariable("pet-id") long id) {
-        Pet response = petService.findPet(id);
+    public ResponseEntity getPet(@RequestHeader("Authorization") String token,
+                                 @PathVariable("pet-id") long id) {
+        Pet response = petService.findPet(id, token);
 
         return new ResponseEntity(mapper.petToPetResponseDto(response),HttpStatus.OK);
     }
 
     @DeleteMapping("/{pet-id}")
-    public ResponseEntity deletePet(@PathVariable("pet-id") long id) {
-        petService.deletePet(id);
+    public ResponseEntity deletePet(@RequestHeader("Authorization") String token,
+                                    @PathVariable("pet-id") long id) {
+        petService.deletePet(id, token);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

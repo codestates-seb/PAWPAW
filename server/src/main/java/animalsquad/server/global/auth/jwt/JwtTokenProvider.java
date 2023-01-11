@@ -117,7 +117,6 @@ public class JwtTokenProvider {
         return (expiration.getTime() - now);
     }
 
-
     public String resolveToken(String accessToken) {
         String token = accessToken;
 
