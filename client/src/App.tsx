@@ -1,14 +1,16 @@
 import React from 'react';
-import Header from './components/Header';
 import './App.css';
+import Login from './Pages/Login';
+import SignUp from './Pages/SignUp';
+import UserInfo from './Pages/UserInfo';
 
-const App: React.FC = () => {
+function App() {
   return (
-    <div>
-      <Header />
-      <div className='App'>main</div>
+    <div className='App'>
+      <Login />
+      <SignUp />
+      <UserInfo />
     </div>
   );
-};
-
+}
 export default App;
