@@ -18,13 +18,11 @@ import java.util.List;
 public class Address extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    @Column(unique = true)
     private int code;
     private String name;
-
     @OneToOne(mappedBy = "address")
     private Pet pet;
-
     @OneToMany(mappedBy = "address")
     private List<InfoMap> infoMaps = new ArrayList<>();
 
