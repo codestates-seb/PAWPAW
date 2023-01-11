@@ -8,10 +8,10 @@ public enum ExceptionCode {
     PET_EXISTS(409, "Pet exists"),
     PET_NOT_FOUND(404,"Pet not found"),
     INVALID_TOKEN(400, "Invalid token"),
-    REFRESH_TOKEN_NOT_FOUND(400, "Refresh token not found"),
+    REFRESH_TOKEN_NOT_FOUND(404, "Refresh token not found"),
     INVALID_REFRESH_TOKEN(400,"Invalid refresh token"),
 
-    ADDRESS_NOT_FOUND(400, "Address not found"),
+    ADDRESS_NOT_FOUND(404, "Address not found"),
     FILTER_NAME_INCORRECT(400, "Filter name incorrect"),
 
     TOKEN_AND_ID_NOT_MATCH(403, "Token and id not match"),
@@ -20,7 +20,8 @@ public enum ExceptionCode {
     INFO_MAP_NOT_FOUND(404, "Info map not found"),
     INFO_MAP_COMMENT_NOT_FOUND(404,"Info map comment not found"),
 
-    EXISTS_MY_PLACE(409, "My place exists");
+    EXISTS_MY_PLACE(409, "My place exists"),
+    MY_PLACE_NOT_FOUND(404, "My place not found");
     @Getter
     private int status;
 

@@ -42,6 +42,20 @@ public class PetMapService {
 
         return petMapRepository.save(petMap);
     }
+    public void deletePlace(PetMap petMap, String token) {
+        long petId = jwtTokenProvider.getPetId(token);
+
+        if(petId != petMap.getPet().getId()) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
+
+        InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
+        Pet pet = petService.findPet(petMap.getPet().getId());
+
+        PetMap findPetMap = findVerifiedPetMap(infoMap, pet);
+        petMapRepository.delete(findPetMap);
+
+    }
 
     public void findExistsPlace(InfoMap infoMap, Pet pet) {
         Optional<PetMap> optionalPetMap = petMapRepository.findByPet_IdAndInfoMap_Id(pet.getId(), infoMap.getId());
@@ -50,4 +64,11 @@ public class PetMapService {
             throw new BusinessLogicException(ExceptionCode.EXISTS_MY_PLACE);
         }
     }
+
+    public PetMap findVerifiedPetMap(InfoMap infoMap, Pet pet) {
+        return petMapRepository.findByPet_IdAndInfoMap_Id(pet.getId(), infoMap.getId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MY_PLACE_NOT_FOUND));
+    }
+
+
 }

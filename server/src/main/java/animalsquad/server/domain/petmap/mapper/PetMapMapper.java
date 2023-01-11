@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface PetMapMapper {
 
-    default PetMap addPlaceDtoToPetMap(MyPlaceDto addPlaceDto) {
+    default PetMap myPlaceDtoToPetMap(MyPlaceDto addPlaceDto) {
         PetMap petMap = new PetMap();
 
         Pet pet = new Pet();
