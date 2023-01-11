@@ -12,7 +12,7 @@ public class PetPatchDto {
     private String petName;
     private int age;
     private String gender;
-    private Address address;
+    private int code;
     private String profileImage;
 
 }

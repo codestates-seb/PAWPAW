@@ -1,8 +1,10 @@
 package animalsquad.server.domain.pet.service;
 
+import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.repository.PetRepository;
+import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
@@ -27,6 +29,7 @@ public class PetService {
     private final PetRepository petRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     public Pet createPet(Pet pet) {
@@ -35,13 +38,19 @@ public class PetService {
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
 
         int code = pet.getAddress().getCode();
-        pet.setAddress(addressRepository.findByCode(code));
+
+        Optional<Address> optionalAddress = addressRepository.findByCode(code);
+        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
+
+        pet.setAddress(address);
 
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet) {
+    public Pet updatePet(Pet pet, String token) {
         Pet findPet = findVerifiedPet(pet.getId());
+
+        verifiedToken(pet.getId(), token);
 
         Optional.ofNullable(pet.getPetName())
                 .ifPresent(name -> findPet.setPetName(name));
@@ -49,10 +58,14 @@ public class PetService {
                 .ifPresent(age -> findPet.setAge(age));
         Optional.ofNullable(pet.getGender())
                 .ifPresent(gender -> findPet.setGender(gender));
-        Optional.ofNullable(pet.getAddress())
-                .ifPresent(address -> findPet.setAddress(address));
         Optional.ofNullable(pet.getProfileImage())
                 .ifPresent(profileImage -> findPet.setProfileImage(profileImage));
+
+        Optional.ofNullable(pet.getAddress().getCode())
+                .ifPresent(code -> {
+                    Address address = verifiedAddress(code);
+                    findPet.setAddress(address);
+                });
 
         Pet savedPet = petRepository.save(findPet);
 
@@ -60,18 +73,28 @@ public class PetService {
 
     }
 
-    // 커뮤니티 기능 구현 전 자신의 정보만 가져옴.
-    public Pet findPet(long id) {
-        return findVerifiedPet(id);
+    private Address verifiedAddress(int code) {
+        Optional<Address> optionalAddress = addressRepository.findByCode(code);
+        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
+        return address;
     }
 
+    // 커뮤니티 기능 구현 전 나의 정보만 조회
+
+    public Pet findPet(long id, String token) {
+        verifiedToken(id, token);
+
+        return findVerifiedPet(id);
+    }
     // redis 설정 시 refreshToken 삭제 추가
-    public void deletePet(long id) {
-        Pet findPet = findVerifiedPet(id);
+
+    public void deletePet(long id, String token) {
+        findVerifiedPet(id);
+
+        verifiedToken(id, token);
 
         petRepository.deleteById(id);
     }
-
     private void verifyExistsId(String loginId) {
         Optional<Pet> pet = petRepository.findByLoginId(loginId);
 
@@ -87,4 +110,13 @@ public class PetService {
 
         return findPet;
     }
+
+    private void verifiedToken(long id, String token) {
+        long petId = jwtTokenProvider.getPetId(token);
+
+        if (petId != id) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
+    }
+
 }

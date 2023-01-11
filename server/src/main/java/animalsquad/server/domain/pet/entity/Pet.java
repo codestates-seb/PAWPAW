@@ -6,6 +6,7 @@ import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.domain.petmap.entity.PetMap;
 import animalsquad.server.global.audit.Auditable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +27,7 @@ public class Pet extends Auditable {
     private long id;
 
     private String loginId;
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String password;
     @Column(length = 30, nullable = false)
     private String petName;
