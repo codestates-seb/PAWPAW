@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(name = "myPlace", columnNames = {"PET_ID", "INFO_MAP_ID"}))
 public class PetMap extends Auditable {
 
     @Id
