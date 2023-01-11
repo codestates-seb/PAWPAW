@@ -8,9 +8,15 @@ import HomeMap from './Map/Map'
 function App() {
   return (
     <div className='App'>
+
+      <Login />
+      <SignUp />
+      <UserInfo />
+    </div>
+  );
+}
       <HomeMap />
     </div>
   );
 }
-
 export default App;
