@@ -91,21 +91,24 @@ const MarkContainer = styled.div`
     content: '';
     position: absolute;
     left: 47%;
-    top: 100%;
-  }
-  &.active::after {
-    border-top: 10px solid ${yellow};
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 10px solid transparent;
-    content: '';
-    position: absolute;
-    left: 47%;
-    top: 100%;
+    top: 95%;
   }
 
-  &.active {
+  // hover & 클릭 시 노란색
+  &.active,
+  &:hover {
     background-color: ${yellow};
+
+    &::after {
+      border-top: 10px solid ${yellow};
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 10px solid transparent;
+      content: '';
+      position: absolute;
+      left: 47%;
+      top: 100%;
+    }
   }
 `;
 const WhiteCircleBox = styled.div`
@@ -122,6 +125,7 @@ const WhiteCircleBox = styled.div`
 
 const ParkName = styled.div`
   padding-right: 15px;
+  user-select: none;
 `;
 
 export default Marker;
