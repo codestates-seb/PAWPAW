@@ -34,7 +34,9 @@ public class InfoMapService {
                 InfoMapCategory category = InfoMapCategory.valueOf(filter);
                 infoMaps = infoMapRepository.findInfoMapsWithFilter(petId, category);
                 break;
-            case "PICK" : break; // TODO 나의 장소
+            case "PICK" :
+                infoMaps = infoMapRepository.findInfoMapsMyPick(petId);
+                break;
             default :
                 throw new BusinessLogicException(ExceptionCode.FILTER_NAME_INCORRECT);
 
