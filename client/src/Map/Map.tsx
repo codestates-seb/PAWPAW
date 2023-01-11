@@ -1,3 +1,4 @@
+import MapFilter from './MapFilter';
 import React from 'react';
 import color from '../color';
 import styled from 'styled-components';
@@ -11,7 +12,13 @@ import Marker from './Marker';
 
 const { brown } = color;
 
-const Container = styled.div``;
+const Container = styled.div`
+  position: relative;
+
+  .map {
+    position: absolute;
+  }
+`;
 
 const data = [
   {
@@ -80,6 +87,7 @@ function HomeMap() {
           return <Marker key={idx} {...el} />;
         })}
       </Map>
+      <MapFilter />
     </Container>
   );
 }
