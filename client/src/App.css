@@ -1,4 +1,7 @@
-* {box-sizing: border-box}
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
 
 .App {
   text-align: center;
