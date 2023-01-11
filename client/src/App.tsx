@@ -4,10 +4,12 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import UserInfo from './Pages/UserInfo';
 import UserInfoEdit from './Pages/UserInfoEdit';
+import HomeMap from './Map/Map'
 
 function App() {
   return (
     <div className='App'>
+
       <Login />
       <SignUp />
       <UserInfo />
@@ -15,5 +17,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
