@@ -47,16 +47,16 @@ public class InfoMapController {
 
     @PostMapping("/review")
     public ResponseEntity postContent(@RequestBody @Valid InfoMapCommentPostDto infoMapCommentPostDto,
-                                       @RequestHeader("Authorization") String token) {
-        InfoMapComment comment = infoMapCommentService.createComment( infoMapCommentsMapper.infoMapCommentPostToInfoMap(infoMapCommentPostDto), token);
+                                      @RequestHeader("Authorization") String token) {
+        InfoMapComment comment = infoMapCommentService.createComment(infoMapCommentsMapper.infoMapCommentPostToInfoMap(infoMapCommentPostDto), token);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PatchMapping("/review/{review-id}")
     public ResponseEntity patchContent(@RequestBody @Valid InfoMapCommentPatchDto infoMapCommentPatchDto,
-                                        @RequestHeader("Authorization") String token,
-                                        @PathVariable("review-id") long commentId) {
+                                       @RequestHeader("Authorization") String token,
+                                       @PathVariable("review-id") long commentId) {
         infoMapCommentPatchDto.setCommentId(commentId);
         InfoMapComment infoMapComment1 = infoMapCommentService.updateComment(infoMapCommentsMapper.infoMapCommentPatchToInfoMap(infoMapCommentPatchDto), token);
 

@@ -18,7 +18,9 @@ public enum ExceptionCode {
     NOT_HAVE_PERMISSION_TO_EDIT(403, "Not have permission to edit"),
 
     INFO_MAP_NOT_FOUND(404, "Info map not found"),
-    INFO_MAP_COMMENT_NOT_FOUND(404,"Info map comment not found");
+    INFO_MAP_COMMENT_NOT_FOUND(404,"Info map comment not found"),
+
+    EXISTS_MY_PLACE(409, "My place exists");
     @Getter
     private int status;
 
