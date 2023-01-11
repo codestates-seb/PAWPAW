@@ -73,6 +73,9 @@ const MapFilter = () => {
 
 const Container = styled.div`
   position: absolute;
+  z-index: 100;
+  top: 70px;
+  left: 905px;
 
   .absolute {
     position: absolute;
@@ -82,6 +85,7 @@ const Container = styled.div`
     background-color: ${ivory};
     border-radius: 7px;
     padding: 4px;
+    box-shadow: rgba(149, 157, 165, 0.5) 0px 8px 24px;
   }
 
   .park {

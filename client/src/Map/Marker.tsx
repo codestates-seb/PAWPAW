@@ -9,7 +9,7 @@ import HospitalMarker from './Marker/HospitalMarker';
 import CampMarker from './Marker/CampMarker';
 import FoodMarker from './Marker/FoodMarker';
 import PropTypes from 'prop-types';
-import { IProps } from './Map';
+import { IProps } from './HomeMap';
 import PoolMarker from './Marker/PoolMarker';
 
 const { brown, yellow } = color;
@@ -91,10 +91,9 @@ const MarkContainer = styled.div`
     position: absolute;
     left: 45%;
     top: 100%;
-
   }
-  &.active::after{
-      border-top: 10px solid ${yellow};
+  &.active::after {
+    border-top: 10px solid ${yellow};
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid transparent;

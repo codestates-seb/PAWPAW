@@ -4,13 +4,15 @@ import { HeaderTabSVG } from '../img/headerTabSVG';
 import { Icon } from '@iconify/react';
 import color from '../color';
 import styled from 'styled-components';
-const { ivory, brown, coral } = color;
+const { ivory, brown, yellow } = color;
 const Container = styled.header`
   width: 100%;
-  height: 70px;
+  height: 50px;
   background-color: ${ivory};
   display: flex;
   flex-direction: row;
+  position: absolute;
+  z-index: 100;
 `;
 const HeaderLeftBox = styled.button`
   all: unset;
@@ -27,7 +29,7 @@ const HeaderRightButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 10px 0 10px;
+  margin: 0 7px 0 7px;
 `;
 const HeaderTextImg = styled.img`
   width: 109px;
@@ -66,9 +68,9 @@ const Header: React.FC = () => {
     <Container>
       <HeaderLeftBox onMouseOver={mouseOverHomeHandler} onMouseOut={mouseOutHomeHandler}>
         {home === false ? (
-          <Icon icon='ph:paw-print-fill' style={{ fontSize: '50px' }} color={brown} />
+          <Icon icon='ph:paw-print-fill' style={{ fontSize: '40px' }} color={brown} />
         ) : (
-          <Icon icon='ph:paw-print-fill' style={{ fontSize: '50px' }} color={coral} />
+          <Icon icon='ph:paw-print-fill' style={{ fontSize: '40px' }} color={yellow} />
         )}
       </HeaderLeftBox>
       <HeaderLeftBox>
@@ -77,23 +79,23 @@ const Header: React.FC = () => {
       <HeaderBlank />
       <HeaderRightButton onMouseOver={mouseOverMapHandler} onMouseOut={mouseOutMapHandler}>
         {map === false ? (
-          <Icon icon='material-symbols:map' style={{ fontSize: '50px' }} color={brown} />
+          <Icon icon='material-symbols:map' style={{ fontSize: '40px' }} color={brown} />
         ) : (
-          <Icon icon='material-symbols:map' style={{ fontSize: '50px' }} color={coral} />
+          <Icon icon='material-symbols:map' style={{ fontSize: '40px' }} color={yellow} />
         )}
       </HeaderRightButton>
       <HeaderRightButton onMouseOver={mouseOverTabHandler} onMouseOut={mouseOutTabHandler}>
         {tab === false ? (
-          <HeaderTabSVG width='33' height='27' fill={brown} />
+          <HeaderTabSVG width='26' height='21' fill={brown} />
         ) : (
-          <HeaderTabSVG width='33' height='27' fill={coral} />
+          <HeaderTabSVG width='26' height='21' fill={yellow} />
         )}
       </HeaderRightButton>
       <HeaderRightButton onMouseOver={mouseOverUserHandler} onMouseOut={mouseOutUserHandler}>
         {user === false ? (
-          <Icon icon='mdi:user-circle' style={{ fontSize: '50px' }} color={brown} />
+          <Icon icon='mdi:user-circle' style={{ fontSize: '40px' }} color={brown} />
         ) : (
-          <Icon icon='mdi:user-circle' style={{ fontSize: '50px' }} color={coral} />
+          <Icon icon='mdi:user-circle' style={{ fontSize: '40px' }} color={yellow} />
         )}
       </HeaderRightButton>
     </Container>

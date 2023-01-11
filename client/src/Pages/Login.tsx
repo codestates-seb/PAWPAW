@@ -33,6 +33,8 @@ const IconDiv = styled.div`
 `;
 
 const InputDiv = styled.div`
+  display: flex;
+  flex-direction: column;
   input:last-child {
     margin-bottom: 0px;
   }

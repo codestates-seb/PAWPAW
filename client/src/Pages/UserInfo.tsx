@@ -27,6 +27,9 @@ const AvatarDiv = styled.div`
   font-size: 100px;
   background-color: ${ivory};
   line-height: 180px;
+
+  display: flex;
+  justify-content: center;
 `;
 
 const NameDiv = styled.div`
@@ -53,6 +56,9 @@ const PlusDiv = styled.div`
 
 const InputDiv = styled.div`
   margin-top: 100px;
+
+  display: flex;
+  flex-direction: column;
 `;
 
 const GenderDiv = styled.div<{ isMale: boolean }>`
