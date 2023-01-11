@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -112,7 +112,9 @@ const Login: FC = () => {
           <ButtonDiv>
             <Button text='로그인' onClick={submitHandler} />
           </ButtonDiv>
-          <SignUpA>회원가입</SignUpA>
+          <Link to={'/signup'}>
+            <SignUpA>회원가입</SignUpA>
+          </Link>
         </RightDiv>
       </Box>
     </Container>
