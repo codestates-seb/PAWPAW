@@ -110,7 +110,7 @@ const Container = styled.div`
   height: 955px;
   position: relative;
   z-index: 100;
-  top: 70px;
+  top: 50px;
 `;
 const ModalInfoDiv = styled.div`
   width: 100%;
@@ -163,6 +163,7 @@ const ModalInfoContent = styled.div`
 `;
 const ModalReviewBox = styled.div`
   height: auto;
+  background-color: white;
 `;
 const ModalReview = styled.div`
   width: 100%;

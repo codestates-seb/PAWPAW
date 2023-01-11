@@ -11,6 +11,7 @@ import FoodMarker from './Marker/FoodMarker';
 import PropTypes from 'prop-types';
 import { IProps } from './HomeMap';
 import PoolMarker from './Marker/PoolMarker';
+import Modal from '../Components/Modal';
 
 const { brown, yellow } = color;
 
@@ -53,6 +54,8 @@ const Marker = (detail: IProps['detail']) => {
           <ParkName>{detail.title}</ParkName>
         </MarkContainer>
       </CustomOverlayMap>
+      {click ? <Modal />
+       : ''}
     </Container>
   );
 };
