@@ -76,6 +76,7 @@ const MarkContainer = styled.div`
   border-radius: 20px;
   background-color: ${brown};
   cursor: pointer;
+  line-height: 40px;
 
   .center {
     display: flex;
@@ -84,22 +85,22 @@ const MarkContainer = styled.div`
 
   &::after {
     border-top: 10px solid ${brown};
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
     border-bottom: 10px solid transparent;
     content: '';
     position: absolute;
-    left: 45%;
+    left: 47%;
     top: 100%;
   }
   &.active::after {
     border-top: 10px solid ${yellow};
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
     border-bottom: 10px solid transparent;
     content: '';
     position: absolute;
-    left: 45%;
+    left: 47%;
     top: 100%;
   }
 

@@ -75,7 +75,7 @@ const Container = styled.div`
   position: absolute;
   z-index: 100;
   top: 70px;
-  left: 905px;
+  left: calc(100vw - 605px);
 
   .absolute {
     position: absolute;
