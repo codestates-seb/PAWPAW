@@ -80,7 +80,9 @@ const Login: React.FC = () => {
           password: password,
         });
         const jwtToken = response.headers.authorization as string;
+        const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
+        localStorage.setItem('Refresh', refreshToken);
         navigate('/map');
         // 지금은 map이 초기 화면 이니까
         window.location.reload();
