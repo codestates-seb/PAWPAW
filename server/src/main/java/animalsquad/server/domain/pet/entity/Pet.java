@@ -32,7 +32,12 @@ public class Pet extends Auditable {
     @Column(length = 30, nullable = false)
     private String petName;
     private int age;
-    private String gender;
+    @Column(length = 6)
+    @Enumerated(EnumType.STRING)    // 실제 DB에 varchar 타입의 컬럼 생상
+    private Gender gender;
+    @Column(length = 3)
+    @Enumerated(EnumType.STRING)
+    private Species species;
     private String profileImage;
 
     @OneToOne(fetch = FetchType.LAZY)
