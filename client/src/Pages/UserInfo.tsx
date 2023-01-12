@@ -4,6 +4,8 @@ import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
+import { Icon } from '@iconify/react';
+import AddressModal from './AddressModal';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 
@@ -54,11 +56,22 @@ const PlusDiv = styled.div`
   }
 `;
 
-const InputDiv = styled.div`
-  margin-top: 100px;
+const InputsDiv = styled.div`
+  margin-top: 73px;
 
   display: flex;
   flex-direction: column;
+`;
+
+const InputDiv = styled.div`
+  position: relative;
+`;
+
+const SvgSpan = styled.span`
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  cursor: pointer;
 `;
 
 const GenderDiv = styled.div<{ isMale: boolean }>`
@@ -149,6 +162,10 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   user-select: none;
 `;
 
+const ButtonDiv = styled.div`
+  margin-top: 45px;
+`;
+
 const MaleSVG = (
   <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path
@@ -187,10 +204,24 @@ const YellowPlusSVG = (
   </svg>
 );
 
+export interface PropTypes {
+  address: number;
+  setAddress: (address: number) => void;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
 const UserInfo: FC = () => {
   const [isMale, setIsMale] = useState(true);
   const [isCat, setIsCat] = useState(true);
-  console.log(isMale);
+  const [isOpen, setIsOpen] = useState(false);
+  const [address, setAddress] = useState(0);
+
+  const openAddressModal = () => {
+    setIsOpen(!isOpen);
+  };
+
+  console.log('address', address);
+
   return (
     <Container>
       <Background />
@@ -203,10 +234,15 @@ const UserInfo: FC = () => {
         </LeftDiv>
 
         <RightDiv>
-          <InputDiv>
+          <InputsDiv>
             <Input type='text' placeholder='나이' marginBottom='40px' />
-            <Input type='text' placeholder='어디에 사시나요?' />
-          </InputDiv>
+            <InputDiv>
+              <Input type='text' placeholder={address === 0 ? '어디에 사시나요?' : `${address}`} />
+              <SvgSpan onClick={openAddressModal}>
+                <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
+              </SvgSpan>
+            </InputDiv>
+          </InputsDiv>
 
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
@@ -230,8 +266,12 @@ const UserInfo: FC = () => {
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
+          <ButtonDiv>
+            <Button text='시작하기' />
+          </ButtonDiv>
         </RightDiv>
       </Box>
+      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
 };

@@ -60,7 +60,7 @@ const AvatarEditDiv = styled.div`
 `;
 
 const InputsDiv = styled.div`
-  margin-top: 100px;
+  margin-top: 73px;
 `;
 
 const InputDiv = styled.div`
@@ -160,6 +160,10 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   right: 12px;
   cursor: pointer;
   user-select: none;
+`;
+
+const ButtonDiv = styled.div`
+  margin-top: 45px;
 `;
 
 const MaleSVG = (
@@ -269,6 +273,9 @@ const UserInfoEdit: FC = () => {
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
+          <ButtonDiv>
+            <Button text='수정' />
+          </ButtonDiv>
         </RightDiv>
       </Box>
     </Container>
