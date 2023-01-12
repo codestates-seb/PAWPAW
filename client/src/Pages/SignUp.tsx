@@ -1,5 +1,7 @@
 import React, { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -7,7 +9,7 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 
 const { ivory, brown } = color;
-
+const url = 'http://localhost:8080';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -95,6 +97,11 @@ const SignUp: FC = () => {
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+  const navigate = useNavigate();
+  const jwtToken = localStorage.getItem('Authorization');
+  const refreshToken = localStorage.getItem('Refresh');
+  axios.defaults.headers.common['Authorization'] = `${jwtToken}`;
+  axios.defaults.headers.common['Refresh'] = `${refreshToken}`;
 
   const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPetName((e.target as HTMLInputElement).value);
@@ -111,6 +118,23 @@ const SignUp: FC = () => {
   const pwconfirmHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPasswordConfirm((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
+  };
+  const submitHandler = async () => {
+    if (petName === '' || userId === '' || password === '' || passwordConfirm === '') {
+      alert('회원가입 실패 빈 칸이 없어야 합니다.');
+    } else {
+      try {
+        await axios.post(`${url}/signup`, {
+          loginId: userId,
+          password: password,
+          petname: petName,
+        });
+        navigate('/signup');
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        alert(error);
+      }
+    }
   };
   return (
     <Container>
@@ -164,7 +188,7 @@ const SignUp: FC = () => {
           </InputDiv>
 
           <ButtonDiv>
-            <Button text='회원가입' />
+            <Button text='회원가입' onClick={submitHandler} />
           </ButtonDiv>
         </RightDiv>
       </Box>
