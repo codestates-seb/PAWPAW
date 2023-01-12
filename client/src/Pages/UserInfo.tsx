@@ -195,14 +195,21 @@ const YellowPlusSVG = (
 const UserInfo: FC = () => {
   const [isMale, setIsMale] = useState<string>('male');
   const [isCat, setIsCat] = useState(true);
+  const [isAge, setIsAge] = useState('0');
   const location = useLocation();
-  const userid = location.state.userId;
-  const petname = location.state.petName;
+  const userid = location.state.userid;
+  const petname = location.state.petname;
   const password = location.state.password;
+  console.log(isAge);
+  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsAge((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+
   const navigate = useNavigate();
   console.log(isMale);
   const submitHandler = async () => {
-    if (petname === '' || userid === '' || password === '') {
+    if (isAge === '' || isMale === '' || userid === '' || password === '') {
       alert('회원가입 실패 빈 칸이 없어야 합니다.');
     } else {
       try {
@@ -210,8 +217,8 @@ const UserInfo: FC = () => {
           loginId: userid,
           password: password,
           petname: petname,
-          age: 1,
-          gender: '',
+          age: isAge,
+          gender: isMale,
           address: '',
           profileImage: '',
         });
@@ -235,7 +242,7 @@ const UserInfo: FC = () => {
 
         <RightDiv>
           <InputDiv>
-            <Input type='text' placeholder='나이' marginBottom='40px' />
+            <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
             <Input type='text' placeholder='어디에 사시나요?' />
           </InputDiv>
 

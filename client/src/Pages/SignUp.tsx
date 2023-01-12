@@ -137,8 +137,20 @@ const SignUp: FC = () => {
         }
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
+        console.error('Error', error);
         alert(error);
       }
+    }
+  };
+  const goNextPage = () => {
+    if (userId === '') {
+      alert('아이디를 입력해야 합니다.');
+    } else if (password === '') {
+      alert('비밀번호를 입력해야 합니다.');
+    } else if (password !== passwordConfirm) {
+      alert('비밀번호가 일치하지 않습니다.');
+    } else {
+      navigate('/userinfo', { state: { id: userId, password: password, petname: petName } });
     }
   };
   return (
@@ -193,9 +205,7 @@ const SignUp: FC = () => {
           </InputDiv>
 
           <ButtonDiv>
-            <Link to={'/userinfo'} state={{ userId, password, petName }}>
-              <Button text='회원가입' />
-            </Link>
+            <Button text='회원가입' onClick={goNextPage} />
           </ButtonDiv>
         </RightDiv>
       </Box>
