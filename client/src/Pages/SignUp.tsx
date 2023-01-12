@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import color from '../color';
@@ -119,17 +119,22 @@ const SignUp: FC = () => {
     setPasswordConfirm((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
   };
-  const submitHandler = async () => {
-    if (petName === '' || userId === '' || password === '' || passwordConfirm === '') {
-      alert('회원가입 실패 빈 칸이 없어야 합니다.');
+  const idValidationHandler = async () => {
+    if (userId === '') {
+      alert('아이디를 입력해야 합니다.');
     } else {
       try {
-        await axios.post(`${url}/signup`, {
+        const response = await axios.post(`${url}/pets/check`, {
           loginId: userId,
-          password: password,
-          petname: petName,
         });
-        navigate('/signup');
+        const value = response as unknown as boolean;
+        // 타입 설정에 대해서 고민 필요
+        // response 일지 response.status 이것도 아니면 response.body일지는 통신해보면서 정하기
+        if (value === true) {
+          alert('유효한 아이디 입니다.');
+        } else if (value === false) {
+          alert('중복된 아이디 입니다.');
+        }
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
         alert(error);
@@ -160,7 +165,7 @@ const SignUp: FC = () => {
                 paddingRight='60px'
                 onChange={userIdHandler}
               />
-              <ConfirmSpan>중복확인</ConfirmSpan>
+              <ConfirmSpan onClick={idValidationHandler}>중복확인</ConfirmSpan>
             </IdDiv>
 
             <PasswordDiv>
@@ -188,7 +193,9 @@ const SignUp: FC = () => {
           </InputDiv>
 
           <ButtonDiv>
-            <Button text='회원가입' onClick={submitHandler} />
+            <Link to={'/userinfo'} state={{ userId, password, petName }}>
+              <Button text='회원가입' />
+            </Link>
           </ButtonDiv>
         </RightDiv>
       </Box>

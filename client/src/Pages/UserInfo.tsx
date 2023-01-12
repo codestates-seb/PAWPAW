@@ -1,12 +1,14 @@
 import React, { FC, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
-
+const url = 'http://localhost:8080';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -61,7 +63,7 @@ const InputDiv = styled.div`
   flex-direction: column;
 `;
 
-const GenderDiv = styled.div<{ isMale: boolean }>`
+const GenderDiv = styled.div<{ isMale: string }>`
   width: 233px;
   margin-bottom: 35px;
 
@@ -70,11 +72,11 @@ const GenderDiv = styled.div<{ isMale: boolean }>`
   align-items: center;
 
   button:first-of-type {
-    ${(props) => props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'male' && `background-color: ${darkivory}`}
   }
 
   button:last-of-type {
-    ${(props) => !props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'female' && `background-color: ${darkivory}`}
   }
 `;
 
@@ -148,6 +150,9 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   cursor: pointer;
   user-select: none;
 `;
+const ButtonDiv = styled.div`
+  margin-top: 100px;
+`;
 
 const MaleSVG = (
   <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -188,9 +193,35 @@ const YellowPlusSVG = (
 );
 
 const UserInfo: FC = () => {
-  const [isMale, setIsMale] = useState(true);
+  const [isMale, setIsMale] = useState<string>('male');
   const [isCat, setIsCat] = useState(true);
+  const location = useLocation();
+  const userid = location.state.userId;
+  const petname = location.state.petName;
+  const password = location.state.password;
+  const navigate = useNavigate();
   console.log(isMale);
+  const submitHandler = async () => {
+    if (petname === '' || userid === '' || password === '') {
+      alert('회원가입 실패 빈 칸이 없어야 합니다.');
+    } else {
+      try {
+        await axios.post(`${url}/signup`, {
+          loginId: userid,
+          password: password,
+          petname: petname,
+          age: 1,
+          gender: '',
+          address: '',
+          profileImage: '',
+        });
+        navigate('/login');
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        alert(error);
+      }
+    }
+  };
   return (
     <Container>
       <Background />
@@ -210,8 +241,8 @@ const UserInfo: FC = () => {
 
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale(true)}>{MaleSVG}</IconButton>
-            <IconButton onClick={() => setIsMale(false)}>{FemaleSVG}</IconButton>
+            <IconButton onClick={() => setIsMale('male')}>{MaleSVG}</IconButton>
+            <IconButton onClick={() => setIsMale('female')}>{FemaleSVG}</IconButton>
           </GenderDiv>
 
           <TypeDiv>
@@ -228,6 +259,9 @@ const UserInfo: FC = () => {
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
+              <ButtonDiv>
+                <Button text='회원가입' onClick={submitHandler} />
+              </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
         </RightDiv>
