@@ -6,12 +6,28 @@ spring:
     port: 6379
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
 logging.level:
   org.hibernate.SQL: debug
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${s3_access_key}
+      secret-key: ${s3_secret_key}
+    region:
+      static: ${s3_region}
+    s3:
+      bucket: ${s3_bucket}
+    stack:
+      auto: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 jwt:
   key: ${JWT_SECRET_KEY}
