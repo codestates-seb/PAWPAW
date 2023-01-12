@@ -25,6 +25,7 @@ public interface PetMapper {
         pet.setPetName( petPostDto.getPetName() );
         pet.setAge( petPostDto.getAge() );
         pet.setGender( petPostDto.getGender() );
+        pet.setSpecies(petPostDto.getSpecies());
         pet.setProfileImage( petPostDto.getProfileImage() );
         pet.setAddress(address);
 
@@ -41,6 +42,7 @@ public interface PetMapper {
         pet.setPetName(petPatchDto.getPetName());
         pet.setAge(petPatchDto.getAge());
         pet.setGender(petPatchDto.getGender());
+        pet.setSpecies(petPatchDto.getSpecies());
         pet.setProfileImage(petPatchDto.getProfileImage());
         pet.setAddress(address);
 
@@ -57,29 +59,9 @@ public interface PetMapper {
         responseDto.setProfileImage(pet.getProfileImage());
         responseDto.setAge(pet.getAge());
         responseDto.setGender(pet.getGender());
+        responseDto.setSpecies(pet.getSpecies());
 
         return responseDto;
 
     }
-//    List<PetResponseDto> petsToPetResponses(List<Pet> pets);
-
-//    default Pet petPostToPet1(PetPostDto petPostDto) {
-//        int code = petPostDto.getCode(); //ADDress -> code
-//        Address address = new Address();
-//        address.setCode(code);
-//
-//        Pet = new Pet();
-//        pet.set~~
-//
-//
-//        //Pet등록하실 때
-//        createPet(Pet pet) {
-//            int code = pet.getAddress().getCode();
-//            Address findAddress = addressRepository.findByCode(code); //네임, 코드랑
-//            pet.setAddress(findAddress);
-//
-//            petRepository.save(pet);
-//        }
-//
-//    }
 }

@@ -58,6 +58,8 @@ public class PetService {
                 .ifPresent(age -> findPet.setAge(age));
         Optional.ofNullable(pet.getGender())
                 .ifPresent(gender -> findPet.setGender(gender));
+        Optional.ofNullable(pet.getSpecies())
+                .ifPresent(species -> findPet.setSpecies(species));
         Optional.ofNullable(pet.getProfileImage())
                 .ifPresent(profileImage -> findPet.setProfileImage(profileImage));
 
