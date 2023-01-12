@@ -124,12 +124,20 @@ const Modal = ({click, setClick}: CProps['clicks']) => {
 
 const Container = styled.div`
   width: 350px;
-  height: 955px;
   position: relative;
   z-index: 100;
   top: 50px;
   box-shadow: rgba(149, 157, 165, 0.8) 14px 0px 14px -14px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background: #ccc;
+  }
   .img {
     border-bottom: 1px solid ${bordergrey};
   }

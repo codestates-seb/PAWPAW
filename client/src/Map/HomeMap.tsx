@@ -18,6 +18,7 @@ const Container = styled.div`
   }
 
   .map {
+    margin-top: 50px;
     position: absolute;
   }
 `;
