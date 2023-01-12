@@ -15,12 +15,19 @@ import Modal from '../Components/Modal';
 
 const { brown, yellow } = color;
 
+export interface CProps {
+  clicks: {
+    click: boolean;
+    setClick: (classname: boolean) => void;
+  };
+}
+
 const Marker = (detail: IProps['detail']) => {
-  const [click, setClick] = useState(false);
+  const [click, setClick] = useState<boolean>(false);
+  const data = [click, setClick];
 
   const selectHandler = () => {
     setClick(!click);
-    console.log('click', click);
   };
 
   function renderSwitch(param: any) {
@@ -54,8 +61,7 @@ const Marker = (detail: IProps['detail']) => {
           <ParkName>{detail.title}</ParkName>
         </MarkContainer>
       </CustomOverlayMap>
-      {click ? <Modal />
-       : ''}
+      {click ? <Modal click={click} setClick={setClick} /> : ''}
     </Container>
   );
 };
