@@ -12,7 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class FileUploadService {
-
+// 추가
     private final UploadService s3Service;
 
     //Multipart를 통해 전송된 파일을 업로드하는 메소드

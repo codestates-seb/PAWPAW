@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                                 .antMatchers("/pets/signup").permitAll()
                                 .antMatchers("/reissue").permitAll()
                                 .antMatchers("/pets/signup").permitAll()
+                                .antMatchers("/pets/check/**").permitAll()
 //                                .antMatchers("/api/v1/upload").permitAll()
                                 .anyRequest().hasRole("USER")
 

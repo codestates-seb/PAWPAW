@@ -13,4 +13,5 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     Optional<Pet> findByLoginId(String loginId);
 //    Page<Pet> findById(long id, PageRequest pageRequest);
+    boolean existsByLoginId(String loginId);
 }

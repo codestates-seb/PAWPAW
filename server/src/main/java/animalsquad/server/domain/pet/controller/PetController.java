@@ -6,14 +6,12 @@ import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.mapper.PetMapper;
 import animalsquad.server.domain.pet.service.PetService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +27,13 @@ public class PetController {
         Pet pet = petService.createPet(mapper.petPostToPet(petPostDto));
 
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/check/{login-id}")
+    public ResponseEntity<Boolean> checkPet(@PathVariable ("login-id") String loginId) {
+        Boolean result = petService.checkLoginId(loginId);
+
+        return new ResponseEntity(result, HttpStatus.OK);
     }
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@RequestHeader("Authorization") String token,

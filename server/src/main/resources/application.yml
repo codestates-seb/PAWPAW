@@ -6,13 +6,19 @@ spring:
     port: 6379
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
-        default_batch_fetch_size: 10
 logging.level:
+  com:
+    amazonaws:
+      util:
+        EC2MetadataUtils: error
   org.hibernate.SQL: debug
+
+jwt:
+  key: ${JWT_SECRET_KEY}
 
 cloud:
   aws:
@@ -29,9 +35,6 @@ cloud:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
-jwt:
-  key: ${JWT_SECRET_KEY}
 ---
 spring:
   config:

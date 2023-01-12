@@ -38,13 +38,14 @@ public class PetService {
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
 
         int code = pet.getAddress().getCode();
-
-        Optional<Address> optionalAddress = addressRepository.findByCode(code);
-        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
-
+        Address address = verifiedAddress(code);
         pet.setAddress(address);
 
         return petRepository.save(pet);
+    }
+    // id 중복 검사
+    public boolean checkLoginId(String loginId) {
+        return petRepository.existsByLoginId(loginId);
     }
 
     public Pet updatePet(Pet pet, String token) {
@@ -75,12 +76,6 @@ public class PetService {
 
     }
 
-    private Address verifiedAddress(int code) {
-        Optional<Address> optionalAddress = addressRepository.findByCode(code);
-        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
-        return address;
-    }
-
     // 커뮤니티 기능 구현 전 나의 정보만 조회
 
     public Pet findPet(long id, String token) {
@@ -97,6 +92,12 @@ public class PetService {
 
         petRepository.deleteById(id);
     }
+    private Address verifiedAddress(int code) {
+        Optional<Address> optionalAddress = addressRepository.findByCode(code);
+        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
+        return address;
+    }
+
     private void verifyExistsId(String loginId) {
         Optional<Pet> pet = petRepository.findByLoginId(loginId);
 
@@ -112,7 +113,6 @@ public class PetService {
 
         return findPet;
     }
-
     private void verifiedToken(long id, String token) {
         long petId = jwtTokenProvider.getPetId(token);
 
