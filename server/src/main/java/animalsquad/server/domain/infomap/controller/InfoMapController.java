@@ -28,10 +28,17 @@ public class InfoMapController {
     private final InfoMapMapper infoMapMapper;
     private final InfoMapCommentsMapper infoMapCommentsMapper;
 
-    @GetMapping
-    public ResponseEntity getMaps(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "none") String filter) {
+    @GetMapping("/{code}")
+    public ResponseEntity getMaps(@PathVariable("code") int code,
+                                  @RequestParam(defaultValue = "none") String filter) {
 
-        List<InfoMap> infos = infoMapService.findInfos(token, filter.toUpperCase());
+        List<InfoMap> infos = infoMapService.findInfos(code, filter.toUpperCase());
+        return new ResponseEntity(infoMapMapper.infoMapsToResponseDto(infos), HttpStatus.OK);
+    }
+
+    @GetMapping("/mypick")
+    public ResponseEntity getMyPick(@RequestHeader("Authorization") String token) {
+        List<InfoMap> infos = infoMapService.findMyPicks(token);
         return new ResponseEntity(infoMapMapper.infoMapsToResponseDto(infos), HttpStatus.OK);
     }
 

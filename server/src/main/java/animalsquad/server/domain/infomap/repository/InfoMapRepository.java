@@ -10,14 +10,13 @@ import java.util.List;
 
 public interface InfoMapRepository extends JpaRepository<InfoMap, Long> {
 
-    @Query("select im from InfoMap im where im.address.id in (select a.id from Address a join Pet p on a.id = p.address.id where p.id = :petId)")
-    List<InfoMap> findInfoMaps(long petId);
+    @Query("select im from InfoMap im where im.address.code = :code")
+    List<InfoMap> findInfoMaps(int code);
 
-
-    @Query("select im from InfoMap im where im.address.id in (select a.id from Address a join Pet p on a.id = p.address.id where p.id = :petId) and im.category = :from")
-    List<InfoMap> findInfoMapsWithFilter(long petId, InfoMapCategory from);
-
-
+    @Query("select im from InfoMap im where im.address.code = :code and im.category = :from")
+    List<InfoMap> findInfoMapsWithFilter(int code, InfoMapCategory from);
+//
+//
     @Query("select im from InfoMap im join fetch PetMap pm on im.id = pm.infoMap.id where pm.pet.id = :petId")
     List<InfoMap> findInfoMapsMyPick(long petId);
 }

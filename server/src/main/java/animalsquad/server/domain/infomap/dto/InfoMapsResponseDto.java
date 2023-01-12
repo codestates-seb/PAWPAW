@@ -18,5 +18,6 @@ public class InfoMapsResponseDto {
     private BigDecimal longitude;
 
     private String category;
+    private int code;
 
 }
