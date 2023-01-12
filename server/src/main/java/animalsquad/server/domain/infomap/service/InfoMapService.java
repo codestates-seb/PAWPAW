@@ -22,28 +22,26 @@ public class InfoMapService {
     private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapRepository infoMapRepository;
 
-    public List<InfoMap> findInfos(String token,String filter) {
-
-        long petId = jwtTokenProvider.getPetId(token);
+    public List<InfoMap> findInfos(int code, String filter) {
 
         List<InfoMap> infoMaps = new ArrayList<>();
 
         switch(filter) {
-            case "NONE" : infoMaps = infoMapRepository.findInfoMaps(petId); break;
+            case "NONE" : infoMaps = infoMapRepository.findInfoMaps(code); break;
             case "PARK" : case "CAFE" : case "RESTAURANT" : case  "POOL" : case "CAMPING" : case "HOSPITAL" :
                 InfoMapCategory category = InfoMapCategory.valueOf(filter);
-                infoMaps = infoMapRepository.findInfoMapsWithFilter(petId, category);
-                break;
-            case "PICK" :
-                infoMaps = infoMapRepository.findInfoMapsMyPick(petId);
+                infoMaps = infoMapRepository.findInfoMapsWithFilter(code, category);
                 break;
             default :
                 throw new BusinessLogicException(ExceptionCode.FILTER_NAME_INCORRECT);
-
         }
-
-
         return infoMaps;
+    }
+
+    public List<InfoMap> findMyPicks(String token) {
+        long petId = jwtTokenProvider.getPetId(token);
+
+        return infoMapRepository.findInfoMapsMyPick(petId);
     }
 
     public InfoMap createMaps(InfoMap infoMap) {

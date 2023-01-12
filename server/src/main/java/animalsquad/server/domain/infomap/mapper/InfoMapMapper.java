@@ -34,6 +34,7 @@ public interface InfoMapMapper {
                     infoMapsResponseDto.setLongitude(infoMap.getLongitude());
                     infoMapsResponseDto.setLatitude(infoMap.getLatitude());
                     infoMapsResponseDto.setId(infoMap.getId());
+                    infoMapsResponseDto.setCode(infoMap.getAddress().getCode());
 
                     return infoMapsResponseDto;
                 }).collect(Collectors.toList());
