@@ -4,6 +4,7 @@ import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.repository.PetRepository;
+import animalsquad.server.global.S3.Service.FileUploadService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
 import animalsquad.server.global.exception.BusinessLogicException;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.NoSuchElementException;
@@ -30,8 +32,6 @@ public class PetService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-
-
     public Pet createPet(Pet pet) {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
@@ -41,7 +41,6 @@ public class PetService {
 
         Optional<Address> optionalAddress = addressRepository.findByCode(code);
         Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
-
         pet.setAddress(address);
 
         return petRepository.save(pet);
