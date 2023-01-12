@@ -58,12 +58,12 @@ const SignUpA = styled.a`
 `;
 
 const Login: React.FC = () => {
-  const [userId, setUserId] = useState<string>('');
+  const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
   const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setUserId((e.target as HTMLInputElement).value);
+    setId((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
   };
 
@@ -73,10 +73,10 @@ const Login: React.FC = () => {
   };
   const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (userId !== '' && password !== '') {
+    if (id !== '' && password !== '') {
       try {
         const response = await axios.post(`${url}/login`, {
-          loginId: userId,
+          loginId: id,
           password: password,
         });
         const jwtToken = response.headers.authorization as string;
@@ -87,6 +87,7 @@ const Login: React.FC = () => {
         // 지금은 map이 초기 화면 이니까
         window.location.reload();
       } catch (error) {
+        console.error('Error', error);
         alert(error);
       }
     } else {

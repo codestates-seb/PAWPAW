@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import color from '../color';
@@ -94,7 +94,7 @@ const ClosedEyeSVG = (
 const SignUp: FC = () => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [petName, setPetName] = useState<string>('');
-  const [userId, setUserId] = useState<string>('');
+  const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
   const navigate = useNavigate();
@@ -108,7 +108,7 @@ const SignUp: FC = () => {
     console.log((e.target as HTMLInputElement).value);
   };
   const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setUserId((e.target as HTMLInputElement).value);
+    setId((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
   };
   const pwHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -120,12 +120,12 @@ const SignUp: FC = () => {
     console.log((e.target as HTMLInputElement).value);
   };
   const idValidationHandler = async () => {
-    if (userId === '') {
+    if (id === '') {
       alert('아이디를 입력해야 합니다.');
     } else {
       try {
         const response = await axios.post(`${url}/pets/check`, {
-          loginId: userId,
+          loginId: id,
         });
         const value = response as unknown as boolean;
         // 타입 설정에 대해서 고민 필요
@@ -143,14 +143,14 @@ const SignUp: FC = () => {
     }
   };
   const goNextPage = () => {
-    if (userId === '') {
+    if (id === '') {
       alert('아이디를 입력해야 합니다.');
     } else if (password === '') {
       alert('비밀번호를 입력해야 합니다.');
     } else if (password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
     } else {
-      navigate('/userinfo', { state: { id: userId, password: password, petname: petName } });
+      navigate('/userinfo', { state: { id: id, password: password, petname: petName } });
     }
   };
   return (

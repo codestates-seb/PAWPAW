@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import color from '../color';
@@ -197,7 +197,7 @@ const UserInfo: FC = () => {
   const [isCat, setIsCat] = useState(true);
   const [isAge, setIsAge] = useState('0');
   const location = useLocation();
-  const userid = location.state.userid;
+  const id = location.state.id;
   const petname = location.state.petname;
   const password = location.state.password;
   console.log(isAge);
@@ -209,12 +209,14 @@ const UserInfo: FC = () => {
   const navigate = useNavigate();
   console.log(isMale);
   const submitHandler = async () => {
-    if (isAge === '' || isMale === '' || userid === '' || password === '') {
-      alert('회원가입 실패 빈 칸이 없어야 합니다.');
+    if (isAge === '') {
+      alert('나이가 입력 되어야 합니다.');
+    } else if (isMale === '' || id === '' || password === '') {
+      alert('입력되지 않은 값이 있습니다.');
     } else {
       try {
         await axios.post(`${url}/signup`, {
-          loginId: userid,
+          loginId: id,
           password: password,
           petname: petname,
           age: isAge,
