@@ -60,12 +60,12 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public Jws<Claims> getClaims(String accessToken) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(accessToken);
-    }
+//    public Jws<Claims> getClaims(String accessToken) {
+//        return Jwts.parserBuilder()
+//                .setSigningKey(key)
+//                .build()
+//                .parseClaimsJws(accessToken);
+//    }
 
 
     public Authentication getAuthentication(String accessToken) {
@@ -128,7 +128,8 @@ public class JwtTokenProvider {
 
     public long getPetId(String token) {
         token = resolveToken(token);
-        Claims body = getClaims(token).getBody();
+//        Claims body = getClaims(token).getBody();
+        Claims body = parseClaims(token);
         return Long.parseLong(String.valueOf(body.get("petId")));
     }
 
