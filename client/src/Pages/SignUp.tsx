@@ -6,7 +6,7 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 
-const { ivory, brown, darkbrown } = color;
+const { ivory, brown } = color;
 
 // 전체 화면
 const Container = styled.div`
@@ -90,8 +90,28 @@ const ClosedEyeSVG = (
 );
 
 const SignUp: FC = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  console.log(passwordVisible);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [petName, setPetName] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+
+  const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPetName((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setUserId((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const pwHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPassword((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const pwconfirmHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPasswordConfirm((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
   return (
     <Container>
       <Background />
@@ -108,9 +128,14 @@ const SignUp: FC = () => {
           <TextDiv>회원가입</TextDiv>
 
           <InputDiv>
-            <Input type='text' placeholder='반려동물 이름' />
+            <Input type='text' placeholder='반려동물 이름' onChange={petNameHandler} />
             <IdDiv>
-              <Input type='text' placeholder='아이디' paddingRight='60px' />
+              <Input
+                type='text'
+                placeholder='아이디'
+                paddingRight='60px'
+                onChange={userIdHandler}
+              />
               <ConfirmSpan>중복확인</ConfirmSpan>
             </IdDiv>
 
@@ -119,6 +144,7 @@ const SignUp: FC = () => {
                 type={passwordVisible ? 'text' : 'password'}
                 placeholder='비밀번호'
                 paddingRight='35px'
+                onChange={pwHandler}
               />
               <SvgSpan onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? OpenedEyeSVG : ClosedEyeSVG}
@@ -129,6 +155,7 @@ const SignUp: FC = () => {
                 type={passwordVisible ? 'text' : 'password'}
                 placeholder='비밀번호 확인'
                 paddingRight='35px'
+                onChange={pwconfirmHandler}
               />
               <SvgSpan onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? OpenedEyeSVG : ClosedEyeSVG}

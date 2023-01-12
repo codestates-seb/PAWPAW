@@ -73,7 +73,7 @@ const Login: React.FC = () => {
   };
   const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (userId !== '' || password !== '') {
+    if (userId !== '' && password !== '') {
       try {
         const response = await axios.post(`${url}/login`, {
           loginId: userId,
