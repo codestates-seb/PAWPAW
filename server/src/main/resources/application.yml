@@ -6,12 +6,16 @@ spring:
     port: 6379
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 10
 logging.level:
+  com:
+    amazonaws:
+      util:
+        EC2MetadataUtils: error
   org.hibernate.SQL: debug
 
 cloud:

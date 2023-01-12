@@ -10,12 +10,15 @@ import animalsquad.server.domain.infomap.mapper.InfoMapCommentsMapper;
 import animalsquad.server.domain.infomap.mapper.InfoMapMapper;
 import animalsquad.server.domain.infomap.service.InfoMapCommentService;
 import animalsquad.server.domain.infomap.service.InfoMapService;
+import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -27,6 +30,7 @@ public class InfoMapController {
     private final InfoMapCommentService infoMapCommentService;
     private final InfoMapMapper infoMapMapper;
     private final InfoMapCommentsMapper infoMapCommentsMapper;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/{code}")
     public ResponseEntity getMaps(@PathVariable("code") int code,
@@ -44,7 +48,7 @@ public class InfoMapController {
 
     //테스트용 post
     @PostMapping
-    public ResponseEntity postMaps(@RequestBody InfoMapPostDto infoMapPostDto) {
+    public ResponseEntity postMaps(InfoMapPostDto infoMapPostDto) {
         InfoMap infoMap = infoMapMapper.postDtoToInfoMap(infoMapPostDto);
 
         infoMapService.createMaps(infoMap);
@@ -76,5 +80,18 @@ public class InfoMapController {
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/details/{info-map-id}")
+    public ResponseEntity getInfoMapDetails(@PathVariable("info-map-id") long infoMapId,
+                                            @Positive @RequestParam(defaultValue = "1") int page,
+                                            @Positive @RequestParam(defaultValue = "15") int size,
+                                            @RequestHeader("Authorization") String token) {
+        InfoMap infoMap = infoMapService.findMapDetails(infoMapId);
+        long petId = jwtTokenProvider.getPetId(token);
+        Page<InfoMapComment> pagedComment = infoMapCommentService.findAllWithInfoMapId(page - 1, size, infoMapId);
+
+        return new ResponseEntity<>(infoMapMapper.infoMapsToDetailsResponseDto(infoMap,pagedComment,petId),HttpStatus.OK);
+    }
+
 
 }
