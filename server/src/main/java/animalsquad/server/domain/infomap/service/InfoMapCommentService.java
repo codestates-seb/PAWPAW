@@ -5,10 +5,12 @@ import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.infomap.repository.InfoMapCommentRepository;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.service.PetService;
-import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,21 +21,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InfoMapCommentService {
 
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapCommentRepository infoMapCommentRepository;
     private final InfoMapService infoMapService;
     private final PetService petService;
 
 
-    public InfoMapComment createComment(InfoMapComment infoMapComment, String token) {
+    public InfoMapComment createComment(InfoMapComment infoMapComment, long petId) {
 
-        long petId = jwtTokenProvider.getPetId(token);
+//        long petId = jwtTokenProvider.getPetId(token);
         if (petId != infoMapComment.getPet().getId()) {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(infoMapComment.getInfoMap().getId());
-        Pet pet = petService.findPet(infoMapComment.getPet().getId(), token);
+        Pet pet = petService.findPet(infoMapComment.getPet().getId());
 
         infoMapComment.setPet(pet);
         infoMapComment.setInfoMap(infoMap);
@@ -41,8 +43,8 @@ public class InfoMapCommentService {
         return infoMapCommentRepository.save(infoMapComment);
     }
 
-    public InfoMapComment updateComment(InfoMapComment infoMapComment, String token) {
-        long petId = jwtTokenProvider.getPetId(token);
+    public InfoMapComment updateComment(InfoMapComment infoMapComment, long petId) {
+//        long petId = jwtTokenProvider.getPetId(token);
 
         if (petId != infoMapComment.getPet().getId()) {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
@@ -61,9 +63,7 @@ public class InfoMapCommentService {
         return findComment;
     }
 
-    public void deleteComment(long id, String token) {
-        long petId = jwtTokenProvider.getPetId(token);
-
+    public void deleteComment(long id, long petId) {
         InfoMapComment findComment = findVerifiedComment(id);
 
         if (petId != findComment.getPet().getId()) {
@@ -71,6 +71,10 @@ public class InfoMapCommentService {
         }
 
         infoMapCommentRepository.deleteById(id);
+    }
+
+    public Page<InfoMapComment> findAllWithInfoMapId(int page, int size, long infoMapId) {
+        return infoMapCommentRepository.findAllByInfoMap_Id(PageRequest.of(page,size, Sort.by("id")),infoMapId);
     }
 
     public InfoMapComment findVerifiedComment(long id) {

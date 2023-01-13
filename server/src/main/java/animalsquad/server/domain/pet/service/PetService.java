@@ -46,17 +46,10 @@ public class PetService {
         Address address = verifiedAddress(code);
         pet.setAddress(address);
 
-        String imageUrl = fileUploadService.uploadImage(file);
-        pet.setProfileImage(imageUrl);
-
         return petRepository.save(pet);
     }
-    // id 중복 검사
-    public boolean checkLoginId(String loginId) {
-        return petRepository.existsByLoginId(loginId);
-    }
 
-    public Pet updatePet(Pet pet, String token,MultipartFile file) {
+    public Pet updatePet(Pet pet, String token) {
         Pet findPet = findVerifiedPet(pet.getId());
 
         verifiedToken(pet.getId(), token);
@@ -72,8 +65,6 @@ public class PetService {
         Optional.ofNullable(pet.getProfileImage())
                 .ifPresent(profileImage -> findPet.setProfileImage(profileImage));
 
-//        file.isEmpty()
-
         Optional.ofNullable(pet.getAddress().getCode())
                 .ifPresent(code -> {
                     Address address = verifiedAddress(code);
@@ -82,34 +73,36 @@ public class PetService {
 
         Pet savedPet = petRepository.save(findPet);
 
-        //TODO: 이미지 수정 로직 추가
-        // 수정할 이미지 파일이 있다면? s3에 저장되어 있던 이미지 삭제 후, 이미지 등록 -> pet에 저장되어 있는 프로필이미지 url 바꾸어서 세팅
         return savedPet;
 
     }
 
-    // 커뮤니티 기능 구현 전 나의 정보만 조회
-    public Pet findPet(long id, String token) {
-        verifiedToken(id, token);
-
-        return findVerifiedPet(id);
-    }
-    // redis 설정 시 refreshToken 삭제 추가
-    public void deletePet(long id, String token) {
-        findVerifiedPet(id);
-
-        verifiedToken(id, token);
-
-//        redisTemplate.delete();
-//        S3에 저장된 이미지 파일 삭제
-        petRepository.deleteById(id);
-    }
     private Address verifiedAddress(int code) {
         Optional<Address> optionalAddress = addressRepository.findByCode(code);
         Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
         return address;
     }
 
+    // 커뮤니티 기능 구현 전 나의 정보만 조회
+
+    public Pet findPet(long id) {
+        return findVerifiedPet(id);
+    }
+
+    public Pet findPet(long id, String token) {
+        verifiedToken(id, token);
+
+        return findVerifiedPet(id);
+    }
+    // redis 설정 시 refreshToken 삭제 추가
+
+    public void deletePet(long id, String token) {
+        findVerifiedPet(id);
+
+        verifiedToken(id, token);
+
+        petRepository.deleteById(id);
+    }
     private void verifyExistsId(String loginId) {
         Optional<Pet> pet = petRepository.findByLoginId(loginId);
 
@@ -125,6 +118,7 @@ public class PetService {
 
         return findPet;
     }
+
     private void verifiedToken(long id, String token) {
         long petId = jwtTokenProvider.getPetId(token);
 

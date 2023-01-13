@@ -30,6 +30,14 @@ public class InfoMap extends Auditable {
     @Enumerated(EnumType.STRING)
     private InfoMapCategory category;
 
+    @Column(name = "IMAGEURL")
+    private String imageUrl;
+
+    private String mapAddress;
+    private String operationTime;
+    private String tel;
+    private String homepage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
