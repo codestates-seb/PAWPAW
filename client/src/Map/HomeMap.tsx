@@ -1,5 +1,5 @@
 import MapFilter from './MapFilter';
-import React from 'react';
+import React, { useState } from 'react';
 import color from '../color';
 import styled from 'styled-components';
 import { Map } from 'react-kakao-maps-sdk';
@@ -29,9 +29,23 @@ export interface IProps {
     lat: number;
     lng: number;
   };
+  filter: {
+    selected: string;
+    setSelected: (classname: string) => void;
+  };
 }
 
 function HomeMap() {
+  const [selected, setSelected] = useState<string>('all');
+  let filteredData;
+
+  // selected === 'all'인 경우, 모든 데이터를 보여준다.
+  if (selected === 'all') {
+    filteredData = data;
+    // 그 외의 경우, selected와 일치하는 tag만 보여준다.
+  } else {
+    filteredData = data.filter((el) => el.tag === selected);
+  }
   return (
     <Container>
       <Header />
@@ -41,11 +55,11 @@ function HomeMap() {
         style={{ width: '100%', height: '100%' }}
         level={6}
       >
-        {data.map((el, idx) => {
+        {filteredData.map((el, idx) => {
           return <Marker key={idx} {...el} />;
         })}
       </Map>
-      <MapFilter />
+      <MapFilter selected={selected} setSelected={setSelected} />
     </Container>
   );
 }
