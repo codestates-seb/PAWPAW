@@ -11,10 +11,13 @@ import animalsquad.server.domain.infomap.mapper.InfoMapMapper;
 import animalsquad.server.domain.infomap.service.InfoMapCommentService;
 import animalsquad.server.domain.infomap.service.InfoMapService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
+import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,8 +44,9 @@ public class InfoMapController {
     }
 
     @GetMapping("/mypick")
-    public ResponseEntity getMyPick(@RequestHeader("Authorization") String token) {
-        List<InfoMap> infos = infoMapService.findMyPicks(token);
+    public ResponseEntity getMyPick(@AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+        long id = principal.getId();
+        List<InfoMap> infos = infoMapService.findMyPicks(id);
         return new ResponseEntity(infoMapMapper.infoMapsToResponseDto(infos), HttpStatus.OK);
     }
 
@@ -58,25 +62,29 @@ public class InfoMapController {
 
     @PostMapping("/review")
     public ResponseEntity postContent(@RequestBody @Valid InfoMapCommentPostDto infoMapCommentPostDto,
-                                      @RequestHeader("Authorization") String token) {
-        InfoMapComment comment = infoMapCommentService.createComment(infoMapCommentsMapper.infoMapCommentPostToInfoMap(infoMapCommentPostDto), token);
+                                      @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+        long petId = principal.getId();
+        InfoMapComment comment = infoMapCommentService.createComment(infoMapCommentsMapper.infoMapCommentPostToInfoMap(infoMapCommentPostDto), petId);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PatchMapping("/review/{review-id}")
     public ResponseEntity patchContent(@RequestBody @Valid InfoMapCommentPatchDto infoMapCommentPatchDto,
-                                       @RequestHeader("Authorization") String token,
+                                       @AuthenticationPrincipal PetDetailsService.PetDetails principal,
                                        @PathVariable("review-id") long commentId) {
         infoMapCommentPatchDto.setCommentId(commentId);
-        InfoMapComment infoMapComment1 = infoMapCommentService.updateComment(infoMapCommentsMapper.infoMapCommentPatchToInfoMap(infoMapCommentPatchDto), token);
+        long petId = principal.getId();
+        InfoMapComment infoMapComment1 = infoMapCommentService.updateComment(infoMapCommentsMapper.infoMapCommentPatchToInfoMap(infoMapCommentPatchDto), petId);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/review/{review-id}")
-    public ResponseEntity deleteContent(@PathVariable("review-id") long commentId, @RequestHeader("Authorization") String token) {
-        infoMapCommentService.deleteComment(commentId, token);
+    public ResponseEntity deleteContent(@PathVariable("review-id") long commentId,
+                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+        long petId = principal.getId();
+        infoMapCommentService.deleteComment(commentId, petId);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -85,9 +93,9 @@ public class InfoMapController {
     public ResponseEntity getInfoMapDetails(@PathVariable("info-map-id") long infoMapId,
                                             @Positive @RequestParam(defaultValue = "1") int page,
                                             @Positive @RequestParam(defaultValue = "15") int size,
-                                            @RequestHeader("Authorization") String token) {
+                                            @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         InfoMap infoMap = infoMapService.findMapDetails(infoMapId);
-        long petId = jwtTokenProvider.getPetId(token);
+        long petId = principal.getId();
         Page<InfoMapComment> pagedComment = infoMapCommentService.findAllWithInfoMapId(page - 1, size, infoMapId);
 
         return new ResponseEntity<>(infoMapMapper.infoMapsToDetailsResponseDto(infoMap,pagedComment,petId),HttpStatus.OK);
