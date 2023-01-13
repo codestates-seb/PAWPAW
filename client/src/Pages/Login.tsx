@@ -8,7 +8,7 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 import axios from 'axios';
 const { brown } = color;
-const url = 'https://6936-124-57-120-82.jp.ngrok.io';
+const url = '';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
