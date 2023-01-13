@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -192,7 +192,7 @@ const YellowPlusSVG = (
   </svg>
 );
 
-const UserInfo: FC = () => {
+const UserInfo: React.FC = () => {
   const [isMale, setIsMale] = useState<string>('male');
   const [isCat, setIsCat] = useState(true);
   const [isAge, setIsAge] = useState('0');
@@ -206,31 +206,48 @@ const UserInfo: FC = () => {
     console.log((e.target as HTMLInputElement).value);
   };
 
+  // const uploadHandler = (e) => {
+  //   e.preventDefault();
+  //   const file = e.target.files[0];
+  //   setFiles([...file, { uploadedFile: file }]);
+  // };
+
   const navigate = useNavigate();
   console.log(isMale);
   const submitHandler = async () => {
+    // const jwtToken = localStorage.getItem('Authorization');
+    // const refreshToken = localStorage.getItem('Refresh');
+    const body = {
+      loginId: id,
+      password: password,
+      petname: petname,
+      age: isAge,
+      gender: isMale,
+      address: '',
+      profileImage: '',
+    };
     if (isAge === '') {
       alert('나이가 입력 되어야 합니다.');
     } else if (isMale === '' || id === '' || password === '') {
       alert('입력되지 않은 값이 있습니다.');
     } else {
       try {
-        await axios.post(`${url}/signup`, {
-          loginId: id,
-          password: password,
-          petname: petname,
-          age: isAge,
-          gender: isMale,
-          address: '',
-          profileImage: '',
-        });
+        await axios.post(`${url}/signup`, body);
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
+        console.error('Error', error);
         alert(error);
       }
     }
   };
+  // const state = {
+  //   file: null,
+  // }
+  // const handleFile = (e)=>{
+  //   const file = e.target.files[0]
+  //   this.setState({file:file})
+  // }
   return (
     <Container>
       <Background />
@@ -268,6 +285,12 @@ const UserInfo: FC = () => {
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
+              <input
+                type='file'
+                name='photo'
+                accept='image/*,audio/*,video/mp4,video/x-m4v,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,.csv'
+                // onChange={uploadHandler}
+              />
               <ButtonDiv>
                 <Button text='회원가입' onClick={submitHandler} />
               </ButtonDiv>

@@ -73,12 +73,13 @@ const Login: React.FC = () => {
   };
   const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const body = {
+      loginId: id,
+      password: password,
+    };
     if (id !== '' && password !== '') {
       try {
-        const response = await axios.post(`${url}/login`, {
-          loginId: id,
-          password: password,
-        });
+        const response = await axios.post(`${url}/login`, body);
         const jwtToken = response.headers.authorization as string;
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
