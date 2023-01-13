@@ -24,67 +24,57 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
       <FlexBox>
         <div className='flex'>
           <div className='one'>
-              <ModalInfoDiv>
-                <img className='img' src={ModalSample} />
-                <ModalInfoTitleBox>
-                  <ModalInfoTitle>{title}</ModalInfoTitle>
-                  <ModalInfoSubTitle>공원</ModalInfoSubTitle>
-                  <ModalBookmarkButton onClick={bookmarkeHandler}>
-                    {bookmark === false ? (
-                      <Icon
-                        icon='ic:round-star-outline'
-                        color={brown}
-                        style={{ fontSize: '30px' }}
-                      />
-                    ) : (
-                      <Icon icon='ic:round-star' color={coral} style={{ fontSize: '30px' }} />
-                    )}
-                  </ModalBookmarkButton>
-                </ModalInfoTitleBox>
-                <ModalInfoContentBox>
-                  <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-                  <ModalInfoContent>서울 종로구 숭인동 58-149</ModalInfoContent>
-                </ModalInfoContentBox>
-                <ModalInfoContentBox>
-                  <Icon
-                    icon='ic:round-access-time-filled'
-                    color={brown}
-                    style={{ fontSize: '30px' }}
-                  />
-                  <ModalInfoContent>이용 시간을 알려주세요.</ModalInfoContent>
-                </ModalInfoContentBox>
-                <ModalInfoContentBox>
-                  <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-                  <ModalInfoContent>02-0000-0000</ModalInfoContent>
-                </ModalInfoContentBox>
-                <ModalInfoContentBox>
-                  <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-                  <ModalInfoContent>https://seoulpark.com</ModalInfoContent>
-                </ModalInfoContentBox>
-              </ModalInfoDiv>
-              <ModalReviewBox>
-                <ModalReviewTitle>리뷰</ModalReviewTitle>
-                <ModalReview>
-                  <ModalReviewUserBox>
-                    <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                    <ModalReviewUserName>유저 이름</ModalReviewUserName>
-                  </ModalReviewUserBox>
-                  <ModalReviewTextBox>
-                    <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
-                    <ModalReviewDate>2023-01-10</ModalReviewDate>
-                  </ModalReviewTextBox>
-                </ModalReview>
-                <ModalReview>
-                  <ModalReviewUserBox>
-                    <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                    <ModalReviewUserName>유저 이름</ModalReviewUserName>
-                  </ModalReviewUserBox>
-                  <ModalReviewTextBox>
-                    <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
-                    <ModalReviewDate>2023-01-10</ModalReviewDate>
-                  </ModalReviewTextBox>
-                </ModalReview>
-              </ModalReviewBox>
+            <ModalInfoDiv>
+              <img className='img' src={ModalSample} />
+              <ModalInfoTitleBox>
+                <ModalInfoTitle>{title}</ModalInfoTitle>
+                <ModalInfoSubTitle>공원</ModalInfoSubTitle>
+                <ModalBookmarkButton onClick={bookmarkeHandler}>
+                  {bookmark === false ? (
+                    <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
+                  ) : (
+                    <Icon icon='ic:round-star' color={coral} style={{ fontSize: '30px' }} />
+                  )}
+                </ModalBookmarkButton>
+              </ModalInfoTitleBox>
+              <ModalInfoContentBox>
+                <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
+                <ModalInfoContent>서울 종로구 숭인동 58-149</ModalInfoContent>
+              </ModalInfoContentBox>
+              <ModalInfoContentBox>
+                <Icon
+                  icon='ic:round-access-time-filled'
+                  color={brown}
+                  style={{ fontSize: '30px' }}
+                />
+                <ModalInfoContent>이용 시간을 알려주세요.</ModalInfoContent>
+              </ModalInfoContentBox>
+              <ModalInfoContentBox>
+                <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
+                <ModalInfoContent>02-0000-0000</ModalInfoContent>
+              </ModalInfoContentBox>
+              <ModalInfoContentBox>
+                <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
+                <ModalInfoContent>https://seoulpark.com</ModalInfoContent>
+              </ModalInfoContentBox>
+            </ModalInfoDiv>
+            <ModalReviewBox>
+              <ModalReviewTitle>리뷰</ModalReviewTitle>
+              {dummydata.map((el, idx) => {
+                return (
+                  <ModalReview key={idx}>
+                    <ModalReviewUserBox>
+                      <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+                      <ModalReviewUserName>{el.username}</ModalReviewUserName>
+                    </ModalReviewUserBox>
+                    <ModalReviewTextBox>
+                      <ModalReviewText>{el.content}</ModalReviewText>
+                      <ModalReviewDate>{el.date}</ModalReviewDate>
+                    </ModalReviewTextBox>
+                  </ModalReview>
+                );
+              })}
+            </ModalReviewBox>
           </div>
           <ModalReviewWrite>
             <ModalReviewUserBox>
@@ -308,5 +298,18 @@ const ModalReviewWrite = styled.div`
   background-color: white;
   margin-bottom: 35px;
 `;
+
+const dummydata = [
+  {
+    username: '까미',
+    content: '즐거워요',
+    date: '2023-01-10',
+  },
+  {
+    username: '콩이',
+    content: '아이들이 즐거워해요',
+    date: '2023-01-10',
+  },
+];
 
 export default Modal;
