@@ -22,82 +22,71 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   return (
     <Container onClick={(e) => e.stopPropagation()}>
       <FlexBox>
-        <div>
-          <ModalInfoDiv>
-            <img className='img' src={ModalSample} />
-            <ModalInfoTitleBox>
-              <ModalInfoTitle>{title}</ModalInfoTitle>
-              <ModalInfoSubTitle>공원</ModalInfoSubTitle>
-              <ModalBookmarkButton onClick={bookmarkeHandler}>
-                {bookmark === false ? (
-                  <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
-                ) : (
-                  <Icon icon='ic:round-star' color={coral} style={{ fontSize: '30px' }} />
-                )}
-              </ModalBookmarkButton>
-            </ModalInfoTitleBox>
-            <ModalInfoContentBox>
-              <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-              <ModalInfoContent>서울 종로구 숭인동 58-149</ModalInfoContent>
-            </ModalInfoContentBox>
-            <ModalInfoContentBox>
-              <Icon icon='ic:round-access-time-filled' color={brown} style={{ fontSize: '30px' }} />
-              <ModalInfoContent>이용 시간을 알려주세요.</ModalInfoContent>
-            </ModalInfoContentBox>
-            <ModalInfoContentBox>
-              <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-              <ModalInfoContent>02-0000-0000</ModalInfoContent>
-            </ModalInfoContentBox>
-            <ModalInfoContentBox>
-              <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-              <ModalInfoContent>https://seoulpark.com</ModalInfoContent>
-            </ModalInfoContentBox>
-          </ModalInfoDiv>
-          <ModalReviewBox>
-            <ModalReviewTitle>리뷰</ModalReviewTitle>
-            <ModalReview>
-              <ModalReviewUserBox>
-                <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                <ModalReviewUserName>유저 이름</ModalReviewUserName>
-              </ModalReviewUserBox>
-              <ModalReviewTextBox>
-                <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
-                <ModalReviewDate>2023-01-10</ModalReviewDate>
-              </ModalReviewTextBox>
-            </ModalReview>
-            <ModalReview>
-              <ModalReviewUserBox>
-                <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                <ModalReviewUserName>유저 이름</ModalReviewUserName>
-              </ModalReviewUserBox>
-              <ModalReviewTextBox>
-                <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
-                <ModalReviewDate>2023-01-10</ModalReviewDate>
-              </ModalReviewTextBox>
-            </ModalReview>
-            <ModalReview>
-              <ModalReviewUserBox>
-                <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                <ModalReviewUserName>유저 이름</ModalReviewUserName>
-              </ModalReviewUserBox>
-              <ModalReviewTextBox>
-                <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
-                <ModalReviewDate>2023-01-10</ModalReviewDate>
-              </ModalReviewTextBox>
-            </ModalReview>
-            <ModalReview>
-              <ModalReviewUserBox>
-                <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                <ModalReviewUserName>유저 이름</ModalReviewUserName>
-              </ModalReviewUserBox>
-              <ModalReviewTextBox>
-                <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
-                <ModalReviewDate>2023-01-10</ModalReviewDate>
-              </ModalReviewTextBox>
-            </ModalReview>
-          </ModalReviewBox>
-
-          <ModalReview>
+        <div className='flex'>
+          <div className='one'>
+              <ModalInfoDiv>
+                <img className='img' src={ModalSample} />
+                <ModalInfoTitleBox>
+                  <ModalInfoTitle>{title}</ModalInfoTitle>
+                  <ModalInfoSubTitle>공원</ModalInfoSubTitle>
+                  <ModalBookmarkButton onClick={bookmarkeHandler}>
+                    {bookmark === false ? (
+                      <Icon
+                        icon='ic:round-star-outline'
+                        color={brown}
+                        style={{ fontSize: '30px' }}
+                      />
+                    ) : (
+                      <Icon icon='ic:round-star' color={coral} style={{ fontSize: '30px' }} />
+                    )}
+                  </ModalBookmarkButton>
+                </ModalInfoTitleBox>
+                <ModalInfoContentBox>
+                  <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
+                  <ModalInfoContent>서울 종로구 숭인동 58-149</ModalInfoContent>
+                </ModalInfoContentBox>
+                <ModalInfoContentBox>
+                  <Icon
+                    icon='ic:round-access-time-filled'
+                    color={brown}
+                    style={{ fontSize: '30px' }}
+                  />
+                  <ModalInfoContent>이용 시간을 알려주세요.</ModalInfoContent>
+                </ModalInfoContentBox>
+                <ModalInfoContentBox>
+                  <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
+                  <ModalInfoContent>02-0000-0000</ModalInfoContent>
+                </ModalInfoContentBox>
+                <ModalInfoContentBox>
+                  <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
+                  <ModalInfoContent>https://seoulpark.com</ModalInfoContent>
+                </ModalInfoContentBox>
+              </ModalInfoDiv>
+              <ModalReviewBox>
+                <ModalReviewTitle>리뷰</ModalReviewTitle>
+                <ModalReview>
+                  <ModalReviewUserBox>
+                    <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+                    <ModalReviewUserName>유저 이름</ModalReviewUserName>
+                  </ModalReviewUserBox>
+                  <ModalReviewTextBox>
+                    <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
+                    <ModalReviewDate>2023-01-10</ModalReviewDate>
+                  </ModalReviewTextBox>
+                </ModalReview>
+                <ModalReview>
+                  <ModalReviewUserBox>
+                    <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+                    <ModalReviewUserName>유저 이름</ModalReviewUserName>
+                  </ModalReviewUserBox>
+                  <ModalReviewTextBox>
+                    <ModalReviewText>좋아요!!!!!!!!!!!!!!!!!!!!</ModalReviewText>
+                    <ModalReviewDate>2023-01-10</ModalReviewDate>
+                  </ModalReviewTextBox>
+                </ModalReview>
+              </ModalReviewBox>
+          </div>
+          <ModalReviewWrite>
             <ModalReviewUserBox>
               <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
               <ModalReviewUserName>유저 이름</ModalReviewUserName>
@@ -108,7 +97,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
               </ModalReviewInputBox>
               <ModalReviewButton>작성</ModalReviewButton>
             </ModalReviewInputTextBox>
-          </ModalReview>
+          </ModalReviewWrite>
         </div>
         <ModalCloseBox onClick={selectHandler}>
           <Icon
@@ -130,7 +119,6 @@ const Container = styled.div`
   z-index: 100;
   box-shadow: rgba(149, 157, 165, 0.8) 14px 0px 14px -14px;
   overflow-y: scroll;
-  overflow-x: hidden;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -141,6 +129,16 @@ const Container = styled.div`
   }
   .img {
     border-bottom: 1px solid ${bordergrey};
+  }
+  .flex {
+    display: flex;
+    justify-content: column;
+    flex-direction: column;
+    height: 100vh;
+    background-color: ${ivory};
+  }
+  .one {
+    flex: 1;
   }
 `;
 
@@ -198,7 +196,6 @@ const ModalInfoContent = styled.div`
   margin-left: 10px;
 `;
 const ModalReviewBox = styled.div`
-  height: auto;
   background-color: white;
 `;
 const ModalReview = styled.div`
@@ -302,6 +299,14 @@ const ModalCloseBox = styled.div`
   .close {
     cursor: pointer;
   }
+`;
+
+const ModalReviewWrite = styled.div`
+  width: 100%;
+  height: 90px;
+  display: flex;
+  background-color: white;
+  margin-bottom: 35px;
 `;
 
 export default Modal;
