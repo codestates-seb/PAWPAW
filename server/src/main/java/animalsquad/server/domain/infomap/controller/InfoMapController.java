@@ -52,10 +52,10 @@ public class InfoMapController {
 
     //테스트용 post
     @PostMapping
-    public ResponseEntity postMaps(InfoMapPostDto infoMapPostDto) {
+    public ResponseEntity postMaps(InfoMapPostDto infoMapPostDto) throws IllegalAccessException {
         InfoMap infoMap = infoMapMapper.postDtoToInfoMap(infoMapPostDto);
 
-        infoMapService.createMaps(infoMap);
+        infoMapService.createMaps(infoMap,infoMapPostDto.getFile());
 
         return new ResponseEntity(HttpStatus.OK);
     }

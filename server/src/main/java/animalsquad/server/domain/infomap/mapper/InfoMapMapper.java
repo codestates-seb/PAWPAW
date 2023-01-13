@@ -25,7 +25,7 @@ public interface InfoMapMapper {
 
         infoMap.setCategory(infoMapPostDto.getCategory());
         infoMap.setHomepage(infoMapPostDto.getHomepage());
-        infoMap.setImageUrl(infoMapPostDto.getImageUrl());
+//        infoMap.setImageUrl(infoMapPostDto.getImageUrl());
         infoMap.setLatitude(infoMapPostDto.getLatitude());
         infoMap.setLongitude(infoMapPostDto.getLongitude());
         infoMap.setMapAddress(infoMapPostDto.getMapAddress());

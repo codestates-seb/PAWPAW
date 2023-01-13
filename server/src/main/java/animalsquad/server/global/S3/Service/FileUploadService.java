@@ -31,7 +31,8 @@ public class FileUploadService {
 
     //기존 확장자명을 유지한 채, 유니크한 파일의 이름을 생성하는 로직
     private String createFileName(String originalFileName) throws IllegalAccessException {
-        return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
+        return UUID.randomUUID() + "." + getFileExtension(originalFileName);
+//        return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
     }
 
     //파일의 확장자명을 가져오는 로직

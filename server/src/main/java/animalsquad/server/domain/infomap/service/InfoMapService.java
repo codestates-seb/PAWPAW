@@ -1,13 +1,17 @@
 package animalsquad.server.domain.infomap.service;
 
+import animalsquad.server.domain.address.entity.Address;
+import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.infomap.entity.InfoMapCategory;
 import animalsquad.server.domain.infomap.repository.InfoMapRepository;
+import animalsquad.server.global.S3.Service.FileUploadService;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,8 @@ public class InfoMapService {
 
 //    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapRepository infoMapRepository;
+    private final AddressRepository addressRepository;
+    private final FileUploadService fileUploadService;
 
     public List<InfoMap> findInfos(int code, String filter) {
 
@@ -44,7 +50,16 @@ public class InfoMapService {
         return findVerifiedInfoMap(infoMapId);
     }
 
-    public InfoMap createMaps(InfoMap infoMap) {
+    public InfoMap createMaps(InfoMap infoMap, MultipartFile file) throws IllegalAccessException {
+        Optional<Address> optionalAddress = addressRepository.findById(infoMap.getAddress().getId());
+        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
+
+        infoMap.setAddress(address);
+
+        String imageUrl = fileUploadService.uploadImage(file);
+
+        infoMap.setImageUrl(imageUrl);
+
         return infoMapRepository.save(infoMap);
     }
 
