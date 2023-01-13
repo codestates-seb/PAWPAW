@@ -8,7 +8,7 @@ import { CProps } from '../Map/Marker';
 
 const { ivory, lightgrey, brown, bordergrey, coral } = color;
 
-const Modal = ({click, setClick}: CProps['clicks']) => {
+const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   const [bookmark, setBookmark] = useState<boolean>(false);
 
   const bookmarkeHandler = () => {
@@ -26,7 +26,7 @@ const Modal = ({click, setClick}: CProps['clicks']) => {
           <ModalInfoDiv>
             <img className='img' src={ModalSample} />
             <ModalInfoTitleBox>
-              <ModalInfoTitle>맑은 공기 공원</ModalInfoTitle>
+              <ModalInfoTitle>{title}</ModalInfoTitle>
               <ModalInfoSubTitle>공원</ModalInfoSubTitle>
               <ModalBookmarkButton onClick={bookmarkeHandler}>
                 {bookmark === false ? (
@@ -95,19 +95,20 @@ const Modal = ({click, setClick}: CProps['clicks']) => {
                 <ModalReviewDate>2023-01-10</ModalReviewDate>
               </ModalReviewTextBox>
             </ModalReview>
-            <ModalReview>
-              <ModalReviewUserBox>
-                <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
-                <ModalReviewUserName>유저 이름</ModalReviewUserName>
-              </ModalReviewUserBox>
-              <ModalReviewInputTextBox>
-                <ModalReviewInputBox>
-                  <ModalReviewInput type='text' placeholder='이 공간이 어땠나요?' />
-                </ModalReviewInputBox>
-                <ModalReviewButton>작성</ModalReviewButton>
-              </ModalReviewInputTextBox>
-            </ModalReview>
           </ModalReviewBox>
+
+          <ModalReview>
+            <ModalReviewUserBox>
+              <ModalReviewUserImg src={UserImg1}></ModalReviewUserImg>
+              <ModalReviewUserName>유저 이름</ModalReviewUserName>
+            </ModalReviewUserBox>
+            <ModalReviewInputTextBox>
+              <ModalReviewInputBox>
+                <ModalReviewInput type='text' placeholder='이 공간이 어땠나요?' />
+              </ModalReviewInputBox>
+              <ModalReviewButton>작성</ModalReviewButton>
+            </ModalReviewInputTextBox>
+          </ModalReview>
         </div>
         <ModalCloseBox onClick={selectHandler}>
           <Icon
@@ -205,6 +206,7 @@ const ModalReview = styled.div`
   height: 90px;
   display: flex;
   border-bottom: 1px solid ${bordergrey};
+  background-color: white;
 `;
 const ModalReviewTitle = styled.div`
   color: ${brown};
@@ -290,12 +292,12 @@ const ModalReviewInputTextBox = styled.div`
 `;
 
 const ModalCloseBox = styled.div`
-margin: auto;
-opacity: 0.8;
-.close {
-  cursor: pointer;
-  margin-left: 10px;
-}
+  margin: auto;
+  opacity: 0.8;
+  .close {
+    cursor: pointer;
+    margin-left: 10px;
+  }
 `;
 
 export default Modal;

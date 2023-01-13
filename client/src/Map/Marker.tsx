@@ -19,6 +19,7 @@ export interface CProps {
   clicks: {
     click: boolean;
     setClick: (classname: boolean) => void;
+    title: string;
   };
 }
 
@@ -27,7 +28,7 @@ const Marker = (detail: IProps['detail']) => {
   const data = [click, setClick];
 
   const selectHandler = () => {
-    setClick(!click);
+      setClick(!click);
   };
 
   function renderSwitch(param: any) {
@@ -61,7 +62,7 @@ const Marker = (detail: IProps['detail']) => {
           <ParkName>{detail.title}</ParkName>
         </MarkContainer>
       </CustomOverlayMap>
-      {click ? <Modal click={click} setClick={setClick} /> : ''}
+      {click ? <Modal click={click} setClick={setClick} title={detail.title} /> : ''}
     </Container>
   );
 };
