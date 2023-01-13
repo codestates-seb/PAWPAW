@@ -33,8 +33,7 @@ public class PetPostDto {
     private Species species;
     @NotNull
     private int code;
-    private String profileImage;
-
-//    private MultipartFile profileImage;
+//    private String profileImage;
+    private MultipartFile profileImage;
 
 }

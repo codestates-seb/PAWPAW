@@ -23,8 +23,8 @@ public class PetController {
     private final PetMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity postPet(@Valid PetPostDto petPostDto) {
-        Pet pet = petService.createPet(mapper.petPostToPet(petPostDto));
+    public ResponseEntity postPet(@Valid PetPostDto petPostDto) throws IllegalAccessException {
+        Pet pet = petService.createPet(mapper.petPostToPet(petPostDto), petPostDto.getProfileImage());
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -41,7 +41,7 @@ public class PetController {
                                     PetPatchDto petPatchDto) {
         petPatchDto.setId(id);
 
-        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto), token);
+        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto), token, petPatchDto.getProfileImage());
 
         return new ResponseEntity(HttpStatus.OK);
     }

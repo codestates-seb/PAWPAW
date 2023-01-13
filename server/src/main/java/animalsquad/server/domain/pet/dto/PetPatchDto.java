@@ -5,6 +5,7 @@ import animalsquad.server.domain.pet.entity.Gender;
 import animalsquad.server.domain.pet.entity.Species;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -16,6 +17,6 @@ public class PetPatchDto {
     private Gender gender;
     private Species species;
     private int code;
-    private String profileImage;
+    private MultipartFile profileImage;
 
 }
