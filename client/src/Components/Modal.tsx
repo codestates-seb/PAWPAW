@@ -20,7 +20,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   };
 
   return (
-    <Container>
+    <Container onClick={(e) => e.stopPropagation()}>
       <FlexBox>
         <div>
           <ModalInfoDiv>
@@ -125,9 +125,9 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
 
 const Container = styled.div`
   width: 350px;
+  height: 100vh;
   position: relative;
   z-index: 100;
-  top: 50px;
   box-shadow: rgba(149, 157, 165, 0.8) 14px 0px 14px -14px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -292,11 +292,15 @@ const ModalReviewInputTextBox = styled.div`
 `;
 
 const ModalCloseBox = styled.div`
-  margin: auto;
+  position: fixed;
+  z-index: 999;
+  top: 476px;
+  left: 357px;
+  bottom: 0;
+  right: 0;
   opacity: 0.8;
   .close {
     cursor: pointer;
-    margin-left: 10px;
   }
 `;
 

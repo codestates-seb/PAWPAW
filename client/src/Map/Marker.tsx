@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
 import { IProps } from './HomeMap';
 import PoolMarker from './Marker/PoolMarker';
 import Modal from '../Components/Modal';
+import { Icon } from '@iconify/react';
+
 
 const { brown, yellow } = color;
 
@@ -28,7 +30,7 @@ const Marker = (detail: IProps['detail']) => {
   const data = [click, setClick];
 
   const selectHandler = () => {
-      setClick(!click);
+    setClick(!click);
   };
 
   function renderSwitch(param: any) {
@@ -62,7 +64,15 @@ const Marker = (detail: IProps['detail']) => {
           <ParkName>{detail.title}</ParkName>
         </MarkContainer>
       </CustomOverlayMap>
-      {click ? <Modal click={click} setClick={setClick} title={detail.title} /> : ''}
+      {click ? (
+        <>
+          <ModalBack onClick={selectHandler}>
+            <Modal click={click} setClick={setClick} title={detail.title} />
+          </ModalBack>
+        </>
+      ) : (
+        ''
+      )}
     </Container>
   );
 };
@@ -132,6 +142,29 @@ const WhiteCircleBox = styled.div`
 
 const ParkName = styled.div`
   padding-right: 15px;
+`;
+
+const ModalBack = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+`;
+
+const ModalCloseBox = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: 476px;
+  left: 350px;
+  bottom: 0;
+  right: 0;
+  opacity: 0.8;
+  .close {
+    cursor: pointer;
+  }
 `;
 
 export default Marker;
