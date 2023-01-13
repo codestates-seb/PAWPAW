@@ -1,13 +1,15 @@
 import React, { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 
-const { ivory, brown, darkbrown } = color;
-
+const { ivory, brown } = color;
+const url = 'http://localhost:8080';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -90,8 +92,67 @@ const ClosedEyeSVG = (
 );
 
 const SignUp: FC = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  console.log(passwordVisible);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [petName, setPetName] = useState<string>('');
+  const [id, setId] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+  const navigate = useNavigate();
+  const jwtToken = localStorage.getItem('Authorization');
+  const refreshToken = localStorage.getItem('Refresh');
+  axios.defaults.headers.common['Authorization'] = `${jwtToken}`;
+  axios.defaults.headers.common['Refresh'] = `${refreshToken}`;
+
+  const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPetName((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setId((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const pwHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPassword((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const pwconfirmHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPasswordConfirm((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const idValidationHandler = async () => {
+    if (id === '') {
+      alert('아이디를 입력해야 합니다.');
+    } else {
+      try {
+        const response = await axios.post(`${url}/pets/check/${id}`, {
+          loginId: id,
+        });
+        const value = response as unknown as boolean;
+        // 타입 설정에 대해서 고민 필요
+        // response 일지 response.status 이것도 아니면 response.body일지는 통신해보면서 정하기
+        if (value === true) {
+          alert('유효한 아이디 입니다.');
+        } else if (value === false) {
+          alert('중복된 아이디 입니다.');
+        }
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        console.error('Error', error);
+        alert(error);
+      }
+    }
+  };
+  const goNextPage = () => {
+    if (id === '') {
+      alert('아이디를 입력해야 합니다.');
+    } else if (password === '') {
+      alert('비밀번호를 입력해야 합니다.');
+    } else if (password !== passwordConfirm) {
+      alert('비밀번호가 일치하지 않습니다.');
+    } else {
+      navigate('/userinfo', { state: { id: id, password: password, petname: petName } });
+    }
+  };
   return (
     <Container>
       <Background />
@@ -108,10 +169,15 @@ const SignUp: FC = () => {
           <TextDiv>회원가입</TextDiv>
 
           <InputDiv>
-            <Input type='text' placeholder='반려동물 이름' />
+            <Input type='text' placeholder='반려동물 이름' onChange={petNameHandler} />
             <IdDiv>
-              <Input type='text' placeholder='아이디' paddingRight='60px' />
-              <ConfirmSpan>중복확인</ConfirmSpan>
+              <Input
+                type='text'
+                placeholder='아이디'
+                paddingRight='60px'
+                onChange={userIdHandler}
+              />
+              <ConfirmSpan onClick={idValidationHandler}>중복확인</ConfirmSpan>
             </IdDiv>
 
             <PasswordDiv>
@@ -119,6 +185,7 @@ const SignUp: FC = () => {
                 type={passwordVisible ? 'text' : 'password'}
                 placeholder='비밀번호'
                 paddingRight='35px'
+                onChange={pwHandler}
               />
               <SvgSpan onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? OpenedEyeSVG : ClosedEyeSVG}
@@ -129,6 +196,7 @@ const SignUp: FC = () => {
                 type={passwordVisible ? 'text' : 'password'}
                 placeholder='비밀번호 확인'
                 paddingRight='35px'
+                onChange={pwconfirmHandler}
               />
               <SvgSpan onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? OpenedEyeSVG : ClosedEyeSVG}
@@ -137,7 +205,7 @@ const SignUp: FC = () => {
           </InputDiv>
 
           <ButtonDiv>
-            <Button text='회원가입' />
+            <Button text='회원가입' onClick={goNextPage} />
           </ButtonDiv>
         </RightDiv>
       </Box>

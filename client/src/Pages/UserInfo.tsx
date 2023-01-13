@@ -1,5 +1,8 @@
+
 import React, { FC, useState, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -8,7 +11,7 @@ import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
-
+const url = 'http://localhost:8080';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -74,7 +77,7 @@ const SvgSpan = styled.span`
   cursor: pointer;
 `;
 
-const GenderDiv = styled.div<{ isMale: boolean }>`
+const GenderDiv = styled.div<{ isMale: string }>`
   width: 233px;
   margin-bottom: 35px;
 
@@ -83,11 +86,11 @@ const GenderDiv = styled.div<{ isMale: boolean }>`
   align-items: center;
 
   button:first-of-type {
-    ${(props) => props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'male' && `background-color: ${darkivory}`}
   }
 
   button:last-of-type {
-    ${(props) => !props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'female' && `background-color: ${darkivory}`}
   }
 `;
 
@@ -161,6 +164,9 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   cursor: pointer;
   user-select: none;
 `;
+const ButtonDiv = styled.div`
+  margin-top: 100px;
+`;
 
 const ButtonDiv = styled.div`
   margin-top: 45px;
@@ -185,19 +191,37 @@ const YellowPlusSVG = (
     />
   </svg>
 );
-
 export interface IProps {
   address: number | null;
   setAddress: (address: number | null) => void;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const UserInfo: FC = () => {
-  const [isMale, setIsMale] = useState(true);
+const UserInfo: React.FC = () => {
+  const [isMale, setIsMale] = useState<string>('male');
   const [isCat, setIsCat] = useState(true);
+  const [isAge, setIsAge] = useState('0');
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<number | null>(null);
+  const location = useLocation();
+  const id = location.state.id;
+  const petname = location.state.petname;
+  const password = location.state.password;
+  console.log(isAge);
+  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsAge((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
 
+  // const uploadHandler = (e) => {
+  //   e.preventDefault();
+  //   const file = e.target.files[0];
+  //   setFiles([...file, { uploadedFile: file }]);
+  // };
+
+  const navigate = useNavigate();
+  console.log(isMale);
+  
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -211,6 +235,46 @@ const UserInfo: FC = () => {
     }
   });
 
+  
+  const submitHandler = async () => {
+    const jwtToken = localStorage.getItem('Authorization');
+    const refreshToken = localStorage.getItem('Refresh');
+    const body = {
+      loginId: id,
+      password: password,
+      petname: petname,
+      age: isAge,
+      gender: isMale,
+      address: '',
+      profileImage: '',
+    };
+    const headers = {
+      Authorization: jwtToken,
+      Refresh: refreshToken,
+    };
+    if (isAge === '') {
+      alert('나이가 입력 되어야 합니다.');
+    } else if (isMale === '' || id === '' || password === '') {
+      alert('입력되지 않은 값이 있습니다.');
+    } else {
+      try {
+        await axios.post(`${url}/signup`, { body }, { headers });
+        navigate('/login');
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        console.error('Error', error);
+        alert(error);
+      }
+    }
+  };
+  // const state = {
+  //   file: null,
+  // }
+  // const handleFile = (e)=>{
+  //   const file = e.target.files[0]
+  //   this.setState({file:file})
+  // }
+
   return (
     <Container>
       <Background ref={backgroundRef} />
@@ -221,10 +285,9 @@ const UserInfo: FC = () => {
           <PlusDiv>{WhitePlusSVG}</PlusDiv>
           <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
         </LeftDiv>
-
         <RightDiv>
           <InputsDiv>
-            <Input type='text' placeholder='나이' marginBottom='40px' />
+            <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
             <InputDiv>
               <Input
                 type='text'
@@ -237,17 +300,15 @@ const UserInfo: FC = () => {
               </SvgSpan>
             </InputDiv>
           </InputsDiv>
-
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale(true)}>
+            <IconButton onClick={() => setIsMale('male')}>
               <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
             </IconButton>
-            <IconButton onClick={() => setIsMale(false)}>
+            <IconButton onClick={() => setIsMale('female')}>
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
-
           <TypeDiv>
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
@@ -262,6 +323,15 @@ const UserInfo: FC = () => {
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
+              <input
+                type='file'
+                name='photo'
+                accept='image/*,audio/*,video/mp4,video/x-m4v,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,.csv'
+                // onChange={uploadHandler}
+              />
+              <ButtonDiv>
+                <Button text='회원가입' submitAddress={submitHandler} />
+              </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>

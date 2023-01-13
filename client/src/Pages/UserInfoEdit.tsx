@@ -164,6 +164,9 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   cursor: pointer;
   user-select: none;
 `;
+const ButtonDiv = styled.div`
+  margin-top: 100px;
+`;
 
 const ButtonDiv = styled.div`
   margin-top: 45px;
@@ -257,6 +260,9 @@ const UserInfoEdit: FC = () => {
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
+              <ButtonDiv>
+                <Button text='회원가입' />
+              </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>

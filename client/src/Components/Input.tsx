@@ -10,6 +10,7 @@ type Props = {
   placeholder: string;
   paddingRight?: string;
   marginBottom?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   openAddressModal?: (e: React.MouseEvent<HTMLInputElement>) => void;
 };
 
@@ -36,6 +37,7 @@ const Input = ({
   placeholder,
   paddingRight,
   marginBottom,
+  onChange,
   openAddressModal,
 }: Props) => {
   return (
@@ -46,6 +48,7 @@ const Input = ({
         placeholder={placeholder}
         paddingRight={paddingRight}
         marginBottom={marginBottom}
+        onChange={onChange}
         onClick={openAddressModal}
       />
     </>
