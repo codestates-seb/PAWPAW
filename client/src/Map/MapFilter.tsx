@@ -2,15 +2,31 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import color from '../color';
+import { IProps } from './HomeMap';
 
-const { ivory } = color;
+const { ivory, yellow } = color;
 
-const MapFilter = () => {
+const MapFilter = ({ selected, setSelected }: IProps['filter']) => {
+  const showFilteredMarkers = (e: React.MouseEvent) => {
+    const target = e.target as HTMLDivElement;
+    const tag = target.classList[2]; // tag : 'park', 'cafe', 'food', 'camping', 'pool', 'hospital', 'my'
+
+    // 이미 선택된 요소를 또 클릭할 경우, selected를 'all'로 업데이트한다.
+    if (selected === tag) {
+      setSelected('all');
+    } else {
+      setSelected(tag);
+    }
+  };
+
   return (
     <Container>
       <div className='absolute'>
         <div className='flex'>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'park' ? 'park selected' : 'park'}
+          >
             <IconBox>
               <Icon
                 icon='material-symbols:park-rounded'
@@ -20,31 +36,46 @@ const MapFilter = () => {
             </IconBox>
             <Text className='park'>공원</Text>
           </FilterBox>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'cafe' ? 'cafe selected' : 'cafe'}
+          >
             <IconBox>
               <Icon icon='ph:coffee-fill' color='#7d5a5a' style={{ fontSize: '23px' }} />
             </IconBox>
             <Text className='cafe'>카페</Text>
           </FilterBox>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'food' ? 'food selected' : 'food'}
+          >
             <IconBox>
               <Icon icon='fluent:food-24-filled' color='#fea572' style={{ fontSize: '23px' }} />
             </IconBox>
             <Text className='food'>음식점</Text>
           </FilterBox>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'camping' ? 'camping selected' : 'camping'}
+          >
             <IconBox>
               <Icon icon='material-symbols:camping' color='#93c246' style={{ fontSize: '23px' }} />
             </IconBox>
-            <Text className='camp'>캠핑</Text>
+            <Text className='camping'>캠핑</Text>
           </FilterBox>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'pool' ? 'pool selected' : 'pool'}
+          >
             <IconBox>
               <Icon icon='mdi:pool' color='#6cb2f2' style={{ fontSize: '26px' }} />
             </IconBox>
             <Text className='pool'>수영장</Text>
           </FilterBox>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'hospital' ? 'hospital selected' : 'hospital'}
+          >
             <IconBox>
               <Icon
                 icon='ic:baseline-local-hospital'
@@ -54,7 +85,10 @@ const MapFilter = () => {
             </IconBox>
             <Text className='hospital'>병원</Text>
           </FilterBox>
-          <FilterBox>
+          <FilterBox
+            onClick={showFilteredMarkers}
+            className={selected === 'my' ? 'my selected' : 'my'}
+          >
             <IconBox>
               <Icon
                 className='star'
@@ -85,43 +119,30 @@ const Container = styled.div`
     background-color: ${ivory};
     border-radius: 7px;
     padding: 4px;
-    box-shadow: rgba(149, 157, 165, 0.5) 0px 8px 24px;
-  }
-
-  .park {
-    width: 40px;
-  }
-  .cafe {
-    width: 40px;
-  }
-  .food {
-    width: 50px;
-  }
-  .camp {
-    width: 40px;
-  }
-  .pool {
-    width: 50px;
-  }
-  .hospital {
-    width: 40px;
-  }
-  .my {
-    width: 72px;
-    margin-right: 5px;
+    box-shadow: rgba(149, 157, 165, 0.3) 0px 8px 24px;
   }
 `;
 
 const FilterBox = styled.div`
   display: flex;
   align-items: center;
-  margin: 0 4px;
+  margin: 0 5px;
+  cursor: pointer;
+
+  &.selected div {
+    color: ${yellow};
+  }
+
+  &:hover div {
+    color: ${yellow};
+  }
 `;
 
 const IconBox = styled.div`
   padding: 1px;
   display: flex;
   text-align: center;
+  pointer-events: none;
 
   .star {
     margin-top: -3px;
@@ -133,6 +154,29 @@ const Text = styled.div`
   font-weight: 700;
   padding: 1px;
   font-size: 14px;
+
+  &.park {
+    width: 40px;
+  }
+  &.cafe {
+    width: 40px;
+  }
+  &.food {
+    width: 50px;
+  }
+  &.camping {
+    width: 40px;
+  }
+  &.pool {
+    width: 50px;
+  }
+  &.hospital {
+    width: 40px;
+  }
+  &.my {
+    width: 65px;
+    margin-right: 5px;
+  }
 `;
 
 export default MapFilter;

@@ -6,10 +6,12 @@ const { brown, bordergrey } = color;
 
 type Props = {
   type: string;
+  readOnly?: boolean;
   placeholder: string;
   paddingRight?: string;
   marginBottom?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  openAddressModal?: (e: React.MouseEvent<HTMLInputElement>) => void;
 };
 
 const StyledInput = styled.input<Props>`
@@ -29,15 +31,25 @@ const StyledInput = styled.input<Props>`
   }
 `;
 
-const Input = ({ type, placeholder, paddingRight, marginBottom, onChange }: Props) => {
+const Input = ({
+  type,
+  readOnly,
+  placeholder,
+  paddingRight,
+  marginBottom,
+  onChange,
+  openAddressModal,
+}: Props) => {
   return (
     <>
       <StyledInput
         type={type}
+        readOnly={readOnly}
         placeholder={placeholder}
         paddingRight={paddingRight}
         marginBottom={marginBottom}
         onChange={onChange}
+        onClick={openAddressModal}
       />
     </>
   );

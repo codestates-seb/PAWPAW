@@ -11,15 +11,26 @@ import FoodMarker from './Marker/FoodMarker';
 import PropTypes from 'prop-types';
 import { IProps } from './HomeMap';
 import PoolMarker from './Marker/PoolMarker';
+import Modal from '../Components/Modal';
+import { Icon } from '@iconify/react';
+
 
 const { brown, yellow } = color;
 
+export interface CProps {
+  clicks: {
+    click: boolean;
+    setClick: (classname: boolean) => void;
+    title: string;
+  };
+}
+
 const Marker = (detail: IProps['detail']) => {
-  const [click, setClick] = useState(false);
+  const [click, setClick] = useState<boolean>(false);
+  const data = [click, setClick];
 
   const selectHandler = () => {
     setClick(!click);
-    console.log('click', click);
   };
 
   function renderSwitch(param: any) {
@@ -53,6 +64,15 @@ const Marker = (detail: IProps['detail']) => {
           <ParkName>{detail.title}</ParkName>
         </MarkContainer>
       </CustomOverlayMap>
+      {click ? (
+        <>
+          <ModalBack onClick={selectHandler}>
+            <Modal click={click} setClick={setClick} title={detail.title} />
+          </ModalBack>
+        </>
+      ) : (
+        ''
+      )}
     </Container>
   );
 };
@@ -91,21 +111,24 @@ const MarkContainer = styled.div`
     content: '';
     position: absolute;
     left: 47%;
-    top: 100%;
-  }
-  &.active::after {
-    border-top: 10px solid ${yellow};
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 10px solid transparent;
-    content: '';
-    position: absolute;
-    left: 47%;
-    top: 100%;
+    top: 95%;
   }
 
-  &.active {
+  // hover & 클릭 시 노란색
+  &.active,
+  &:hover {
     background-color: ${yellow};
+
+    &::after {
+      border-top: 10px solid ${yellow};
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 10px solid transparent;
+      content: '';
+      position: absolute;
+      left: 47%;
+      top: 100%;
+    }
   }
 `;
 const WhiteCircleBox = styled.div`
@@ -122,6 +145,30 @@ const WhiteCircleBox = styled.div`
 
 const ParkName = styled.div`
   padding-right: 15px;
+  user-select: none;
+`;
+
+const ModalBack = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+`;
+
+const ModalCloseBox = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: 476px;
+  left: 350px;
+  bottom: 0;
+  right: 0;
+  opacity: 0.8;
+  .close {
+    cursor: pointer;
+  }
 `;
 
 export default Marker;

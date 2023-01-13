@@ -7,7 +7,6 @@ import SignUp from './Pages/SignUp';
 import UserInfo from './Pages/UserInfo';
 import UserInfoEdit from './Pages/UserInfoEdit';
 import HomeMap from './Map/HomeMap';
-import Modal from './Components/Modal';
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
         <Route path='/userinfo' element={<UserInfo />} />
         <Route path='/userinfoedit' element={<UserInfoEdit />} />
         <Route path='/map' element={<HomeMap />} />
-        <Route path='/modal' element={<Modal />} />
       </Routes>
     </BrowserRouter>
   );

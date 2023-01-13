@@ -4,6 +4,9 @@ import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
+import { Icon } from '@iconify/react';
+import AddressModal from './AddressModal';
+import { convertAddress } from './UserInfo';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 
@@ -60,7 +63,7 @@ const AvatarEditDiv = styled.div`
 `;
 
 const InputsDiv = styled.div`
-  margin-top: 100px;
+  margin-top: 73px;
 `;
 
 const InputDiv = styled.div`
@@ -165,23 +168,9 @@ const ButtonDiv = styled.div`
   margin-top: 100px;
 `;
 
-const MaleSVG = (
-  <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <path
-      d='M18 18C20.58 18 23 18.82 24.94 20.22L35.16 10H26V6H42V22H38V12.82L27.78 23C29.18 25 30 27.4 30 30C30 33.1826 28.7357 36.2348 26.4853 38.4853C24.2348 40.7357 21.1826 42 18 42C14.8174 42 11.7652 40.7357 9.51472 38.4853C7.26428 36.2348 6 33.1826 6 30C6 26.8174 7.26428 23.7652 9.51472 21.5147C11.7652 19.2643 14.8174 18 18 18ZM18 22C15.8783 22 13.8434 22.8429 12.3431 24.3431C10.8429 25.8434 10 27.8783 10 30C10 32.1217 10.8429 34.1566 12.3431 35.6569C13.8434 37.1571 15.8783 38 18 38C20.1217 38 22.1566 37.1571 23.6569 35.6569C25.1571 34.1566 26 32.1217 26 30C26 27.8783 25.1571 25.8434 23.6569 24.3431C22.1566 22.8429 20.1217 22 18 22Z'
-      fill='#6C92F2'
-    />
-  </svg>
-);
-
-const FemaleSVG = (
-  <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <path
-      d='M24 8C27.1826 8 30.2348 9.26428 32.4853 11.5147C34.7357 13.7652 36 16.8174 36 20C36 25.94 31.68 30.88 26 31.84V36H30V40H26V44H22V40H18V36H22V31.84C16.32 30.88 12 25.94 12 20C12 16.8174 13.2643 13.7652 15.5147 11.5147C17.7652 9.26428 20.8174 8 24 8ZM24 12C21.8783 12 19.8434 12.8429 18.3431 14.3431C16.8429 15.8434 16 17.8783 16 20C16 22.1217 16.8429 24.1566 18.3431 25.6569C19.8434 27.1571 21.8783 28 24 28C26.1217 28 28.1566 27.1571 29.6569 25.6569C31.1571 24.1566 32 22.1217 32 20C32 17.8783 31.1571 15.8434 29.6569 14.3431C28.1566 12.8429 26.1217 12 24 12Z'
-      fill='#F87D7D'
-    />
-  </svg>
-);
+const ButtonDiv = styled.div`
+  margin-top: 45px;
+`;
 
 const WhiteCirclePencilSVG = (
   <svg width='45' height='45' viewBox='0 0 45 45' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -203,28 +192,16 @@ const YellowCirclePencilSVG = (
   </svg>
 );
 
-const WhitePencilSVG = (
-  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <path
-      d='M19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3043 2.75 17.863 2.75C18.421 2.75 18.8917 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.571 21.275 6.113C21.2917 6.65433 21.1083 7.11667 20.725 7.5L19.3 8.925ZM4 21C3.71667 21 3.47933 20.904 3.288 20.712C3.096 20.5207 3 20.2833 3 20V17.175C3 17.0417 3.025 16.9127 3.075 16.788C3.125 16.6627 3.2 16.55 3.3 16.45L13.6 6.15L17.85 10.4L7.55 20.7C7.45 20.8 7.33767 20.875 7.213 20.925C7.08767 20.975 6.95833 21 6.825 21H4Z'
-      fill='#FFF8F0'
-    />
-  </svg>
-);
-
-const BrownPencilSVG = (
-  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <path
-      d='M19.3 8.925L15.05 4.725L16.45 3.325C16.8333 2.94167 17.3043 2.75 17.863 2.75C18.421 2.75 18.8917 2.94167 19.275 3.325L20.675 4.725C21.0583 5.10833 21.2583 5.571 21.275 6.113C21.2917 6.65433 21.1083 7.11667 20.725 7.5L19.3 8.925ZM4 21C3.71667 21 3.47933 20.904 3.288 20.712C3.096 20.5207 3 20.2833 3 20V17.175C3 17.0417 3.025 16.9127 3.075 16.788C3.125 16.6627 3.2 16.55 3.3 16.45L13.6 6.15L17.85 10.4L7.55 20.7C7.45 20.8 7.33767 20.875 7.213 20.925C7.08767 20.975 6.95833 21 6.825 21H4Z'
-      fill='#7D5A5A'
-    />
-  </svg>
-);
-
 const UserInfoEdit: FC = () => {
   const [isMale, setIsMale] = useState(true);
   const [isCat, setIsCat] = useState(true);
-  console.log(isMale);
+  const [isOpen, setIsOpen] = useState(false);
+  const [address, setAddress] = useState<number | null>(null);
+
+  const openAddressModal = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Container>
       <Background />
@@ -234,7 +211,7 @@ const UserInfoEdit: FC = () => {
           <AvatarEditDiv>{WhiteCirclePencilSVG}</AvatarEditDiv>
           <AvatarEditDiv className='invisible'>{YellowCirclePencilSVG}</AvatarEditDiv>
           <NameDiv>
-            귀염둥이 <NameEditSpan>{WhitePencilSVG}</NameEditSpan>
+            귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
         </LeftDiv>
 
@@ -242,18 +219,31 @@ const UserInfoEdit: FC = () => {
           <InputsDiv>
             <InputDiv>
               <Input type='text' placeholder='나이' marginBottom='40px' />
-              <SvgSpan>{BrownPencilSVG}</SvgSpan>
+              <SvgSpan>
+                <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
+              </SvgSpan>
             </InputDiv>
             <InputDiv>
-              <Input type='text' placeholder='어디에 사시나요?' />
-              <SvgSpan>{BrownPencilSVG}</SvgSpan>
+              <Input
+                type='text'
+                readOnly={true}
+                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                openAddressModal={openAddressModal}
+              />
+              <SvgSpan onClick={openAddressModal}>
+                <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
+              </SvgSpan>
             </InputDiv>
           </InputsDiv>
 
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale(true)}>{MaleSVG}</IconButton>
-            <IconButton onClick={() => setIsMale(false)}>{FemaleSVG}</IconButton>
+            <IconButton onClick={() => setIsMale(true)}>
+              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
+            </IconButton>
+            <IconButton onClick={() => setIsMale(false)}>
+              <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
+            </IconButton>
           </GenderDiv>
 
           <TypeDiv>
@@ -275,8 +265,12 @@ const UserInfoEdit: FC = () => {
               </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
+          <ButtonDiv>
+            <Button text='수정' />
+          </ButtonDiv>
         </RightDiv>
       </Box>
+      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
 };

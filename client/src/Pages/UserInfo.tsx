@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { FC, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -6,6 +7,8 @@ import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
+import { Icon } from '@iconify/react';
+import AddressModal from './AddressModal';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const url = 'http://localhost:8080';
@@ -56,11 +59,22 @@ const PlusDiv = styled.div`
   }
 `;
 
-const InputDiv = styled.div`
-  margin-top: 100px;
+const InputsDiv = styled.div`
+  margin-top: 73px;
 
   display: flex;
   flex-direction: column;
+`;
+
+const InputDiv = styled.div`
+  position: relative;
+`;
+
+const SvgSpan = styled.span`
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  cursor: pointer;
 `;
 
 const GenderDiv = styled.div<{ isMale: string }>`
@@ -154,23 +168,9 @@ const ButtonDiv = styled.div`
   margin-top: 100px;
 `;
 
-const MaleSVG = (
-  <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <path
-      d='M18 18C20.58 18 23 18.82 24.94 20.22L35.16 10H26V6H42V22H38V12.82L27.78 23C29.18 25 30 27.4 30 30C30 33.1826 28.7357 36.2348 26.4853 38.4853C24.2348 40.7357 21.1826 42 18 42C14.8174 42 11.7652 40.7357 9.51472 38.4853C7.26428 36.2348 6 33.1826 6 30C6 26.8174 7.26428 23.7652 9.51472 21.5147C11.7652 19.2643 14.8174 18 18 18ZM18 22C15.8783 22 13.8434 22.8429 12.3431 24.3431C10.8429 25.8434 10 27.8783 10 30C10 32.1217 10.8429 34.1566 12.3431 35.6569C13.8434 37.1571 15.8783 38 18 38C20.1217 38 22.1566 37.1571 23.6569 35.6569C25.1571 34.1566 26 32.1217 26 30C26 27.8783 25.1571 25.8434 23.6569 24.3431C22.1566 22.8429 20.1217 22 18 22Z'
-      fill='#6C92F2'
-    />
-  </svg>
-);
-
-const FemaleSVG = (
-  <svg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <path
-      d='M24 8C27.1826 8 30.2348 9.26428 32.4853 11.5147C34.7357 13.7652 36 16.8174 36 20C36 25.94 31.68 30.88 26 31.84V36H30V40H26V44H22V40H18V36H22V31.84C16.32 30.88 12 25.94 12 20C12 16.8174 13.2643 13.7652 15.5147 11.5147C17.7652 9.26428 20.8174 8 24 8ZM24 12C21.8783 12 19.8434 12.8429 18.3431 14.3431C16.8429 15.8434 16 17.8783 16 20C16 22.1217 16.8429 24.1566 18.3431 25.6569C19.8434 27.1571 21.8783 28 24 28C26.1217 28 28.1566 27.1571 29.6569 25.6569C31.1571 24.1566 32 22.1217 32 20C32 17.8783 31.1571 15.8434 29.6569 14.3431C28.1566 12.8429 26.1217 12 24 12Z'
-      fill='#F87D7D'
-    />
-  </svg>
-);
+const ButtonDiv = styled.div`
+  margin-top: 45px;
+`;
 
 const WhitePlusSVG = (
   <svg width='38' height='38' viewBox='0 0 38 38' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -191,11 +191,18 @@ const YellowPlusSVG = (
     />
   </svg>
 );
+export interface IProps {
+  address: number | null;
+  setAddress: (address: number | null) => void;
+  setIsOpen: (isOpen: boolean) => void;
+}
 
 const UserInfo: React.FC = () => {
   const [isMale, setIsMale] = useState<string>('male');
   const [isCat, setIsCat] = useState(true);
   const [isAge, setIsAge] = useState('0');
+  const [isOpen, setIsOpen] = useState(false);
+  const [address, setAddress] = useState<number | null>(null);
   const location = useLocation();
   const id = location.state.id;
   const petname = location.state.petname;
@@ -214,6 +221,21 @@ const UserInfo: React.FC = () => {
 
   const navigate = useNavigate();
   console.log(isMale);
+  
+  const openAddressModal = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const backgroundRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
+  // 배경 클릭시 모달이 닫힌다.
+  window.addEventListener('click', (e) => {
+    if (e.target === backgroundRef.current) {
+      setIsOpen(false);
+    }
+  });
+
+  
   const submitHandler = async () => {
     const jwtToken = localStorage.getItem('Authorization');
     const refreshToken = localStorage.getItem('Refresh');
@@ -252,9 +274,10 @@ const UserInfo: React.FC = () => {
   //   const file = e.target.files[0]
   //   this.setState({file:file})
   // }
+
   return (
     <Container>
-      <Background />
+      <Background ref={backgroundRef} />
       <Box>
         <LeftDiv>
           <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
@@ -262,19 +285,30 @@ const UserInfo: React.FC = () => {
           <PlusDiv>{WhitePlusSVG}</PlusDiv>
           <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
         </LeftDiv>
-
         <RightDiv>
-          <InputDiv>
+          <InputsDiv>
             <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
-            <Input type='text' placeholder='어디에 사시나요?' />
-          </InputDiv>
-
+            <InputDiv>
+              <Input
+                type='text'
+                readOnly={true}
+                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                openAddressModal={openAddressModal}
+              />
+              <SvgSpan onClick={openAddressModal}>
+                <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
+              </SvgSpan>
+            </InputDiv>
+          </InputsDiv>
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale('male')}>{MaleSVG}</IconButton>
-            <IconButton onClick={() => setIsMale('female')}>{FemaleSVG}</IconButton>
+            <IconButton onClick={() => setIsMale('male')}>
+              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
+            </IconButton>
+            <IconButton onClick={() => setIsMale('female')}>
+              <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
+            </IconButton>
           </GenderDiv>
-
           <TypeDiv>
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
@@ -296,14 +330,75 @@ const UserInfo: React.FC = () => {
                 // onChange={uploadHandler}
               />
               <ButtonDiv>
-                <Button text='회원가입' onClick={submitHandler} />
+                <Button text='회원가입' submitAddress={submitHandler} />
               </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
+          <ButtonDiv>
+            <Button text='시작하기' />
+          </ButtonDiv>
         </RightDiv>
       </Box>
+      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
+};
+
+export const convertAddress = (address: number) => {
+  if (address !== null) {
+    switch (address) {
+      case 11680:
+        return '강남구';
+      case 11740:
+        return '강동구';
+      case 11305:
+        return '강북구';
+      case 11500:
+        return '강서구';
+      case 11620:
+        return '관악구';
+      case 11215:
+        return '광진구';
+      case 11530:
+        return '구로구';
+      case 11545:
+        return '금천구';
+      case 11350:
+        return '노원구';
+      case 11320:
+        return '도봉구';
+      case 11230:
+        return '동대문구';
+      case 11590:
+        return '동작구';
+      case 11440:
+        return '마포구';
+      case 11410:
+        return '서대문구';
+      case 11650:
+        return '서초구';
+      case 11200:
+        return '성동구';
+      case 11290:
+        return '성북구';
+      case 11710:
+        return '송파구';
+      case 11470:
+        return '양천구';
+      case 11560:
+        return '영등포구';
+      case 11170:
+        return '용산구';
+      case 11380:
+        return '은평구';
+      case 11110:
+        return '종로구';
+      case 11140:
+        return '중구	';
+      case 11260:
+        return '중랑구';
+    }
+  }
 };
 
 export default UserInfo;
