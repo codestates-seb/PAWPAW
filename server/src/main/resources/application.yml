@@ -51,13 +51,13 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
-#---
-#spring:
-#  config:
-#    activate:
-#      on-profile: server
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ${MYSQL_URL}
-#    username: ${MYSQL_USERNAME}
-#    password: ${MYSQL_PASSWORD}
+---
+spring:
+  config:
+    activate:
+      on-profile: server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}

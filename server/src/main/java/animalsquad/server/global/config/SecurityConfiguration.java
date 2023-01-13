@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -60,13 +61,14 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
+                                .antMatchers("/").permitAll()
 //                        .antMatchers("/login").permitAll()
                                 .antMatchers("/pets/test").hasRole("USER") //권한 테스트용
                                 .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")
                                 .antMatchers("/pets/signup").permitAll()
                                 .antMatchers("/reissue").permitAll()
-                                .antMatchers("/pets/signup").permitAll()
+//                                .antMatchers("/pets/signup").permitAll()
                                 .antMatchers("/pets/check/**").permitAll()
 //                                .antMatchers("/api/v1/upload").permitAll()
                                 .anyRequest().hasRole("USER")
@@ -106,6 +108,11 @@ public class SecurityConfiguration {
                     .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
                     .addFilterBefore(jwtExceptionFilter, JwtVerificationFilter.class);
         }
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/favicon.ico");
     }
 
 }

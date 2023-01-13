@@ -11,9 +11,6 @@ import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +38,6 @@ public class PetService {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
-
         int code = pet.getAddress().getCode();
         Address address = verifiedAddress(code);
         pet.setAddress(address);
