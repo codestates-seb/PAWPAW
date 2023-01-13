@@ -32,9 +32,8 @@ public class PetService {
     private final PetRepository petRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final FileUploadService fileUploadService;
-//    private final RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
 
 
     public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
@@ -49,9 +48,10 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet, MultipartFile file) {
+    public Pet updatePet(Pet pet,long petId, MultipartFile file) {
         Pet findPet = findVerifiedPet(pet.getId());
 
+        verifiedToken(pet, petId);
 
         Optional.ofNullable(pet.getPetName())
                 .ifPresent(name -> findPet.setPetName(name));
@@ -80,6 +80,42 @@ public class PetService {
         return petRepository.existsByLoginId(loginId);
     }
 
+    // 저장된 유저의 id와 요청한 유저의 id가 맞는지 검증하는 로직
+    public Pet petVerifiedToken(long id, long petId) {
+        Pet findPet = findPet(id);
+
+        verifiedToken(findPet, petId);
+
+        return findPet;
+    }
+
+    // repository에 저장된 유저를 가져오는 로직
+    public Pet findPet(long id) {
+        return findVerifiedPet(id);
+    }
+
+
+
+    // redis 설정 시 refreshToken 삭제 추가
+
+    public void deletePet(long id, long petId) {
+        Pet findPet = findVerifiedPet(id);
+
+        verifiedToken(findPet, petId);
+
+        // redis에서 RefreshToken 삭제
+        String findPetLoginId = findPet.getLoginId();
+        redisTemplate.delete("RT:" + findPetLoginId);
+
+        petRepository.deleteById(id);
+    }
+
+    private void verifiedToken(Pet pet, long petId) {
+        if (petId != pet.getId()) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
+    }
+
     private Address verifiedAddress(int code) {
         Optional<Address> optionalAddress = addressRepository.findByCode(code);
         Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
@@ -87,18 +123,6 @@ public class PetService {
     }
 
     // 커뮤니티 기능 구현 전 나의 정보만 조회
-
-    public Pet findPet(long id) {
-        return findVerifiedPet(id);
-    }
-
-    // redis 설정 시 refreshToken 삭제 추가
-
-    public void deletePet(long id) {
-        findVerifiedPet(id);
-
-        petRepository.deleteById(id);
-    }
     private void verifyExistsId(String loginId) {
         Optional<Pet> pet = petRepository.findByLoginId(loginId);
 
