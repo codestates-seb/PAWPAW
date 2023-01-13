@@ -49,10 +49,9 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet, String token) {
+    public Pet updatePet(Pet pet, MultipartFile file) {
         Pet findPet = findVerifiedPet(pet.getId());
 
-        verifiedToken(pet.getId(), token);
 
         Optional.ofNullable(pet.getPetName())
                 .ifPresent(name -> findPet.setPetName(name));
@@ -77,6 +76,10 @@ public class PetService {
 
     }
 
+    public Boolean checkLoginId(String loginId) {
+        return petRepository.existsByLoginId(loginId);
+    }
+
     private Address verifiedAddress(int code) {
         Optional<Address> optionalAddress = addressRepository.findByCode(code);
         Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
@@ -89,17 +92,10 @@ public class PetService {
         return findVerifiedPet(id);
     }
 
-    public Pet findPet(long id, String token) {
-        verifiedToken(id, token);
-
-        return findVerifiedPet(id);
-    }
     // redis 설정 시 refreshToken 삭제 추가
 
-    public void deletePet(long id, String token) {
+    public void deletePet(long id) {
         findVerifiedPet(id);
-
-        verifiedToken(id, token);
 
         petRepository.deleteById(id);
     }
@@ -117,14 +113,6 @@ public class PetService {
                 new NoSuchElementException(ExceptionCode.PET_NOT_FOUND.getMessage()));
 
         return findPet;
-    }
-
-    private void verifiedToken(long id, String token) {
-        long petId = jwtTokenProvider.getPetId(token);
-
-        if (petId != id) {
-            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
-        }
     }
 
 }
