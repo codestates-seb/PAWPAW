@@ -165,10 +165,6 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   user-select: none;
 `;
 const ButtonDiv = styled.div`
-  margin-top: 100px;
-`;
-
-const ButtonDiv = styled.div`
   margin-top: 45px;
 `;
 

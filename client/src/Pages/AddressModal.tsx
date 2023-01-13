@@ -169,7 +169,7 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
         </Map>
       </MapDiv>
       <ButtonDiv>
-        <Button text='선택 완료' submitAddress={submitAddress} />
+        <Button text='선택 완료' onClick={submitAddress} />
       </ButtonDiv>
       <NameSpan top={'101px'} left={'444px'}>
         도봉구

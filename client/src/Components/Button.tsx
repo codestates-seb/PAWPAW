@@ -7,7 +7,6 @@ const { brown, darkbrown } = color;
 type Props = {
   text: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  submitAddress?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const StyledButton = styled.button`
@@ -26,9 +25,8 @@ const StyledButton = styled.button`
   }
 `;
 
-
-const Button = ({ text, onClick, submitAddress }: Props) => {
-  return <StyledButton onClick={onClick} onClick={submitAddress}>{text} </StyledButton>;
+const Button = ({ text, onClick }: Props) => {
+  return <StyledButton onClick={onClick}>{text} </StyledButton>;
 };
 
 export default Button;

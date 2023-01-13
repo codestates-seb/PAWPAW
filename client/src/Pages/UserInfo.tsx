@@ -1,4 +1,3 @@
-
 import React, { FC, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -164,9 +163,6 @@ const DogSpan = styled.span<{ isCat: boolean }>`
   cursor: pointer;
   user-select: none;
 `;
-const ButtonDiv = styled.div`
-  margin-top: 100px;
-`;
 
 const ButtonDiv = styled.div`
   margin-top: 45px;
@@ -221,7 +217,7 @@ const UserInfo: React.FC = () => {
 
   const navigate = useNavigate();
   console.log(isMale);
-  
+
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -235,7 +231,6 @@ const UserInfo: React.FC = () => {
     }
   });
 
-  
   const submitHandler = async () => {
     const jwtToken = localStorage.getItem('Authorization');
     const refreshToken = localStorage.getItem('Refresh');
@@ -245,7 +240,7 @@ const UserInfo: React.FC = () => {
       petname: petname,
       age: isAge,
       gender: isMale,
-      address: '',
+      address: address,
       profileImage: '',
     };
     const headers = {
@@ -329,13 +324,10 @@ const UserInfo: React.FC = () => {
                 accept='image/*,audio/*,video/mp4,video/x-m4v,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,.csv'
                 // onChange={uploadHandler}
               />
-              <ButtonDiv>
-                <Button text='회원가입' submitAddress={submitHandler} />
-              </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>
-            <Button text='시작하기' />
+            <Button text='시작하기' onClick={submitHandler} />
           </ButtonDiv>
         </RightDiv>
       </Box>
