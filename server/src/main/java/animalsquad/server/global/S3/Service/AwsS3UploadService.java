@@ -3,6 +3,7 @@ package animalsquad.server.global.S3.Service;
 import animalsquad.server.global.S3.Component.S3Component;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,11 @@ public class AwsS3UploadService implements UploadService {
     @Override
     public  void  uploadFile(InputStream inputStream, ObjectMetadata objectMeTadata, String fileName){
         amazonS3.putObject(new PutObjectRequest(component.getBucket() +"/test" ,fileName,inputStream,objectMeTadata).withCannedAcl(CannedAccessControlList.PublicRead));
+    }
+
+    @Override
+    public void deleteFile(String fileName){
+        amazonS3.deleteObject(new DeleteObjectRequest(component.getBucket() + "/test", fileName));
     }
 
     @Override

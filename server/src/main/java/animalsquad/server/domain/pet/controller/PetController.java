@@ -40,7 +40,7 @@ public class PetController {
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@PathVariable("pet-id") long id,
                                     PetPatchDto petPatchDto,
-                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
         long petId = principal.getId();
 
         petPatchDto.setId(id);
@@ -54,10 +54,8 @@ public class PetController {
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
                                  @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
-
-        Pet findPet = petService.findPet(id);
-
-//        Pet response = petService.
+        // TODO: 토큰 검증 로직 수정
+        Pet findPet = petService.petVerifiedToken(id, petId);
 
         return new ResponseEntity(mapper.petToPetResponseDto(findPet),HttpStatus.OK);
     }

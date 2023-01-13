@@ -45,35 +45,42 @@ public class PetService {
         Address address = verifiedAddress(code);
         pet.setAddress(address);
 
+        String imageUrl = fileUploadService.uploadImage(file);
+        pet.setProfileImage(imageUrl);
+
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet,long petId, MultipartFile file) {
+    public Pet updatePet(Pet pet,long petId, MultipartFile file) throws IllegalAccessException {
         Pet findPet = findVerifiedPet(pet.getId());
 
         verifiedToken(pet, petId);
 
-        Optional.ofNullable(pet.getPetName())
-                .ifPresent(name -> findPet.setPetName(name));
-        Optional.ofNullable(pet.getAge())
-                .ifPresent(age -> findPet.setAge(age));
-        Optional.ofNullable(pet.getGender())
-                .ifPresent(gender -> findPet.setGender(gender));
-        Optional.ofNullable(pet.getSpecies())
-                .ifPresent(species -> findPet.setSpecies(species));
-        Optional.ofNullable(pet.getProfileImage())
-                .ifPresent(profileImage -> findPet.setProfileImage(profileImage));
+            Optional.ofNullable(pet.getPetName())
+                    .ifPresent(name -> findPet.setPetName(name));
+            Optional.ofNullable(pet.getAge())
+                    .ifPresent(age -> findPet.setAge(age));
+            Optional.ofNullable(pet.getGender())
+                    .ifPresent(gender -> findPet.setGender(gender));
+            Optional.ofNullable(pet.getSpecies())
+                    .ifPresent(species -> findPet.setSpecies(species));
+            Optional.ofNullable(pet.getAddress().getCode())
+                    .ifPresent(code -> {
+                        Address address = verifiedAddress(code);
+                        findPet.setAddress(address);
+                    });
+        // 프로필 이미지 수정
+        if(file == null) {
+        } else {
+            String beforeImage = findPet.getProfileImage();
+            fileUploadService.deleteFile(beforeImage);
 
-        Optional.ofNullable(pet.getAddress().getCode())
-                .ifPresent(code -> {
-                    Address address = verifiedAddress(code);
-                    findPet.setAddress(address);
-                });
-
+            String imageUrl = fileUploadService.uploadImage(file);
+            findPet.setProfileImage(imageUrl);
+        }
         Pet savedPet = petRepository.save(findPet);
 
         return savedPet;
-
     }
 
     public Boolean checkLoginId(String loginId) {
