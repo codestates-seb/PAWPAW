@@ -14,6 +14,197 @@ const { ivory, brown, yellow, darkivory, bordergrey } = color;
 interface FormData {
   file: File;
 }
+export interface IProps {
+  address: number | null;
+  setAddress: (address: number | null) => void;
+  setIsOpen: (isOpen: boolean) => void;
+}
+const UserInfo: React.FC = () => {
+  const [isMale, setIsMale] = useState<string>('male');
+  const [isCat, setIsCat] = useState(true);
+  const [isAge, setIsAge] = useState('0');
+  const [isOpen, setIsOpen] = useState(false);
+  const [address, setAddress] = useState<number | null>(null);
+  const [formData, setFormData] = useState<FormData>({ file: new File([], '') });
+  const location = useLocation();
+  const id = location.state.id;
+  const petname = location.state.petname;
+  const password = location.state.password;
+  const navigate = useNavigate();
+  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsAge((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+  const openAddressModal = () => {
+    setIsOpen(!isOpen);
+  };
+  const backgroundRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
+  // 배경 클릭시 모달이 닫힌다.
+  window.addEventListener('click', (e) => {
+    if (e.target === backgroundRef.current) {
+      setIsOpen(false);
+    }
+  });
+  const submitHandler = async () => {
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+    const data = new FormData();
+    data.append('loginId', id);
+    data.append('password', password);
+    data.append('petname', petname);
+    data.append('age', isAge);
+    data.append('species', 'Dog');
+    data.append('gender', isMale);
+    data.append('address', `${address}`);
+    data.append('profileImage', formData.file);
+    for (const key of data.keys()) {
+      console.log(key);
+    }
+    for (const value of data.values()) {
+      console.log(value);
+    }
+    if (isAge === '') {
+      alert('나이가 입력 되어야 합니다.');
+    } else if (isMale === '' || id === '' || password === '') {
+      alert('입력되지 않은 값이 있습니다.');
+    } else {
+      try {
+        await axios.post(`${url}/signup`, data, { headers });
+        navigate('/login');
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        console.error('Error', error);
+        alert(error);
+      }
+    }
+  };
+
+  return (
+    <Container>
+      <Background ref={backgroundRef} />
+      <Box>
+        <LeftDiv>
+          <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
+          <NameDiv>{petname}</NameDiv>
+          <PlusDiv>{WhitePlusSVG}</PlusDiv>
+          <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
+          <form>
+            <input type='file' name='profileImage' onChange={handleChange} />
+          </form>
+        </LeftDiv>
+        <RightDiv>
+          <InputsDiv>
+            <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
+            <InputDiv>
+              <Input
+                type='text'
+                readOnly={true}
+                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                openAddressModal={openAddressModal}
+              />
+              <SvgSpan onClick={openAddressModal}>
+                <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
+              </SvgSpan>
+            </InputDiv>
+          </InputsDiv>
+          <GenderDiv isMale={isMale}>
+            <TextSpan>성별</TextSpan>
+            <IconButton onClick={() => setIsMale('male')}>
+              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
+            </IconButton>
+            <IconButton onClick={() => setIsMale('female')}>
+              <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
+            </IconButton>
+          </GenderDiv>
+          <TypeDiv>
+            <TextSpan>저는...</TextSpan>
+            <ToggleDiv>
+              <CircleDiv
+                onClick={() => setIsCat(!isCat)}
+                isCat={isCat}
+                className={isCat ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+              />
+              <CatSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
+                🐱
+              </CatSpan>
+              <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
+                🐶
+              </DogSpan>
+            </ToggleDiv>
+          </TypeDiv>
+          <ButtonDiv>
+            <Button text='시작하기' onClick={submitHandler} />
+          </ButtonDiv>
+        </RightDiv>
+      </Box>
+      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
+    </Container>
+  );
+};
+
+export const convertAddress = (address: number) => {
+  if (address !== null) {
+    switch (address) {
+      case 11680:
+        return '강남구';
+      case 11740:
+        return '강동구';
+      case 11305:
+        return '강북구';
+      case 11500:
+        return '강서구';
+      case 11620:
+        return '관악구';
+      case 11215:
+        return '광진구';
+      case 11530:
+        return '구로구';
+      case 11545:
+        return '금천구';
+      case 11350:
+        return '노원구';
+      case 11320:
+        return '도봉구';
+      case 11230:
+        return '동대문구';
+      case 11590:
+        return '동작구';
+      case 11440:
+        return '마포구';
+      case 11410:
+        return '서대문구';
+      case 11650:
+        return '서초구';
+      case 11200:
+        return '성동구';
+      case 11290:
+        return '성북구';
+      case 11710:
+        return '송파구';
+      case 11470:
+        return '양천구';
+      case 11560:
+        return '영등포구';
+      case 11170:
+        return '용산구';
+      case 11380:
+        return '은평구';
+      case 11110:
+        return '종로구';
+      case 11140:
+        return '중구	';
+      case 11260:
+        return '중랑구';
+    }
+  }
+};
+
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -190,233 +381,5 @@ const YellowPlusSVG = (
     />
   </svg>
 );
-export interface IProps {
-  address: number | null;
-  setAddress: (address: number | null) => void;
-  setIsOpen: (isOpen: boolean) => void;
-}
-
-const UserInfo: React.FC = () => {
-  const [isMale, setIsMale] = useState<string>('male');
-  const [isCat, setIsCat] = useState(true);
-  const [isAge, setIsAge] = useState('0');
-  const [isOpen, setIsOpen] = useState(false);
-  const [address, setAddress] = useState<number | null>(null);
-  const [formData, setFormData] = useState<FormData>({ file: new File([], '') });
-  const location = useLocation();
-  const id = location.state.id;
-  const petname = location.state.petname;
-  const password = location.state.password;
-  console.log(isAge);
-  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsAge((e.target as HTMLInputElement).value);
-    console.log(formData);
-    console.log((e.target as HTMLInputElement).value);
-  };
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const navigate = useNavigate();
-
-  const openAddressModal = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const backgroundRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
-
-  // 배경 클릭시 모달이 닫힌다.
-  window.addEventListener('click', (e) => {
-    if (e.target === backgroundRef.current) {
-      setIsOpen(false);
-    }
-  });
-
-  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const target = e.target as any;
-  //   const files = target.profileImage.files;
-  //   const formData = new FormData();
-  //   formData.append('files', files[0]);
-
-  //   const dataSet = {
-  //     loginId: id,
-  //     password: password,
-  //     petname: petname,
-  //     age: isAge,
-  //     species: 'Dog',
-  //     gender: isMale,
-  //     address: address,
-  //     profileImage: '',
-  //   };
-
-  //   formData.append('data', JSON.stringify(dataSet));
-
-  // };
-
-  const submitHandler = async () => {
-    // const jwtToken = localStorage.getItem('Authorization');
-    // const refreshToken = localStorage.getItem('Refresh');
-    // const body = {
-    //   loginId: id,
-    //   password: password,
-    //   petname: petname,
-    //   age: isAge,
-    //   species: 'Dog',
-    //   gender: isMale,
-    //   address: address,
-    //   profileImage: '',
-    // };
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-      // Authorization: jwtToken,
-      // Refresh: refreshToken,
-    };
-    const data = new FormData();
-    data.append('loginId', id);
-    data.append('password', password);
-    data.append('petname', petname);
-    data.append('age', isAge);
-    data.append('species', 'Dog');
-    data.append('gender', isMale);
-    data.append('address', `${address}`);
-    data.append('profileImage', formData.file);
-    console.log(formData);
-    if (isAge === '') {
-      alert('나이가 입력 되어야 합니다.');
-    } else if (isMale === '' || id === '' || password === '') {
-      alert('입력되지 않은 값이 있습니다.');
-    } else {
-      try {
-        await axios.post(`${url}/signup`, data, { headers });
-        navigate('/login');
-        // 비동기 에러 날 것 같으면 .then 사용
-      } catch (error) {
-        console.error('Error', error);
-        alert(error);
-      }
-    }
-  };
-
-  return (
-    <Container>
-      <Background ref={backgroundRef} />
-      <Box>
-        <LeftDiv>
-          <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
-          <NameDiv>귀염둥이</NameDiv>
-          <PlusDiv>{WhitePlusSVG}</PlusDiv>
-          <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
-        </LeftDiv>
-        <RightDiv>
-          <InputsDiv>
-            <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
-            <InputDiv>
-              <Input
-                type='text'
-                readOnly={true}
-                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
-                openAddressModal={openAddressModal}
-              />
-              <SvgSpan onClick={openAddressModal}>
-                <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
-              </SvgSpan>
-            </InputDiv>
-          </InputsDiv>
-          <GenderDiv isMale={isMale}>
-            <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale('male')}>
-              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
-            </IconButton>
-            <IconButton onClick={() => setIsMale('female')}>
-              <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
-            </IconButton>
-          </GenderDiv>
-          <TypeDiv>
-            <TextSpan>저는...</TextSpan>
-            <ToggleDiv>
-              <CircleDiv
-                onClick={() => setIsCat(!isCat)}
-                isCat={isCat}
-                className={isCat ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
-              />
-              <CatSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
-                🐱
-              </CatSpan>
-              <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
-                🐶
-              </DogSpan>
-              <form>
-                <input type='file' name='profileImage' onChange={handleChange} />
-              </form>
-            </ToggleDiv>
-          </TypeDiv>
-          <ButtonDiv>
-            <Button text='시작하기' onClick={submitHandler} />
-          </ButtonDiv>
-        </RightDiv>
-      </Box>
-      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
-    </Container>
-  );
-};
-
-export const convertAddress = (address: number) => {
-  if (address !== null) {
-    switch (address) {
-      case 11680:
-        return '강남구';
-      case 11740:
-        return '강동구';
-      case 11305:
-        return '강북구';
-      case 11500:
-        return '강서구';
-      case 11620:
-        return '관악구';
-      case 11215:
-        return '광진구';
-      case 11530:
-        return '구로구';
-      case 11545:
-        return '금천구';
-      case 11350:
-        return '노원구';
-      case 11320:
-        return '도봉구';
-      case 11230:
-        return '동대문구';
-      case 11590:
-        return '동작구';
-      case 11440:
-        return '마포구';
-      case 11410:
-        return '서대문구';
-      case 11650:
-        return '서초구';
-      case 11200:
-        return '성동구';
-      case 11290:
-        return '성북구';
-      case 11710:
-        return '송파구';
-      case 11470:
-        return '양천구';
-      case 11560:
-        return '영등포구';
-      case 11170:
-        return '용산구';
-      case 11380:
-        return '은평구';
-      case 11110:
-        return '종로구';
-      case 11140:
-        return '중구	';
-      case 11260:
-        return '중랑구';
-    }
-  }
-};
 
 export default UserInfo;
