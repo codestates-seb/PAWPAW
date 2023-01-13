@@ -215,8 +215,8 @@ const UserInfo: React.FC = () => {
   const navigate = useNavigate();
   console.log(isMale);
   const submitHandler = async () => {
-    // const jwtToken = localStorage.getItem('Authorization');
-    // const refreshToken = localStorage.getItem('Refresh');
+    const jwtToken = localStorage.getItem('Authorization');
+    const refreshToken = localStorage.getItem('Refresh');
     const body = {
       loginId: id,
       password: password,
@@ -226,13 +226,17 @@ const UserInfo: React.FC = () => {
       address: '',
       profileImage: '',
     };
+    const headers = {
+      Authorization: jwtToken,
+      Refresh: refreshToken,
+    };
     if (isAge === '') {
       alert('나이가 입력 되어야 합니다.');
     } else if (isMale === '' || id === '' || password === '') {
       alert('입력되지 않은 값이 있습니다.');
     } else {
       try {
-        await axios.post(`${url}/signup`, body);
+        await axios.post(`${url}/signup`, { body }, { headers });
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {

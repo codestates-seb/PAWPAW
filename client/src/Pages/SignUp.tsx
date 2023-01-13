@@ -124,7 +124,7 @@ const SignUp: FC = () => {
       alert('아이디를 입력해야 합니다.');
     } else {
       try {
-        const response = await axios.post(`${url}/pets/check`, {
+        const response = await axios.post(`${url}/pets/check/${id}`, {
           loginId: id,
         });
         const value = response as unknown as boolean;

@@ -5,7 +5,7 @@ axios.defaults.headers.common['Authorization'] = `${jwtToken}`;
 axios.defaults.headers.common['Refresh'] = `${refreshToken}`;
 const url = 'http://localhost:8080';
 
-export const memberUpdate = async (
+export const userUpdate = async (
   id: string,
   petname: string,
   age: string,
@@ -26,7 +26,7 @@ export const memberUpdate = async (
   }
 };
 
-export const memberDelete = async (id: string) => {
+export const userDelete = async (id: string) => {
   try {
     await axios.delete(`${url}/pets/${id}`);
   } catch (error) {
