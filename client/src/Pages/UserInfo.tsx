@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -10,7 +10,10 @@ import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
-const url = 'http://localhost:8080';
+
+interface FormData {
+  file: File;
+}
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -199,6 +202,7 @@ const UserInfo: React.FC = () => {
   const [isAge, setIsAge] = useState('0');
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<number | null>(null);
+  const [formData, setFormData] = useState<FormData>({ file: new File([], '') });
   const location = useLocation();
   const id = location.state.id;
   const petname = location.state.petname;
@@ -206,17 +210,15 @@ const UserInfo: React.FC = () => {
   console.log(isAge);
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setIsAge((e.target as HTMLInputElement).value);
+    console.log(formData);
     console.log((e.target as HTMLInputElement).value);
   };
-
-  // const uploadHandler = (e) => {
-  //   e.preventDefault();
-  //   const file = e.target.files[0];
-  //   setFiles([...file, { uploadedFile: file }]);
-  // };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const navigate = useNavigate();
-  console.log(isMale);
 
   const openAddressModal = () => {
     setIsOpen(!isOpen);
@@ -231,29 +233,63 @@ const UserInfo: React.FC = () => {
     }
   });
 
+  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   const target = e.target as any;
+  //   const files = target.profileImage.files;
+  //   const formData = new FormData();
+  //   formData.append('files', files[0]);
+
+  //   const dataSet = {
+  //     loginId: id,
+  //     password: password,
+  //     petname: petname,
+  //     age: isAge,
+  //     species: 'Dog',
+  //     gender: isMale,
+  //     address: address,
+  //     profileImage: '',
+  //   };
+
+  //   formData.append('data', JSON.stringify(dataSet));
+
+  // };
+
   const submitHandler = async () => {
-    const jwtToken = localStorage.getItem('Authorization');
-    const refreshToken = localStorage.getItem('Refresh');
-    const body = {
-      loginId: id,
-      password: password,
-      petname: petname,
-      age: isAge,
-      gender: isMale,
-      address: address,
-      profileImage: '',
-    };
+    // const jwtToken = localStorage.getItem('Authorization');
+    // const refreshToken = localStorage.getItem('Refresh');
+    // const body = {
+    //   loginId: id,
+    //   password: password,
+    //   petname: petname,
+    //   age: isAge,
+    //   species: 'Dog',
+    //   gender: isMale,
+    //   address: address,
+    //   profileImage: '',
+    // };
     const headers = {
-      Authorization: jwtToken,
-      Refresh: refreshToken,
+      'Content-Type': 'multipart/form-data',
+      // Authorization: jwtToken,
+      // Refresh: refreshToken,
     };
+    const data = new FormData();
+    data.append('loginId', id);
+    data.append('password', password);
+    data.append('petname', petname);
+    data.append('age', isAge);
+    data.append('species', 'Dog');
+    data.append('gender', isMale);
+    data.append('address', `${address}`);
+    data.append('profileImage', formData.file);
+    console.log(formData);
     if (isAge === '') {
       alert('나이가 입력 되어야 합니다.');
     } else if (isMale === '' || id === '' || password === '') {
       alert('입력되지 않은 값이 있습니다.');
     } else {
       try {
-        await axios.post(`${url}/signup`, { body }, { headers });
+        await axios.post(`${url}/signup`, data, { headers });
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
@@ -262,13 +298,6 @@ const UserInfo: React.FC = () => {
       }
     }
   };
-  // const state = {
-  //   file: null,
-  // }
-  // const handleFile = (e)=>{
-  //   const file = e.target.files[0]
-  //   this.setState({file:file})
-  // }
 
   return (
     <Container>
@@ -318,12 +347,9 @@ const UserInfo: React.FC = () => {
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
-              <input
-                type='file'
-                name='photo'
-                accept='image/*,audio/*,video/mp4,video/x-m4v,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,.csv'
-                // onChange={uploadHandler}
-              />
+              <form>
+                <input type='file' name='profileImage' onChange={handleChange} />
+              </form>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>

@@ -9,7 +9,7 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 
 const { ivory, brown } = color;
-const url = 'http://localhost:8080';
+
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -136,6 +136,8 @@ const SignUp: FC = () => {
           alert('중복된 아이디 입니다.');
         }
         // 비동기 에러 날 것 같으면 .then 사용
+        console.log(response);
+        console.log(id);
       } catch (error) {
         console.error('Error', error);
         alert(error);
