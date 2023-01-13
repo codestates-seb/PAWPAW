@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import color from '../color';
 import { Map, Polygon } from 'react-kakao-maps-sdk';
 import jsonData from '../seoul-geojson.json';
 import Button from '../Components/Button';
-import { PropTypes } from './UserInfo';
+import { IProps } from './UserInfo';
 
 const { yellow, brown, ivory } = color;
 
@@ -44,12 +44,12 @@ const NameSpan = styled.span<{ top: string; left: string }>`
   z-index: 1;
   top: ${(props) => props.top};
   left: ${(props) => props.left};
-  user-select: none;
-  cursor: pointer;
+  pointer-events: none;
 `;
 
-const AddressModal = ({ address, setAddress, setIsOpen }: PropTypes) => {
+const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
   const [areas, setAreas] = useState(jsonData.features); // 구 25개 배열
+  const [clickedCode, setClickedCode] = useState<number | null>(null);
 
   // 마우스 호버시, 선택된 index의 지역의 isMouseover 속성을 true, 나머지 지역은 false로 바꾼다.
   const handleMouseOver = (idx: number) => {
@@ -92,15 +92,39 @@ const AddressModal = ({ address, setAddress, setIsOpen }: PropTypes) => {
         isClicked: true,
       },
     ]);
-    setAddress(code);
+    setClickedCode(code);
   };
 
   // 선택 완료 버튼 클릭시, 주소가 기본값이 아니라면 제출한다.
   const submitAddress = () => {
-    if (address !== 0) {
+    setAddress(clickedCode);
+
+    if (address !== null) {
       setIsOpen(false);
     }
   };
+
+  // 이미 입력된 주소가 있다면 색칠해서 보여준다.
+  useEffect(() => {
+    if (address !== 0) {
+      setAreas((areas) => [
+        // 선택된 지역은 clicked 처리해 렌더링
+        ...areas
+          .filter((area) => Number(area.properties.ADM_SECT_C) === address)
+          .map((selectedArea) => {
+            selectedArea.isClicked = true;
+            return selectedArea;
+          }),
+        // 선택되지 않은 지역은 clicked 해제해 렌더링
+        ...areas
+          .filter((area) => Number(area.properties.ADM_SECT_C) !== address)
+          .map((unselectedArea) => {
+            unselectedArea.isClicked = false;
+            return unselectedArea;
+          }),
+      ]);
+    }
+  }, []);
 
   return (
     <Container>
@@ -115,6 +139,7 @@ const AddressModal = ({ address, setAddress, setIsOpen }: PropTypes) => {
           level={9}
           zoomable={false}
           disableDoubleClickZoom={true}
+          draggable={false}
         >
           {areas.map((gu, idx) => {
             const code = Number(gu.properties.ADM_SECT_C); // 법정동코드
@@ -176,7 +201,7 @@ const AddressModal = ({ address, setAddress, setIsOpen }: PropTypes) => {
       <NameSpan top={'360px'} left={'197px'}>
         양천구
       </NameSpan>
-      <NameSpan top={'282px'} left={'150px'}>
+      <NameSpan top={'282px'} left={'153px'}>
         강서구
       </NameSpan>
       <NameSpan top={'387px'} left={'330px'}>

@@ -3,13 +3,16 @@ import Header from '../Components/Header';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+const Container = styled.div``;
+
+const Body = styled.div`
+  padding-top: 50px;
+`;
+
 const Domain: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true); // 나중에 false로 수정하기
   const navigate = useNavigate();
-  const Container = styled.div``;
-  const Body = styled.div`
-    padding-top: 50px;
-  `;
+
   return (
     <>
       <Container>
