@@ -4,6 +4,7 @@ import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +32,8 @@ public class PetDetailsService implements UserDetailsService {
         return new PetDetails(pet);
     }
 
-    private final class PetDetails extends Pet implements UserDetails {
+    @Getter
+    public final class PetDetails extends Pet implements UserDetails {
         PetDetails(Pet pet) {
             setId(pet.getId());
             setLoginId(pet.getLoginId());

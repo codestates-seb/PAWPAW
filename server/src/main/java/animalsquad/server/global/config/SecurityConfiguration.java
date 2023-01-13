@@ -8,6 +8,7 @@ import animalsquad.server.global.auth.jwt.JwtAuthenticationFilter;
 import animalsquad.server.global.auth.jwt.JwtExceptionFilter;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.auth.jwt.JwtVerificationFilter;
+import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ public class SecurityConfiguration {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
+    private final PetDetailsService petDetailsService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -96,7 +98,7 @@ public class SecurityConfiguration {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new PetAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new PetAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenProvider, redisTemplate);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenProvider, redisTemplate,petDetailsService);
 
             JwtExceptionFilter jwtExceptionFilter = new JwtExceptionFilter();
             builder.addFilter(jwtAuthenticationFilter)

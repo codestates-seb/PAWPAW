@@ -82,6 +82,10 @@ public class PetService {
 
     // 커뮤니티 기능 구현 전 나의 정보만 조회
 
+    public Pet findPet(long id) {
+        return findVerifiedPet(id);
+    }
+
     public Pet findPet(long id, String token) {
         verifiedToken(id, token);
 

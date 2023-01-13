@@ -1,5 +1,6 @@
 package animalsquad.server.global.auth.jwt;
 
+import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,6 +28,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
+    private final PetDetailsService petDetailsService;
 
 
     @Override
@@ -75,10 +78,11 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 //    }
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
-        String loginId = (String) claims.get("loginId");
+        String loginId = (String) claims.get("sub");
         List<GrantedAuthority> authorities = ((List<String>) claims.get("roles")).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        UserDetails userDetails = petDetailsService.loadUserByUsername(loginId);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(loginId, null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

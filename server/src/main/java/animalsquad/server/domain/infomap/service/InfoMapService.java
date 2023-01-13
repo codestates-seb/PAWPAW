@@ -3,13 +3,9 @@ package animalsquad.server.domain.infomap.service;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.infomap.entity.InfoMapCategory;
 import animalsquad.server.domain.infomap.repository.InfoMapRepository;
-import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InfoMapService {
 
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapRepository infoMapRepository;
 
     public List<InfoMap> findInfos(int code, String filter) {
@@ -41,10 +37,8 @@ public class InfoMapService {
         return infoMaps;
     }
 
-    public List<InfoMap> findMyPicks(String token) {
-        long petId = jwtTokenProvider.getPetId(token);
-
-        return infoMapRepository.findInfoMapsMyPick(petId);
+    public List<InfoMap> findMyPicks(long id) {
+        return infoMapRepository.findInfoMapsMyPick(id);
     }
     public InfoMap findMapDetails(long infoMapId){
         return findVerifiedInfoMap(infoMapId);
