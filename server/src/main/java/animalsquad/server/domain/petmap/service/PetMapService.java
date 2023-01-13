@@ -33,7 +33,7 @@ public class PetMapService {
         }
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
-        Pet pet = petService.findPet(petMap.getPet().getId(), token);
+        Pet pet = petService.findPet(petMap.getPet().getId());
 
         findExistsPlace(infoMap, pet);
 
@@ -51,7 +51,7 @@ public class PetMapService {
         }
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
-        Pet pet = petService.findPet(petMap.getPet().getId(), token);
+        Pet pet = petService.findPet(petMap.getPet().getId());
 
         PetMap findPetMap = findVerifiedPetMap(infoMap, pet);
         petMapRepository.delete(findPetMap);

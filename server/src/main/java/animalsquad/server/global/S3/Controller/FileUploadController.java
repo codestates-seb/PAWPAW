@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
-public class FileuploadController {
+public class FileUploadController {
     private final FileUploadService fileUploadService;
 
     @PostMapping("/api/v1/upload")

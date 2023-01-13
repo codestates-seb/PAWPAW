@@ -6,14 +6,12 @@ import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.mapper.PetMapper;
 import animalsquad.server.domain.pet.service.PetService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,34 +23,38 @@ public class PetController {
     private final PetMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity postPet(@Valid PetPostDto petPostDto) {
-        Pet pet = petService.createPet(mapper.petPostToPet(petPostDto));
+    public ResponseEntity postPet(@Valid PetPostDto petPostDto) throws IllegalAccessException {
+        Pet pet = petService.createPet(mapper.petPostToPet(petPostDto), petPostDto.getProfileImage());
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
+
+    @GetMapping("/check/{login-id}")
+    public ResponseEntity<Boolean> checkPet(@PathVariable ("login-id") String loginId) {
+        Boolean result = petService.checkLoginId(loginId);
+
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
     @PatchMapping("/{pet-id}")
-    public ResponseEntity patchPet(@RequestHeader("Authorization") String token,
-                                   @PathVariable("pet-id") long id,
+    public ResponseEntity patchPet(@PathVariable("pet-id") long id,
                                     PetPatchDto petPatchDto) {
         petPatchDto.setId(id);
 
-        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto), token);
+        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto), petPatchDto.getProfileImage());
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{pet-id}")
-    public ResponseEntity getPet(@RequestHeader("Authorization") String token,
-                                 @PathVariable("pet-id") long id) {
-        Pet response = petService.findPet(id, token);
+    public ResponseEntity getPet(@PathVariable("pet-id") long id) {
+        Pet response = petService.findPet(id);
 
         return new ResponseEntity(mapper.petToPetResponseDto(response),HttpStatus.OK);
     }
 
     @DeleteMapping("/{pet-id}")
-    public ResponseEntity deletePet(@RequestHeader("Authorization") String token,
-                                    @PathVariable("pet-id") long id) {
-        petService.deletePet(id, token);
+    public ResponseEntity deletePet(@PathVariable("pet-id") long id) {
+        petService.deletePet(id);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
