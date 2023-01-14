@@ -20,7 +20,7 @@ export interface IProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 const UserInfo: React.FC = () => {
-  const [isMale, setIsMale] = useState<string>('male');
+  const [isMale, setIsMale] = useState<string>('Male');
   const [isCat, setIsCat] = useState(true);
   const [isAge, setIsAge] = useState('0');
   const [isOpen, setIsOpen] = useState(false);
@@ -57,12 +57,17 @@ const UserInfo: React.FC = () => {
     const data = new FormData();
     data.append('loginId', id);
     data.append('password', password);
-    data.append('petname', petname);
-    data.append('age', isAge);
-    data.append('species', 'Dog');
+    data.append('petName', petname);
+    data.append('age', '12');
+    // 나이는 숫자 타입으로
+    data.append('species', 'DOG');
+    // 'DOG','CAT'
     data.append('gender', isMale);
-    data.append('address', `${address}`);
+    // 'MALE','FEMALE'
+    data.append('address', '1');
+    // 주소값도 숫자 타입으로 지금은 1,2만 가능
     data.append('profileImage', formData.file);
+    console.log(data);
     for (const key of data.keys()) {
       console.log(key);
     }
@@ -75,7 +80,7 @@ const UserInfo: React.FC = () => {
       alert('입력되지 않은 값이 있습니다.');
     } else {
       try {
-        await axios.post(`${url}/signup`, data, { headers });
+        await axios.post(`${url}/pets/signup`, data, { headers });
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
@@ -115,10 +120,10 @@ const UserInfo: React.FC = () => {
           </InputsDiv>
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale('male')}>
+            <IconButton onClick={() => setIsMale('MALE')}>
               <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
             </IconButton>
-            <IconButton onClick={() => setIsMale('female')}>
+            <IconButton onClick={() => setIsMale('FEMALE')}>
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
@@ -279,11 +284,11 @@ const GenderDiv = styled.div<{ isMale: string }>`
   align-items: center;
 
   button:first-of-type {
-    ${(props) => props.isMale === 'male' && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'MALE' && `background-color: ${darkivory}`}
   }
 
   button:last-of-type {
-    ${(props) => props.isMale === 'female' && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'FEMALE' && `background-color: ${darkivory}`}
   }
 `;
 
