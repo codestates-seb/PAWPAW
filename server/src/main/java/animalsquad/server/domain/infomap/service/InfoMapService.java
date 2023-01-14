@@ -22,7 +22,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InfoMapService {
 
-//    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapRepository infoMapRepository;
     private final AddressRepository addressRepository;
     private final FileUploadService fileUploadService;

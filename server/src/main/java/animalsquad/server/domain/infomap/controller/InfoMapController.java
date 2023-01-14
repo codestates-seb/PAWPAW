@@ -10,14 +10,12 @@ import animalsquad.server.domain.infomap.mapper.InfoMapCommentsMapper;
 import animalsquad.server.domain.infomap.mapper.InfoMapMapper;
 import animalsquad.server.domain.infomap.service.InfoMapCommentService;
 import animalsquad.server.domain.infomap.service.InfoMapService;
-import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,7 +31,6 @@ public class InfoMapController {
     private final InfoMapCommentService infoMapCommentService;
     private final InfoMapMapper infoMapMapper;
     private final InfoMapCommentsMapper infoMapCommentsMapper;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/{code}")
     public ResponseEntity getMaps(@PathVariable("code") int code,
