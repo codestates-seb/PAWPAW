@@ -9,7 +9,7 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 
 const { ivory, brown } = color;
-
+const url = 'https://hyeon-dong.site';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -98,10 +98,6 @@ const SignUp: FC = () => {
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
   const navigate = useNavigate();
-  const jwtToken = localStorage.getItem('Authorization');
-  const refreshToken = localStorage.getItem('Refresh');
-  axios.defaults.headers.common['Authorization'] = `${jwtToken}`;
-  axios.defaults.headers.common['Refresh'] = `${refreshToken}`;
 
   const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPetName((e.target as HTMLInputElement).value);
@@ -124,20 +120,20 @@ const SignUp: FC = () => {
       alert('아이디를 입력해야 합니다.');
     } else {
       try {
-        const response = await axios.post(`${url}/pets/check/${id}`, {
-          loginId: id,
-        });
-        const value = response as unknown as boolean;
+        const response = await axios.get(`${url}/pets/check/${id}`);
+        const value = response.status as unknown as boolean;
+        console.log(value);
+        console.log(response);
+        console.log(response.data);
+        console.log(id);
         // 타입 설정에 대해서 고민 필요
         // response 일지 response.status 이것도 아니면 response.body일지는 통신해보면서 정하기
-        if (value === true) {
+        if (response.data === true) {
           alert('유효한 아이디 입니다.');
-        } else if (value === false) {
+        } else if (response.data === false) {
           alert('중복된 아이디 입니다.');
         }
         // 비동기 에러 날 것 같으면 .then 사용
-        console.log(response);
-        console.log(id);
       } catch (error) {
         console.error('Error', error);
         alert(error);
