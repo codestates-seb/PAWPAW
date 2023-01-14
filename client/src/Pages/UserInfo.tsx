@@ -12,32 +12,35 @@ import AddressModal from './AddressModal';
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 
 interface FormData {
-  file: File;
+  profileImage: Blob | null;
 }
+
 export interface IProps {
   address: number | null;
   setAddress: (address: number | null) => void;
   setIsOpen: (isOpen: boolean) => void;
 }
 const UserInfo: React.FC = () => {
-  const [isMale, setIsMale] = useState<string>('Male');
+  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>('MALE');
   const [isCat, setIsCat] = useState(true);
-  const [isAge, setIsAge] = useState('0');
+  const [isAge, setIsAge] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<number | null>(null);
-  const [formData, setFormData] = useState<FormData>({ file: new File([], '') });
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const location = useLocation();
   const id = location.state.id;
   const petname = location.state.petname;
   const password = location.state.password;
   const navigate = useNavigate();
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsAge((e.target as HTMLInputElement).value);
+    setIsAge(Number(e.target.value));
     console.log((e.target as HTMLInputElement).value);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    }
   };
   const openAddressModal = () => {
     setIsOpen(!isOpen);
@@ -51,6 +54,7 @@ const UserInfo: React.FC = () => {
     }
   });
   const submitHandler = async () => {
+    if (!formData.profileImage) return;
     const headers = {
       'Content-Type': 'multipart/form-data',
     };
@@ -58,7 +62,7 @@ const UserInfo: React.FC = () => {
     data.append('loginId', id);
     data.append('password', password);
     data.append('petName', petname);
-    data.append('age', '12');
+    data.append('age', isAge.toString());
     // 나이는 숫자 타입으로
     data.append('species', 'DOG');
     // 'DOG','CAT'
@@ -66,17 +70,19 @@ const UserInfo: React.FC = () => {
     // 'MALE','FEMALE'
     data.append('address', '1');
     // 주소값도 숫자 타입으로 지금은 1,2만 가능
-    data.append('profileImage', formData.file);
+    data.append('profileImage', formData.profileImage);
     console.log(data);
+    console.log(formData);
+    console.log(formData.profileImage);
     for (const key of data.keys()) {
       console.log(key);
     }
     for (const value of data.values()) {
       console.log(value);
     }
-    if (isAge === '') {
+    if (isAge === 0) {
       alert('나이가 입력 되어야 합니다.');
-    } else if (isMale === '' || id === '' || password === '') {
+    } else if (id === '' || password === '') {
       alert('입력되지 않은 값이 있습니다.');
     } else {
       try {
