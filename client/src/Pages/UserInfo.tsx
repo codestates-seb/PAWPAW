@@ -10,7 +10,7 @@ import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
-
+const url = '';
 interface FormData {
   profileImage: Blob | null;
 }
@@ -64,7 +64,7 @@ const UserInfo: React.FC = () => {
     data.append('petName', petname);
     data.append('age', isAge.toString());
     // 나이는 숫자 타입으로
-    data.append('species', 'DOG');
+    data.append('species', 'CAT');
     // 'DOG','CAT'
     data.append('gender', isMale);
     // 'MALE','FEMALE'
@@ -74,6 +74,7 @@ const UserInfo: React.FC = () => {
     console.log(data);
     console.log(formData);
     console.log(formData.profileImage);
+    console.log(`file size = ${formData.profileImage.size} byte`);
     for (const key of data.keys()) {
       console.log(key);
     }

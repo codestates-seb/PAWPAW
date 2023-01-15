@@ -11,7 +11,7 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 import axios from 'axios';
 const { brown } = color;
-
+const url = '';
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -64,6 +64,7 @@ const Login: React.FC = () => {
   const [id, setId] = useState<string>('');
   const [petId, setPetId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
 
   const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setId((e.target as HTMLInputElement).value);
@@ -92,9 +93,10 @@ const Login: React.FC = () => {
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
-        // navigate('/map');
+        localStorage.setItem('petId', petId);
+        navigate('/map');
         // 지금은 map이 초기 화면 이니까
-        // window.location.reload();
+        window.location.reload();
       } catch (error) {
         console.error('Error', error);
         alert(error);

@@ -1,10 +1,39 @@
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import ts from 'typescript';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
-// axios.defaults.headers.common['Authorization'] = `${jwtToken}`;
-// axios.defaults.headers.common['Refresh'] = `${refreshToken}`;
 const url = '';
+
+interface FetchHook {
+  responseData: object | null;
+  loading: boolean;
+  error: string | null;
+}
+
+export const getUserInfo = (id: string): FetchHook => {
+  const [responseData, setResponseData] = useState<object | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${url}/pets/${id}`);
+        setResponseData(response.data);
+      } catch (error) {
+        setError(error as never);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [url]);
+
+  return { responseData, loading, error };
+};
 
 export const petUpdate = async (
   petId: string,
@@ -57,5 +86,8 @@ export const petDelete = async (id: string) => {
     await axios.delete(`${url}/pets/${id}`, { headers });
   } catch (error) {
     console.error('Error', error);
+  } finally {
+    localStorage.removeItem('Authorization');
+    localStorage.removeItem('Refresh');
   }
 };
