@@ -6,10 +6,8 @@ import { Icon } from '@iconify/react';
 import color from '../color';
 import { useNavigate } from 'react-router';
 import { getUserInfo, petLogout } from '../util/UserApi';
-import { isModifier } from 'typescript';
 
 const { darkgrey, brown, mediumgrey, bordergrey } = color;
-const url = '';
 
 interface FormData {
   profileImage: Blob | null;
@@ -34,7 +32,8 @@ interface Info {
 
 const Mypage = () => {
   const navigate = useNavigate();
-  const { responseData, error } = getUserInfo(5);
+  const petId = localStorage.getItem('petId') as string;
+  const { responseData, error } = getUserInfo(petId);
   const [info, setInfo] = useState<Info>({
     petName: '',
     isMale: 'MALE',
@@ -64,6 +63,9 @@ const Mypage = () => {
         profileImage: formData,
       },
     });
+  };
+  const logoutHandler = () => {
+    petLogout().then(() => navigate('/login'));
   };
 
   return (
@@ -115,7 +117,7 @@ const Mypage = () => {
           </WriteBox>
         </WriteContainerBox>
         <LogoutBox>
-          <button onClick={petLogout}>로그아웃</button>
+          <button onClick={logoutHandler}>로그아웃</button>
         </LogoutBox>
       </Container>
     </>
