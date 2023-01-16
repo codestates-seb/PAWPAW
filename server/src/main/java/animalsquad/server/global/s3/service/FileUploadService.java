@@ -12,7 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class FileUploadService {
-    // 추가
+// 추가
     private final UploadService s3Service;
 
     //Multipart를 통해 전송된 파일을 업로드하는 메소드
@@ -32,7 +32,6 @@ public class FileUploadService {
     //기존 확장자명을 유지한 채, 유니크한 파일의 이름을 생성하는 로직
     private String createFileName(String originalFileName) throws IllegalAccessException {
         return UUID.randomUUID() + "." + getFileExtension(originalFileName);
-//        return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
     }
 
     //파일의 확장자명을 가져오는 로직
@@ -42,5 +41,8 @@ public class FileUploadService {
         } catch (StringIndexOutOfBoundsException e) {
             throw new IllegalAccessException(String.format("잘못된 형식의 파일($s) 입니다", fileName));
         }
+    }
+    public void deleteFile(String fileName) throws IllegalAccessException {
+        s3Service.deleteFile(fileName);
     }
 }

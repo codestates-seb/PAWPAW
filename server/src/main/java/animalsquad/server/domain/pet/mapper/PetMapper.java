@@ -26,7 +26,7 @@ public interface PetMapper {
         pet.setAge( petPostDto.getAge() );
         pet.setGender( petPostDto.getGender() );
         pet.setSpecies(petPostDto.getSpecies());
-//        pet.setProfileImage( petPostDto.getProfileImage().getName() );
+//        pet.setProfileImage( petPostDto.getProfileImage());
         pet.setAddress(address);
 
         return pet;
