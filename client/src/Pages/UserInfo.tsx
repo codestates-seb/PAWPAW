@@ -70,13 +70,9 @@ const UserInfo: React.FC = () => {
     data.append('password', password);
     data.append('petName', petname);
     data.append('age', isAge.toString());
-    // 나이는 숫자 타입으로
     data.append('species', 'CAT');
-    // 'DOG','CAT'
     data.append('gender', isMale);
-    // 'MALE','FEMALE'
     data.append('code', '1');
-    // 주소값도 숫자 타입으로 지금은 1,2만 가능
     data.append('profileImage', formData.profileImage);
     console.log(data);
     console.log(formData);

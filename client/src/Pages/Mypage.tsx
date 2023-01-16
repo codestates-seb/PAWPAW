@@ -1,15 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from '../Components/Header';
 import UserImg from '../img/userimg.png';
 import { Icon } from '@iconify/react';
 import color from '../color';
 import { useNavigate } from 'react-router';
+import { getUserInfo, petLogout } from '../util/UserApi';
+import { isModifier } from 'typescript';
 
 const { darkgrey, brown, mediumgrey, bordergrey } = color;
+const url = '';
+
+interface FormData {
+  profileImage: Blob | null;
+}
+
+interface ResponseData {
+  petName: string;
+  code: string;
+  profileImage: File | null;
+  age: number;
+  gender: 'MALE' | 'FEMALE';
+  species: 'CAT' | 'DOG';
+}
+
+interface Info {
+  petName: string;
+  isMale: 'MALE' | 'FEMALE';
+  isCat: 'CAT' | 'DOG';
+  age: number;
+  address: string | null;
+}
 
 const Mypage = () => {
   const navigate = useNavigate();
+  const { responseData, error } = getUserInfo(5);
+  const [info, setInfo] = useState<Info>({
+    petName: '',
+    isMale: 'MALE',
+    isCat: 'CAT',
+    age: 0,
+    address: null,
+  });
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [count, setCount] = useState<number>(0);
+
+  if (!error && responseData && count === 0) {
+    const { petName, code, profileImage, age, gender, species } = responseData as ResponseData;
+    setInfo({ ...info, petName: petName, address: code, age: age, isMale: gender, isCat: species });
+    setFormData({ profileImage: profileImage });
+    setCount(count + 1);
+  }
+  console.log('info', info);
+
+  const goEditPage = () => {
+    navigate('/userinfoedit', {
+      state: {
+        petName: info.petName,
+        code: info.address,
+        age: info.age,
+        gender: info.isMale,
+        species: info.isMale,
+        profileImage: formData,
+      },
+    });
+  };
+
   return (
     <>
       <Header />
@@ -20,21 +76,24 @@ const Mypage = () => {
           </ProfileBox>
           <InfoBox>
             <InfoTopBox>
-              <InfoNameBox>귀염둥이</InfoNameBox>
-              <InfoAgeBox>6세</InfoAgeBox>
+              <InfoNameBox>{info.petName}</InfoNameBox>
+              <InfoAgeBox>{info.age}살</InfoAgeBox>
               <InfoGenderBox>
-                <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '20px' }} />
-                <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '20px' }} />
+                {info.isMale === 'MALE' ? (
+                  <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '20px' }} />
+                ) : (
+                  <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '20px' }} />
+                )}
               </InfoGenderBox>
               <EditBox>
-                <button onClick={() => navigate('/userinfoedit')}>수정</button>
+                <button onClick={goEditPage}>수정</button>
               </EditBox>
             </InfoTopBox>
             <InfoBottomBox>
               <InfoIconBox>
                 <Icon icon='mdi:map-marker' color='#7d5a5a' style={{ fontSize: '20px' }} />
               </InfoIconBox>
-              <InfoPosBox>떡잎 마을</InfoPosBox>
+              <InfoPosBox>{info.address}</InfoPosBox>
             </InfoBottomBox>
           </InfoBox>
         </ProfileContainerBox>
@@ -44,7 +103,6 @@ const Mypage = () => {
             <div className='top'>
               <TitleBox>동물 병원 추천</TitleBox>
               <DayBox>2023.01.04</DayBox>
-              <WriterBox>귀염둥이</WriterBox>
             </div>
             <ContentBox>저렴한 동물 병원 추천해주세요</ContentBox>
           </WriteBox>
@@ -52,13 +110,12 @@ const Mypage = () => {
             <div className='top'>
               <TitleBox>동물 병원 추천</TitleBox>
               <DayBox>2023.01.04</DayBox>
-              <WriterBox>귀염둥이</WriterBox>
             </div>
             <ContentBox>저렴한 동물 병원 추천해주세요</ContentBox>
           </WriteBox>
         </WriteContainerBox>
         <LogoutBox>
-          <button>로그아웃</button>
+          <button onClick={petLogout}>로그아웃</button>
         </LogoutBox>
       </Container>
     </>
@@ -101,7 +158,7 @@ const InfoNameBox = styled.div`
 `;
 
 const InfoAgeBox = styled.div`
-  margin-right: 15px;
+  margin-right: 5px;
   display: flex;
   align-items: center;
   font-size: 20px;
@@ -113,7 +170,7 @@ const InfoGenderBox = styled.div`
 `;
 
 const EditBox = styled.div`
-  margin-left: auto;
+  margin-left: 10px;
   display: flex;
   align-items: center;
   button {
@@ -172,15 +229,6 @@ const DayBox = styled.div`
   display: flex;
   align-items: center;
   margin-left: 10px;
-`;
-
-const WriterBox = styled.div`
-  color: ${darkgrey};
-  font-weight: 600;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  margin-left: auto;
 `;
 
 const ContentBox = styled.div`

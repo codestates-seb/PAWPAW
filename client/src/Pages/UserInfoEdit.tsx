@@ -14,6 +14,13 @@ const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 interface FormData {
   profileImage: Blob | null;
 }
+interface Info {
+  petName: string;
+  isMale: 'MALE' | 'FEMALE';
+  isCat: 'CAT' | 'DOG';
+  age: number;
+  address: string | null;
+}
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -195,6 +202,14 @@ const YellowCirclePencilSVG = (
   </svg>
 );
 
+interface Info {
+  petName: string;
+  isMale: 'MALE' | 'FEMALE';
+  isCat: 'CAT' | 'DOG';
+  age: number;
+  address: string | null;
+}
+
 const UserInfoEdit: FC = () => {
   const location = useLocation();
   const petname = location.state.petname;
@@ -205,12 +220,23 @@ const UserInfoEdit: FC = () => {
   const profileImage = location.state.profileImage;
 
   const [isOpen, setIsOpen] = useState(false);
+
+  // const [info, setInfo] = useState<Info>({
+  //   petName: petname,
+  //   isMale: gender,
+  //   isCat: species,
+  //   age: age,
+  //   address: code,
+  // });
+
+  const [isPetName, setIsPetName] = useState<string>(petname);
   const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
   const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
   const [isAge, setIsAge] = useState<number>(age);
   const [address, setAddress] = useState<number | null>(code);
   const [formData, setFormData] = useState<FormData>({ profileImage: profileImage });
   const petId: string | null = localStorage.getItem('petId');
+
   const catHandler = () => {
     if (isCat === 'CAT') {
       setIsCat('DOG');
@@ -225,13 +251,17 @@ const UserInfoEdit: FC = () => {
       setFormData({ ...formData, [name]: files[0] });
     }
   };
+  const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsPetName((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
   const deleteHandler = () => {
     petDelete(petId as string);
   };
   const updateHandler = () => {
     petUpdate(
       petId as string,
-      petname as string,
+      isPetName as string,
       isAge as number,
       gender as string,
       species as string,
@@ -239,29 +269,6 @@ const UserInfoEdit: FC = () => {
       formData as { profileImage: string | Blob },
     );
   };
-  if (petId) {
-    interface ResponseData {
-      petname: string;
-      address: string;
-      profileImage: File | null;
-      age: number;
-      gender: 'MALE' | 'FEMALE';
-      species: string;
-    }
-    const { responseData, loading, error } = getUserInfo(petId);
-    const responseDataTyped = responseData as ResponseData;
-    console.log(responseData);
-    console.log(loading);
-    console.log(error);
-    const { petname, address, profileImage, age, gender, species } = responseDataTyped;
-    setIsAge(age);
-    setFormData({ profileImage: profileImage });
-    console.log(petname);
-    console.log(address);
-    console.log(gender);
-    console.log(species);
-  }
-  // mypage에 들어갈 코드
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -275,7 +282,8 @@ const UserInfoEdit: FC = () => {
           <AvatarEditDiv>{WhiteCirclePencilSVG}</AvatarEditDiv>
           <AvatarEditDiv className='invisible'>{YellowCirclePencilSVG}</AvatarEditDiv>
           <NameDiv>
-            귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
+            <Input type='text' placeholder={petname} onChange={petNameHandler} />
+            <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
           <form>
             <input type='file' name='profileImage' onChange={handleChange} />
