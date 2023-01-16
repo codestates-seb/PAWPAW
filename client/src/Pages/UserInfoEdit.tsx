@@ -7,7 +7,7 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
-import { getUserInfo, petUpdate } from '../util/UserApi';
+import { getUserInfo, petDelete } from '../util/UserApi';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 interface FormData {
@@ -17,7 +17,6 @@ interface FormData {
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -170,6 +169,9 @@ const DogSpan = styled.span<{ isCat: string }>`
 const ButtonDiv = styled.div`
   margin-top: 45px;
 `;
+const DeleteButton = styled.div`
+  z-index: 2;
+`;
 
 const WhiteCirclePencilSVG = (
   <svg width='45' height='45' viewBox='0 0 45 45' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -206,6 +208,9 @@ const UserInfoEdit: FC = () => {
       setIsCat('CAT');
     }
     console.log(isCat);
+  };
+  const deleteHandler = () => {
+    petDelete(petId as string);
   };
   if (petId) {
     interface ResponseData {
@@ -298,6 +303,7 @@ const UserInfoEdit: FC = () => {
           </ButtonDiv>
         </RightDiv>
       </Box>
+      <DeleteButton onClick={deleteHandler}>회원탈퇴</DeleteButton>
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
