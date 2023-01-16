@@ -40,7 +40,7 @@ export const petUpdate = async (
   age: number,
   gender: string,
   species: string,
-  address: string,
+  code: number,
   formData: { profileImage: string | Blob },
 ) => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export const petUpdate = async (
   data.append('age', age.toString());
   data.append('species', species);
   data.append('gender', gender);
-  data.append('address', address);
+  data.append('code', code.toString());
   data.append('profileImage', formData.profileImage);
   console.log(data);
   console.log(formData);
@@ -92,6 +92,7 @@ export const petLogout = async () => {
 };
 
 export const petDelete = async (id: string) => {
+  const navigate = useNavigate();
   const headers = {
     Authorization: jwtToken,
     Refresh: refreshToken,
@@ -103,5 +104,6 @@ export const petDelete = async (id: string) => {
   } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
+    navigate('/login');
   }
 };

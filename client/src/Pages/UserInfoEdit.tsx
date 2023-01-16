@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
@@ -7,7 +8,7 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
-import { getUserInfo, petDelete } from '../util/UserApi';
+import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 interface FormData {
@@ -194,12 +195,20 @@ const YellowCirclePencilSVG = (
 );
 
 const UserInfoEdit: FC = () => {
-  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>('MALE');
-  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>('CAT');
-  const [isAge, setIsAge] = useState<number>(0);
+  const location = useLocation();
+  const petname = location.state.petname;
+  const age = location.state.age as number;
+  const gender = location.state.gender;
+  const species = location.state.species;
+  const code = location.state.code;
+  const profileImage = location.state.profileImage;
+
   const [isOpen, setIsOpen] = useState(false);
-  const [address, setAddress] = useState<number | null>(null);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
+  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
+  const [isAge, setIsAge] = useState<number>(age);
+  const [address, setAddress] = useState<number | null>(code);
+  const [formData, setFormData] = useState<FormData>({ profileImage: profileImage });
   const petId: string | null = localStorage.getItem('petId');
   const catHandler = () => {
     if (isCat === 'CAT') {
@@ -209,8 +218,25 @@ const UserInfoEdit: FC = () => {
     }
     console.log(isCat);
   };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    }
+  };
   const deleteHandler = () => {
     petDelete(petId as string);
+  };
+  const updateHandler = () => {
+    petUpdate(
+      petId as string,
+      petname as string,
+      isAge as number,
+      gender as string,
+      species as string,
+      address as number,
+      formData as { profileImage: string | Blob },
+    );
   };
   if (petId) {
     interface ResponseData {
@@ -234,6 +260,7 @@ const UserInfoEdit: FC = () => {
     console.log(gender);
     console.log(species);
   }
+  // mypage에 들어갈 코드
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -249,6 +276,9 @@ const UserInfoEdit: FC = () => {
           <NameDiv>
             귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
+          <form>
+            <input type='file' name='profileImage' onChange={handleChange} />
+          </form>
         </LeftDiv>
 
         <RightDiv>
@@ -288,7 +318,7 @@ const UserInfoEdit: FC = () => {
               <CircleDiv
                 onClick={catHandler}
                 isCat={isCat}
-                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+                className={isCat === 'CAT' ? 'cat' : 'dog'}
               />
               <CatSpan onClick={catHandler} isCat={isCat}>
                 🐱
@@ -299,7 +329,7 @@ const UserInfoEdit: FC = () => {
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>
-            <Button text='수정' />
+            <Button text='수정' onClick={updateHandler} />
           </ButtonDiv>
         </RightDiv>
       </Box>
