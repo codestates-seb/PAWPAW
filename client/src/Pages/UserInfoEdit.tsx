@@ -7,9 +7,12 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
+import { getUserInfo, petUpdate } from '../util/UserApi';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
-
+interface FormData {
+  profileImage: Blob | null;
+}
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -77,7 +80,7 @@ const SvgSpan = styled.span`
   cursor: pointer;
 `;
 
-const GenderDiv = styled.div<{ isMale: boolean }>`
+const GenderDiv = styled.div<{ isMale: string }>`
   width: 233px;
   margin-bottom: 35px;
 
@@ -189,11 +192,35 @@ const YellowCirclePencilSVG = (
 );
 
 const UserInfoEdit: FC = () => {
-  const [isMale, setIsMale] = useState(true);
+  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>('MALE');
   const [isCat, setIsCat] = useState(true);
+  const [isAge, setIsAge] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<number | null>(null);
-
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const petId: string | null = localStorage.getItem('petId');
+  if (petId) {
+    interface ResponseData {
+      petname: string;
+      address: string;
+      profileImage: File | null;
+      age: number;
+      gender: 'MALE' | 'FEMALE';
+      species: string;
+    }
+    const { responseData, loading, error } = getUserInfo(petId);
+    const responseDataTyped = responseData as ResponseData;
+    console.log(responseData);
+    console.log(loading);
+    console.log(error);
+    const { petname, address, profileImage, age, gender, species } = responseDataTyped;
+    setIsAge(age);
+    setFormData({ profileImage: profileImage });
+    console.log(petname);
+    console.log(address);
+    console.log(gender);
+    console.log(species);
+  }
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -234,10 +261,10 @@ const UserInfoEdit: FC = () => {
 
           <GenderDiv isMale={isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale(true)}>
+            <IconButton onClick={() => setIsMale('MALE')}>
               <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
             </IconButton>
-            <IconButton onClick={() => setIsMale(false)}>
+            <IconButton onClick={() => setIsMale('FEMALE')}>
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
@@ -256,9 +283,6 @@ const UserInfoEdit: FC = () => {
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
-              <ButtonDiv>
-                <Button text='회원가입' />
-              </ButtonDiv>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>

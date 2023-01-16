@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable camelcase */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -59,6 +62,7 @@ const SignUpA = styled.a`
 
 const Login: React.FC = () => {
   const [id, setId] = useState<string>('');
+  const [petId, setPetId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
@@ -81,9 +85,15 @@ const Login: React.FC = () => {
       try {
         const response = await axios.post(`${url}/login`, body);
         const jwtToken = response.headers.authorization as string;
+        const jwtToken_decode = jwt_decode(jwtToken);
+        // @ts-ignore
+        const petid = jwtToken_decode.petId as string;
+        setPetId(petid);
+        console.log(petId);
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
+        localStorage.setItem('petId', petId);
         navigate('/map');
         // 지금은 map이 초기 화면 이니까
         window.location.reload();
