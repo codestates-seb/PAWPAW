@@ -6,7 +6,6 @@ import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.service.PetService;
 import animalsquad.server.domain.petmap.entity.PetMap;
 import animalsquad.server.domain.petmap.repository.PetMapRepository;
-import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +20,13 @@ import java.util.Optional;
 public class PetMapService {
 
     private final PetMapRepository petMapRepository;
-    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapService infoMapService;
     private final PetService petService;
 
-    public PetMap addPlace(PetMap petMap, String token) {
-        long petId = jwtTokenProvider.getPetId(token);
+    public PetMap addPlace(PetMap petMap, long petId) {
 
-        if (petId != petMap.getPet().getId()) {
-            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
-        }
+
+        verifyAuthority(petId,petMap.getPet().getId());
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
         Pet pet = petService.findPet(petMap.getPet().getId());
@@ -43,12 +39,9 @@ public class PetMapService {
         return petMapRepository.save(petMap);
     }
 
-    public void deletePlace(PetMap petMap, String token) {
-        long petId = jwtTokenProvider.getPetId(token);
+    public void deletePlace(PetMap petMap, long petId) {
 
-        if (petId != petMap.getPet().getId()) {
-            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
-        }
+        verifyAuthority(petId,petMap.getPet().getId());
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(petMap.getInfoMap().getId());
         Pet pet = petService.findPet(petMap.getPet().getId());
@@ -71,5 +64,9 @@ public class PetMapService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MY_PLACE_NOT_FOUND));
     }
 
-
+    private void verifyAuthority(long principalId, long compareId) {
+        if (principalId != compareId) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
+    }
 }

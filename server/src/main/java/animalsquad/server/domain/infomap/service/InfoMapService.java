@@ -1,13 +1,17 @@
 package animalsquad.server.domain.infomap.service;
 
+import animalsquad.server.domain.address.entity.Address;
+import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.infomap.entity.InfoMapCategory;
 import animalsquad.server.domain.infomap.repository.InfoMapRepository;
+import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +22,29 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InfoMapService {
 
-//    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapRepository infoMapRepository;
+    private final AddressRepository addressRepository;
+    private final FileUploadService fileUploadService;
+    private static final String folderName = "map";
 
     public List<InfoMap> findInfos(int code, String filter) {
 
         List<InfoMap> infoMaps = new ArrayList<>();
 
-        switch(filter) {
-            case "NONE" : infoMaps = infoMapRepository.findInfoMaps(code); break;
-            case "PARK" : case "CAFE" : case "RESTAURANT" : case  "POOL" : case "CAMPING" : case "HOSPITAL" :
+        switch (filter) {
+            case "NONE":
+                infoMaps = infoMapRepository.findInfoMaps(code);
+                break;
+            case "PARK":
+            case "CAFE":
+            case "RESTAURANT":
+            case "POOL":
+            case "CAMPING":
+            case "HOSPITAL":
                 InfoMapCategory category = InfoMapCategory.valueOf(filter);
                 infoMaps = infoMapRepository.findInfoMapsWithFilter(code, category);
                 break;
-            default :
+            default:
                 throw new BusinessLogicException(ExceptionCode.FILTER_NAME_INCORRECT);
         }
         return infoMaps;
@@ -40,11 +53,20 @@ public class InfoMapService {
     public List<InfoMap> findMyPicks(long id) {
         return infoMapRepository.findInfoMapsMyPick(id);
     }
-    public InfoMap findMapDetails(long infoMapId){
+
+    public InfoMap findMapDetails(long infoMapId) {
         return findVerifiedInfoMap(infoMapId);
     }
 
-    public InfoMap createMaps(InfoMap infoMap) {
+    public InfoMap createMaps(InfoMap infoMap, MultipartFile file) throws IllegalAccessException {
+        Optional<Address> optionalAddress = addressRepository.findById(infoMap.getAddress().getId());
+        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
+
+        infoMap.setAddress(address);
+        String imageUrl = fileUploadService.uploadImage(file, folderName);
+
+        infoMap.setImageUrl(imageUrl);
+
         return infoMapRepository.save(infoMap);
     }
 

@@ -5,15 +5,13 @@ import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
-import animalsquad.server.global.S3.Service.FileUploadService;
+import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,7 +40,6 @@ public class PetService {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
-
         int code = pet.getAddress().getCode();
         Address address = verifiedAddress(code);
         pet.setAddress(address);

@@ -4,6 +4,7 @@ import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.infomap.entity.InfoMapCategory;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public class InfoMapPostDto {
 
     private InfoMapCategory category;
 
-    private String imageUrl;
+    private MultipartFile file;
 
     private String mapAddress;
 

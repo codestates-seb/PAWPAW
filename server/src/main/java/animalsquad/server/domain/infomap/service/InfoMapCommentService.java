@@ -21,7 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InfoMapCommentService {
 
-//    private final JwtTokenProvider jwtTokenProvider;
     private final InfoMapCommentRepository infoMapCommentRepository;
     private final InfoMapService infoMapService;
     private final PetService petService;
@@ -29,10 +28,7 @@ public class InfoMapCommentService {
 
     public InfoMapComment createComment(InfoMapComment infoMapComment, long petId) {
 
-//        long petId = jwtTokenProvider.getPetId(token);
-        if (petId != infoMapComment.getPet().getId()) {
-            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
-        }
+        verifyAuthority(petId, infoMapComment.getPet().getId());
 
         InfoMap infoMap = infoMapService.findVerifiedInfoMap(infoMapComment.getInfoMap().getId());
         Pet pet = petService.findPet(infoMapComment.getPet().getId());
@@ -44,11 +40,8 @@ public class InfoMapCommentService {
     }
 
     public InfoMapComment updateComment(InfoMapComment infoMapComment, long petId) {
-//        long petId = jwtTokenProvider.getPetId(token);
 
-        if (petId != infoMapComment.getPet().getId()) {
-            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
-        }
+        verifyAuthority(petId, infoMapComment.getPet().getId());
 
         InfoMapComment findComment = findVerifiedComment(infoMapComment.getId());
 
@@ -66,9 +59,7 @@ public class InfoMapCommentService {
     public void deleteComment(long id, long petId) {
         InfoMapComment findComment = findVerifiedComment(id);
 
-        if (petId != findComment.getPet().getId()) {
-            throw new BusinessLogicException(ExceptionCode.NOT_HAVE_PERMISSION_TO_EDIT);
-        }
+        verifyAuthority(petId, findComment.getPet().getId());
 
         infoMapCommentRepository.deleteById(id);
     }
@@ -79,6 +70,12 @@ public class InfoMapCommentService {
 
     public InfoMapComment findVerifiedComment(long id) {
         return infoMapCommentRepository.findById(id).orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFO_MAP_COMMENT_NOT_FOUND));
+    }
+
+    private void verifyAuthority(long principalId, long compareId) {
+        if (principalId != compareId) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
     }
 
 

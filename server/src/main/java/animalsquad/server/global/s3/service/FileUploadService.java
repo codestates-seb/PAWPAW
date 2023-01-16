@@ -1,4 +1,4 @@
-package animalsquad.server.global.S3.Service;
+package animalsquad.server.global.s3.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class FileUploadService {
         objectMetadata.setContentType(file.getContentType());
         try (InputStream inputStream = file.getInputStream()) {
             s3Service.uploadFile(inputStream, objectMetadata, fileName, folderName);
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new IllegalAccessException(String.format("파일 변환 중에러가 발생하였습니다.(%s)", file.getOriginalFilename()));
         }
         return s3Service.getFileUrl(fileName, folderName);

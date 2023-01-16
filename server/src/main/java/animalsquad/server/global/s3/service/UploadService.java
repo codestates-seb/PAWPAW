@@ -1,4 +1,4 @@
-package animalsquad.server.global.S3.Service;
+package animalsquad.server.global.s3.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
@@ -8,7 +8,6 @@ public interface UploadService {
     void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName, String folderName);
 
     String getFileUrl(String fileName, String folderName);
-
     void deleteFile(String fileName);
 }
 
