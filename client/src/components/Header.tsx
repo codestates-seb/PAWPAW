@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HeaderText } from '../img/header';
 import { HeaderTabSVG } from '../img/headerTabSVG';
 import { Icon } from '@iconify/react';
@@ -40,6 +41,7 @@ const Header: React.FC = () => {
   const [map, setMap] = useState<boolean>(false);
   const [tab, setTab] = useState<boolean>(false);
   const [user, setUser] = useState<boolean>(false);
+  const navigate = useNavigate();
   const mouseOverHomeHandler = () => {
     setHome(true);
   };
@@ -63,6 +65,9 @@ const Header: React.FC = () => {
   };
   const mouseOutUserHandler = () => {
     setUser(false);
+  };
+  const goTo = () => {
+    navigate('/MyPage');
   };
   return (
     <Container>
@@ -91,7 +96,11 @@ const Header: React.FC = () => {
           <HeaderTabSVG width='26' height='21' fill={yellow} />
         )}
       </HeaderRightButton>
-      <HeaderRightButton onMouseOver={mouseOverUserHandler} onMouseOut={mouseOutUserHandler}>
+      <HeaderRightButton
+        onMouseOver={mouseOverUserHandler}
+        onMouseOut={mouseOutUserHandler}
+        onClick={goTo}
+      >
         {user === false ? (
           <Icon icon='mdi:user-circle' style={{ fontSize: '40px' }} color={brown} />
         ) : (
