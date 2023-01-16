@@ -77,6 +77,21 @@ export const petUpdate = async (
   }
 };
 
+export const petLogout = async () => {
+  const headers = {
+    Authorization: jwtToken,
+    Refresh: refreshToken,
+  };
+  try {
+    await axios.post(`${url}/logout`, { headers });
+  } catch (error) {
+    console.error('Error', error);
+  } finally {
+    localStorage.removeItem('Authorization');
+    localStorage.removeItem('Refresh');
+  }
+};
+
 export const petDelete = async (id: string) => {
   const headers = {
     Authorization: jwtToken,
