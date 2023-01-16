@@ -25,8 +25,8 @@ public class AwsS3UploadService implements UploadService {
     }
 
     @Override
-    public void deleteFile(String fileName){
-        amazonS3.deleteObject(new DeleteObjectRequest(component.getBucket() + "/test", fileName));
+    public void deleteFile(String fileName, String folderName){
+        amazonS3.deleteObject(new DeleteObjectRequest(component.getBucket() + "/" + folderName, fileName));
     }
 
     @Override

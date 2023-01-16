@@ -80,7 +80,7 @@ public class PetService {
         // 프로필 이미지 수정, 디폴트 이미지
         if(!file.isEmpty()) {
             String beforeImage = findPet.getProfileImage();
-            fileUploadService.deleteFile(beforeImage);
+            fileUploadService.deleteFile(beforeImage, folder);
 
             String imageUrl = fileUploadService.uploadImage(file, folder);
             findPet.setProfileImage(imageUrl);
@@ -125,7 +125,7 @@ public class PetService {
         // S3에서 image삭제
         if (!findPet.getProfileImage().contains("default")) {
             String image = findPet.getProfileImage();
-            fileUploadService.deleteFile(image);
+            fileUploadService.deleteFile(image, folder);
         }
         petRepository.deleteById(id);
     }
