@@ -10,7 +10,7 @@ import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
 import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
 
-const { ivory, brown, yellow, darkivory, bordergrey } = color;
+const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 interface FormData {
   profileImage: Blob | null;
 }
@@ -44,10 +44,6 @@ const NameDiv = styled.div`
   font-weight: bold;
   color: white;
   text-decoration: underline;
-`;
-
-const NameEditSpan = styled.span`
-  cursor: pointer;
 `;
 
 const AvatarEditDiv = styled.div`
@@ -171,7 +167,12 @@ const ButtonDiv = styled.div`
   margin-top: 45px;
 `;
 const DeleteButton = styled.div`
-  z-index: 2;
+  z-index: 1;
+  color: ${red};
+  font-size: 15px;
+  font-weight: Bold;
+  left: 1000px;
+  top: 1000px;
 `;
 
 const WhiteCirclePencilSVG = (
