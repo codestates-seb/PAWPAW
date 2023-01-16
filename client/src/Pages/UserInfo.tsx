@@ -8,6 +8,8 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const url = '';
@@ -125,9 +127,9 @@ const UserInfo: React.FC = () => {
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
             ) : isCat ? (
-              '🐶'
+              <img className='baseimojidog' src={Dog} style={{ width: '100px', height: '100px' }}></img>
             ) : (
-              '🐱'
+              <img className='baseimojicat' src={Cat} style={{ width: '100px', height: '100px' }}></img>
             )}
           </AvatarDiv>
 
@@ -189,10 +191,10 @@ const UserInfo: React.FC = () => {
                 className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
               <CatSpan onClick={catHandler} isCat={isCat}>
-                🐱
+                <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
               <DogSpan onClick={catHandler} isCat={isCat}>
-                🐶
+                <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
@@ -271,6 +273,13 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .baseimojidog {
+    margin-top: 30px;
+  }
+  .baseimojicat {
+    margin-top: 35px;
+  }
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -280,14 +289,13 @@ const AvatarDiv = styled.div`
   height: 175px;
   margin-top: 140px;
   border-radius: 50%;
-  font-size: 100px;
   background-color: ${ivory};
   line-height: 180px;
 
   display: flex;
   justify-content: center;
 
-  .userprofile{
+  .userprofile {
     border-radius: 50%;
   }
 `;
