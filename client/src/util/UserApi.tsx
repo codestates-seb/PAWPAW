@@ -4,7 +4,6 @@ import axios from 'axios';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = '';
-const navigate = useNavigate();
 
 interface FetchHook {
   responseData: object | null;
@@ -18,10 +17,15 @@ export const getUserInfo = (id: string): FetchHook => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      Authorization: jwtToken,
+      Refresh: refreshToken,
+    };
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${url}/pets/${id}`);
+        const response = await axios.get(`${url}/pets/${id}`, { headers });
         setResponseData(response.data);
       } catch (error) {
         setError(error as never);
@@ -43,6 +47,7 @@ export const petUpdate = async (
   species: string,
   code: number,
   formData: { profileImage: string | Blob },
+  navigate: any,
 ) => {
   if (!formData.profileImage) return;
   const headers = {
@@ -57,15 +62,6 @@ export const petUpdate = async (
   data.append('gender', gender);
   data.append('code', code.toString());
   data.append('profileImage', formData.profileImage);
-  console.log(data);
-  console.log(formData);
-  console.log(formData.profileImage);
-  for (const key of data.keys()) {
-    console.log(key);
-  }
-  for (const value of data.values()) {
-    console.log(value);
-  }
   try {
     await axios.post(`${url}/patch/${petId}`, data, { headers });
     navigate('/login');
@@ -79,15 +75,23 @@ export const petUpdate = async (
 export const petLogout = async () => {
   const headers = {
     Authorization: jwtToken,
-    Refresh: refreshToken,
   };
   try {
-    await axios.post(`${url}/logout`, { headers });
+    await axios.post(
+      `${url}/logout`,
+      {
+        accessToken: jwtToken,
+        refreshToken: refreshToken,
+      },
+      { headers },
+    );
   } catch (error) {
     console.error('Error', error);
+    console.log(jwtToken);
   } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
+    localStorage.removeItem('petId');
   }
 };
 
@@ -103,6 +107,5 @@ export const petDelete = async (id: string) => {
   } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
-    navigate('/login');
   }
 };

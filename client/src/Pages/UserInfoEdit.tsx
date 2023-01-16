@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
@@ -8,7 +8,7 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
-import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
+import { petUpdate, petDelete } from '../util/UserApi';
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 interface FormData {
@@ -174,12 +174,13 @@ const ButtonDiv = styled.div`
   margin-top: 45px;
 `;
 const DeleteButton = styled.div`
-  z-index: 1;
+  z-index: 999;
   color: ${red};
   font-size: 15px;
   font-weight: Bold;
   left: 1000px;
   top: 1000px;
+  cursor: pointer;
 `;
 
 const WhiteCirclePencilSVG = (
@@ -212,6 +213,7 @@ interface Info {
 
 const UserInfoEdit: FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const petname = location.state.petname;
   const age = location.state.age as number;
   const gender = location.state.gender;
@@ -267,6 +269,7 @@ const UserInfoEdit: FC = () => {
       species as string,
       address as number,
       formData as { profileImage: string | Blob },
+      navigate,
     );
   };
   const openAddressModal = () => {
