@@ -75,7 +75,7 @@ const UserInfo: React.FC = () => {
     // 'DOG','CAT'
     data.append('gender', isMale);
     // 'MALE','FEMALE'
-    data.append('address', '1');
+    data.append('code', '1');
     // 주소값도 숫자 타입으로 지금은 1,2만 가능
     data.append('profileImage', formData.profileImage);
     console.log(data);
@@ -109,7 +109,7 @@ const UserInfo: React.FC = () => {
       <Background ref={backgroundRef} />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
+          <AvatarDiv>{isCat === 'DOG' ? '🐶' : '🐱'}</AvatarDiv>
           <NameDiv>{petname}</NameDiv>
           <PlusDiv>{WhitePlusSVG}</PlusDiv>
           <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
