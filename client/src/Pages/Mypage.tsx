@@ -4,10 +4,12 @@ import Header from '../Components/Header';
 import UserImg from '../img/userimg.png';
 import { Icon } from '@iconify/react';
 import color from '../color';
+import { useNavigate } from 'react-router';
 
-const { darkgrey, brown, yellow, mediumgrey, bordergrey } = color;
+const { darkgrey, brown, mediumgrey, bordergrey } = color;
 
 const Mypage = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Header />
@@ -25,7 +27,7 @@ const Mypage = () => {
                 <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '20px' }} />
               </InfoGenderBox>
               <EditBox>
-                <button>수정</button>
+                <button onClick={() => navigate('/userinfoedit')}>수정</button>
               </EditBox>
             </InfoTopBox>
             <InfoBottomBox>
@@ -120,6 +122,7 @@ const EditBox = styled.div`
     width: 39px;
     color: ${darkgrey};
     border-radius: 5px;
+    cursor: pointer;
   }
 `;
 
@@ -193,6 +196,7 @@ const LogoutBox = styled.div`
     border: none;
     border-radius: 5px;
     height: 25px;
+    cursor: pointer;
   }
 `;
 
