@@ -32,6 +32,13 @@ const UserInfo: React.FC = () => {
   const petname = location.state.petname;
   const password = location.state.password;
   const navigate = useNavigate();
+
+  const [fileImage, setFileImage] = useState<string>();
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+  };
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setIsAge(Number(e.target.value));
     console.log((e.target as HTMLInputElement).value);
@@ -109,13 +116,45 @@ const UserInfo: React.FC = () => {
       <Background ref={backgroundRef} />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat ? (
+              '🐶'
+            ) : (
+              '🐱'
+            )}
+          </AvatarDiv>
+
           <NameDiv>{petname}</NameDiv>
-          <PlusDiv>{WhitePlusSVG}</PlusDiv>
-          <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
-          <form>
-            <input type='file' name='profileImage' onChange={handleChange} />
-          </form>
+          <PlusDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhitePlusSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </PlusDiv>
+          <PlusDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowPlusSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </PlusDiv>
+          <input type='file' id='input-file' style={{ display: 'none' }} />
         </LeftDiv>
         <RightDiv>
           <InputsDiv>
@@ -247,6 +286,10 @@ const AvatarDiv = styled.div`
 
   display: flex;
   justify-content: center;
+
+  .userprofile{
+    border-radius: 50%;
+  }
 `;
 
 const NameDiv = styled.div`
