@@ -22,7 +22,7 @@ export interface IProps {
 }
 const UserInfo: React.FC = () => {
   const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>('MALE');
-  const [isCat, setIsCat] = useState(true);
+  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>('CAT');
   const [isAge, setIsAge] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<number | null>(null);
@@ -40,6 +40,13 @@ const UserInfo: React.FC = () => {
     const { name, files } = e.target;
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
+    }
+  };
+  const catHandler = () => {
+    if (isCat === 'CAT') {
+      setIsCat('DOG');
+    } else {
+      setIsCat('CAT');
     }
   };
   const openAddressModal = () => {
@@ -138,14 +145,14 @@ const UserInfo: React.FC = () => {
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
               <CircleDiv
-                onClick={() => setIsCat(!isCat)}
+                onClick={catHandler}
                 isCat={isCat}
-                className={isCat ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
-              <CatSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
+              <CatSpan onClick={catHandler} isCat={isCat}>
                 🐱
               </CatSpan>
-              <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
+              <DogSpan onClick={catHandler} isCat={isCat}>
                 🐶
               </DogSpan>
             </ToggleDiv>
@@ -334,7 +341,7 @@ const ToggleDiv = styled.div`
   position: relative;
 `;
 
-const CircleDiv = styled.div<{ isCat: boolean; className: string }>`
+const CircleDiv = styled.div<{ isCat: string; className: string }>`
   width: 58px;
   height: 58px;
   border-radius: 50px;
@@ -353,7 +360,7 @@ const CircleDiv = styled.div<{ isCat: boolean; className: string }>`
   }
 `;
 
-const CatSpan = styled.span<{ isCat: boolean }>`
+const CatSpan = styled.span<{ isCat: string }>`
   font-size: 36px;
   position: absolute;
   top: 9px;
@@ -361,7 +368,7 @@ const CatSpan = styled.span<{ isCat: boolean }>`
   cursor: pointer;
   user-select: none;
 `;
-const DogSpan = styled.span<{ isCat: boolean }>`
+const DogSpan = styled.span<{ isCat: string }>`
   font-size: 36px;
   position: absolute;
   top: 7px;
