@@ -13,6 +13,14 @@ import axios from 'axios';
 const { brown } = color;
 const url = '';
 // 전체 화면
+interface Info {
+  petName: string;
+  petId: number;
+  exp: number;
+  roles: any;
+  sub: string;
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -85,17 +93,16 @@ const Login: React.FC = () => {
       try {
         const response = await axios.post(`${url}/login`, body);
         const jwtToken = response.headers.authorization as string;
-        const jwtToken_decode = jwt_decode(jwtToken);
+        const jwtToken_decode = jwt_decode(jwtToken) as Info;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
-        setPetId(petid);
-        console.log(petId);
+        setPetId(petid.toString());
+        console.log('petId', petId);
         const refreshToken = response.headers.refresh as string;
+        localStorage.setItem('petId', petid);
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
-        localStorage.setItem('petId', petId);
         navigate('/map');
-        // 지금은 map이 초기 화면 이니까
         window.location.reload();
       } catch (error) {
         console.error('Error', error);
