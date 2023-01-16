@@ -59,7 +59,7 @@ const Mypage = () => {
         code: info.address,
         age: info.age,
         gender: info.isMale,
-        species: info.isMale,
+        species: info.isCat,
         profileImage: formData,
       },
     });
