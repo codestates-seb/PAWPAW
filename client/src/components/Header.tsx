@@ -1,112 +1,74 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderText } from '../img/header';
-import { HeaderTabSVG } from '../img/headerTabSVG';
 import { Icon } from '@iconify/react';
 import color from '../color';
 import styled from 'styled-components';
+
 const { ivory, brown, yellow } = color;
 const Container = styled.header`
   width: 100%;
   height: 50px;
   background-color: ${ivory};
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   position: absolute;
   z-index: 100;
 `;
 const HeaderLeftBox = styled.button`
   all: unset;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-left: 8px;
+  margin-left: 10px;
 `;
-const HeaderBlank = styled.div`
-  width: 100%;
+
+const LogoImg = styled.img`
+  height: 50px;
+  cursor: pointer;
+  content: url('https://ifh.cc/g/5zP1VD.png');
+
+  &:hover {
+    content: url('https://ifh.cc/g/4ffBQ7.png');
+  }
 `;
-const HeaderRightButton = styled.button`
+
+const HeaderRightButtons = styled.button`
   all: unset;
+  margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 7px 0 7px;
 `;
-const HeaderTextImg = styled.img`
-  width: 109px;
-  height: 41px;
+
+const IconSpan = styled.span`
+  margin: 0px 8px;
+  color: ${brown};
+  cursor: pointer;
+
+  &:hover {
+    color: ${yellow};
+  }
 `;
+
 const Header: React.FC = () => {
-  const [home, setHome] = useState<boolean>(false);
-  const [map, setMap] = useState<boolean>(false);
-  const [tab, setTab] = useState<boolean>(false);
-  const [user, setUser] = useState<boolean>(false);
   const navigate = useNavigate();
-  const mouseOverHomeHandler = () => {
-    setHome(true);
-  };
-  const mouseOutHomeHandler = () => {
-    setHome(false);
-  };
-  const mouseOverMapHandler = () => {
-    setMap(true);
-  };
-  const mouseOutMapHandler = () => {
-    setMap(false);
-  };
-  const mouseOverTabHandler = () => {
-    setTab(true);
-  };
-  const mouseOutTabHandler = () => {
-    setTab(false);
-  };
-  const mouseOverUserHandler = () => {
-    setUser(true);
-  };
-  const mouseOutUserHandler = () => {
-    setUser(false);
-  };
-  const goTo = () => {
-    navigate('/MyPage');
-  };
+
   return (
     <Container>
-      <HeaderLeftBox onMouseOver={mouseOverHomeHandler} onMouseOut={mouseOutHomeHandler}>
-        {home === false ? (
-          <Icon icon='ph:paw-print-fill' style={{ fontSize: '40px' }} color={brown} />
-        ) : (
-          <Icon icon='ph:paw-print-fill' style={{ fontSize: '40px' }} color={yellow} />
-        )}
-      </HeaderLeftBox>
       <HeaderLeftBox>
-        <HeaderTextImg src={HeaderText} />
+        <LogoImg onClick={() => navigate('/map')} />
       </HeaderLeftBox>
-      <HeaderBlank />
-      <HeaderRightButton onMouseOver={mouseOverMapHandler} onMouseOut={mouseOutMapHandler}>
-        {map === false ? (
-          <Icon icon='material-symbols:map' style={{ fontSize: '40px' }} color={brown} />
-        ) : (
-          <Icon icon='material-symbols:map' style={{ fontSize: '40px' }} color={yellow} />
-        )}
-      </HeaderRightButton>
-      <HeaderRightButton onMouseOver={mouseOverTabHandler} onMouseOut={mouseOutTabHandler}>
-        {tab === false ? (
-          <HeaderTabSVG width='26' height='21' fill={brown} />
-        ) : (
-          <HeaderTabSVG width='26' height='21' fill={yellow} />
-        )}
-      </HeaderRightButton>
-      <HeaderRightButton
-        onMouseOver={mouseOverUserHandler}
-        onMouseOut={mouseOutUserHandler}
-        onClick={goTo}
-      >
-        {user === false ? (
-          <Icon icon='mdi:user-circle' style={{ fontSize: '40px' }} color={brown} />
-        ) : (
-          <Icon icon='mdi:user-circle' style={{ fontSize: '40px' }} color={yellow} />
-        )}
-      </HeaderRightButton>
+
+      <HeaderRightButtons>
+        <IconSpan onClick={() => navigate('/map')}>
+          <Icon icon='material-symbols:map' style={{ fontSize: '35px' }} />
+        </IconSpan>
+        <IconSpan>
+          <Icon icon='gridicons:posts' style={{ fontSize: '35px' }} />
+        </IconSpan>
+        <IconSpan onClick={() => navigate('/mypage')}>
+          <Icon icon='mdi:user-circle' style={{ fontSize: '35px' }} />
+        </IconSpan>
+      </HeaderRightButtons>
     </Container>
   );
 };
