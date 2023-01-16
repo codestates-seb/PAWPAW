@@ -8,6 +8,8 @@ import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
 import { getUserInfo, petUpdate } from '../util/UserApi';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 interface FormData {
@@ -21,6 +23,14 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .baseimojidog {
+    margin-top: 30px;
+  }
+  .baseimojicat {
+    margin-top: 35px;
+  }
+
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -198,6 +208,12 @@ const UserInfoEdit: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [fileImage, setFileImage] = useState<string>();
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+  };
   const petId: string | null = localStorage.getItem('petId');
   if (petId) {
     interface ResponseData {
@@ -230,9 +246,50 @@ const UserInfoEdit: FC = () => {
       <Background />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
-          <AvatarEditDiv>{WhiteCirclePencilSVG}</AvatarEditDiv>
-          <AvatarEditDiv className='invisible'>{YellowCirclePencilSVG}</AvatarEditDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat ? (
+              <img
+                className='baseimojidog'
+                src={Dog}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            ) : (
+              <img
+                className='baseimojicat'
+                src={Cat}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            )}
+          </AvatarDiv>
+          <AvatarEditDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhiteCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
+          <AvatarEditDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
           <NameDiv>
             귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
@@ -278,10 +335,10 @@ const UserInfoEdit: FC = () => {
                 className={isCat ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
               <CatSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
-                🐱
+                <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
               <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
-                🐶
+                <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
