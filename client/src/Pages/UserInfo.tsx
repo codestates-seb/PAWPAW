@@ -41,6 +41,7 @@ const UserInfo: React.FC = () => {
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
+    console.log(files);
   };
   const catHandler = () => {
     if (isCat === 'CAT') {
@@ -72,7 +73,7 @@ const UserInfo: React.FC = () => {
     data.append('age', isAge.toString());
     data.append('species', 'CAT');
     data.append('gender', isMale);
-    data.append('code', '1');
+    data.append('code', '11680');
     data.append('profileImage', formData.profileImage);
     console.log(data);
     console.log(formData);

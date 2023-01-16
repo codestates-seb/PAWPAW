@@ -58,14 +58,23 @@ export const petUpdate = async (
   const data = new FormData();
   data.append('petName', petname);
   data.append('age', age.toString());
-  data.append('species', species);
   data.append('gender', gender);
+  data.append('species', species);
   data.append('code', code.toString());
   data.append('profileImage', formData.profileImage);
+  console.log('data', data);
+  console.log('5', formData);
+  console.log('6', formData.profileImage);
+  console.log('7');
+  for (const key of data.keys()) {
+    console.log(key);
+  }
+  for (const value of data.values()) {
+    console.log(value);
+  }
   try {
     await axios.post(`${url}/patch/${petId}`, data, { headers });
-    navigate('/login');
-    // 비동기 에러 날 것 같으면 .then 사용
+    navigate('/Mypage');
   } catch (error) {
     console.error('Error', error);
     alert(error);
