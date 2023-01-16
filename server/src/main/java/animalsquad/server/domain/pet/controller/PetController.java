@@ -27,8 +27,8 @@ public class PetController {
     @PostMapping("/signup")
     public ResponseEntity postPet(@Valid PetPostDto petPostDto) throws IllegalAccessException {
         Pet pet = petService.createPet(mapper.petPostToPet(petPostDto), petPostDto.getProfileImage());
-
-        return new ResponseEntity(HttpStatus.CREATED);
+        long id = pet.getId();
+        return new ResponseEntity(id, HttpStatus.CREATED);
     }
 
     @GetMapping("/check/{login-id}")
@@ -62,7 +62,7 @@ public class PetController {
 
     @DeleteMapping("/{pet-id}")
     public ResponseEntity deletePet(@PathVariable("pet-id") long id,
-                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
         long petId = principal.getId();
 
         petService.deletePet(id, petId);
