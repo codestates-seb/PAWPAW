@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
@@ -7,10 +6,10 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
-import { convertAddress } from './UserInfo';
-import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
+import { getUserInfo, petUpdate } from '../util/UserApi';
+import { codeToAddress } from '../util/ConvertAddress';
 
-const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
+const { ivory, brown, yellow, darkivory, bordergrey } = color;
 interface FormData {
   profileImage: Blob | null;
 }
@@ -18,6 +17,7 @@ interface FormData {
 const Container = styled.div`
   width: 100%;
   height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,6 +44,10 @@ const NameDiv = styled.div`
   font-weight: bold;
   color: white;
   text-decoration: underline;
+`;
+
+const NameEditSpan = styled.span`
+  cursor: pointer;
 `;
 
 const AvatarEditDiv = styled.div`
@@ -128,7 +132,7 @@ const ToggleDiv = styled.div`
   position: relative;
 `;
 
-const CircleDiv = styled.div<{ isCat: string; className: string }>`
+const CircleDiv = styled.div<{ isCat: boolean; className: string }>`
   width: 58px;
   height: 58px;
   border-radius: 50px;
@@ -147,32 +151,24 @@ const CircleDiv = styled.div<{ isCat: string; className: string }>`
   }
 `;
 
-const CatSpan = styled.span<{ isCat: string }>`
+const CatSpan = styled.span<{ isCat: boolean }>`
   font-size: 36px;
-  position: absolute;
+  /* position: absolute;
   top: 9px;
-  left: 12px;
+  left: 12px; */
   cursor: pointer;
   user-select: none;
 `;
-const DogSpan = styled.span<{ isCat: string }>`
+const DogSpan = styled.span<{ isCat: boolean }>`
   font-size: 36px;
-  position: absolute;
+  /* position: absolute;
   top: 7px;
-  right: 12px;
+  right: 12px; */
   cursor: pointer;
   user-select: none;
 `;
 const ButtonDiv = styled.div`
   margin-top: 45px;
-`;
-const DeleteButton = styled.div`
-  z-index: 1;
-  color: ${red};
-  font-size: 15px;
-  font-weight: Bold;
-  left: 1000px;
-  top: 1000px;
 `;
 
 const WhiteCirclePencilSVG = (
@@ -196,49 +192,13 @@ const YellowCirclePencilSVG = (
 );
 
 const UserInfoEdit: FC = () => {
-  const location = useLocation();
-  const petname = location.state.petname;
-  const age = location.state.age as number;
-  const gender = location.state.gender;
-  const species = location.state.species;
-  const code = location.state.code;
-  const profileImage = location.state.profileImage;
-
+  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>('MALE');
+  const [isCat, setIsCat] = useState(true);
+  const [isAge, setIsAge] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
-  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
-  const [isAge, setIsAge] = useState<number>(age);
-  const [address, setAddress] = useState<number | null>(code);
-  const [formData, setFormData] = useState<FormData>({ profileImage: profileImage });
+  const [address, setAddress] = useState<number | null>(null);
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const petId: string | null = localStorage.getItem('petId');
-  const catHandler = () => {
-    if (isCat === 'CAT') {
-      setIsCat('DOG');
-    } else {
-      setIsCat('CAT');
-    }
-    console.log(isCat);
-  };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files) {
-      setFormData({ ...formData, [name]: files[0] });
-    }
-  };
-  const deleteHandler = () => {
-    petDelete(petId as string);
-  };
-  const updateHandler = () => {
-    petUpdate(
-      petId as string,
-      petname as string,
-      isAge as number,
-      gender as string,
-      species as string,
-      address as number,
-      formData as { profileImage: string | Blob },
-    );
-  };
   if (petId) {
     interface ResponseData {
       petname: string;
@@ -261,7 +221,6 @@ const UserInfoEdit: FC = () => {
     console.log(gender);
     console.log(species);
   }
-  // mypage에 들어갈 코드
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -271,15 +230,12 @@ const UserInfoEdit: FC = () => {
       <Background />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat !== 'DOG' ? '🐶' : '🐱'}</AvatarDiv>
+          <AvatarDiv>{isCat ? '🐶' : '🐱'}</AvatarDiv>
           <AvatarEditDiv>{WhiteCirclePencilSVG}</AvatarEditDiv>
           <AvatarEditDiv className='invisible'>{YellowCirclePencilSVG}</AvatarEditDiv>
           <NameDiv>
             귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
-          <form>
-            <input type='file' name='profileImage' onChange={handleChange} />
-          </form>
         </LeftDiv>
 
         <RightDiv>
@@ -294,7 +250,7 @@ const UserInfoEdit: FC = () => {
               <Input
                 type='text'
                 readOnly={true}
-                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>
@@ -317,24 +273,23 @@ const UserInfoEdit: FC = () => {
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
               <CircleDiv
-                onClick={catHandler}
+                onClick={() => setIsCat(!isCat)}
                 isCat={isCat}
-                className={isCat === 'CAT' ? 'cat' : 'dog'}
+                className={isCat ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
-              <CatSpan onClick={catHandler} isCat={isCat}>
+              <CatSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐱
               </CatSpan>
-              <DogSpan onClick={catHandler} isCat={isCat}>
+              <DogSpan onClick={() => setIsCat(!isCat)} isCat={isCat}>
                 🐶
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>
-            <Button text='수정' onClick={updateHandler} />
+            <Button text='수정' />
           </ButtonDiv>
         </RightDiv>
       </Box>
-      <DeleteButton onClick={deleteHandler}>회원탈퇴</DeleteButton>
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
