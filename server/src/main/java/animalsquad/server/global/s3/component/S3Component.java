@@ -1,4 +1,4 @@
-package animalsquad.server.global.S3.Component;
+package animalsquad.server.global.s3.component;
 
 import lombok.Getter;
 import lombok.Setter;

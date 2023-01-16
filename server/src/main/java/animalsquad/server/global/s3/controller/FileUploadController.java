@@ -1,6 +1,6 @@
-package animalsquad.server.global.S3.Controller;
+package animalsquad.server.global.s3.controller;
 
-import animalsquad.server.global.S3.Service.FileUploadService;
+import animalsquad.server.global.s3.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

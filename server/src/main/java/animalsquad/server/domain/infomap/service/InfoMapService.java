@@ -5,7 +5,7 @@ import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.infomap.entity.InfoMapCategory;
 import animalsquad.server.domain.infomap.repository.InfoMapRepository;
-import animalsquad.server.global.S3.Service.FileUploadService;
+import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;

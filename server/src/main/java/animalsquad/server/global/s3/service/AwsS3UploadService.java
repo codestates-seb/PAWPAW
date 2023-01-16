@@ -1,6 +1,6 @@
-package animalsquad.server.global.S3.Service;
+package animalsquad.server.global.s3.service;
 
-import animalsquad.server.global.S3.Component.S3Component;
+import animalsquad.server.global.s3.component.S3Component;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;

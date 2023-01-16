@@ -1,4 +1,4 @@
-package animalsquad.server.global.S3.Service;
+package animalsquad.server.global.s3.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
