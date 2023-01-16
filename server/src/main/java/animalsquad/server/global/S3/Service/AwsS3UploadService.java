@@ -3,6 +3,7 @@ package animalsquad.server.global.S3.Service;
 import animalsquad.server.global.S3.Component.S3Component;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,18 @@ public class AwsS3UploadService implements UploadService {
     private final S3Component component;
 
     @Override
-    public  void  uploadFile(InputStream inputStream, ObjectMetadata objectMeTadata, String fileName){
-        amazonS3.putObject(new PutObjectRequest(component.getBucket() +"/test" ,fileName,inputStream,objectMeTadata).withCannedAcl(CannedAccessControlList.PublicRead));
+    public  void  uploadFile(InputStream inputStream, ObjectMetadata objectMeTadata, String fileName, String folderName){
+        amazonS3.putObject(new PutObjectRequest(component.getBucket() + "/" + folderName ,fileName,inputStream,objectMeTadata).withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
     @Override
-    public  String getFileUrl(String fileName){
-        return amazonS3.getUrl(component.getBucket(),fileName).toString();
+    public void deleteFile(String fileName){
+        amazonS3.deleteObject(new DeleteObjectRequest(component.getBucket() + "/test", fileName));
+    }
+
+    @Override
+    public  String getFileUrl(String fileName, String folderName){
+        return amazonS3.getUrl(component.getBucket() + "/" + folderName,fileName).toString();
     }
 }
 // uploadFile()은 aws-cloud-starter-aws에서 제공하는 AmazonS3를 이용해서 파일을 업로드하고,
