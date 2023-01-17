@@ -97,6 +97,4 @@ public class InfoMapController {
 
         return new ResponseEntity<>(infoMapMapper.infoMapsToDetailsResponseDto(infoMap,pagedComment,petId),HttpStatus.OK);
     }
-
-
 }

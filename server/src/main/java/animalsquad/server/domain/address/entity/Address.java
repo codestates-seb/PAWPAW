@@ -19,7 +19,7 @@ public class Address extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(unique = true)
-    private int code;
+    private Integer code;
     private String name;
     @OneToOne(mappedBy = "address")
     private Pet pet;
