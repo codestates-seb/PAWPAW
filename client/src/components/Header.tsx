@@ -5,6 +5,49 @@ import color from '../color';
 import styled from 'styled-components';
 
 const { ivory, brown, yellow } = color;
+
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+
+  const goToMap = () => {
+    const jwtToken = localStorage.getItem('Authorization');
+    if (jwtToken !== null) {
+      navigate('/map');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const goToMyPage = () => {
+    const jwtToken = localStorage.getItem('Authorization');
+    if (jwtToken !== null) {
+      navigate('/mypage');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  return (
+    <Container>
+      <HeaderLeftBox>
+        <LogoImg onClick={goToMap} />
+      </HeaderLeftBox>
+
+      <HeaderRightButtons>
+        <IconSpan onClick={goToMap}>
+          <Icon icon='material-symbols:map' style={{ fontSize: '35px' }} />
+        </IconSpan>
+        <IconSpan>
+          <Icon icon='gridicons:posts' style={{ fontSize: '35px' }} />
+        </IconSpan>
+        <IconSpan onClick={goToMyPage}>
+          <Icon icon='mdi:user-circle' style={{ fontSize: '35px' }} />
+        </IconSpan>
+      </HeaderRightButtons>
+    </Container>
+  );
+};
+
 const Container = styled.header`
   width: 100%;
   height: 50px;
@@ -48,29 +91,5 @@ const IconSpan = styled.span`
     color: ${yellow};
   }
 `;
-
-const Header: React.FC = () => {
-  const navigate = useNavigate();
-
-  return (
-    <Container>
-      <HeaderLeftBox>
-        <LogoImg onClick={() => navigate('/map')} />
-      </HeaderLeftBox>
-
-      <HeaderRightButtons>
-        <IconSpan onClick={() => navigate('/map')}>
-          <Icon icon='material-symbols:map' style={{ fontSize: '35px' }} />
-        </IconSpan>
-        <IconSpan>
-          <Icon icon='gridicons:posts' style={{ fontSize: '35px' }} />
-        </IconSpan>
-        <IconSpan onClick={() => navigate('/mypage')}>
-          <Icon icon='mdi:user-circle' style={{ fontSize: '35px' }} />
-        </IconSpan>
-      </HeaderRightButtons>
-    </Container>
-  );
-};
 
 export default Header;

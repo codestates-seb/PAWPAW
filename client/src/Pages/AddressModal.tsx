@@ -6,47 +6,6 @@ import jsonData from '../seoul-geojson.json';
 import Button from '../Components/Button';
 import { IProps } from './UserInfo';
 
-const { yellow, brown, ivory } = color;
-
-const Container = styled.div`
-  position: absolute;
-  width: 800px;
-  height: 571px;
-  padding: 25px;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: ${ivory};
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  position: absolute;
-`;
-
-const MapDiv = styled.div`
-  border-radius: 10px;
-  width: 750px;
-  height: 521px;
-  overflow: hidden;
-`;
-
-const ButtonDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  top: 485px;
-  right: 35px;
-  z-index: 1;
-`;
-
-const NameSpan = styled.span<{ top: string; left: string }>`
-  position: absolute;
-  color: ${brown};
-  font-size: 13px;
-  font-weight: bold;
-  z-index: 1;
-  top: ${(props) => props.top};
-  left: ${(props) => props.left};
-  pointer-events: none;
-`;
-
 const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
   const [areas, setAreas] = useState(jsonData.features); // 구 25개 배열
   const [clickedCode, setClickedCode] = useState<number | null>(null);
@@ -249,5 +208,46 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
     </Container>
   );
 };
+
+const { yellow, brown, ivory } = color;
+
+const Container = styled.div`
+  position: absolute;
+  width: 800px;
+  height: 571px;
+  padding: 25px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: ${ivory};
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  position: absolute;
+`;
+
+const MapDiv = styled.div`
+  border-radius: 10px;
+  width: 750px;
+  height: 521px;
+  overflow: hidden;
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 485px;
+  right: 35px;
+  z-index: 1;
+`;
+
+const NameSpan = styled.span<{ top: string; left: string }>`
+  position: absolute;
+  color: ${brown};
+  font-size: 13px;
+  font-weight: bold;
+  z-index: 1;
+  top: ${(props) => props.top};
+  left: ${(props) => props.left};
+  pointer-events: none;
+`;
 
 export default AddressModal;

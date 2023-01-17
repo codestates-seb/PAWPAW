@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from '../Components/Header';
-import UserImg from '../img/userimg.png';
 import { Icon } from '@iconify/react';
 import color from '../color';
 import { useNavigate } from 'react-router';
@@ -35,7 +34,7 @@ const Mypage = () => {
   const petId = localStorage.getItem('petId') as string;
   const { responseData, error } = getUserInfo(petId);
   const [info, setInfo] = useState<Info>({
-    petName: '',
+    petName: 'test',
     isMale: 'MALE',
     isCat: 'CAT',
     age: 0,
@@ -51,7 +50,7 @@ const Mypage = () => {
     setCount(count + 1);
   }
   console.log('info', info);
-
+  const UserImg = formData.profileImage as unknown as string;
   const goEditPage = () => {
     navigate('/userinfoedit', {
       state: {

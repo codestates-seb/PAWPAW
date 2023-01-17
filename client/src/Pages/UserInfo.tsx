@@ -12,7 +12,6 @@ import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
-
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const url = '';
 interface FormData {
@@ -24,41 +23,51 @@ export interface IProps {
   setAddress: (address: number | null) => void;
   setIsOpen: (isOpen: boolean) => void;
 }
+
+interface Info {
+  petName: string;
+  isMale: 'MALE' | 'FEMALE';
+  isCat: 'CAT' | 'DOG';
+  age: number;
+}
+
 const UserInfo: React.FC = () => {
-  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>('MALE');
-  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>('CAT');
-  const [isAge, setIsAge] = useState<number>(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const [address, setAddress] = useState<number | null>(null);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
-  const location = useLocation();
-  const id = location.state.id;
-  const petname = location.state.petname;
-  const password = location.state.password;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [info, setInfo] = useState<Info>({
+    petName: 'test',
+    isMale: 'MALE',
+    isCat: 'CAT',
+    age: 0,
+  });
+  const [address, setAddress] = useState<number | null>(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const { id, petname, password } = location.state;
 
   const [fileImage, setFileImage] = useState<string>();
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setFileImage(URL.createObjectURL(event.target.files[0]));
-  };
-  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsAge(Number(e.target.value));
-    console.log((e.target as HTMLInputElement).value);
-  };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
+    const { name, files } = event.target;
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
     console.log(files);
   };
+
+  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, age: Number(e.target.value) });
+    console.log((e.target as HTMLInputElement).value);
+  };
+
   const catHandler = () => {
-    if (isCat === 'CAT') {
-      setIsCat('DOG');
+    if (info.isCat === 'CAT') {
+      setInfo({ ...info, isCat: 'DOG' });
     } else {
-      setIsCat('CAT');
+      setInfo({ ...info, isCat: 'CAT' });
     }
   };
   const openAddressModal = () => {
@@ -72,18 +81,20 @@ const UserInfo: React.FC = () => {
       setIsOpen(false);
     }
   });
+
   const submitHandler = async () => {
     if (!formData.profileImage) return;
     const headers = {
       'Content-Type': 'multipart/form-data',
     };
+
     const data = new FormData();
     data.append('loginId', id);
     data.append('password', password);
-    data.append('petName', petname);
-    data.append('age', isAge.toString());
+    data.append('petName', info.petName);
+    data.append('age', info.age.toString());
     data.append('species', 'CAT');
-    data.append('gender', isMale);
+    data.append('gender', info.isMale);
     data.append('code', '11680');
     data.append('profileImage', formData.profileImage);
     console.log(data);
@@ -96,7 +107,7 @@ const UserInfo: React.FC = () => {
     for (const value of data.values()) {
       console.log(value);
     }
-    if (isAge === 0) {
+    if (info.age === 0) {
       alert('나이가 입력 되어야 합니다.');
     } else if (id === '' || password === '') {
       alert('입력되지 않은 값이 있습니다.');
@@ -125,34 +136,48 @@ const UserInfo: React.FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : isCat === 'DOG' ? (
-              <img className='baseimojidog' src={Dog} style={{ width: '100px', height: '100px' }}></img>
+            ) : info.isCat === 'DOG' ? (
+              <img
+                className='baseimojidog'
+                src={Dog}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
             ) : (
-              <img className='baseimojicat' src={Cat} style={{ width: '100px', height: '100px' }}></img>
+              <img
+                className='baseimojicat'
+                src={Cat}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
             )}
           </AvatarDiv>
           <NameDiv>{petname}</NameDiv>
           <PlusDiv>
-            <label className='input-file-button' htmlFor='input-file'>
-              {WhitePlusSVG}
-            </label>
-            <input
-              type='file'
-              id='input-file'
-              onChange={saveFileImage}
-              style={{ display: 'none' }}
-            />
+            <form>
+              <label className='input-file-button' htmlFor='input-file'>
+                {WhitePlusSVG}
+              </label>
+              <input
+                type='file'
+                id='input-file'
+                name='profileImage'
+                onChange={saveFileImage}
+                style={{ display: 'none' }}
+              />
+            </form>
           </PlusDiv>
           <PlusDiv className='invisible'>
-            <label className='input-file-button' htmlFor='input-file'>
-              {YellowPlusSVG}
-            </label>
-            <input
-              type='file'
-              id='input-file'
-              onChange={saveFileImage}
-              style={{ display: 'none' }}
-            />
+            <form>
+              <label className='input-file-button' htmlFor='input-file'>
+                {YellowPlusSVG}
+              </label>
+              <input
+                type='file'
+                id='input-file'
+                name='profileImage'
+                onChange={saveFileImage}
+                style={{ display: 'none' }}
+              />
+            </form>
           </PlusDiv>
           <input type='file' id='input-file' style={{ display: 'none' }} />
         </LeftDiv>
@@ -171,12 +196,12 @@ const UserInfo: React.FC = () => {
               </SvgSpan>
             </InputDiv>
           </InputsDiv>
-          <GenderDiv isMale={isMale}>
+          <GenderDiv isMale={info.isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale('MALE')}>
+            <IconButton onClick={() => setInfo({ ...info, isMale: 'MALE' })}>
               <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
             </IconButton>
-            <IconButton onClick={() => setIsMale('FEMALE')}>
+            <IconButton onClick={() => setInfo({ ...info, isMale: 'FEMALE' })}>
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
@@ -185,13 +210,13 @@ const UserInfo: React.FC = () => {
             <ToggleDiv>
               <CircleDiv
                 onClick={catHandler}
-                isCat={isCat}
-                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+                isCat={info.isCat}
+                className={info.isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
-              <CatSpan onClick={catHandler} isCat={isCat}>
+              <CatSpan onClick={catHandler} isCat={info.isCat}>
                 <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
-              <DogSpan onClick={catHandler} isCat={isCat}>
+              <DogSpan onClick={catHandler} isCat={info.isCat}>
                 <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
@@ -355,7 +380,7 @@ const CircleDiv = styled.div<{ isCat: string; className: string }>`
 const CatSpan = styled.span<{ isCat: string }>`
   font-size: 36px;
   position: absolute;
-  top: 9px;
+  top: 11px;
   left: 12px;
   cursor: pointer;
   user-select: none;
@@ -363,7 +388,7 @@ const CatSpan = styled.span<{ isCat: string }>`
 const DogSpan = styled.span<{ isCat: string }>`
   font-size: 36px;
   position: absolute;
-  top: 7px;
+  top: 9px;
   right: 12px;
   cursor: pointer;
   user-select: none;

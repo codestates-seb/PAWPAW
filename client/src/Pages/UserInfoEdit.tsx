@@ -13,7 +13,6 @@ import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
-
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
@@ -29,6 +28,228 @@ interface Info {
   age: number;
   address: string | null;
 }
+
+const UserInfoEdit: FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const petName = location.state.petName;
+  const age = location.state.age as number;
+  const gender = location.state.gender;
+  const species = location.state.species;
+  const code = location.state.code;
+  const profileImage = location.state.profileImage;
+  const imgUrl = profileImage.profileImage;
+  const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
+  console.log(files);
+  const [renderCount, setRenderCount] = useState<number>(0);
+  const [isPetName, setIsPetName] = useState<string>(petName);
+  const [isOpen, setIsOpen] = useState(false);
+  const [fileImage, setFileImage] = useState<string>();
+  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
+  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
+  const [isAge, setIsAge] = useState<number>(age);
+  const [address, setAddress] = useState<number | null>(code);
+  const [formData, setFormData] = useState<FormData>({ profileImage: files });
+  const petId: string | null = localStorage.getItem('petId');
+  console.log('저긴가1', formData);
+  console.log('저긴가2', formData.profileImage);
+  console.log('pet', petName);
+  if (renderCount === 0) {
+    setRenderCount(renderCount + 1);
+    setFormData({ ...formData, ['profileImage']: files });
+    console.log('여긴가', formData);
+  }
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+    const { name, files } = event.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    }
+    console.log(formData);
+  };
+
+  const catHandler = () => {
+    if (isCat === 'CAT') {
+      setIsCat('DOG');
+    } else {
+      setIsCat('CAT');
+    }
+    console.log(isCat);
+  };
+
+  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsAge(Number(e.target.value));
+    console.log((e.target as HTMLInputElement).value);
+  };
+
+  const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsPetName((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+
+  const deleteHandler = () => {
+    petDelete(petId as string);
+  };
+
+  const openAddressModal = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const updateHandler = async () => {
+    if (!formData.profileImage) return;
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      Authorization: jwtToken,
+      Refresh: refreshToken,
+    };
+
+    const data = new FormData();
+    data.append('petName', isPetName);
+    data.append('age', isAge.toString());
+    data.append('gender', gender);
+    data.append('species', species);
+    data.append('code', '11680');
+    data.append('profileImage', formData.profileImage);
+    console.log(data);
+    console.log(formData);
+    console.log(formData.profileImage);
+
+    for (const key of data.keys()) {
+      console.log(key);
+    }
+    for (const value of data.values()) {
+      console.log(value);
+    }
+    try {
+      await axios.post(`${url}/patch/${petId}`, data, { headers });
+      navigate('/login');
+      // 비동기 에러 날 것 같으면 .then 사용
+    } catch (error) {
+      console.error('Error', error);
+      alert(error);
+    }
+  };
+
+  return (
+    <Container>
+      <Background />
+      <Box>
+        <LeftDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat === 'DOG' ? (
+              <img
+                className='baseimojidog'
+                src={Dog}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            ) : (
+              <img
+                className='baseimojicat'
+                src={Cat}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            )}
+          </AvatarDiv>
+          <AvatarEditDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhiteCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
+          <AvatarEditDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
+          <NameDiv>
+            <Input type='text' placeholder={petName} onChange={petNameHandler} />
+            <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
+          </NameDiv>
+        </LeftDiv>
+
+        <RightDiv>
+          <InputsDiv>
+            <InputDiv>
+              <Input
+                type='text'
+                placeholder={`${age} 살`}
+                marginBottom='40px'
+                onChange={ageHandler}
+              />
+              <SvgSpan>
+                <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
+              </SvgSpan>
+            </InputDiv>
+            <InputDiv>
+              <Input
+                type='text'
+                readOnly={true}
+                placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
+                openAddressModal={openAddressModal}
+              />
+              <SvgSpan onClick={openAddressModal}>
+                <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
+              </SvgSpan>
+            </InputDiv>
+          </InputsDiv>
+
+          <GenderDiv isMale={isMale}>
+            <TextSpan>성별</TextSpan>
+            <IconButton onClick={() => setIsMale('MALE')}>
+              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
+            </IconButton>
+            <IconButton onClick={() => setIsMale('FEMALE')}>
+              <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
+            </IconButton>
+          </GenderDiv>
+
+          <TypeDiv>
+            <TextSpan>저는...</TextSpan>
+            <ToggleDiv>
+              <CircleDiv
+                onClick={catHandler}
+                isCat={isCat}
+                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+              />
+              <CatSpan onClick={catHandler} isCat={isCat}>
+                <img src={Cat} style={{ width: '36px' }}></img>
+              </CatSpan>
+              <DogSpan onClick={catHandler} isCat={isCat}>
+                <img src={Dog} style={{ width: '36px' }}></img>
+              </DogSpan>
+            </ToggleDiv>
+          </TypeDiv>
+          <ButtonDiv>
+            <Button text='수정' onClick={updateHandler} />
+          </ButtonDiv>
+        </RightDiv>
+      </Box>
+      <DeleteButton onClick={deleteHandler} />
+      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
+    </Container>
+  );
+};
+
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -44,7 +265,6 @@ const Container = styled.div`
   .baseimojicat {
     margin-top: 35px;
   }
-
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -66,12 +286,12 @@ const NameDiv = styled.div`
   margin-top: 28px;
   font-size: 32px;
   font-weight: bold;
-  color: white;
   text-decoration: underline;
-`;
+  color: ${brown};
 
-const NameEditSpan = styled.span`
-  cursor: pointer;
+  &::placeholder {
+    color: ${brown};
+  }
 `;
 
 const AvatarEditDiv = styled.div`
@@ -156,7 +376,7 @@ const ToggleDiv = styled.div`
   position: relative;
 `;
 
-const CircleDiv = styled.div<{ isCat: boolean; className: string }>`
+const CircleDiv = styled.div<{ isCat: string; className: string }>`
   width: 58px;
   height: 58px;
   border-radius: 50px;
@@ -175,19 +395,19 @@ const CircleDiv = styled.div<{ isCat: boolean; className: string }>`
   }
 `;
 
-const CatSpan = styled.span<{ isCat: boolean }>`
+const CatSpan = styled.span<{ isCat: string }>`
   font-size: 36px;
-  /* position: absolute;
-  top: 9px;
-  left: 12px; */
+  position: absolute;
+  top: 11px;
+  left: 12px;
   cursor: pointer;
   user-select: none;
 `;
-const DogSpan = styled.span<{ isCat: boolean }>`
+const DogSpan = styled.span<{ isCat: string }>`
   font-size: 36px;
-  /* position: absolute;
-  top: 7px;
-  right: 12px; */
+  position: absolute;
+  top: 9px;
+  right: 12px;
   cursor: pointer;
   user-select: none;
 `;
@@ -224,245 +444,5 @@ const YellowCirclePencilSVG = (
     />
   </svg>
 );
-
-interface Info {
-  petName: string;
-  isMale: 'MALE' | 'FEMALE';
-  isCat: 'CAT' | 'DOG';
-  age: number;
-  address: string | null;
-}
-
-const UserInfoEdit: FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const petname = location.state.petname;
-  const age = location.state.age as number;
-  const gender = location.state.gender;
-  const species = location.state.species;
-  const code = location.state.code;
-  const profileImage = location.state.profileImage;
-  const imgUrl = profileImage.profileImage;
-  const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
-  console.log(files);
-  const [renderCount, setRenderCount] = useState<number>(0);
-  const [isPetName, setIsPetName] = useState<string>(petname);
-  const [isOpen, setIsOpen] = useState(false);
-  const [fileImage, setFileImage] = useState<string>();
-  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    setFileImage(URL.createObjectURL(event.target.files[0]));
-  };
-  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
-  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
-  const [isAge, setIsAge] = useState<number>(age);
-  const [address, setAddress] = useState<number | null>(code);
-  const [formData, setFormData] = useState<FormData>({ profileImage: files });
-  const petId: string | null = localStorage.getItem('petId');
-  console.log('저긴가1', formData);
-  console.log('저긴가2', formData.profileImage);
-
-  if (renderCount === 0) {
-    setRenderCount(renderCount + 1);
-    setFormData({ ...formData, ['profileImage']: files });
-    console.log('여긴가', formData);
-  }
-  const catHandler = () => {
-    if (isCat === 'CAT') {
-      setIsCat('DOG');
-    } else {
-      setIsCat('CAT');
-    }
-    console.log(isCat);
-  };
-  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsAge(Number(e.target.value));
-    console.log((e.target as HTMLInputElement).value);
-  };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files) {
-      setFormData({ ...formData, [name]: files[0] });
-    }
-    console.log(formData);
-  };
-  const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsPetName((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
-  };
-  const deleteHandler = () => {
-    petDelete(petId as string);
-  };
-  const petId: string | null = localStorage.getItem('petId');
-  if (petId) {
-    interface ResponseData {
-      petname: string;
-      address: string;
-      profileImage: File | null;
-      age: number;
-      gender: 'MALE' | 'FEMALE';
-      species: string;
-    }
-    const { responseData, loading, error } = getUserInfo(petId);
-    const responseDataTyped = responseData as ResponseData;
-    console.log(responseData);
-    console.log(loading);
-    console.log(error);
-    const { petname, address, profileImage, age, gender, species } = responseDataTyped;
-    setIsAge(age);
-    setFormData({ profileImage: profileImage });
-    console.log(petname);
-    console.log(address);
-    console.log(gender);
-    console.log(species);
-  }
-  const openAddressModal = () => {
-    setIsOpen(!isOpen);
-  };
-  const updateHandler = async () => {
-    if (!formData.profileImage) return;
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-      Authorization: jwtToken,
-      Refresh: refreshToken,
-    };
-    const data = new FormData();
-    data.append('petName', isPetName);
-    data.append('age', isAge.toString());
-    data.append('gender', gender);
-    data.append('species', species);
-    data.append('code', '11680');
-    data.append('profileImage', formData.profileImage);
-    console.log(data);
-    console.log(formData);
-    console.log(formData.profileImage);
-    for (const key of data.keys()) {
-      console.log(key);
-    }
-    for (const value of data.values()) {
-      console.log(value);
-    }
-    try {
-      await axios.post(`${url}/patch/${petId}`, data, { headers });
-      navigate('/login');
-      // 비동기 에러 날 것 같으면 .then 사용
-    } catch (error) {
-      console.error('Error', error);
-      alert(error);
-    }
-  };
-
-  return (
-    <Container>
-      <Background />
-      <Box>
-        <LeftDiv>
-          <AvatarDiv>
-            {fileImage ? (
-              <img
-                className='userprofile'
-                alt='sample'
-                src={fileImage}
-                style={{ margin: 'auto', width: '175px', height: '175px' }}
-              />
-            ) : isCat === 'DOG' ? (
-              <img
-                className='baseimojidog'
-                src={Dog}
-                style={{ width: '100px', height: '100px' }}
-              ></img>
-            ) : (
-              <img
-                className='baseimojicat'
-                src={Cat}
-                style={{ width: '100px', height: '100px' }}
-              ></img>
-            )}
-          </AvatarDiv>
-          <AvatarEditDiv>
-            <label className='input-file-button' htmlFor='input-file'>
-              {WhiteCirclePencilSVG}
-            </label>
-            <input
-              type='file'
-              id='input-file'
-              onChange={saveFileImage}
-              style={{ display: 'none' }}
-            />
-          </AvatarEditDiv>
-          <AvatarEditDiv className='invisible'>
-            <label className='input-file-button' htmlFor='input-file'>
-              {YellowCirclePencilSVG}
-            </label>
-            <input
-              type='file'
-              id='input-file'
-              onChange={saveFileImage}
-              style={{ display: 'none' }}
-            />
-          </AvatarEditDiv>
-          <NameDiv>
-            <Input type='text' placeholder={petname} onChange={petNameHandler} />
-            <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
-          </NameDiv>
-        </LeftDiv>
-
-        <RightDiv>
-          <InputsDiv>
-            <InputDiv>
-              <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
-              <SvgSpan>
-                <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
-              </SvgSpan>
-            </InputDiv>
-            <InputDiv>
-              <Input
-                type='text'
-                readOnly={true}
-                placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
-                openAddressModal={openAddressModal}
-              />
-              <SvgSpan onClick={openAddressModal}>
-                <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
-              </SvgSpan>
-            </InputDiv>
-          </InputsDiv>
-
-          <GenderDiv isMale={isMale}>
-            <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale('MALE')}>
-              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
-            </IconButton>
-            <IconButton onClick={() => setIsMale('FEMALE')}>
-              <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
-            </IconButton>
-          </GenderDiv>
-
-          <TypeDiv>
-            <TextSpan>저는...</TextSpan>
-            <ToggleDiv>
-              <CircleDiv
-                onClick={() => setIsCat(!isCat)}
-                isCat={isCat}
-                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
-              />
-              <CatSpan onClick={catHandler} isCat={isCat}>
-                <img src={Cat} style={{ width: '36px' }}></img>
-              </CatSpan>
-              <DogSpan onClick={catHandler} isCat={isCat}>
-                <img src={Dog} style={{ width: '36px' }}></img>
-              </DogSpan>
-            </ToggleDiv>
-          </TypeDiv>
-          <ButtonDiv>
-            <Button text='수정' />
-          </ButtonDiv>
-        </RightDiv>
-      </Box>
-      {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
-    </Container>
-  );
-};
 
 export default UserInfoEdit;
