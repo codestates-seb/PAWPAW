@@ -4,6 +4,7 @@ import axios from 'axios';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = '';
+const navigate = useNavigate();
 
 interface FetchHook {
   responseData: object | null;
@@ -40,10 +41,9 @@ export const petUpdate = async (
   age: number,
   gender: string,
   species: string,
-  address: string,
+  code: number,
   formData: { profileImage: string | Blob },
 ) => {
-  const navigate = useNavigate();
   if (!formData.profileImage) return;
   const headers = {
     'Content-Type': 'multipart/form-data',
@@ -55,7 +55,7 @@ export const petUpdate = async (
   data.append('age', age.toString());
   data.append('species', species);
   data.append('gender', gender);
-  data.append('address', address);
+  data.append('code', code.toString());
   data.append('profileImage', formData.profileImage);
   console.log(data);
   console.log(formData);
@@ -103,5 +103,6 @@ export const petDelete = async (id: string) => {
   } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
+    navigate('/login');
   }
 };

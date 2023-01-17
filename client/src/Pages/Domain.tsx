@@ -25,6 +25,7 @@ const Domain: React.FC = () => {
             <button onClick={() => navigate('/userinfoedit')}>사용자 정보 수정</button>
             <button onClick={() => navigate('/map')}>맵</button>
             <button onClick={() => navigate('/modal')}>모달</button>
+            <button onClick={() => navigate('/mypage')}>마이페이지</button>
           </div>
         </Body>
       </Container>
