@@ -8,7 +8,10 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { convertAddress } from './UserInfo';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
 import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
+
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 interface FormData {
@@ -21,6 +24,14 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .baseimojidog {
+    margin-top: 30px;
+  }
+  .baseimojicat {
+    margin-top: 35px;
+  }
+
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -203,13 +214,19 @@ const UserInfoEdit: FC = () => {
   const species = location.state.species;
   const code = location.state.code;
   const profileImage = location.state.profileImage;
-
   const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [fileImage, setFileImage] = useState<string>();
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+  };
   const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
   const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
   const [isAge, setIsAge] = useState<number>(age);
   const [address, setAddress] = useState<number | null>(code);
-  const [formData, setFormData] = useState<FormData>({ profileImage: profileImage });
+
   const petId: string | null = localStorage.getItem('petId');
   const catHandler = () => {
     if (isCat === 'CAT') {
@@ -271,9 +288,50 @@ const UserInfoEdit: FC = () => {
       <Background />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat !== 'DOG' ? '🐶' : '🐱'}</AvatarDiv>
-          <AvatarEditDiv>{WhiteCirclePencilSVG}</AvatarEditDiv>
-          <AvatarEditDiv className='invisible'>{YellowCirclePencilSVG}</AvatarEditDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat ? (
+              <img
+                className='baseimojidog'
+                src={Dog}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            ) : (
+              <img
+                className='baseimojicat'
+                src={Cat}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            )}
+          </AvatarDiv>
+          <AvatarEditDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhiteCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
+          <AvatarEditDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
           <NameDiv>
             귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
@@ -322,10 +380,10 @@ const UserInfoEdit: FC = () => {
                 className={isCat === 'CAT' ? 'cat' : 'dog'}
               />
               <CatSpan onClick={catHandler} isCat={isCat}>
-                🐱
+                <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
               <DogSpan onClick={catHandler} isCat={isCat}>
-                🐶
+                <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>

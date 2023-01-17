@@ -8,6 +8,8 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const url = '';
@@ -32,6 +34,13 @@ const UserInfo: React.FC = () => {
   const petname = location.state.petname;
   const password = location.state.password;
   const navigate = useNavigate();
+
+  const [fileImage, setFileImage] = useState<string>();
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+  };
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setIsAge(Number(e.target.value));
     console.log((e.target as HTMLInputElement).value);
@@ -109,13 +118,44 @@ const UserInfo: React.FC = () => {
       <Background ref={backgroundRef} />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat === 'DOG' ? '🐶' : '🐱'}</AvatarDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat ? (
+              <img className='baseimojidog' src={Dog} style={{ width: '100px', height: '100px' }}></img>
+            ) : (
+              <img className='baseimojicat' src={Cat} style={{ width: '100px', height: '100px' }}></img>
+            )}
+          </AvatarDiv>
           <NameDiv>{petname}</NameDiv>
-          <PlusDiv>{WhitePlusSVG}</PlusDiv>
-          <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
-          <form>
-            <input type='file' name='profileImage' onChange={handleChange} />
-          </form>
+          <PlusDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhitePlusSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </PlusDiv>
+          <PlusDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowPlusSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </PlusDiv>
+          <input type='file' id='input-file' style={{ display: 'none' }} />
         </LeftDiv>
         <RightDiv>
           <InputsDiv>
@@ -150,10 +190,10 @@ const UserInfo: React.FC = () => {
                 className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
               <CatSpan onClick={catHandler} isCat={isCat}>
-                🐱
+                <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
               <DogSpan onClick={catHandler} isCat={isCat}>
-                🐶
+                <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
@@ -232,6 +272,13 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .baseimojidog {
+    margin-top: 30px;
+  }
+  .baseimojicat {
+    margin-top: 35px;
+  }
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -241,12 +288,15 @@ const AvatarDiv = styled.div`
   height: 175px;
   margin-top: 140px;
   border-radius: 50%;
-  font-size: 100px;
   background-color: ${ivory};
   line-height: 180px;
 
   display: flex;
   justify-content: center;
+
+  .userprofile {
+    border-radius: 50%;
+  }
 `;
 
 const NameDiv = styled.div`
