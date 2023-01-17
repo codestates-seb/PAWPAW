@@ -1,4 +1,6 @@
 import React, { FC, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
@@ -7,14 +9,25 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
+import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
-import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
+
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
+const jwtToken = localStorage.getItem('Authorization');
+const refreshToken = localStorage.getItem('Refresh');
+const url = '';
 
 interface FormData {
   profileImage: Blob | null;
+}
+interface Info {
+  petName: string;
+  isMale: 'MALE' | 'FEMALE';
+  isCat: 'CAT' | 'DOG';
+  age: number;
+  address: string | null;
 }
 // 전체 화면
 const Container = styled.div`
@@ -182,6 +195,16 @@ const ButtonDiv = styled.div`
   margin-top: 45px;
 `;
 
+const DeleteButton = styled.div`
+  z-index: 999;
+  color: ${red};
+  font-size: 15px;
+  font-weight: Bold;
+  left: 1000px;
+  top: 1000px;
+  cursor: pointer;
+`;
+
 const WhiteCirclePencilSVG = (
   <svg width='45' height='45' viewBox='0 0 45 45' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <circle cx='23' cy='22' r='14' fill='#7D5A5A' />
@@ -202,16 +225,29 @@ const YellowCirclePencilSVG = (
   </svg>
 );
 
+interface Info {
+  petName: string;
+  isMale: 'MALE' | 'FEMALE';
+  isCat: 'CAT' | 'DOG';
+  age: number;
+  address: string | null;
+}
+
 const UserInfoEdit: FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const petname = location.state.petname;
   const age = location.state.age as number;
   const gender = location.state.gender;
   const species = location.state.species;
   const code = location.state.code;
   const profileImage = location.state.profileImage;
+  const imgUrl = profileImage.profileImage;
+  const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
+  console.log(files);
+  const [renderCount, setRenderCount] = useState<number>(0);
+  const [isPetName, setIsPetName] = useState<string>(petname);
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const [fileImage, setFileImage] = useState<string>();
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -222,7 +258,42 @@ const UserInfoEdit: FC = () => {
   const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
   const [isAge, setIsAge] = useState<number>(age);
   const [address, setAddress] = useState<number | null>(code);
+  const [formData, setFormData] = useState<FormData>({ profileImage: files });
+  const petId: string | null = localStorage.getItem('petId');
+  console.log('저긴가1', formData);
+  console.log('저긴가2', formData.profileImage);
 
+  if (renderCount === 0) {
+    setRenderCount(renderCount + 1);
+    setFormData({ ...formData, ['profileImage']: files });
+    console.log('여긴가', formData);
+  }
+  const catHandler = () => {
+    if (isCat === 'CAT') {
+      setIsCat('DOG');
+    } else {
+      setIsCat('CAT');
+    }
+    console.log(isCat);
+  };
+  const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsAge(Number(e.target.value));
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    }
+    console.log(formData);
+  };
+  const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsPetName((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const deleteHandler = () => {
+    petDelete(petId as string);
+  };
   const petId: string | null = localStorage.getItem('petId');
   if (petId) {
     interface ResponseData {
@@ -248,6 +319,38 @@ const UserInfoEdit: FC = () => {
   }
   const openAddressModal = () => {
     setIsOpen(!isOpen);
+  };
+  const updateHandler = async () => {
+    if (!formData.profileImage) return;
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      Authorization: jwtToken,
+      Refresh: refreshToken,
+    };
+    const data = new FormData();
+    data.append('petName', isPetName);
+    data.append('age', isAge.toString());
+    data.append('gender', gender);
+    data.append('species', species);
+    data.append('code', '11680');
+    data.append('profileImage', formData.profileImage);
+    console.log(data);
+    console.log(formData);
+    console.log(formData.profileImage);
+    for (const key of data.keys()) {
+      console.log(key);
+    }
+    for (const value of data.values()) {
+      console.log(value);
+    }
+    try {
+      await axios.post(`${url}/patch/${petId}`, data, { headers });
+      navigate('/login');
+      // 비동기 에러 날 것 같으면 .then 사용
+    } catch (error) {
+      console.error('Error', error);
+      alert(error);
+    }
   };
 
   return (
@@ -300,14 +403,15 @@ const UserInfoEdit: FC = () => {
             />
           </AvatarEditDiv>
           <NameDiv>
-            귀염둥이 <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
+            <Input type='text' placeholder={petname} onChange={petNameHandler} />
+            <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
         </LeftDiv>
 
         <RightDiv>
           <InputsDiv>
             <InputDiv>
-              <Input type='text' placeholder='나이' marginBottom='40px' />
+              <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
               <SvgSpan>
                 <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
               </SvgSpan>
