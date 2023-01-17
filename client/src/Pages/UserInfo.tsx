@@ -8,8 +8,10 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
+import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const url = '';
@@ -84,7 +86,7 @@ const UserInfo: React.FC = () => {
     // 'DOG','CAT'
     data.append('gender', isMale);
     // 'MALE','FEMALE'
-    data.append('code', '1');
+    data.append('address', '1');
     // 주소값도 숫자 타입으로 지금은 1,2만 가능
     data.append('profileImage', formData.profileImage);
     console.log(data);
@@ -126,7 +128,7 @@ const UserInfo: React.FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : isCat ? (
+            ) : isCat === 'DOG' ? (
               <img className='baseimojidog' src={Dog} style={{ width: '100px', height: '100px' }}></img>
             ) : (
               <img className='baseimojicat' src={Cat} style={{ width: '100px', height: '100px' }}></img>
@@ -164,7 +166,7 @@ const UserInfo: React.FC = () => {
               <Input
                 type='text'
                 readOnly={true}
-                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>
@@ -205,63 +207,6 @@ const UserInfo: React.FC = () => {
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
-};
-
-export const convertAddress = (address: number) => {
-  if (address !== null) {
-    switch (address) {
-      case 11680:
-        return '강남구';
-      case 11740:
-        return '강동구';
-      case 11305:
-        return '강북구';
-      case 11500:
-        return '강서구';
-      case 11620:
-        return '관악구';
-      case 11215:
-        return '광진구';
-      case 11530:
-        return '구로구';
-      case 11545:
-        return '금천구';
-      case 11350:
-        return '노원구';
-      case 11320:
-        return '도봉구';
-      case 11230:
-        return '동대문구';
-      case 11590:
-        return '동작구';
-      case 11440:
-        return '마포구';
-      case 11410:
-        return '서대문구';
-      case 11650:
-        return '서초구';
-      case 11200:
-        return '성동구';
-      case 11290:
-        return '성북구';
-      case 11710:
-        return '송파구';
-      case 11470:
-        return '양천구';
-      case 11560:
-        return '영등포구';
-      case 11170:
-        return '용산구';
-      case 11380:
-        return '은평구';
-      case 11110:
-        return '종로구';
-      case 11140:
-        return '중구	';
-      case 11260:
-        return '중랑구';
-    }
-  }
 };
 
 // 전체 화면
