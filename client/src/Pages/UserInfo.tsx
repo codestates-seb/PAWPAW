@@ -41,7 +41,7 @@ const UserInfo: React.FC = () => {
     isCat: 'CAT',
     age: 0,
   });
-  const [address, setAddress] = useState<number | null>(0);
+  const [address, setAddress] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const { id, petname, password } = location.state;
@@ -69,6 +69,7 @@ const UserInfo: React.FC = () => {
     } else {
       setInfo({ ...info, isCat: 'CAT' });
     }
+    console.log('1', info.isCat);
   };
   const openAddressModal = () => {
     setIsOpen(!isOpen);
@@ -122,7 +123,6 @@ const UserInfo: React.FC = () => {
       }
     }
   };
-
   return (
     <Container>
       <Background ref={backgroundRef} />
@@ -136,7 +136,7 @@ const UserInfo: React.FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : info.isCat === 'DOG' ? (
+            ) : info.isCat === 'CAT' ? (
               <img
                 className='baseimojidog'
                 src={Dog}
