@@ -8,12 +8,17 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
-import { convertAddress } from './UserInfo';
-import { petDelete } from '../util/UserApi';
+import { codeToAddress } from '../util/ConvertAddress';
+import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
+
+
+const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = '';
-const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
+
 interface FormData {
   profileImage: Blob | null;
 }
@@ -28,9 +33,18 @@ interface Info {
 const Container = styled.div`
   width: 100%;
   height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .baseimojidog {
+    margin-top: 30px;
+  }
+  .baseimojicat {
+    margin-top: 35px;
+  }
+
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -54,6 +68,10 @@ const NameDiv = styled.div`
   font-weight: bold;
   color: white;
   text-decoration: underline;
+`;
+
+const NameEditSpan = styled.span`
+  cursor: pointer;
 `;
 
 const AvatarEditDiv = styled.div`
@@ -138,7 +156,7 @@ const ToggleDiv = styled.div`
   position: relative;
 `;
 
-const CircleDiv = styled.div<{ isCat: string; className: string }>`
+const CircleDiv = styled.div<{ isCat: boolean; className: string }>`
   width: 58px;
   height: 58px;
   border-radius: 50px;
@@ -157,25 +175,26 @@ const CircleDiv = styled.div<{ isCat: string; className: string }>`
   }
 `;
 
-const CatSpan = styled.span<{ isCat: string }>`
+const CatSpan = styled.span<{ isCat: boolean }>`
   font-size: 36px;
-  position: absolute;
+  /* position: absolute;
   top: 9px;
-  left: 12px;
+  left: 12px; */
   cursor: pointer;
   user-select: none;
 `;
-const DogSpan = styled.span<{ isCat: string }>`
+const DogSpan = styled.span<{ isCat: boolean }>`
   font-size: 36px;
-  position: absolute;
+  /* position: absolute;
   top: 7px;
-  right: 12px;
+  right: 12px; */
   cursor: pointer;
   user-select: none;
 `;
 const ButtonDiv = styled.div`
   margin-top: 45px;
 `;
+
 const DeleteButton = styled.div`
   z-index: 999;
   color: ${red};
@@ -226,9 +245,15 @@ const UserInfoEdit: FC = () => {
   const imgUrl = profileImage.profileImage;
   const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
   console.log(files);
-  const [isOpen, setIsOpen] = useState(false);
   const [renderCount, setRenderCount] = useState<number>(0);
   const [isPetName, setIsPetName] = useState<string>(petname);
+  const [isOpen, setIsOpen] = useState(false);
+  const [fileImage, setFileImage] = useState<string>();
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+  };
   const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
   const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
   const [isAge, setIsAge] = useState<number>(age);
@@ -269,6 +294,29 @@ const UserInfoEdit: FC = () => {
   const deleteHandler = () => {
     petDelete(petId as string);
   };
+  const petId: string | null = localStorage.getItem('petId');
+  if (petId) {
+    interface ResponseData {
+      petname: string;
+      address: string;
+      profileImage: File | null;
+      age: number;
+      gender: 'MALE' | 'FEMALE';
+      species: string;
+    }
+    const { responseData, loading, error } = getUserInfo(petId);
+    const responseDataTyped = responseData as ResponseData;
+    console.log(responseData);
+    console.log(loading);
+    console.log(error);
+    const { petname, address, profileImage, age, gender, species } = responseDataTyped;
+    setIsAge(age);
+    setFormData({ profileImage: profileImage });
+    console.log(petname);
+    console.log(address);
+    console.log(gender);
+    console.log(species);
+  }
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -310,16 +358,54 @@ const UserInfoEdit: FC = () => {
       <Background />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat !== 'DOG' ? '🐶' : '🐱'}</AvatarDiv>
-          <AvatarEditDiv>{WhiteCirclePencilSVG}</AvatarEditDiv>
-          <AvatarEditDiv className='invisible'>{YellowCirclePencilSVG}</AvatarEditDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat === 'DOG' ? (
+              <img
+                className='baseimojidog'
+                src={Dog}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            ) : (
+              <img
+                className='baseimojicat'
+                src={Cat}
+                style={{ width: '100px', height: '100px' }}
+              ></img>
+            )}
+          </AvatarDiv>
+          <AvatarEditDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhiteCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
+          <AvatarEditDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowCirclePencilSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </AvatarEditDiv>
           <NameDiv>
             <Input type='text' placeholder={petname} onChange={petNameHandler} />
             <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
           </NameDiv>
-          <form>
-            <input type='file' name='profileImage' onChange={handleChange} />
-          </form>
         </LeftDiv>
 
         <RightDiv>
@@ -334,7 +420,7 @@ const UserInfoEdit: FC = () => {
               <Input
                 type='text'
                 readOnly={true}
-                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>
@@ -357,24 +443,23 @@ const UserInfoEdit: FC = () => {
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
               <CircleDiv
-                onClick={catHandler}
+                onClick={() => setIsCat(!isCat)}
                 isCat={isCat}
-                className={isCat === 'CAT' ? 'cat' : 'dog'}
+                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
               <CatSpan onClick={catHandler} isCat={isCat}>
-                🐱
+                <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
               <DogSpan onClick={catHandler} isCat={isCat}>
-                🐶
+                <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>
-            <Button text='수정' onClick={updateHandler} />
+            <Button text='수정' />
           </ButtonDiv>
         </RightDiv>
       </Box>
-      <DeleteButton onClick={deleteHandler}>회원탈퇴</DeleteButton>
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );

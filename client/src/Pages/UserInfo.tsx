@@ -8,6 +8,10 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
+import { codeToAddress } from '../util/ConvertAddress';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
+
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const url = '';
@@ -32,6 +36,13 @@ const UserInfo: React.FC = () => {
   const petname = location.state.petname;
   const password = location.state.password;
   const navigate = useNavigate();
+
+  const [fileImage, setFileImage] = useState<string>();
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+  };
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setIsAge(Number(e.target.value));
     console.log((e.target as HTMLInputElement).value);
@@ -106,13 +117,44 @@ const UserInfo: React.FC = () => {
       <Background ref={backgroundRef} />
       <Box>
         <LeftDiv>
-          <AvatarDiv>{isCat === 'DOG' ? '🐶' : '🐱'}</AvatarDiv>
+          <AvatarDiv>
+            {fileImage ? (
+              <img
+                className='userprofile'
+                alt='sample'
+                src={fileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : isCat === 'DOG' ? (
+              <img className='baseimojidog' src={Dog} style={{ width: '100px', height: '100px' }}></img>
+            ) : (
+              <img className='baseimojicat' src={Cat} style={{ width: '100px', height: '100px' }}></img>
+            )}
+          </AvatarDiv>
           <NameDiv>{petname}</NameDiv>
-          <PlusDiv>{WhitePlusSVG}</PlusDiv>
-          <PlusDiv className='invisible'>{YellowPlusSVG}</PlusDiv>
-          <form>
-            <input type='file' name='profileImage' onChange={handleChange} />
-          </form>
+          <PlusDiv>
+            <label className='input-file-button' htmlFor='input-file'>
+              {WhitePlusSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </PlusDiv>
+          <PlusDiv className='invisible'>
+            <label className='input-file-button' htmlFor='input-file'>
+              {YellowPlusSVG}
+            </label>
+            <input
+              type='file'
+              id='input-file'
+              onChange={saveFileImage}
+              style={{ display: 'none' }}
+            />
+          </PlusDiv>
+          <input type='file' id='input-file' style={{ display: 'none' }} />
         </LeftDiv>
         <RightDiv>
           <InputsDiv>
@@ -121,7 +163,7 @@ const UserInfo: React.FC = () => {
               <Input
                 type='text'
                 readOnly={true}
-                placeholder={address === null ? '어디에 사시나요?' : `${convertAddress(address)}`}
+                placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>
@@ -147,10 +189,10 @@ const UserInfo: React.FC = () => {
                 className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
               />
               <CatSpan onClick={catHandler} isCat={isCat}>
-                🐱
+                <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
               <DogSpan onClick={catHandler} isCat={isCat}>
-                🐶
+                <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
@@ -164,63 +206,6 @@ const UserInfo: React.FC = () => {
   );
 };
 
-export const convertAddress = (address: number) => {
-  if (address !== null) {
-    switch (address) {
-      case 11680:
-        return '강남구';
-      case 11740:
-        return '강동구';
-      case 11305:
-        return '강북구';
-      case 11500:
-        return '강서구';
-      case 11620:
-        return '관악구';
-      case 11215:
-        return '광진구';
-      case 11530:
-        return '구로구';
-      case 11545:
-        return '금천구';
-      case 11350:
-        return '노원구';
-      case 11320:
-        return '도봉구';
-      case 11230:
-        return '동대문구';
-      case 11590:
-        return '동작구';
-      case 11440:
-        return '마포구';
-      case 11410:
-        return '서대문구';
-      case 11650:
-        return '서초구';
-      case 11200:
-        return '성동구';
-      case 11290:
-        return '성북구';
-      case 11710:
-        return '송파구';
-      case 11470:
-        return '양천구';
-      case 11560:
-        return '영등포구';
-      case 11170:
-        return '용산구';
-      case 11380:
-        return '은평구';
-      case 11110:
-        return '종로구';
-      case 11140:
-        return '중구	';
-      case 11260:
-        return '중랑구';
-    }
-  }
-};
-
 // 전체 화면
 const Container = styled.div`
   width: 100%;
@@ -229,6 +214,13 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  .baseimojidog {
+    margin-top: 30px;
+  }
+  .baseimojicat {
+    margin-top: 35px;
+  }
 `;
 
 // Background, Box, LeftDiv, RightDiv import
@@ -238,12 +230,15 @@ const AvatarDiv = styled.div`
   height: 175px;
   margin-top: 140px;
   border-radius: 50%;
-  font-size: 100px;
   background-color: ${ivory};
   line-height: 180px;
 
   display: flex;
   justify-content: center;
+
+  .userprofile {
+    border-radius: 50%;
+  }
 `;
 
 const NameDiv = styled.div`
