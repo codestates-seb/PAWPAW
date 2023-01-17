@@ -47,9 +47,9 @@ public class PetService {
         String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
         String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
         // 디폴트 이미지는 S3에 저장해두고 Url만 저장
-        if( (file.isEmpty()) && pet.getSpecies() == Species.DOG) {
+        if (file == null && pet.getSpecies() == Species.DOG) {
             pet.setProfileImage(defaultDogImageUrl);
-        } else if ( (file.isEmpty()) && pet.getSpecies() == Species.CAT) {
+        } else if ( file == null && pet.getSpecies() == Species.CAT) {
             pet.setProfileImage(defaultCatImageUrl);
         } else {
                 String imageUrl = fileUploadService.uploadImage(file, folder);
@@ -78,13 +78,13 @@ public class PetService {
                         findPet.setAddress(address);
                     });
         // 프로필 이미지 수정, 디폴트 이미지
-        if(!file.isEmpty()) {
+        if(file != null && !file.isEmpty()) {
             String beforeImage = findPet.getProfileImage();
             fileUploadService.deleteFile(beforeImage, folder);
 
             String imageUrl = fileUploadService.uploadImage(file, folder);
             findPet.setProfileImage(imageUrl);
-        } else if (!file.isEmpty() && findPet.getProfileImage().contains("default")) {
+        } else if (file != null && findPet.getProfileImage().contains("default")) {
             String imageUrl = fileUploadService.uploadImage(file, folder);
             findPet.setProfileImage(imageUrl);
         }
