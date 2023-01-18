@@ -9,6 +9,8 @@ name: Java CI with Gradle
 
 on:
   push:
+    paths:
+      - 'server/**'
     branches: [ "back" ]
   pull_request:
     branches: [ "back" ]
@@ -23,6 +25,9 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./server
 
     steps:
     - uses: actions/checkout@v3
