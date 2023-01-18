@@ -17,18 +17,18 @@ logging.level:
         EC2MetadataUtils: error
   org.hibernate.SQL: debug
 
-jwt:
-  key: ${JWT_SECRET_KEY}
+#jwt:
+#  key: ${JWT_SECRET_KEY}
 
 cloud:
   aws:
-    credentials:
-      access-key: ${s3_access_key}
-      secret-key: ${s3_secret_key}
-    region:
-      static: ${s3_region}
-    s3:
-      bucket: ${s3_bucket}
+#    credentials:
+#      access-key: ${s3_access_key}
+#      secret-key: ${s3_secret_key}
+#    region:
+#      static: ${s3_region}
+#    s3:
+#      bucket: ${s3_bucket}
     stack:
       auto: false
   servlet:
@@ -58,6 +58,6 @@ spring:
       on-profile: server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+#    url: ${MYSQL_URL}
+#    username: ${MYSQL_USERNAME}
+#    password: ${MYSQL_PASSWORD}
