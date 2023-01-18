@@ -9,11 +9,9 @@ import HospitalMarker from './Marker/HospitalMarker';
 import CampMarker from './Marker/CampMarker';
 import FoodMarker from './Marker/FoodMarker';
 import PropTypes from 'prop-types';
-import { IProps } from './HomeMap';
 import PoolMarker from './Marker/PoolMarker';
+import { IProps } from './HomeMap';
 import Modal from '../Components/Modal';
-import { Icon } from '@iconify/react';
-
 
 const { brown, yellow } = color;
 
@@ -25,7 +23,7 @@ export interface CProps {
   };
 }
 
-const Marker = (detail: IProps['detail']) => {
+const Marker = ({ infoMapId, category, name, latitude, longitude, code }: IProps) => {
   const [click, setClick] = useState<boolean>(false);
   const data = [click, setClick];
 
@@ -33,21 +31,21 @@ const Marker = (detail: IProps['detail']) => {
     setClick(!click);
   };
 
-  function renderSwitch(param: any) {
-    switch (param) {
-      case 'cafe':
+  function renderSwitch(category: string) {
+    switch (category) {
+      case '카페':
         return <CafeMarker />;
-      case 'park':
+      case '공원':
         return <ParkMarker />;
-      case 'food':
+      case '음식점':
         return <FoodMarker />;
-      case 'pool':
+      case '수영장':
         return <PoolMarker />;
-      case 'camping':
+      case '캠핑':
         return <CampMarker />;
-      case 'hospital':
+      case '병원':
         return <HospitalMarker />;
-      case 'my':
+      case '나의장소':
         return <MyMarker />;
       default:
         return '';
@@ -56,18 +54,18 @@ const Marker = (detail: IProps['detail']) => {
 
   return (
     <Container>
-      <CustomOverlayMap position={{ lat: detail.lat, lng: detail.lng }}>
+      <CustomOverlayMap position={{ lat: latitude, lng: longitude }}>
         <MarkContainer className={click ? 'active' : ''} onClick={selectHandler}>
           <div className='center'>
-            <WhiteCircleBox>{renderSwitch(detail.tag)}</WhiteCircleBox>
+            <WhiteCircleBox>{renderSwitch(category)}</WhiteCircleBox>
           </div>
-          <ParkName>{detail.title}</ParkName>
+          <ParkName>{name}</ParkName>
         </MarkContainer>
       </CustomOverlayMap>
       {click ? (
         <>
           <ModalBack onClick={selectHandler}>
-            <Modal click={click} setClick={setClick} title={detail.title} />
+            <Modal click={click} setClick={setClick} title={name} />
           </ModalBack>
         </>
       ) : (
