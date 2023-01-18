@@ -29,16 +29,16 @@ interface ICurLocation {
 const HomeMap = () => {
   const { kakao } = window;
   const [selected, setSelected] = useState<string>('all'); // 선택한 필터
-  const [data, setData] = useState<IProps[] | null>(null);
+  const [data, setData] = useState<IProps[] | null>(null); // 데이터
 
-  const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 }); // 현재 위치
+  const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 }); // 현재 위치 좌표
   const [address, setAddress] = useState<string | undefined>(undefined); // 현재 위치의 주소 코드 ex. 11680
 
+  const [newLocation, setNewLocation] = useState(currentLocation); // 이동한 위치 좌표
   const [fullAddress, setFullAddress] = useState<string[]>([]); // 이동한 위치의 주소 ex. ['서울', '강남구' '...']
-  const [newLocation, setNewLocation] = useState(currentLocation); // 이동한 위치
-  const [isLocationChanged, setIsLocationChanged] = useState<boolean>(false);
+  const [isLocationChanged, setIsLocationChanged] = useState<boolean>(false); // 이동했는지 여부
 
-  let url = `${process.env.REACT_APP_API_ROOT}`;
+  let url = process.env.REACT_APP_API_ROOT;
   const petId = localStorage.getItem('petId') as string;
   const headers = {
     Authorization: jwtToken,
@@ -47,12 +47,13 @@ const HomeMap = () => {
   // 1. 가장 처음 렌더링 시 딱 한번만 실행되는 useEffect
   useEffect(() => {
     // petId로 유저 정보 GET해서 address를 받아온다.
-    axios.get(`${url}/pets/${petId}`, { headers }).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_ROOT}/pets/${petId}`, { headers }).then((res) => {
       setAddress(res.data.code);
-      setCurrentLocation({ lat: 37.496486063, lng: 127.028361548 });
+      setCurrentLocation({ lat: 37.496486063, lng: 127.028361548 }); // 강남역 좌표 (임시)
+      // ✅ 서버 API 수정되면 수정하기
       // setCurrentLocation({ lat: data.coord.latitude, lng: data.coord.longitude });
 
-      // 불러온 address로 화면에 바로 렌더링
+      // 불러온 address로 화면에 바로 렌더링한다.
       axios
         .get(`${process.env.REACT_APP_API_ROOT}/maps/${res.data.code}`, { headers })
         .then((res) => {
@@ -93,7 +94,7 @@ const HomeMap = () => {
   };
 
   // 마우스 드래그 이벤트가 감지될 때마다 실행되는 함수
-  // 1. isLocationChange를 true로 바꾸고, 현재 지도의 중심 좌표를 setNewLocation한다.
+  // isLocationChange를 true로 바꾸고, 현재 지도의 중심 좌표를 newLocation으로 업데이트한다.
   const dragHandler = (map: any) => {
     setIsLocationChanged(true);
     setNewLocation({
@@ -105,7 +106,7 @@ const HomeMap = () => {
   };
 
   // 현재 위치에서 검색하기 버튼을 눌렀을 때 실행되는 함수
-  // newLocation을 setCurrentLocation하고, fullAddress에 기반해 address를 업데이트하는 함수
+  // newLocation을 currentLocation으로 업데이트하고, fullAddress에 기반해 address를 업데이트한다.
   const updateCurrentLocation = () => {
     setCurrentLocation(newLocation);
 
