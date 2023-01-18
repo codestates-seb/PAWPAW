@@ -29,6 +29,7 @@ public class InfoMapDetailsResponseDto {
     public static class Details {
         private String infoUrl;
         private String name;
+        private String mapAddress;
         private String category;
         private boolean isMyPick;
         private String operationTime;

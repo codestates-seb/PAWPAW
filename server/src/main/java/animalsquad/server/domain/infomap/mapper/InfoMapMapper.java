@@ -59,7 +59,7 @@ public interface InfoMapMapper {
         details.setName(infoMap.getName());
         details.setOperationTime(infoMap.getOperationTime());
         details.setTel(infoMap.getTel());
-
+        details.setMapAddress(infoMap.getMapAddress());
         details.setMyPick(infoMap.getPetMaps().stream()
                 .anyMatch(petMap -> {
                     return petMap.getPet().getId() == petId;
