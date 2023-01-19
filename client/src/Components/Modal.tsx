@@ -1,15 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import { CProps } from '../Map/Marker';
+import axios from 'axios';
+const jwtToken = localStorage.getItem('Authorization');
+const refreshToken = localStorage.getItem('Refresh');
+const url = '';
+
+const headers = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: jwtToken,
+  Refresh: refreshToken,
+};
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
 
-const Modal = ({ click, setClick, title }: CProps['clicks']) => {
+interface MapData {
+  details: {
+    infoUrl: string;
+    name: string;
+    mapAddress: string;
+    category: string;
+    operationTime: string;
+    tel: string;
+    homepage: string;
+    myPick: boolean;
+  };
+  reviews: [
+    {
+      petId: number;
+      commentId: number;
+      profileImage: string;
+      petName: string;
+      contents: string;
+      createdAt: string;
+    },
+  ];
+  // | undefined;
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
+const Modal = ({ click, setClick, title, InfoMapId }: CProps['clicks']) => {
+  const [resData, setResData] = useState<object | null>(null);
   const [bookmark, setBookmark] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [count, setCount] = useState<number>(0);
+
+  const [mapdata, setMapdata] = useState<MapData>({
+    details: {
+      infoUrl: 'url.png',
+      name: 'test',
+      mapAddress: 'test',
+      category: 'test',
+      operationTime: '0900-1800',
+      tel: '02-555-8888',
+      homepage: 'test.com',
+      myPick: false,
+    },
+    reviews: [
+      {
+        petId: 0,
+        commentId: 0,
+        profileImage: 'none',
+        petName: 'none',
+        contents: 'none',
+        createdAt: 'none',
+      },
+    ],
+    pageInfo: {
+      page: 1,
+      size: 15,
+      totalElements: 0,
+      totalPages: 1,
+    },
+  });
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    const res = await axios.get(`${url}/maps/details/${InfoMapId}`, { headers });
+    setResData(res.data);
+  }
 
   const bookmarkeHandler = () => {
     setBookmark(!bookmark);
@@ -18,6 +99,12 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   const selectHandler = () => {
     setClick(!click);
   };
+  if (count === 0 && resData !== null) {
+    const { details, reviews, pageInfo } = resData as MapData;
+    setMapdata({ details: details, reviews: reviews, pageInfo: pageInfo });
+    setCount(count + 1);
+    console.log('reviews', mapdata.reviews);
+  }
 
   return (
     <Container onClick={(e) => e.stopPropagation()}>
@@ -28,8 +115,8 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
 
           {/* 이름 */}
           <InfoTitleBox>
-            <InfoTitle>{title}</InfoTitle>
-            <InfoSubTitle>공원</InfoSubTitle>
+            <InfoTitle>{mapdata.details.name}</InfoTitle>
+            <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
             <BookmarkButton onClick={bookmarkeHandler}>
               {bookmark === false ? (
                 <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
@@ -42,19 +129,19 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
           {/* 정보 */}
           <InfoContentBox>
             <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>서울 종로구 숭인동 58-149</InfoContent>
+            <InfoContent>{mapdata.details.mapAddress}</InfoContent>
           </InfoContentBox>
           <InfoContentBox>
             <Icon icon='ic:round-access-time-filled' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>이용 시간을 알려주세요.</InfoContent>
+            <InfoContent>{mapdata.details.operationTime}</InfoContent>
           </InfoContentBox>
           <InfoContentBox>
             <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>02-0000-0000</InfoContent>
+            <InfoContent>{mapdata.details.tel}</InfoContent>
           </InfoContentBox>
           <InfoContentBox>
             <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-            <InfoAnchor>https://seoulpark.com</InfoAnchor>
+            <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
           </InfoContentBox>
         </InfoDiv>
 
@@ -62,17 +149,17 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
         <ReviewBox>
           <ReviewTitle>리뷰</ReviewTitle>
           <Reviews>
-            {dummydata.length !== 0 ? (
-              dummydata.map((el: any, idx: number) => {
+            {mapdata.reviews !== undefined ? (
+              mapdata.reviews.map((el: any, idx: number) => {
                 return (
                   <Review key={idx}>
                     <ReviewUserBox>
                       <ReviewUserImage src={UserImg1} />
-                      <ReviewUserName>{el.username}</ReviewUserName>
+                      <ReviewUserName>{el.petName}</ReviewUserName>
                     </ReviewUserBox>
                     <ReviewTextBox>
-                      <ReviewText>{el.content}</ReviewText>
-                      <ReviewDate>{el.date}</ReviewDate>
+                      <ReviewText>{el.contents}</ReviewText>
+                      <ReviewDate>{el.createdAt}</ReviewDate>
                     </ReviewTextBox>
                   </Review>
                 );

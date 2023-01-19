@@ -22,6 +22,7 @@ export interface CProps {
     click: boolean;
     setClick: (classname: boolean) => void;
     title: string;
+    InfoMapId: number;
   };
 }
 
@@ -67,7 +68,7 @@ const Marker = (detail: IProps['detail']) => {
       {click ? (
         <>
           <ModalBack onClick={selectHandler}>
-            <Modal click={click} setClick={setClick} title={detail.title} />
+            <Modal click={click} setClick={setClick} title={detail.title} InfoMapId={detail.id}/>
           </ModalBack>
         </>
       ) : (
