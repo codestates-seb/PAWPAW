@@ -58,7 +58,7 @@ jobs:
 #        arguments: build
 #        build-root-directory: server
     - name: Build with Gradle
-      run: cd server; ./gradlew build
+      run: cd server; ./gradlew build -Profile=server
       shell: bash
       env:
         MYSQL_URL: ${{ secrets.MYSQL_URL}}
