@@ -12,6 +12,7 @@ const petId = localStorage.getItem('petId') as string;
 const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   const [bookmark, setBookmark] = useState<boolean>(false);
   const [review, setReview] = useState<string>('');
+  const [editReview, setEditReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
 
   const bookmarkeHandler = () => {
@@ -26,6 +27,10 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
     setReview((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
   };
+  const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setEditReview((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
   // const reviewid = 1;
   const infoMapId = 1;
   // 일단 자리만 만들어 두었습니다.
@@ -34,12 +39,23 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
     // window.location.reload();
   };
   const reviewUpdateHandler = () => {
-    mapReviewUPDATE(infoMapId, review);
-    setEditActivate(0);
+    if (!confirm('정말 수정 하시겠어요?')) {
+      alert('취소 되었습니다.');
+    } else {
+      mapReviewUPDATE(infoMapId, editReview);
+      setEditActivate(0);
+      alert('수정 되었습니다.');
+    }
     // window.location.reload();
   };
   const reviewDeleteHandler = (commentId: number) => {
-    mapReviewDELETE(commentId);
+    if (!confirm('정말 삭제 하시겠어요?')) {
+      alert('취소 되었습니다.');
+    } else {
+      mapReviewDELETE(commentId);
+      alert('삭제 되었습니다.');
+    }
+    // mapReviewDELETE(commentId);
   };
   const reviewActivateHandler = (commentId: number) => {
     setEditActivate(commentId);
@@ -105,14 +121,22 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
                         {el.petId === Number(petId) ? (
                           <div>
                             <button onClick={() => reviewDeleteHandler(el.commentId)}>
-                              delete
+                              <Icon
+                                icon='material-symbols:delete-outline-rounded'
+                                color={brown}
+                                style={{ fontSize: '15px' }}
+                              />
                             </button>
                             <button onClick={() => reviewActivateHandler(el.commentId)}>
-                              edit
+                              <Icon
+                                icon='material-symbols:edit-outline'
+                                color={brown}
+                                style={{ fontSize: '15px' }}
+                              />
                             </button>
                           </div>
                         ) : (
-                          <div>good</div>
+                          ''
                         )}
                       </ReviewWrite>
                     ) : (
@@ -126,10 +150,16 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
                             <ReviewInput
                               type='text'
                               placeholder={el.content}
-                              onChange={reviewHandler}
+                              onChange={editReviewHandler}
                             />
                           </ReviewInputBox>
-                          <ReviewButton onClick={reviewUpdateHandler}>수정</ReviewButton>
+                          <ReviewButton onClick={reviewUpdateHandler}>
+                            <Icon
+                              icon='material-symbols:check-small-rounded'
+                              color={yellow}
+                              style={{ fontSize: '20px' }}
+                            />
+                          </ReviewButton>
                         </ReviewInputTextBox>
                       </ReviewWrite>
                     )}
@@ -400,7 +430,6 @@ const EmptyMessage = styled.div`
   font-size: 14px;
   color: ${brown};
 `;
-
 const dummydata: any = [
   {
     username: '까미',
