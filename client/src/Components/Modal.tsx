@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
@@ -12,6 +12,7 @@ const petId = localStorage.getItem('petId') as string;
 const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   const [bookmark, setBookmark] = useState<boolean>(false);
   const [review, setReview] = useState<string>('');
+  const [editActivate, setEditActivate] = useState<number>(0);
 
   const bookmarkeHandler = () => {
     setBookmark(!bookmark);
@@ -38,6 +39,10 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   };
   const reviewDeleteHandler = (commentId: number) => {
     mapReviewDELETE(commentId);
+  };
+  const reviewActivateHandler = (commentId: number) => {
+    setEditActivate(commentId);
+    console.log(editActivate);
   };
   return (
     <Container onClick={(e) => e.stopPropagation()}>
@@ -85,22 +90,47 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
               dummydata.map((el: any, idx: number) => {
                 return (
                   <Review key={idx}>
-                    <ReviewUserBox>
-                      <ReviewUserImage src={UserImg1} />
-                      <ReviewUserName>{el.username}</ReviewUserName>
-                    </ReviewUserBox>
-                    <ReviewTextBox>
-                      <ReviewText>{el.content}</ReviewText>
-                      <ReviewDate>{el.date}</ReviewDate>
-                    </ReviewTextBox>
-                    {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                    {el.petId !== petId ? (
-                      <div>
-                        <button onClick={() => reviewDeleteHandler(el.commentId)}>delete</button>
-                        <button onClick={reviewUpdateHandler}>edit</button>
-                      </div>
+                    {el.commentId !== editActivate ? (
+                      <ReviewWrite>
+                        <ReviewUserBox>
+                          <ReviewUserImage src={UserImg1} />
+                          <ReviewUserName>{el.username}</ReviewUserName>
+                        </ReviewUserBox>
+                        <ReviewTextBox>
+                          <ReviewText>{el.content}</ReviewText>
+                          <ReviewDate>{el.date}</ReviewDate>
+                        </ReviewTextBox>
+                        {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                        {el.petId !== petId ? (
+                          <div>
+                            <button onClick={() => reviewDeleteHandler(el.commentId)}>
+                              delete
+                            </button>
+                            <button onClick={() => reviewActivateHandler(el.commentId)}>
+                              edit
+                            </button>
+                          </div>
+                        ) : (
+                          <div>good</div>
+                        )}
+                      </ReviewWrite>
                     ) : (
-                      <div>good</div>
+                      <ReviewWrite>
+                        <ReviewUserBox>
+                          <ReviewUserImage src={UserImg1} />
+                          <ReviewUserName>{el.username}</ReviewUserName>
+                        </ReviewUserBox>
+                        <ReviewInputTextBox>
+                          <ReviewInputBox>
+                            <ReviewInput
+                              type='text'
+                              placeholder={el.content}
+                              onChange={reviewHandler}
+                            />
+                          </ReviewInputBox>
+                          <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
+                        </ReviewInputTextBox>
+                      </ReviewWrite>
                     )}
                   </Review>
                 );
@@ -375,31 +405,37 @@ const dummydata: any = [
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
+    commentId: 1,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
+    commentId: 2,
   },
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
+    commentId: 3,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
+    commentId: 4,
   },
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
+    commentId: 5,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
+    commentId: 6,
   },
 ];
 
