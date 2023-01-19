@@ -44,7 +44,7 @@ jobs:
         jwt.key: ${{ secrets.JWT_SECRET_KEY }}
         cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY }}
         cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        cloud.aws.region-static: ${{ secrets.S3_REGION }}
+        cloud.aws.region.static: ${{ secrets.S3_REGION }}
         cloud.aws.s3.bucket: ${{ secrets.S3_BUCKET }}
 
 
