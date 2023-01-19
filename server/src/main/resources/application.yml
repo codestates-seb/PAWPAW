@@ -1,9 +1,9 @@
 spring:
 #  profiles:
 #    active: server
-  config:
-    activate:
-      on-profile: server
+#  config:
+#    activate:
+#      on-profile: server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: $MYSQL_URL
