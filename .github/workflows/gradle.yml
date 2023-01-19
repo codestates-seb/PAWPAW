@@ -18,7 +18,7 @@ permissions:
 
 env:
   S3_BUCKET_NAME: animalsquad
-  RESOURCE_PATH: ./server/src/main/resources/application-server.yml
+  RESOURCE_PATH: ./server/src/main/resources-prod/application.yml
 
 jobs:
   build:
@@ -58,7 +58,7 @@ jobs:
 #        arguments: build
 #        build-root-directory: server
     - name: Build with Gradle
-      run: cd server; ./gradlew build -Pprofile=server
+      run: cd server; ./gradlew build -Pprofile=prod
       shell: bash
       env:
         MYSQL_URL: ${{ secrets.MYSQL_URL}}
