@@ -1,19 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
-import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import { CProps } from '../Map/Marker';
+import headers from '../util/headers';
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
+const url = process.env.REACT_APP_API_ROOT;
+const petId = localStorage.getItem('petId') as string;
 
-const Modal = ({ click, setClick, title }: CProps['clicks']) => {
-  const [bookmark, setBookmark] = useState<boolean>(false);
+interface IReqData {
+  petId: number;
+  infoMapId: number;
+}
 
+const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
+  const [myPick, setMyPick] = useState<boolean>(bookmark);
   const bookmarkeHandler = () => {
-    setBookmark(!bookmark);
+    const reqData: IReqData = {
+      petId: Number(petId),
+      infoMapId: id,
+    };
+    if (myPick) {
+      deletePlace(reqData);
+      setMyPick(false);
+    } else {
+      addPlace(reqData);
+      setMyPick(true);
+    }
   };
+
+  async function addPlace(reqData: IReqData) {
+    await axios.post(`${url}/maps/addplace`, JSON.stringify(reqData), { headers });
+  }
+
+  async function deletePlace(reqData: IReqData) {
+    await axios.delete(`${url}/maps/cancel`, {
+      data: reqData,
+      headers,
+    });
+  }
 
   const selectHandler = () => {
     setClick(!click);
@@ -31,7 +61,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
             <InfoTitle>{title}</InfoTitle>
             <InfoSubTitle>공원</InfoSubTitle>
             <BookmarkButton onClick={bookmarkeHandler}>
-              {bookmark === false ? (
+              {myPick === false ? (
                 <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
               ) : (
                 <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />

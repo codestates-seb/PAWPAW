@@ -9,16 +9,22 @@ import Header from '../Components/Header';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
 import { addressToCode } from '../util/ConvertAddress';
-const jwtToken = localStorage.getItem('Authorization');
+import headers from '../util/headers';
+import { getAll, getMyPick, getFilter } from '../util/MapFilterApi';
 const { coral, brown } = color;
+const url = process.env.REACT_APP_API_ROOT;
+const petId = localStorage.getItem('petId') as string;
 
 export interface IProps {
-  infoMapId: number;
+  id: number;
   category: string;
   name: string;
   latitude: number;
   longitude: number;
   code: number;
+  bookmark: boolean;
+  isModalOpen: boolean;
+  setIsModalOpen: (isModalOpen: boolean) => void;
 }
 
 interface ICurLocation {
@@ -28,6 +34,7 @@ interface ICurLocation {
 
 const HomeMap = () => {
   const { kakao } = window;
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 모달 클릭 여부
   const [selected, setSelected] = useState<string>('all'); // 선택한 필터
   const [data, setData] = useState<IProps[] | null>(null); // 데이터
 
@@ -38,48 +45,40 @@ const HomeMap = () => {
   const [fullAddress, setFullAddress] = useState<string[]>([]); // 이동한 위치의 주소 ex. ['서울', '강남구' '...']
   const [isLocationChanged, setIsLocationChanged] = useState<boolean>(false); // 이동했는지 여부
 
-  let url = process.env.REACT_APP_API_ROOT;
-  const petId = localStorage.getItem('petId') as string;
-  const headers = {
-    Authorization: jwtToken,
-  };
-
-  // 1. 가장 처음 렌더링 시 딱 한번만 실행되는 useEffect
+  // 가장 처음 렌더링 시 딱 한번만 실행되는 useEffect
   useEffect(() => {
-    // petId로 유저 정보 GET해서 address를 받아온다.
-    axios.get(`${process.env.REACT_APP_API_ROOT}/pets/${petId}`, { headers }).then((res) => {
-      setAddress(res.data.code);
-      setCurrentLocation({ lat: 37.496486063, lng: 127.028361548 }); // 강남역 좌표 (임시)
-      // ✅ 서버 API 수정되면 수정하기
-      // setCurrentLocation({ lat: data.coord.latitude, lng: data.coord.longitude });
-
-      // 불러온 address로 화면에 바로 렌더링한다.
-      axios
-        .get(`${process.env.REACT_APP_API_ROOT}/maps/${res.data.code}`, { headers })
-        .then((res) => {
-          setData(res.data);
-        });
-    });
+    if (petId) {
+      getUserInfo();
+    }
+    if (address) {
+      getAll(address);
+    }
   }, []);
 
-  // 2. selected(필터)나 address가 바뀔 때마다 실행되는 useEffect
+  // selected, address, isModalOpen이 업데이트될 때마다 실행되는 useEffect
   useEffect(() => {
-    // 선택한 필터에 따른 url 분기
-    if (selected === 'all') {
-      url = `${url}/maps/${address}`;
-    } else if (selected === 'mypick') {
-      url = `${url}/maps/mypick`;
-    } else {
-      url = `${url}/maps/${address}/?filter=${selected.toUpperCase()}`;
+    if (address) {
+      if (selected === 'all') {
+        getAll(address).then((res) => setData(res));
+      } else if (selected === 'mypick') {
+        getMyPick().then((res) => {
+          setData(res);
+        });
+      } else {
+        getFilter(address, selected).then((res) => setData(res));
+      }
     }
+  }, [selected, address, isModalOpen]);
 
-    // address가 undefined가 아닐 때만 GET 요청을 보내 데이터를 받아온다.
-    if (address !== undefined) {
-      axios.get(url, { headers }).then((res) => {
-        setData(res.data);
-      });
-    }
-  }, [selected, address]);
+  // 유저 정보 불러오는 함수
+  async function getUserInfo() {
+    // petId로 유저 정보 GET해서 address를 받아온다.
+    const res = await axios.get(`${url}/pets/${petId}`, { headers });
+    setAddress(res.data.code);
+    setCurrentLocation({ lat: 37.496486063, lng: 127.028361548 }); // 강남역 좌표 (임시)
+    // ✅ 서버 API 수정되면 수정하기
+    // setCurrentLocation({ lat: data.coord.latitude, lng: data.coord.longitude });
+  }
 
   // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
@@ -134,7 +133,14 @@ const HomeMap = () => {
         {/* 장소 마커 */}
         {data &&
           data.map((el) => {
-            return <Marker key={el.infoMapId} {...el} />;
+            return (
+              <Marker
+                key={el.id}
+                {...el}
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+              />
+            );
           })}
       </Map>
 

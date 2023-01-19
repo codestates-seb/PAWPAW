@@ -20,15 +20,26 @@ export interface CProps {
     click: boolean;
     setClick: (classname: boolean) => void;
     title: string;
+    id: number;
+    bookmark: boolean;
   };
 }
 
-const Marker = ({ infoMapId, category, name, latitude, longitude, code }: IProps) => {
+const Marker = ({
+  id,
+  category,
+  name,
+  latitude,
+  longitude,
+  bookmark,
+  isModalOpen,
+  setIsModalOpen,
+}: IProps) => {
   const [click, setClick] = useState<boolean>(false);
-  const data = [click, setClick];
 
   const selectHandler = () => {
     setClick(!click);
+    setIsModalOpen(!isModalOpen);
   };
 
   function renderSwitch(category: string) {
@@ -65,7 +76,7 @@ const Marker = ({ infoMapId, category, name, latitude, longitude, code }: IProps
       {click ? (
         <>
           <ModalBack onClick={selectHandler}>
-            <Modal click={click} setClick={setClick} title={name} />
+            <Modal click={click} setClick={setClick} title={name} id={id} bookmark={bookmark} />
           </ModalBack>
         </>
       ) : (
