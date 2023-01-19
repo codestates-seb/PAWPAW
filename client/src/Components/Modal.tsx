@@ -35,6 +35,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   };
   const reviewUpdateHandler = () => {
     mapReviewUPDATE(infoMapId, review);
+    setEditActivate(0);
     // window.location.reload();
   };
   const reviewDeleteHandler = (commentId: number) => {
@@ -101,7 +102,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
                           <ReviewDate>{el.date}</ReviewDate>
                         </ReviewTextBox>
                         {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                        {el.petId !== petId ? (
+                        {el.petId === Number(petId) ? (
                           <div>
                             <button onClick={() => reviewDeleteHandler(el.commentId)}>
                               delete
@@ -128,7 +129,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
                               onChange={reviewHandler}
                             />
                           </ReviewInputBox>
-                          <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
+                          <ReviewButton onClick={reviewUpdateHandler}>수정</ReviewButton>
                         </ReviewInputTextBox>
                       </ReviewWrite>
                     )}
@@ -406,36 +407,42 @@ const dummydata: any = [
     content: '즐거워요',
     date: '2023-01-10',
     commentId: 1,
+    petId: 1,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
     commentId: 2,
+    petId: 1,
   },
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
     commentId: 3,
+    petId: 2,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
     commentId: 4,
+    petId: 3,
   },
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
     commentId: 5,
+    petId: 4,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
     commentId: 6,
+    petId: 1,
   },
 ];
 
