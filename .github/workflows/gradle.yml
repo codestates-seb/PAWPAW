@@ -60,15 +60,15 @@ jobs:
     - name: Build with Gradle
       run: cd server; ./gradlew build -Pprofile=prod
       shell: bash
-      env:
-        MYSQL_URL: ${{ secrets.MYSQL_URL}}
-        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-        s3_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-        s3_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        s3_region: ${{ secrets.S3_REGION }}
-        s3_bucket: ${{ secrets.S3_BUCKET }}
+#      env:
+#        MYSQL_URL: ${{ secrets.MYSQL_URL}}
+#        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+#        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+#        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+#        s3_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+#        s3_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        s3_region: ${{ secrets.S3_REGION }}
+#        s3_bucket: ${{ secrets.S3_BUCKET }}
 
       # build한 후 프로젝트를 압축합니다.
     - name: Make zip file
