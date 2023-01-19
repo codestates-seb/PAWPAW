@@ -52,24 +52,23 @@ jobs:
       run: chmod +x ./server/gradlew
       shell: bash
 
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build
-        build-root-directory: server
 #    - name: Build with Gradle
-#      run: cd server/catvillage; ./gradlew build -Pprofile=prod
-#      shell: bash
-#      env:
-#        RDS_ENDPOINT: ${{ secrets.ENDPOINT }}
-#        RDS_PORT: ${{ secrets.PORT }}
-#        RDS_USERNAME: ${{ secrets.USER }}
-#        RDS_PASSWORD: ${{ secrets.PASSWORD }}
-#        KAKAO_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-#        KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-#        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-#        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-#        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+#      with:
+#        arguments: build
+#        build-root-directory: server
+    - name: Build with Gradle
+      run: cd server; ./gradlew build
+      shell: bash
+      env:
+        MYSQL_URL: ${{ secrets.MYSQL_URL}}
+        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+        s3_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+        s3_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        s3_region: ${{ secrets.S3_REGION }}
+        s3_bucket: ${{ secrets.S3_BUCKET }}
 
       # build한 후 프로젝트를 압축합니다.
     - name: Make zip file
