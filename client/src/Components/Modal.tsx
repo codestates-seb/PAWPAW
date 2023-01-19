@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { ChangeEventHandler, ChangeEvent, useState } from 'react';
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import { CProps } from '../Map/Marker';
-
+import { mapReviewEdit, mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi';
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
+const petId = localStorage.getItem('petId') as string;
 
 const Modal = ({ click, setClick, title }: CProps['clicks']) => {
   const [bookmark, setBookmark] = useState<boolean>(false);
+  const [review, setReview] = useState<string>('');
 
   const bookmarkeHandler = () => {
     setBookmark(!bookmark);
@@ -19,6 +21,24 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
     setClick(!click);
   };
 
+  const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setReview((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  // const reviewid = 1;
+  const infoMapId = 1;
+  // 일단 자리만 만들어 두었습니다.
+  const reviewPostHandler = () => {
+    mapReviewEdit(infoMapId, review);
+    // window.location.reload();
+  };
+  const reviewUpdateHandler = () => {
+    mapReviewUPDATE(infoMapId, review);
+    // window.location.reload();
+  };
+  const reviewDeleteHandler = () => {
+    mapReviewDELETE;
+  };
   return (
     <Container onClick={(e) => e.stopPropagation()}>
       <FlexBox>
@@ -57,7 +77,6 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
             <InfoAnchor>https://seoulpark.com</InfoAnchor>
           </InfoContentBox>
         </InfoDiv>
-
         {/* 리뷰 */}
         <ReviewBox>
           <ReviewTitle>리뷰</ReviewTitle>
@@ -74,6 +93,15 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
                       <ReviewText>{el.content}</ReviewText>
                       <ReviewDate>{el.date}</ReviewDate>
                     </ReviewTextBox>
+                    {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                    {el.petId === petId ? (
+                      <div>
+                        <button onClick={reviewDeleteHandler}>delete</button>
+                        <button onClick={reviewUpdateHandler}>edit</button>
+                      </div>
+                    ) : (
+                      <div>good</div>
+                    )}
                   </Review>
                 );
               })
@@ -84,7 +112,6 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
             )}
           </Reviews>
         </ReviewBox>
-
         {/* 리뷰 작성 */}
         <ReviewWrite>
           <ReviewUserBox>
@@ -93,12 +120,11 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
           </ReviewUserBox>
           <ReviewInputTextBox>
             <ReviewInputBox>
-              <ReviewInput type='text' placeholder='이 공간이 어땠나요?' />
+              <ReviewInput type='text' placeholder='이 공간이 어땠나요?' onChange={reviewHandler} />
             </ReviewInputBox>
-            <ReviewButton>작성</ReviewButton>
+            <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
           </ReviewInputTextBox>
         </ReviewWrite>
-
         {/* 닫기 버튼 */}
         <CloseBox onClick={selectHandler}>
           <Icon
@@ -274,9 +300,10 @@ const ReviewInputBox = styled.div`
 type Props = {
   type: string;
   placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const ReviewInput = styled.textarea<Props>`
+const ReviewInput = styled.input<Props>`
   padding: 10px;
   width: 100%;
   height: 50px;
