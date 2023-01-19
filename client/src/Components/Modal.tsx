@@ -36,8 +36,8 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
     mapReviewUPDATE(infoMapId, review);
     // window.location.reload();
   };
-  const reviewDeleteHandler = () => {
-    mapReviewDELETE;
+  const reviewDeleteHandler = (commentId: number) => {
+    mapReviewDELETE(commentId);
   };
   return (
     <Container onClick={(e) => e.stopPropagation()}>
@@ -94,9 +94,9 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
                       <ReviewDate>{el.date}</ReviewDate>
                     </ReviewTextBox>
                     {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                    {el.petId === petId ? (
+                    {el.petId !== petId ? (
                       <div>
-                        <button onClick={reviewDeleteHandler}>delete</button>
+                        <button onClick={() => reviewDeleteHandler(el.commentId)}>delete</button>
                         <button onClick={reviewUpdateHandler}>edit</button>
                       </div>
                     ) : (
