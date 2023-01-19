@@ -88,8 +88,13 @@ const Modal = ({ click, setClick, title, InfoMapId }: CProps['clicks']) => {
   }, []);
 
   async function getData() {
-    const res = await axios.get(`${url}/maps/details/${InfoMapId}`, { headers });
-    setResData(res.data);
+    await axios.get(`${url}/maps/details/${InfoMapId}`, { headers })
+    .then((res) => {
+      setResData(res.data);
+    })
+    .catch((error) => {
+      console.error(error)
+    })
   }
 
   const bookmarkeHandler = () => {
@@ -150,20 +155,26 @@ const Modal = ({ click, setClick, title, InfoMapId }: CProps['clicks']) => {
           <ReviewTitle>리뷰</ReviewTitle>
           <Reviews>
             {mapdata.reviews !== undefined ? (
-              mapdata.reviews.map((el: any, idx: number) => {
-                return (
-                  <Review key={idx}>
-                    <ReviewUserBox>
-                      <ReviewUserImage src={UserImg1} />
-                      <ReviewUserName>{el.petName}</ReviewUserName>
-                    </ReviewUserBox>
-                    <ReviewTextBox>
-                      <ReviewText>{el.contents}</ReviewText>
-                      <ReviewDate>{el.createdAt}</ReviewDate>
-                    </ReviewTextBox>
-                  </Review>
-                );
-              })
+              mapdata.reviews.length === 1 && mapdata.reviews[0].commentId === 0 ? (
+                <EmptyMessage>
+                  리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                </EmptyMessage>
+              ) : (
+                mapdata.reviews.map((el: any, idx: number) => {
+                  return (
+                    <Review key={idx}>
+                      <ReviewUserBox>
+                        <ReviewUserImage src={UserImg1} />
+                        <ReviewUserName>{el.petName}</ReviewUserName>
+                      </ReviewUserBox>
+                      <ReviewTextBox>
+                        <ReviewText>{el.contents}</ReviewText>
+                        <ReviewDate>{el.createdAt}</ReviewDate>
+                      </ReviewTextBox>
+                    </Review>
+                  );
+                })
+              )
             ) : (
               <EmptyMessage>
                 리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
