@@ -1,9 +1,4 @@
 spring:
-#  profiles:
-#    active: server
-#  config:
-#    activate:
-#      on-profile: server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: $MYSQL_URL
@@ -43,13 +38,3 @@ cloud:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
-#spring:
-#  config:
-#    activate:
-#      on-profile: server
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: $MYSQL_URL
-#    username: $MYSQL_USERNAME
-#    password: $MYSQL_PASSWORD

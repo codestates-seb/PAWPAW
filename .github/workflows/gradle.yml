@@ -18,7 +18,7 @@ permissions:
 
 env:
   S3_BUCKET_NAME: animalsquad
-  RESOURCE_PATH: ./server/src/main/resources/application.yml
+  RESOURCE_PATH: ./server/src/main/resources/application-server.yml
 
 jobs:
   build:
