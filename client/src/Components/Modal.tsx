@@ -48,7 +48,7 @@ interface MapData {
   };
 }
 
-const Modal = ({ click, setClick, title, InfoMapId }: CProps['clicks']) => {
+const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
   const [resData, setResData] = useState<object | null>(null);
   const [bookmark, setBookmark] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +88,7 @@ const Modal = ({ click, setClick, title, InfoMapId }: CProps['clicks']) => {
   }, []);
 
   async function getData() {
-    await axios.get(`${url}/maps/details/${InfoMapId}`, { headers })
+    await axios.get(`${url}/maps/details/${id}`, { headers })
     .then((res) => {
       setResData(res.data);
     })
