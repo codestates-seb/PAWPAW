@@ -1,6 +1,14 @@
 spring:
-  profiles:
-    active: server
+#  profiles:
+#    active: server
+  config:
+    activate:
+      on-profile: server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: $MYSQL_URL
+    username: $MYSQL_USERNAME
+    password: $MYSQL_PASSWORD
   redis:
     host: localhost
     port: 6379
@@ -35,29 +43,13 @@ cloud:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
----
+
 #spring:
 #  config:
 #    activate:
-#      on-profile: local
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2
+#      on-profile: server
 #  datasource:
-#    url: jdbc:h2:tcp://localhost/~/test
-#    #    url: jdbc:h2:mem:test
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-
----
-spring:
-  config:
-    activate:
-      on-profile: server
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: $MYSQL_URL
-    username: $MYSQL_USERNAME
-    password: $MYSQL_PASSWORD
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: $MYSQL_URL
+#    username: $MYSQL_USERNAME
+#    password: $MYSQL_PASSWORD
