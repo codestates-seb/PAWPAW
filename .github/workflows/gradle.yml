@@ -95,5 +95,5 @@ jobs:
       run: >
         aws deploy create-deployment --application-name animalsquad
         --deployment-config-name CodeDeployDefault.AllAtOnce
-        --deployment-group-name animalsquad-group
+        --deployment-group-name animalsquad
         --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=animalsquad-deploy.zip
