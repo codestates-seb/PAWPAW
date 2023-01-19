@@ -38,7 +38,7 @@ jobs:
       with:
         files: ${{ env.RESOURCE_PATH }}
       env:
-        spring.datasource.url: ${{ secrets.MYSQL_URL}}
+        spring.datasource.url: jdbc:mysql://${{ secrets.ENDPOINT }}:{{ secrets.PORT }}/animalsquad?serverTimezone=Asia/Seoul
         spring.datasource.username: ${{ secrets.MYSQL_USERNAME }}
         spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
         jwt.key: ${{ secrets.JWT_SECRET_KEY }}
