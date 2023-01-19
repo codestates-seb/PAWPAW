@@ -3,9 +3,9 @@ spring:
     active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: $MYSQL_URL
-    username: $MYSQL_USERNAME
-    password: $MYSQL_PASSWORD
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   redis:
     host: localhost
     port: 6379
@@ -23,17 +23,17 @@ logging.level:
   org.hibernate.SQL: debug
 
 jwt:
-  key: $JWT_SECRET_KEY
+  key: ${JWT_SECRET_KEY}
 
 cloud:
   aws:
     credentials:
-      access-key: $s3_access_key
-      secret-key: $s3_secret_key
+      access-key: ${s3_access_key}
+      secret-key: ${s3_secret_key}
     region:
-      static: $s3_region
+      static: ${s3_region}
     s3:
-      bucket: $s3_bucket
+      bucket: ${s3_bucket}
     stack:
       auto: false
   servlet:
