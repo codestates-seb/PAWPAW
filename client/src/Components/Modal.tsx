@@ -29,16 +29,7 @@ interface MapData {
     homepage: string;
     myPick: boolean;
   };
-  reviews: [
-    {
-      petId: number;
-      commentId: number;
-      profileImage: string;
-      petName: string;
-      contents: string;
-      createdAt: string;
-    },
-  ];
+  reviews: object[] | null;
   // | undefined;
   pageInfo: {
     page: number;
@@ -65,16 +56,7 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
       homepage: 'test.com',
       myPick: false,
     },
-    reviews: [
-      {
-        petId: 0,
-        commentId: 0,
-        profileImage: 'none',
-        petName: 'none',
-        contents: 'none',
-        createdAt: 'none',
-      },
-    ],
+    reviews: [] ,
     pageInfo: {
       page: 1,
       size: 15,
@@ -88,13 +70,14 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
   }, []);
 
   async function getData() {
-    await axios.get(`${url}/maps/details/${id}`, { headers })
-    .then((res) => {
-      setResData(res.data);
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+    await axios
+      .get(`${url}/maps/details/${id}`, { headers })
+      .then((res) => {
+        setResData(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   const bookmarkeHandler = () => {
@@ -112,102 +95,106 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
   }
 
   return (
-    <Container onClick={(e) => e.stopPropagation()}>
-      <FlexBox>
-        <InfoDiv>
-          {/* 사진 */}
-          <Image src={ModalSample} />
+    <div>
+      {mapdata.reviews !== null ? (
+        <Container onClick={(e) => e.stopPropagation()}>
+          <FlexBox>
+            <InfoDiv>
+              {/* 사진 */}
+              <Image src={ModalSample} />
 
-          {/* 이름 */}
-          <InfoTitleBox>
-            <InfoTitle>{mapdata.details.name}</InfoTitle>
-            <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
-            <BookmarkButton onClick={bookmarkeHandler}>
-              {bookmark === false ? (
-                <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
-              ) : (
-                <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
-              )}
-            </BookmarkButton>
-          </InfoTitleBox>
+              {/* 이름 */}
+              <InfoTitleBox>
+                <InfoTitle>{mapdata.details.name}</InfoTitle>
+                <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
+                <BookmarkButton onClick={bookmarkeHandler}>
+                  {bookmark === false ? (
+                    <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
+                  ) : (
+                    <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
+                  )}
+                </BookmarkButton>
+              </InfoTitleBox>
 
-          {/* 정보 */}
-          <InfoContentBox>
-            <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>{mapdata.details.mapAddress}</InfoContent>
-          </InfoContentBox>
-          <InfoContentBox>
-            <Icon icon='ic:round-access-time-filled' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>{mapdata.details.operationTime}</InfoContent>
-          </InfoContentBox>
-          <InfoContentBox>
-            <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>{mapdata.details.tel}</InfoContent>
-          </InfoContentBox>
-          <InfoContentBox>
-            <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-            <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
-          </InfoContentBox>
-        </InfoDiv>
+              {/* 정보 */}
+              <InfoContentBox>
+                <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
+                <InfoContent>{mapdata.details.mapAddress}</InfoContent>
+              </InfoContentBox>
+              <InfoContentBox>
+                <Icon
+                  icon='ic:round-access-time-filled'
+                  color={brown}
+                  style={{ fontSize: '30px' }}
+                />
+                <InfoContent>{mapdata.details.operationTime}</InfoContent>
+              </InfoContentBox>
+              <InfoContentBox>
+                <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
+                <InfoContent>{mapdata.details.tel}</InfoContent>
+              </InfoContentBox>
+              <InfoContentBox>
+                <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
+                <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
+              </InfoContentBox>
+            </InfoDiv>
 
-        {/* 리뷰 */}
-        <ReviewBox>
-          <ReviewTitle>리뷰</ReviewTitle>
-          <Reviews>
-            {mapdata.reviews !== undefined ? (
-              mapdata.reviews.length === 1 && mapdata.reviews[0].commentId === 0 ? (
-                <EmptyMessage>
-                  리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-                </EmptyMessage>
-              ) : (
-                mapdata.reviews.map((el: any, idx: number) => {
-                  return (
-                    <Review key={idx}>
-                      <ReviewUserBox>
-                        <ReviewUserImage src={UserImg1} />
-                        <ReviewUserName>{el.petName}</ReviewUserName>
-                      </ReviewUserBox>
-                      <ReviewTextBox>
-                        <ReviewText>{el.contents}</ReviewText>
-                        <ReviewDate>{el.createdAt}</ReviewDate>
-                      </ReviewTextBox>
-                    </Review>
-                  );
-                })
-              )
-            ) : (
-              <EmptyMessage>
-                리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-              </EmptyMessage>
-            )}
-          </Reviews>
-        </ReviewBox>
+            {/* 리뷰 */}
+            <ReviewBox>
+              <ReviewTitle>리뷰</ReviewTitle>
+              <Reviews>
+                {mapdata.reviews.length === 0 ? (
+                  <EmptyMessage>
+                    리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                  </EmptyMessage>
+                ) : (
+                  mapdata.reviews.map((el: any, idx: number) => {
+                    return (
+                      <Review key={idx}>
+                        <ReviewUserBox>
+                          <ReviewUserImage src={UserImg1} />
+                          <ReviewUserName>{el.petName}</ReviewUserName>
+                        </ReviewUserBox>
+                        <ReviewTextBox>
+                          <ReviewText>{el.contents}</ReviewText>
+                          <ReviewDate>{el.createdAt}</ReviewDate>
+                        </ReviewTextBox>
+                      </Review>
+                    );
+                  })
+                )}
+              </Reviews>
+            </ReviewBox>
 
-        {/* 리뷰 작성 */}
-        <ReviewWrite>
-          <ReviewUserBox>
-            <ReviewUserImage src={UserImg1} />
-            <ReviewUserName>유저 이름</ReviewUserName>
-          </ReviewUserBox>
-          <ReviewInputTextBox>
-            <ReviewInputBox>
-              <ReviewInput type='text' placeholder='이 공간이 어땠나요?' />
-            </ReviewInputBox>
-            <ReviewButton>작성</ReviewButton>
-          </ReviewInputTextBox>
-        </ReviewWrite>
+            {/* 리뷰 작성 */}
+            <ReviewWrite>
+              <ReviewUserBox>
+                <ReviewUserImage src={UserImg1} />
+                <ReviewUserName>유저 이름</ReviewUserName>
+              </ReviewUserBox>
+              <ReviewInputTextBox>
+                <ReviewInputBox>
+                  <ReviewInput type='text' placeholder='이 공간이 어땠나요?' />
+                </ReviewInputBox>
+                <ReviewButton>작성</ReviewButton>
+              </ReviewInputTextBox>
+            </ReviewWrite>
 
-        {/* 닫기 버튼 */}
-        <CloseBox onClick={selectHandler}>
-          <Icon
-            className='close'
-            icon='material-symbols:arrow-back-ios-rounded'
-            color='#FFF8F0'
-            style={{ fontSize: '45px' }}
-          />
-        </CloseBox>
-      </FlexBox>
-    </Container>
+            {/* 닫기 버튼 */}
+            <CloseBox onClick={selectHandler}>
+              <Icon
+                className='close'
+                icon='material-symbols:arrow-back-ios-rounded'
+                color='#FFF8F0'
+                style={{ fontSize: '45px' }}
+              />
+            </CloseBox>
+          </FlexBox>
+        </Container>
+      ) : (
+        <div>로딩중!</div>
+      )}
+    </div>
   );
 };
 
