@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
@@ -55,7 +54,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const [review, setReview] = useState<string>('');
   const [editReview, setEditReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
   const [myPick, setMyPick] = useState<boolean>(bookmark);
   const [mapdata, setMapdata] = useState<MapData>({
     details: {
@@ -121,15 +119,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const selectHandler = () => {
     setClick(!click);
   };
-
-  if (count === 0 && resData !== null) {
-    const { details, reviews, pageInfo } = resData as MapData;
-    console.log('resData', resData);
-    setMapdata({ details: details, reviews: reviews, pageInfo: pageInfo });
-    setCount(count + 1);
-    console.log('mapdata', mapdata); // detail, pageInfo는 있는데 reviews가 안담김
-    console.log('mapdata.reviews', mapdata.reviews);
-  }
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setReview((e.target as HTMLInputElement).value);
@@ -415,6 +404,17 @@ const Reviews = styled.div`
     100vh - 537px - 50px - 100px
   ); // 100vh - 위의 콘텐츠 높이 - 헤더 높이 - 리뷰 작성 박스 높이
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #DCCDC8;
+    border-radius: 100px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #A9908D;
+    border-radius: 100px;
+  }
 `;
 
 const Review = styled.div`
