@@ -121,6 +121,7 @@ const UserInfo: React.FC = () => {
 
       try {
         await axios.post(`${process.env.REACT_APP_API_ROOT}/pets/signup`, data, { headers });
+        alert('회원가입이 완료되었습니다.');
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
@@ -145,10 +146,6 @@ const UserInfo: React.FC = () => {
       setAddrErrorMessage('');
     }
   };
-
-  useEffect(() => {
-    printErrorMessage();
-  }, [isOpen]);
 
   return (
     <Container>
@@ -320,6 +317,7 @@ const AvatarDiv = styled.div`
 
   .userprofile {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 
