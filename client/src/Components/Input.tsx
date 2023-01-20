@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import color from '../color';
 
@@ -32,16 +32,19 @@ const StyledInput = styled.input<Props>`
   }
 `;
 
-const Input = ({
-  type,
-  readOnly,
-  placeholder,
-  paddingRight,
-  marginBottom,
-  width,
-  onChange,
-  openAddressModal,
-}: Props) => {
+const Input = (
+  {
+    type,
+    readOnly,
+    placeholder,
+    paddingRight,
+    marginBottom,
+    width,
+    onChange,
+    openAddressModal,
+  }: Props,
+  ref: any,
+) => {
   return (
     <>
       <StyledInput
@@ -53,9 +56,10 @@ const Input = ({
         width={width}
         onChange={onChange}
         onClick={openAddressModal}
+        ref={ref}
       />
     </>
   );
 };
 
-export default Input;
+export default forwardRef(Input);
