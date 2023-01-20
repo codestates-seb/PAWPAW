@@ -59,55 +59,55 @@ export const addressToCode = (address: string) => {
   if (address !== null) {
     switch (address) {
       case '강남구':
-        return 11680;
+        return '11680';
       case '강동구':
-        return;
+        return '11740';
       case '강북구':
-        return 11305;
+        return '11305';
       case '강서구':
-        return 11500;
+        return '11500';
       case '관악구':
-        return 11620;
+        return '11620';
       case '광진구':
-        return 11215;
+        return '11215';
       case '구로구':
-        return 11530;
+        return '11530';
       case '금천구':
-        return 11545;
+        return '11545';
       case '노원구':
-        return 11350;
+        return '11350';
       case '도봉구':
-        return 11320;
+        return '11320';
       case '동대문구':
-        return 11230;
+        return '11230';
       case '동작구':
-        return 11590;
+        return '11590';
       case '마포구':
-        return 11440;
+        return '11440';
       case '서대문구':
-        return 11410;
+        return '11410';
       case '서초구':
-        return 11650;
+        return '11650';
       case '성동구':
-        return 11200;
+        return '11200';
       case '성북구':
-        return 11290;
+        return '11290';
       case '송파구':
-        return 11710;
+        return '11710';
       case '양천구':
-        return 11470;
+        return '11470';
       case '영등포구':
-        return 11560;
+        return '11560';
       case '용산구':
-        return 11170;
+        return '11170';
       case '은평구':
-        return 11380;
+        return '11380';
       case '종로구':
-        return 11110;
+        return '11110';
       case '중구':
-        return 11140;
+        return '11140';
       case '중랑구':
-        return 11260;
+        return '11260';
     }
   }
 };

@@ -2,14 +2,19 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import color from '../color';
-import { IProps } from './HomeMap';
+// import { FProps } from './HomeMap';
 
 const { ivory, yellow } = color;
 
-const MapFilter = ({ selected, setSelected }: IProps['filter']) => {
+export interface FProps {
+  selected: string;
+  setSelected: (classname: string) => void;
+}
+
+const MapFilter = ({ selected, setSelected }: FProps) => {
   const showFilteredMarkers = (e: React.MouseEvent) => {
     const target = e.target as HTMLDivElement;
-    const tag = target.classList[2]; // tag : 'park', 'cafe', 'food', 'camping', 'pool', 'hospital', 'my'
+    const tag = target.classList[2]; // tag : 'park', 'cafe', 'restaurant', 'camping', 'pool', 'hospital', 'mypick'
 
     // 이미 선택된 요소를 또 클릭할 경우, selected를 'all'로 업데이트한다.
     if (selected === tag) {
@@ -47,12 +52,12 @@ const MapFilter = ({ selected, setSelected }: IProps['filter']) => {
           </FilterBox>
           <FilterBox
             onClick={showFilteredMarkers}
-            className={selected === 'food' ? 'food selected' : 'food'}
+            className={selected === 'restaurant' ? 'restaurant selected' : 'restaurant'}
           >
             <IconBox>
               <Icon icon='fluent:food-24-filled' color='#fea572' style={{ fontSize: '23px' }} />
             </IconBox>
-            <Text className='food'>음식점</Text>
+            <Text className='restaurant'>음식점</Text>
           </FilterBox>
           <FilterBox
             onClick={showFilteredMarkers}
@@ -87,7 +92,7 @@ const MapFilter = ({ selected, setSelected }: IProps['filter']) => {
           </FilterBox>
           <FilterBox
             onClick={showFilteredMarkers}
-            className={selected === 'my' ? 'my selected' : 'my'}
+            className={selected === 'mypick' ? 'mypick selected' : 'mypick'}
           >
             <IconBox>
               <Icon
@@ -97,7 +102,7 @@ const MapFilter = ({ selected, setSelected }: IProps['filter']) => {
                 style={{ fontSize: '27px' }}
               />
             </IconBox>
-            <Text className='my'>나의 장소</Text>
+            <Text className='mypick'>나의 장소</Text>
           </FilterBox>
         </div>
       </div>
@@ -161,7 +166,7 @@ const Text = styled.div`
   &.cafe {
     width: 40px;
   }
-  &.food {
+  &.restaurant {
     width: 50px;
   }
   &.camping {
@@ -173,7 +178,7 @@ const Text = styled.div`
   &.hospital {
     width: 40px;
   }
-  &.my {
+  &.mypick {
     width: 65px;
     margin-right: 5px;
   }

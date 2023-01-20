@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
-import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import { CProps } from '../Map/Marker';
-import axios from 'axios';
-const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
-const url = '';
-
-const headers = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: jwtToken,
-  Refresh: refreshToken,
-};
+import { mapReviewEdit, mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi';
+import headers from '../util/headers';
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
+const url = process.env.REACT_APP_API_ROOT;
+const petId = localStorage.getItem('petId') as string;
+
+
+interface IReqData {
+  petId: number;
+  infoMapId: number;
+}
 
 interface MapData {
   details: {
@@ -42,7 +44,9 @@ interface MapData {
 const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
   const [resData, setResData] = useState<object | null>(null);
   const [bookmark, setBookmark] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [review, setReview] = useState<string>('');
+  const [editReview, setEditReview] = useState<string>('');
+  const [editActivate, setEditActivate] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
 
   const [mapdata, setMapdata] = useState<MapData>({
@@ -79,10 +83,33 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
         console.error(error);
       });
   }
-
+  
+const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
+  const [myPick, setMyPick] = useState<boolean>(bookmark);
   const bookmarkeHandler = () => {
-    setBookmark(!bookmark);
+    const reqData: IReqData = {
+      petId: Number(petId),
+      infoMapId: id,
+    };
+    if (myPick) {
+      deletePlace(reqData);
+      setMyPick(false);
+    } else {
+      addPlace(reqData);
+      setMyPick(true);
+    }
   };
+
+  async function addPlace(reqData: IReqData) {
+    await axios.post(`${url}/maps/addplace`, JSON.stringify(reqData), { headers });
+  }
+
+  async function deletePlace(reqData: IReqData) {
+    await axios.delete(`${url}/maps/cancel`, {
+      data: reqData,
+      headers,
+    });
+  }
 
   const selectHandler = () => {
     setClick(!click);
@@ -94,7 +121,44 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
     console.log('reviews', mapdata.reviews);
   }
 
+  const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setReview((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setEditReview((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+
+  const reviewPostHandler = () => {
+    mapReviewEdit(infoMapId, review);
+    // window.location.reload();
+  };
+  const reviewUpdateHandler = () => {
+    if (!confirm('정말 수정 하시겠어요?')) {
+      alert('취소 되었습니다.');
+    } else {
+      mapReviewUPDATE(infoMapId, editReview);
+      setEditActivate(0);
+      alert('수정 되었습니다.');
+    }
+    // window.location.reload();
+  };
+  const reviewDeleteHandler = (commentId: number) => {
+    if (!confirm('정말 삭제 하시겠어요?')) {
+      alert('취소 되었습니다.');
+    } else {
+      mapReviewDELETE(commentId);
+      alert('삭제 되었습니다.');
+    }
+    // mapReviewDELETE(commentId);
+  };
+  const reviewActivateHandler = (commentId: number) => {
+    setEditActivate(commentId);
+    console.log(editActivate);
+  };
   return (
+
     <div>
       {mapdata.reviews !== null ? (
         <Container onClick={(e) => e.stopPropagation()}>
@@ -142,6 +206,81 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
             {/* 리뷰 */}
             <ReviewBox>
               <ReviewTitle>리뷰</ReviewTitle>
+                        <Reviews>
+                {mapdata.reviews.length === 0 ? (
+
+ mapdata.reviews.map((el: any, idx: number) => {
+                return (
+                  <Review key={idx}>
+                    {el.commentId !== editActivate ? (
+                      <ReviewWrite>
+                        <ReviewUserBox>
+                          <ReviewUserImage src={UserImg1} />
+                          <ReviewUserName>{el.username}</ReviewUserName>
+                        </ReviewUserBox>
+                        <ReviewTextBox>
+                          <ReviewText>{el.content}</ReviewText>
+                          <ReviewDate>{el.date}</ReviewDate>
+                        </ReviewTextBox>
+                        {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                        {el.petId === Number(petId) ? (
+                          <div>
+                            <button onClick={() => reviewDeleteHandler(el.commentId)}>
+                              <Icon
+                                icon='material-symbols:delete-outline-rounded'
+                                color={brown}
+                                style={{ fontSize: '15px' }}
+                              />
+                            </button>
+                            <button onClick={() => reviewActivateHandler(el.commentId)}>
+                              <Icon
+                                icon='material-symbols:edit-outline'
+                                color={brown}
+                                style={{ fontSize: '15px' }}
+                              />
+                            </button>
+                          </div>
+                        ) : (
+                          ''
+                        )}
+                      </ReviewWrite>
+                    ) : (
+                      <ReviewWrite>
+                        <ReviewUserBox>
+                          <ReviewUserImage src={UserImg1} />
+                          <ReviewUserName>{el.username}</ReviewUserName>
+                        </ReviewUserBox>
+                        <ReviewInputTextBox>
+                          <ReviewInputBox>
+                            <ReviewInput
+                              type='text'
+                              placeholder={el.content}
+                              onChange={editReviewHandler}
+                            />
+                          </ReviewInputBox>
+                          <ReviewButton onClick={reviewUpdateHandler}>
+                            <Icon
+                              icon='material-symbols:check-small-rounded'
+                              color={yellow}
+                              style={{ fontSize: '20px' }}
+                            />
+                          </ReviewButton>
+                        </ReviewInputTextBox>
+                      </ReviewWrite>
+                    )}
+                  </Review>
+                );
+              })
+            ) : (
+              <EmptyMessage>
+                리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+              </EmptyMessage>
+            )}
+          </Reviews>
+          
+          
+          
+          
               <Reviews>
                 {mapdata.reviews.length === 0 ? (
                   <EmptyMessage>
@@ -359,9 +498,10 @@ const ReviewInputBox = styled.div`
 type Props = {
   type: string;
   placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const ReviewInput = styled.textarea<Props>`
+const ReviewInput = styled.input<Props>`
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -427,37 +567,48 @@ const EmptyMessage = styled.div`
   font-size: 14px;
   color: ${brown};
 `;
-
 const dummydata: any = [
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
+    commentId: 1,
+    petId: 1,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
+    commentId: 2,
+    petId: 1,
   },
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
+    commentId: 3,
+    petId: 2,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
+    commentId: 4,
+    petId: 3,
   },
   {
     username: '까미',
     content: '즐거워요',
     date: '2023-01-10',
+    commentId: 5,
+    petId: 4,
   },
   {
     username: '콩이',
     content: '강아지들이 많아요!',
     date: '2023-01-10',
+    commentId: 6,
+    petId: 1,
   },
 ];
 
