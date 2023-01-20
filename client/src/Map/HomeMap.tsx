@@ -32,6 +32,7 @@ export interface IProps {
     title: string;
     lat: number;
     lng: number;
+    id: number;
   };
   filter: {
     selected: string;
