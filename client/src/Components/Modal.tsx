@@ -86,6 +86,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
       .get(`${url}/maps/details/${id}`, { headers })
       .then((res) => {
         setResData(res.data);
+        setMapdata(res.data);
       })
       .catch((error) => {
         console.error(error);
@@ -227,11 +228,11 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                           <ReviewWrite>
                             <ReviewUserBox>
                               <ReviewUserImage src={UserImg1} />
-                              <ReviewUserName>{el.username}</ReviewUserName>
+                              <ReviewUserName>{el.petName}</ReviewUserName>
                             </ReviewUserBox>
                             <ReviewTextBox>
-                              <ReviewText>{el.content}</ReviewText>
-                              <ReviewDate>{el.date}</ReviewDate>
+                              <ReviewText>{el.contents}</ReviewText>
+                              <ReviewDate>{el.createdAt}</ReviewDate>
                             </ReviewTextBox>
                             {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
                             {el.petId === Number(petId) ? (
