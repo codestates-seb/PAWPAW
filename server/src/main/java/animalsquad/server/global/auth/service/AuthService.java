@@ -104,6 +104,7 @@ public class AuthService {
         claims.put("petId", pet.getId());
         claims.put("roles", pet.getRoles());
         claims.put("petName",pet.getPetName());
+        claims.put("code",pet.getAddress().getCode());
 
         String subject = pet.getLoginId();
         AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(claims, subject);
