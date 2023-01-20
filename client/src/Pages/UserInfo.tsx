@@ -13,7 +13,7 @@ import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
 const { ivory, brown, yellow, darkivory, bordergrey } = color;
-const url = '';
+const url = process.env.REACT_APP_API_ROOT;
 interface FormData {
   profileImage: Blob | null;
 }

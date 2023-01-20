@@ -16,7 +16,7 @@ import Dog from '../img/dogface.png';
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
-const url = '';
+const url = process.env.REACT_APP_API_ROOT;
 
 interface FormData {
   profileImage: Blob | null;

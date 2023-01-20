@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
-const url = '';
-
+const url = process.env.REACT_APP_API_ROOT;
 interface FetchHook {
   responseData: object | null;
   loading: boolean;

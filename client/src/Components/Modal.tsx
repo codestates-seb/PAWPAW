@@ -14,7 +14,6 @@ const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
-
 interface IReqData {
   petId: number;
   infoMapId: number;
@@ -31,8 +30,9 @@ interface MapData {
     homepage: string;
     myPick: boolean;
   };
+
   reviews: object[] | null;
-  // | undefined;
+
   pageInfo: {
     page: number;
     size: number;
@@ -41,14 +41,13 @@ interface MapData {
   };
 }
 
-const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
+const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const [resData, setResData] = useState<object | null>(null);
-  const [bookmark, setBookmark] = useState<boolean>(false);
   const [review, setReview] = useState<string>('');
   const [editReview, setEditReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
-
+  const [myPick, setMyPick] = useState<boolean>(bookmark);
   const [mapdata, setMapdata] = useState<MapData>({
     details: {
       infoUrl: 'url.png',
@@ -60,7 +59,7 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
       homepage: 'test.com',
       myPick: false,
     },
-    reviews: [] ,
+    reviews: [],
     pageInfo: {
       page: 1,
       size: 15,
@@ -83,10 +82,8 @@ const Modal = ({ click, setClick, title, id }: CProps['clicks']) => {
         console.error(error);
       });
   }
-  
-const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
-  const [myPick, setMyPick] = useState<boolean>(bookmark);
-  const bookmarkeHandler = () => {
+
+  const bookmarkHandler = () => {
     const reqData: IReqData = {
       petId: Number(petId),
       infoMapId: id,
@@ -114,8 +111,10 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
   const selectHandler = () => {
     setClick(!click);
   };
+
   if (count === 0 && resData !== null) {
     const { details, reviews, pageInfo } = resData as MapData;
+    console.log(resData);
     setMapdata({ details: details, reviews: reviews, pageInfo: pageInfo });
     setCount(count + 1);
     console.log('reviews', mapdata.reviews);
@@ -131,14 +130,14 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
   };
 
   const reviewPostHandler = () => {
-    mapReviewEdit(infoMapId, review);
+    mapReviewEdit(id, review);
     // window.location.reload();
   };
   const reviewUpdateHandler = () => {
     if (!confirm('정말 수정 하시겠어요?')) {
       alert('취소 되었습니다.');
     } else {
-      mapReviewUPDATE(infoMapId, editReview);
+      mapReviewUPDATE(id, editReview);
       setEditActivate(0);
       alert('수정 되었습니다.');
     }
@@ -158,7 +157,6 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
     console.log(editActivate);
   };
   return (
-
     <div>
       {mapdata.reviews !== null ? (
         <Container onClick={(e) => e.stopPropagation()}>
@@ -171,7 +169,7 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
               <InfoTitleBox>
                 <InfoTitle>{mapdata.details.name}</InfoTitle>
                 <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
-                <BookmarkButton onClick={bookmarkeHandler}>
+                <BookmarkButton onClick={bookmarkHandler}>
                   {bookmark === false ? (
                     <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
                   ) : (
@@ -206,81 +204,6 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
             {/* 리뷰 */}
             <ReviewBox>
               <ReviewTitle>리뷰</ReviewTitle>
-                        <Reviews>
-                {mapdata.reviews.length === 0 ? (
-
- mapdata.reviews.map((el: any, idx: number) => {
-                return (
-                  <Review key={idx}>
-                    {el.commentId !== editActivate ? (
-                      <ReviewWrite>
-                        <ReviewUserBox>
-                          <ReviewUserImage src={UserImg1} />
-                          <ReviewUserName>{el.username}</ReviewUserName>
-                        </ReviewUserBox>
-                        <ReviewTextBox>
-                          <ReviewText>{el.content}</ReviewText>
-                          <ReviewDate>{el.date}</ReviewDate>
-                        </ReviewTextBox>
-                        {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                        {el.petId === Number(petId) ? (
-                          <div>
-                            <button onClick={() => reviewDeleteHandler(el.commentId)}>
-                              <Icon
-                                icon='material-symbols:delete-outline-rounded'
-                                color={brown}
-                                style={{ fontSize: '15px' }}
-                              />
-                            </button>
-                            <button onClick={() => reviewActivateHandler(el.commentId)}>
-                              <Icon
-                                icon='material-symbols:edit-outline'
-                                color={brown}
-                                style={{ fontSize: '15px' }}
-                              />
-                            </button>
-                          </div>
-                        ) : (
-                          ''
-                        )}
-                      </ReviewWrite>
-                    ) : (
-                      <ReviewWrite>
-                        <ReviewUserBox>
-                          <ReviewUserImage src={UserImg1} />
-                          <ReviewUserName>{el.username}</ReviewUserName>
-                        </ReviewUserBox>
-                        <ReviewInputTextBox>
-                          <ReviewInputBox>
-                            <ReviewInput
-                              type='text'
-                              placeholder={el.content}
-                              onChange={editReviewHandler}
-                            />
-                          </ReviewInputBox>
-                          <ReviewButton onClick={reviewUpdateHandler}>
-                            <Icon
-                              icon='material-symbols:check-small-rounded'
-                              color={yellow}
-                              style={{ fontSize: '20px' }}
-                            />
-                          </ReviewButton>
-                        </ReviewInputTextBox>
-                      </ReviewWrite>
-                    )}
-                  </Review>
-                );
-              })
-            ) : (
-              <EmptyMessage>
-                리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-              </EmptyMessage>
-            )}
-          </Reviews>
-          
-          
-          
-          
               <Reviews>
                 {mapdata.reviews.length === 0 ? (
                   <EmptyMessage>
@@ -290,21 +213,68 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
                   mapdata.reviews.map((el: any, idx: number) => {
                     return (
                       <Review key={idx}>
-                        <ReviewUserBox>
-                          <ReviewUserImage src={UserImg1} />
-                          <ReviewUserName>{el.petName}</ReviewUserName>
-                        </ReviewUserBox>
-                        <ReviewTextBox>
-                          <ReviewText>{el.contents}</ReviewText>
-                          <ReviewDate>{el.createdAt}</ReviewDate>
-                        </ReviewTextBox>
+                        {el.commentId !== editActivate ? (
+                          <ReviewWrite>
+                            <ReviewUserBox>
+                              <ReviewUserImage src={UserImg1} />
+                              <ReviewUserName>{el.username}</ReviewUserName>
+                            </ReviewUserBox>
+                            <ReviewTextBox>
+                              <ReviewText>{el.content}</ReviewText>
+                              <ReviewDate>{el.date}</ReviewDate>
+                            </ReviewTextBox>
+                            {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                            {el.petId === Number(petId) ? (
+                              <div>
+                                <button onClick={() => reviewDeleteHandler(el.commentId)}>
+                                  <Icon
+                                    icon='material-symbols:delete-outline-rounded'
+                                    color={brown}
+                                    style={{ fontSize: '15px' }}
+                                  />
+                                </button>
+                                <button onClick={() => reviewActivateHandler(el.commentId)}>
+                                  <Icon
+                                    icon='material-symbols:edit-outline'
+                                    color={brown}
+                                    style={{ fontSize: '15px' }}
+                                  />
+                                </button>
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                          </ReviewWrite>
+                        ) : (
+                          <ReviewWrite>
+                            <ReviewUserBox>
+                              <ReviewUserImage src={UserImg1} />
+                              <ReviewUserName>{el.username}</ReviewUserName>
+                            </ReviewUserBox>
+                            <ReviewInputTextBox>
+                              <ReviewInputBox>
+                                <ReviewInput
+                                  type='text'
+                                  placeholder={el.content}
+                                  onChange={editReviewHandler}
+                                />
+                              </ReviewInputBox>
+                              <ReviewButton onClick={reviewUpdateHandler}>
+                                <Icon
+                                  icon='material-symbols:check-small-rounded'
+                                  color={yellow}
+                                  style={{ fontSize: '20px' }}
+                                />
+                              </ReviewButton>
+                            </ReviewInputTextBox>
+                          </ReviewWrite>
+                        )}
                       </Review>
                     );
                   })
                 )}
               </Reviews>
             </ReviewBox>
-
             {/* 리뷰 작성 */}
             <ReviewWrite>
               <ReviewUserBox>
@@ -313,12 +283,15 @@ const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
               </ReviewUserBox>
               <ReviewInputTextBox>
                 <ReviewInputBox>
-                  <ReviewInput type='text' placeholder='이 공간이 어땠나요?' />
+                  <ReviewInput
+                    type='text'
+                    placeholder='이 공간이 어땠나요?'
+                    onChange={reviewHandler}
+                  />
                 </ReviewInputBox>
-                <ReviewButton>작성</ReviewButton>
+                <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
               </ReviewInputTextBox>
             </ReviewWrite>
-
             {/* 닫기 버튼 */}
             <CloseBox onClick={selectHandler}>
               <Icon
@@ -567,49 +540,5 @@ const EmptyMessage = styled.div`
   font-size: 14px;
   color: ${brown};
 `;
-const dummydata: any = [
-  {
-    username: '까미',
-    content: '즐거워요',
-    date: '2023-01-10',
-    commentId: 1,
-    petId: 1,
-  },
-  {
-    username: '콩이',
-    content: '강아지들이 많아요!',
-    date: '2023-01-10',
-    commentId: 2,
-    petId: 1,
-  },
-  {
-    username: '까미',
-    content: '즐거워요',
-    date: '2023-01-10',
-    commentId: 3,
-    petId: 2,
-  },
-  {
-    username: '콩이',
-    content: '강아지들이 많아요!',
-    date: '2023-01-10',
-    commentId: 4,
-    petId: 3,
-  },
-  {
-    username: '까미',
-    content: '즐거워요',
-    date: '2023-01-10',
-    commentId: 5,
-    petId: 4,
-  },
-  {
-    username: '콩이',
-    content: '강아지들이 많아요!',
-    date: '2023-01-10',
-    commentId: 6,
-    petId: 1,
-  },
-];
 
 export default Modal;
