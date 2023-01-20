@@ -50,6 +50,7 @@ const UserInfoEdit: FC = () => {
   const [isAge, setIsAge] = useState<number>(age);
   const [address, setAddress] = useState<number | null>(code);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const petId: string | null = localStorage.getItem('petId');
   // if (renderCount === 0) {
   //   setRenderCount(renderCount + 1);
@@ -183,8 +184,14 @@ const UserInfoEdit: FC = () => {
             />
           </AvatarEditDiv>
           <NameDiv>
-            <Input type='text' placeholder={petName} onChange={petNameHandler} />
-            <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
+            {isEdit ? (
+              <Input type='text' width={'150px'} placeholder={petName} onChange={petNameHandler} />
+            ) : (
+              <span className='name'>{petName}</span>
+            )}
+            <span className='icon' onClick={() => setIsEdit(!isEdit)}>
+              <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
+            </span>
           </NameDiv>
         </LeftDiv>
 
@@ -275,23 +282,34 @@ const AvatarDiv = styled.div`
   height: 175px;
   margin-top: 140px;
   border-radius: 50%;
+  overflow: hidden;
   font-size: 100px;
   background-color: ${ivory};
   line-height: 180px;
 
   display: flex;
   justify-content: center;
+
+  img {
+    object-fit: cover;
+  }
 `;
 
 const NameDiv = styled.div`
   margin-top: 28px;
-  font-size: 32px;
-  font-weight: bold;
-  text-decoration: underline;
-  color: ${brown};
 
-  &::placeholder {
-    color: ${brown};
+  .icon {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .name {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: underline;
+    color: white;
+    display: inline-block;
   }
 `;
 
@@ -299,7 +317,6 @@ const AvatarEditDiv = styled.div`
   position: absolute;
   top: 270px;
   right: 525px;
-  cursor: pointer;
 
   &.invisible {
     display: none;
@@ -307,6 +324,10 @@ const AvatarEditDiv = styled.div`
 
   &:hover + .invisible {
     display: block;
+  }
+
+  label {
+    cursor: pointer;
   }
 `;
 

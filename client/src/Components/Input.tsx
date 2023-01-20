@@ -10,12 +10,13 @@ type Props = {
   placeholder: string;
   paddingRight?: string;
   marginBottom?: string;
+  width?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   openAddressModal?: (e: React.MouseEvent<HTMLInputElement>) => void;
 };
 
 const StyledInput = styled.input<Props>`
-  width: 233px;
+  width: ${(props) => (props.width ? props.width : '233px')};
   height: 50px;
   margin-bottom: ${(props) => (props.marginBottom ? '40px' : '28px')};
   padding: 12px 16px 7px 16px;
@@ -37,6 +38,7 @@ const Input = ({
   placeholder,
   paddingRight,
   marginBottom,
+  width,
   onChange,
   openAddressModal,
 }: Props) => {
@@ -48,6 +50,7 @@ const Input = ({
         placeholder={placeholder}
         paddingRight={paddingRight}
         marginBottom={marginBottom}
+        width={width}
         onChange={onChange}
         onClick={openAddressModal}
       />

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Header from '../Components/Header';
-import { Icon } from '@iconify/react';
-import color from '../color';
 import { useNavigate } from 'react-router';
-import { getUserInfo, petLogout } from '../util/UserApi';
+import { Icon } from '@iconify/react';
 
-const { darkgrey, brown, mediumgrey, bordergrey } = color;
+import Header from '../Components/Header';
+import color from '../color';
+import { getUserInfo, petLogout } from '../util/UserApi';
+import { codeToAddress } from '../util/ConvertAddress';
+
+const { lightgrey, darkgrey, brown, mediumgrey, bordergrey } = color;
 
 interface FormData {
   profileImage: Blob | null;
@@ -64,7 +66,12 @@ const Mypage = () => {
     });
   };
   const logoutHandler = () => {
-    petLogout().then(() => navigate('/login'));
+    if (!confirm('로그아웃하시겠습니까?')) {
+      alert('취소 되었습니다.');
+    } else {
+      petLogout().then(() => navigate('/login'));
+      alert('로그아웃 되었습니다.');
+    }
   };
 
   return (
@@ -94,12 +101,15 @@ const Mypage = () => {
               <InfoIconBox>
                 <Icon icon='mdi:map-marker' color='#7d5a5a' style={{ fontSize: '20px' }} />
               </InfoIconBox>
-              <InfoPosBox>{info.address}</InfoPosBox>
+              <InfoPosBox>{codeToAddress(Number(info.address))}</InfoPosBox>
             </InfoBottomBox>
           </InfoBox>
         </ProfileContainerBox>
         <WriteContainerBox>
-          <WriteTitleBox>작성한 리뷰</WriteTitleBox>
+          <WriteTitleBox>
+            <span>작성한 리뷰</span>
+            <Icon icon='mdi:paw' style={{ fontSize: '20px' }} />
+          </WriteTitleBox>
           <WriteBox>
             <div className='top'>
               <TitleBox>동물 병원 추천</TitleBox>
@@ -179,13 +189,19 @@ const EditBox = styled.div`
     height: 25px;
     width: 39px;
     color: ${darkgrey};
+    background-color: #f8f8f8;
     border-radius: 5px;
     cursor: pointer;
+
+    &:hover {
+      background-color: #efefef;
+      color: ${brown};
+    }
   }
 `;
 
 const InfoBottomBox = styled.div`
-  padding: 10px;
+  padding: 10px 0px;
   display: flex;
 `;
 
@@ -196,7 +212,7 @@ const InfoIconBox = styled.div`
 const InfoPosBox = styled.div`
   display: flex;
   align-items: center;
-  font-size: 20px;
+  font-size: 18px;
   margin-left: 5px;
 `;
 
@@ -206,6 +222,12 @@ const WriteTitleBox = styled.div`
   font-size: 24px;
   font-weight: 700;
   color: ${brown};
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-right: 5px;
+  }
 `;
 
 const WriteBox = styled.div`
@@ -244,8 +266,15 @@ const LogoutBox = styled.div`
     color: ${darkgrey};
     border: none;
     border-radius: 5px;
+    background-color: #f8f8f8;
+    width: 70px;
     height: 25px;
     cursor: pointer;
+
+    &:hover {
+      background-color: #efefef;
+      color: ${brown};
+    }
   }
 `;
 
