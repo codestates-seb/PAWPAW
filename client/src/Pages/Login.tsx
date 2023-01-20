@@ -11,7 +11,7 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 import axios from 'axios';
 const { brown } = color;
-const url = '';
+const url = process.env.REACT_APP_API_ROOT;
 // 전체 화면
 interface Info {
   petName: string;

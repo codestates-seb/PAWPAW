@@ -3,7 +3,7 @@ import axios from 'axios';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const petId = localStorage.getItem('petId') as string;
-const url = '';
+const url = process.env.REACT_APP_API_ROOT;
 const headers = {
   Authorization: jwtToken,
   Refresh: refreshToken,
