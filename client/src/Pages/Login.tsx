@@ -21,7 +21,7 @@ interface Info {
   sub: string;
   code: number;
 }
-const sampleAddress = 11680;
+
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
         localStorage.setItem('petId', petid);
         setTimeout(() => {
           navigate('/map');
-        }, 100);
+        }, 300);
       } catch (error) {
         console.error('Error', error);
         alert(error);

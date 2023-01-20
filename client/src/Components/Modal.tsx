@@ -135,7 +135,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     setTest(test + 1);
     mapReviewEdit(id, review);
     console.log(test);
-    alert(' 되었습니다.');
+    alert('작성 되었습니다.');
   };
   const reviewUpdateHandler = (commentId: number) => {
     if (!confirm('정말 수정 하시겠어요?')) {
@@ -411,11 +411,11 @@ const Reviews = styled.div`
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background-color: #DCCDC8;
+    background-color: #dccdc8;
     border-radius: 100px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #A9908D;
+    background-color: #a9908d;
     border-radius: 100px;
   }
 `;
