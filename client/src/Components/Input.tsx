@@ -19,7 +19,7 @@ type Props = {
 const StyledInput = styled.input<Props>`
   width: ${(props) => (props.width ? props.width : '233px')};
   height: 50px;
-  margin-bottom: ${(props) => (props.marginBottom ? '40px' : '28px')};
+  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : '28px')};
   padding: 12px 16px 7px 16px;
   padding-right: ${(props) => props.paddingRight};
   border: 1px solid ${bordergrey};

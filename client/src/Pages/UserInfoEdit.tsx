@@ -201,7 +201,7 @@ const UserInfoEdit: FC = () => {
               <Input
                 type='text'
                 placeholder={`${age} 살`}
-                marginBottom='40px'
+                marginBottom='35px'
                 onChange={ageHandler}
               />
               <SvgSpan>
@@ -213,6 +213,7 @@ const UserInfoEdit: FC = () => {
                 type='text'
                 readOnly={true}
                 placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
+                marginBottom='35px'
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>

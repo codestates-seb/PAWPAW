@@ -53,15 +53,18 @@ const SignUp: FC = () => {
 
   const idValidationHandler = async () => {
     if (id === '') {
-      alert('아이디를 입력해주세요.');
+      idRef.current && idRef.current.focus(); // id에 포커스
+      setErrorMessage((prev) => {
+        return { ...prev, idErrorMessage: '아이디를 입력해주세요.' };
+      });
     } else {
       try {
         const response = await axios.get(`${url}/pets/check/${id}`);
         const value = response.data as boolean;
-        // console.log(value);
-        // console.log(response);
-        // console.log(response.data);
-        // console.log(id);
+        console.log(value);
+        console.log(response);
+        console.log(response.data);
+        console.log(id);
         // 타입 설정에 대해서 고민 필요
         // response 일지 response.status 이것도 아니면 response.body일지는 통신해보면서 정하기
         if (response.data === false) {
@@ -92,11 +95,10 @@ const SignUp: FC = () => {
       errorMessage.pwCnfmErrorMessage === '' &&
       isUniqueId
     ) {
-      console.log('통과!');
       navigate('/userinfo', { state: { id: id, password: password, petname: petName } });
     }
   };
-  console.log(isUniqueId);
+
   const printErrorMessage = () => {
     if (petName === '') {
       nameRef.current && nameRef.current.focus(); // name에 포커스
