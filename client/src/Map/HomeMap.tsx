@@ -2,18 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
-import axios from 'axios';
 
 import color from '../color';
 import Header from '../Components/Header';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
 import { addressToCode } from '../util/ConvertAddress';
-import headers from '../util/headers';
 import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
 const { coral, brown } = color;
-const url = process.env.REACT_APP_API_ROOT;
-const petId = localStorage.getItem('petId') as string;
 const code = localStorage.getItem('code') as string;
 
 export interface IProps {

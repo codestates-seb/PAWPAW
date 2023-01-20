@@ -277,7 +277,6 @@ const PlusDiv = styled.div`
   position: absolute;
   top: 270px;
   right: 525px;
-  cursor: pointer;
 
   &.invisible {
     display: none;
@@ -285,6 +284,10 @@ const PlusDiv = styled.div`
 
   &:hover + .invisible {
     display: block;
+  }
+
+  label {
+    cursor: pointer;
   }
 `;
 
