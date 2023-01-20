@@ -10,8 +10,6 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "back" ]
-  pull_request:
-    branches: [ "back" ]
 
 permissions:
   contents: read
@@ -52,45 +50,30 @@ jobs:
       run: chmod +x ./server/gradlew
       shell: bash
 
-#    - name: Build with Gradle
-#      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-#      with:
-#        arguments: build
-#        build-root-directory: server
     - name: Build with Gradle
       run: cd server; ./gradlew build -Pprofile=prod
       shell: bash
-#      env:
-#        MYSQL_URL: ${{ secrets.MYSQL_URL}}
-#        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-#        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-#        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-#        s3_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-#        s3_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        s3_region: ${{ secrets.S3_REGION }}
-#        s3_bucket: ${{ secrets.S3_BUCKET }}
 
-      # build한 후 프로젝트를 압축합니다.
+      # build한 후 프로젝트를 압축
     - name: Make zip file
       run: zip -r ./animalsquad-deploy.zip .
       shell: bash
       working-directory: ./server
 
-      # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
-      # 아래 코드에 Access Key와 Secret Key를 직접 작성하지 않습니다.
+      # Access Key와 Secret Access Key를 통해 권한을 확인
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }} # 등록한 Github Secret이 자동으로 불려옵니다.
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 등록한 Github Secret이 자동으로 불려옵니다.
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
-      # 압축한 프로젝트를 S3로 전송합니다.
+      # 압축한 프로젝트를 S3로 전송
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./animalsquad-deploy.zip s3://$S3_BUCKET_NAME/animalsquad-deploy.zip
       working-directory: ./server
 
-      # CodeDeploy에게 배포 명령을 내립니다.
+      # CodeDeploy에게 배포 명령
     - name: Code Deploy
       run: >
         aws deploy create-deployment --application-name animalsquad
