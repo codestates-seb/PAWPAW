@@ -19,6 +19,15 @@ interface IReqData {
   infoMapId: number;
 }
 
+interface IReview {
+  petId: number;
+  commentId: number;
+  profileImage: string;
+  petName: string;
+  contents: string;
+  createdAt: string;
+}
+
 interface MapData {
   details: {
     infoUrl: string;
@@ -31,7 +40,7 @@ interface MapData {
     myPick: boolean;
   };
 
-  reviews: object[] | null;
+  reviews: IReview[] | null;
 
   pageInfo: {
     page: number;
@@ -114,10 +123,11 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
 
   if (count === 0 && resData !== null) {
     const { details, reviews, pageInfo } = resData as MapData;
-    console.log(resData);
+    console.log('resData', resData);
     setMapdata({ details: details, reviews: reviews, pageInfo: pageInfo });
     setCount(count + 1);
-    console.log('reviews', mapdata.reviews);
+    console.log('mapdata', mapdata); // detail, pageInfo는 있는데 reviews가 안담김
+    console.log('mapdata.reviews', mapdata.reviews);
   }
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
