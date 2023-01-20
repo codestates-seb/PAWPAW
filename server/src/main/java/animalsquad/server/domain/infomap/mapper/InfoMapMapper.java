@@ -4,10 +4,10 @@ import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.infomap.dto.InfoMapDetailsResponseDto;
 import animalsquad.server.domain.infomap.dto.InfoMapPostDto;
 import animalsquad.server.domain.infomap.dto.InfoMapsResponseDto;
+import animalsquad.server.domain.infomap.dto.InfoMapsWithCenterResponseDto;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.entity.Pet;
-import animalsquad.server.global.dto.PageInfo;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 
@@ -50,6 +50,12 @@ public interface InfoMapMapper {
 
                     return infoMapsResponseDto;
                 }).collect(Collectors.toList());
+    }
+
+    default InfoMapsWithCenterResponseDto infoMapsToWithCenterResponseDto(List<InfoMapsResponseDto> responseDtos, Address address) {
+        InfoMapsWithCenterResponseDto.Center center = new InfoMapsWithCenterResponseDto.Center(address.getLatitude(),address.getLongitude());
+
+        return new InfoMapsWithCenterResponseDto(center, responseDtos);
     }
 
     default InfoMapDetailsResponseDto.Details setDetails(InfoMap infoMap, long petId) {

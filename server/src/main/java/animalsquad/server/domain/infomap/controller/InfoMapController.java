@@ -1,9 +1,12 @@
 package animalsquad.server.domain.infomap.controller;
 
 
+import animalsquad.server.domain.address.entity.Address;
+import animalsquad.server.domain.address.service.AddressService;
 import animalsquad.server.domain.infomap.dto.InfoMapCommentPatchDto;
 import animalsquad.server.domain.infomap.dto.InfoMapCommentPostDto;
 import animalsquad.server.domain.infomap.dto.InfoMapPostDto;
+import animalsquad.server.domain.infomap.dto.InfoMapsResponseDto;
 import animalsquad.server.domain.infomap.entity.InfoMap;
 import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.infomap.mapper.InfoMapCommentsMapper;
@@ -31,13 +34,19 @@ public class InfoMapController {
     private final InfoMapCommentService infoMapCommentService;
     private final InfoMapMapper infoMapMapper;
     private final InfoMapCommentsMapper infoMapCommentsMapper;
+    private final AddressService addressService;
 
     @GetMapping("/{code}")
     public ResponseEntity getMaps(@PathVariable("code") int code,
                                   @RequestParam(defaultValue = "none") String filter) {
-
-        List<InfoMap> infos = infoMapService.findInfos(code, filter.toUpperCase());
-        return new ResponseEntity(infoMapMapper.infoMapsToResponseDto(infos), HttpStatus.OK);
+        filter = filter.toUpperCase();
+        List<InfoMap> infos = infoMapService.findInfos(code, filter);
+        List<InfoMapsResponseDto> infoMapsResponseDtos = infoMapMapper.infoMapsToResponseDto(infos);
+        if (filter.equals("NONE")) {
+            Address address = addressService.findAddressByCode(code);
+            return new ResponseEntity(infoMapMapper.infoMapsToWithCenterResponseDto(infoMapsResponseDtos, address),HttpStatus.OK);
+        }
+        return new ResponseEntity(infoMapsResponseDtos, HttpStatus.OK);
     }
 
     @GetMapping("/mypick")
@@ -52,7 +61,7 @@ public class InfoMapController {
     public ResponseEntity postMaps(InfoMapPostDto infoMapPostDto) throws IllegalAccessException {
         InfoMap infoMap = infoMapMapper.postDtoToInfoMap(infoMapPostDto);
 
-        infoMapService.createMaps(infoMap,infoMapPostDto.getFile());
+        infoMapService.createMaps(infoMap, infoMapPostDto.getFile());
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -95,6 +104,6 @@ public class InfoMapController {
         long petId = principal.getId();
         Page<InfoMapComment> pagedComment = infoMapCommentService.findAllWithInfoMapId(page - 1, size, infoMapId);
 
-        return new ResponseEntity<>(infoMapMapper.infoMapsToDetailsResponseDto(infoMap,pagedComment,petId),HttpStatus.OK);
+        return new ResponseEntity<>(infoMapMapper.infoMapsToDetailsResponseDto(infoMap, pagedComment, petId), HttpStatus.OK);
     }
 }
