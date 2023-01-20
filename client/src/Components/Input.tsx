@@ -12,6 +12,7 @@ type Props = {
   marginBottom?: string;
   width?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   openAddressModal?: (e: React.MouseEvent<HTMLInputElement>) => void;
 };
 
@@ -41,6 +42,7 @@ const Input = (
     marginBottom,
     width,
     onChange,
+    onKeyUp,
     openAddressModal,
   }: Props,
   ref: any,
@@ -55,6 +57,7 @@ const Input = (
         marginBottom={marginBottom}
         width={width}
         onChange={onChange}
+        onKeyUp={onKeyUp}
         onClick={openAddressModal}
         ref={ref}
       />
