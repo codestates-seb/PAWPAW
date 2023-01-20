@@ -10,10 +10,11 @@ import MapFilter from './MapFilter';
 import Marker from './Marker';
 import { addressToCode } from '../util/ConvertAddress';
 import headers from '../util/headers';
-import { getAll, getMyPick, getFilter } from '../util/MapFilterApi';
+import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
 const { coral, brown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
+const code = localStorage.getItem('code') as string;
 
 export interface IProps {
   id: number;
@@ -27,7 +28,7 @@ export interface IProps {
   setIsModalOpen: (isModalOpen: boolean) => void;
 }
 
-interface ICurLocation {
+export interface ICurLocation {
   lat: number;
   lng: number;
 }
@@ -39,7 +40,7 @@ const HomeMap = () => {
   const [data, setData] = useState<IProps[] | null>(null); // 데이터
 
   const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 }); // 현재 위치 좌표
-  const [address, setAddress] = useState<string | undefined>(undefined); // 현재 위치의 주소 코드 ex. 11680
+  const [address, setAddress] = useState<string | undefined>(code); // 현재 위치의 주소 코드 ex. 11680
 
   const [newLocation, setNewLocation] = useState(currentLocation); // 이동한 위치 좌표
   const [fullAddress, setFullAddress] = useState<string[]>([]); // 이동한 위치의 주소 ex. ['서울', '강남구' '...']
@@ -47,10 +48,8 @@ const HomeMap = () => {
 
   // 가장 처음 렌더링 시 딱 한번만 실행되는 useEffect
   useEffect(() => {
-    if (petId) {
-      getUserInfo();
-    }
     if (address) {
+      getCenter(address).then((res) => setCurrentLocation(res));
       getAll(address);
     }
   }, []);
@@ -69,16 +68,6 @@ const HomeMap = () => {
       }
     }
   }, [selected, address, isModalOpen]);
-
-  // 유저 정보 불러오는 함수
-  async function getUserInfo() {
-    // petId로 유저 정보 GET해서 address를 받아온다.
-    const res = await axios.get(`${url}/pets/${petId}`, { headers });
-    setAddress(res.data.code);
-    setCurrentLocation({ lat: 37.496486063, lng: 127.028361548 }); // 강남역 좌표 (임시)
-    // ✅ 서버 API 수정되면 수정하기
-    // setCurrentLocation({ lat: data.coord.latitude, lng: data.coord.longitude });
-  }
 
   // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
@@ -123,36 +112,40 @@ const HomeMap = () => {
     <Container>
       <Header />
       {/* 맵 */}
-      <Map
-        className='map'
-        center={currentLocation}
-        style={{ width: '100%', height: '100%' }}
-        level={4}
-        onDragEnd={(map) => dragHandler(map)}
-      >
-        {/* 장소 마커 */}
-        {data &&
-          data.map((el) => {
-            return (
-              <Marker
-                key={el.id}
-                {...el}
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-              />
-            );
-          })}
-      </Map>
+      {address && (
+        <>
+          <Map
+            className='map'
+            center={currentLocation}
+            style={{ width: '100%', height: '100%' }}
+            level={4}
+            onDragEnd={(map) => dragHandler(map)}
+          >
+            {/* 장소 마커 */}
+            {data &&
+              data.map((el) => {
+                return (
+                  <Marker
+                    key={el.id}
+                    {...el}
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                  />
+                );
+              })}
+          </Map>
 
-      {/* 필터 버튼 */}
-      <MapFilter selected={selected} setSelected={setSelected} />
+          {/* 필터 버튼 */}
+          <MapFilter selected={selected} setSelected={setSelected} />
 
-      {/* 현재 위치에서 검색하기 버튼 */}
-      {isLocationChanged && (
-        <RefreshBtn onClick={updateCurrentLocation}>
-          <span>현재 위치에서 검색하기</span>
-          <Icon icon='mi:refresh' color='white' style={{ fontSize: '25px' }} />
-        </RefreshBtn>
+          {/* 현재 위치에서 검색하기 버튼 */}
+          {isLocationChanged && (
+            <RefreshBtn onClick={updateCurrentLocation}>
+              <span>현재 위치에서 검색하기</span>
+              <Icon icon='mi:refresh' color='white' style={{ fontSize: '25px' }} />
+            </RefreshBtn>
+          )}
+        </>
       )}
     </Container>
   );

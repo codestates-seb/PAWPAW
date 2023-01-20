@@ -176,7 +176,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                 <InfoTitle>{mapdata.details.name}</InfoTitle>
                 <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
                 <BookmarkButton onClick={bookmarkHandler}>
-                  {bookmark === false ? (
+                  {myPick === false ? (
                     <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
                   ) : (
                     <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
@@ -226,30 +226,27 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                               <ReviewUserName>{el.petName}</ReviewUserName>
                             </ReviewUserBox>
                             <ReviewTextBox>
-                              <ReviewText>{el.contents}</ReviewText>
+                              <ReviewText>
+                                {el.contents}
+                                {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                                {el.petId === Number(petId) ? (
+                                  <EditDelButtons>
+                                    <button onClick={() => reviewActivateHandler(el.commentId)}>
+                                      <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
+                                    </button>
+                                    <button onClick={() => reviewDeleteHandler(el.commentId)}>
+                                      <Icon
+                                        icon='material-symbols:delete-outline-rounded'
+                                        style={{ fontSize: '15px' }}
+                                      />
+                                    </button>
+                                  </EditDelButtons>
+                                ) : (
+                                  ''
+                                )}
+                              </ReviewText>
                               <ReviewDate>{el.createdAt}</ReviewDate>
                             </ReviewTextBox>
-                            {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                            {el.petId === Number(petId) ? (
-                              <div>
-                                <button onClick={() => reviewDeleteHandler(el.commentId)}>
-                                  <Icon
-                                    icon='material-symbols:delete-outline-rounded'
-                                    color={brown}
-                                    style={{ fontSize: '15px' }}
-                                  />
-                                </button>
-                                <button onClick={() => reviewActivateHandler(el.commentId)}>
-                                  <Icon
-                                    icon='material-symbols:edit-outline'
-                                    color={brown}
-                                    style={{ fontSize: '15px' }}
-                                  />
-                                </button>
-                              </div>
-                            ) : (
-                              ''
-                            )}
                           </ReviewWrite>
                         ) : (
                           <ReviewWrite>
@@ -469,13 +466,16 @@ const ReviewText = styled.div`
   color: ${brown};
   font-size: 14px;
   font-weight: 500;
+
+  display: flex;
+  justify-content: space-between;
 `;
 
 const ReviewDate = styled.div`
   text-align: end;
   color: ${lightgrey};
   font-size: 11px;
-  margin-right: 10px;
+  margin-right: 7px;
 `;
 
 const ReviewInputBox = styled.div`
@@ -556,6 +556,26 @@ const EmptyMessage = styled.div`
   text-align: center;
   font-size: 14px;
   color: ${brown};
+`;
+
+const EditDelButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  button {
+    padding: 5px;
+    border: transparent;
+    border-radius: 5px;
+    color: ${lightgrey};
+    background: none;
+    cursor: pointer;
+    line-height: 0px;
+
+    &:hover {
+      color: ${yellow};
+      background-color: ${ivory};
+    }
+  }
 `;
 
 export default Modal;
