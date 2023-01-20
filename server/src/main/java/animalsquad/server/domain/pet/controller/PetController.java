@@ -54,7 +54,7 @@ public class PetController {
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
                                  @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
-        // TODO: 토큰 검증 로직 수정
+
         Pet findPet = petService.petVerifiedToken(id, petId);
 
         return new ResponseEntity(mapper.petToPetResponseDto(findPet),HttpStatus.OK);
