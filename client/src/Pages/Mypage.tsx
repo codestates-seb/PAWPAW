@@ -8,7 +8,7 @@ import color from '../color';
 import { getUserInfo, petLogout } from '../util/UserApi';
 import { codeToAddress } from '../util/ConvertAddress';
 
-const { lightgrey, darkgrey, brown, mediumgrey, bordergrey } = color;
+const { darkgrey, brown, mediumgrey, bordergrey } = color;
 
 interface FormData {
   profileImage: Blob | null;
@@ -51,7 +51,7 @@ const Mypage = () => {
     setFormData({ profileImage: profileImage });
     setCount(count + 1);
   }
-  console.log('info', info);
+  // console.log('info', info);
   const UserImg = formData.profileImage as unknown as string;
   const goEditPage = () => {
     navigate('/userinfoedit', {
@@ -150,12 +150,17 @@ const ProfileContainerBox = styled.div`
 
 const ProfileBox = styled.div`
   .profile {
-    width: 207px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
   }
 `;
 
 const InfoBox = styled.div`
   margin-left: 30px;
+  width: 100%;
+  padding: 30px;
 `;
 
 const InfoTopBox = styled.div`
@@ -216,7 +221,9 @@ const InfoPosBox = styled.div`
   margin-left: 5px;
 `;
 
-const WriteContainerBox = styled.div``;
+const WriteContainerBox = styled.div`
+  padding: 20px;
+`;
 
 const WriteTitleBox = styled.div`
   font-size: 24px;
