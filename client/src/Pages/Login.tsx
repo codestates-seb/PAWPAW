@@ -19,8 +19,9 @@ interface Info {
   exp: number;
   roles: any;
   sub: string;
+  code: number;
 }
-
+const sampleAddress = 11680;
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -96,14 +97,16 @@ const Login: React.FC = () => {
         const jwtToken_decode = jwt_decode(jwtToken) as Info;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
+        const code = jwtToken_decode.code as number;
         setPetId(petid.toString());
         console.log('petId', petId);
         const refreshToken = response.headers.refresh as string;
-        localStorage.setItem('petId', petid);
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
+        localStorage.setItem('code', code.toString());
+        localStorage.setItem('petId', petid);
         navigate('/map');
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         console.error('Error', error);
         alert(error);

@@ -5,11 +5,18 @@ import { IProps } from '../Map/HomeMap';
 
 const url = process.env.REACT_APP_API_ROOT;
 
+// 지도 중심 좌표 얻기
+export async function getCenter(address: string) {
+  const res = await axios.get(`${url}/maps/${address}`, { headers });
+  const center = res.data.center;
+  return { lat: center.centerLatitude, lng: center.centerLongitude };
+}
+
 // 1️⃣ 전체 데이터 + 나의 장소 불러오기
 export async function getAll(address: string) {
   // 전체 데이터 불러오기
   const res = await axios.get(`${url}/maps/${address}`, { headers });
-  const resData = addBookmark(res.data, false);
+  const resData = addBookmark(res.data.maps, false);
 
   // 나의 장소 데이터 불러오기
   const resMyPick = await axios.get(`${url}/maps/mypick`, { headers });
