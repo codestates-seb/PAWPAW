@@ -15,6 +15,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 logging.level:
   com:
     amazonaws:
@@ -36,7 +40,3 @@ cloud:
       bucket: ${s3_bucket}
     stack:
       auto: false
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
