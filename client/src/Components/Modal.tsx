@@ -1,27 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
-import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import { CProps } from '../Map/Marker';
 import { mapReviewEdit, mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi';
+import headers from '../util/headers';
+
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
+const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
-const Modal = ({ click, setClick, title }: CProps['clicks']) => {
+
+interface IReqData {
+  petId: number;
+  infoMapId: number;
+}
+
+interface MapData {
+  details: {
+    infoUrl: string;
+    name: string;
+    mapAddress: string;
+    category: string;
+    operationTime: string;
+    tel: string;
+    homepage: string;
+    myPick: boolean;
+  };
+  reviews: [
+    {
+      petId: number;
+      commentId: number;
+      profileImage: string;
+      petName: string;
+      contents: string;
+      createdAt: string;
+    },
+  ];
+  // | undefined;
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+const Modal = ({ click, setClick, title, InfoMapId }: CProps['clicks']) => {
+  const [resData, setResData] = useState<object | null>(null);
   const [bookmark, setBookmark] = useState<boolean>(false);
   const [review, setReview] = useState<string>('');
   const [editReview, setEditReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
 
+  const [mapdata, setMapdata] = useState<MapData>({
+    details: {
+      infoUrl: 'url.png',
+      name: 'test',
+      mapAddress: 'test',
+      category: 'test',
+      operationTime: '0900-1800',
+      tel: '02-555-8888',
+      homepage: 'test.com',
+      myPick: false,
+    },
+    reviews: [
+      {
+        petId: 0,
+        commentId: 0,
+        profileImage: 'none',
+        petName: 'none',
+        contents: 'none',
+        createdAt: 'none',
+      },
+    ],
+    pageInfo: {
+      page: 1,
+      size: 15,
+      totalElements: 0,
+      totalPages: 1,
+    },
+  });
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    await axios.get(`${url}/maps/details/${InfoMapId}`, { headers })
+    .then((res) => {
+      setResData(res.data);
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+  
+const Modal = ({ click, setClick, title, id, bookmark }: CProps['clicks']) => {
+  const [myPick, setMyPick] = useState<boolean>(bookmark);
   const bookmarkeHandler = () => {
-    setBookmark(!bookmark);
+    const reqData: IReqData = {
+      petId: Number(petId),
+      infoMapId: id,
+    };
+    if (myPick) {
+      deletePlace(reqData);
+      setMyPick(false);
+    } else {
+      addPlace(reqData);
+      setMyPick(true);
+    }
   };
+
+  async function addPlace(reqData: IReqData) {
+    await axios.post(`${url}/maps/addplace`, JSON.stringify(reqData), { headers });
+  }
+
+  async function deletePlace(reqData: IReqData) {
+    await axios.delete(`${url}/maps/cancel`, {
+      data: reqData,
+      headers,
+    });
+  }
 
   const selectHandler = () => {
     setClick(!click);
   };
+  if (count === 0 && resData !== null) {
+    const { details, reviews, pageInfo } = resData as MapData;
+    setMapdata({ details: details, reviews: reviews, pageInfo: pageInfo });
+    setCount(count + 1);
+    console.log('reviews', mapdata.reviews);
+  }
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setReview((e.target as HTMLInputElement).value);
@@ -31,9 +145,7 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
     setEditReview((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
   };
-  // const reviewid = 1;
-  const infoMapId = 1;
-  // 일단 자리만 만들어 두었습니다.
+
   const reviewPostHandler = () => {
     mapReviewEdit(infoMapId, review);
     // window.location.reload();
@@ -70,10 +182,10 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
 
           {/* 이름 */}
           <InfoTitleBox>
-            <InfoTitle>{title}</InfoTitle>
-            <InfoSubTitle>공원</InfoSubTitle>
+            <InfoTitle>{mapdata.details.name}</InfoTitle>
+            <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
             <BookmarkButton onClick={bookmarkeHandler}>
-              {bookmark === false ? (
+              {myPick === false ? (
                 <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
               ) : (
                 <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
@@ -84,19 +196,19 @@ const Modal = ({ click, setClick, title }: CProps['clicks']) => {
           {/* 정보 */}
           <InfoContentBox>
             <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>서울 종로구 숭인동 58-149</InfoContent>
+            <InfoContent>{mapdata.details.mapAddress}</InfoContent>
           </InfoContentBox>
           <InfoContentBox>
             <Icon icon='ic:round-access-time-filled' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>이용 시간을 알려주세요.</InfoContent>
+            <InfoContent>{mapdata.details.operationTime}</InfoContent>
           </InfoContentBox>
           <InfoContentBox>
             <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-            <InfoContent>02-0000-0000</InfoContent>
+            <InfoContent>{mapdata.details.tel}</InfoContent>
           </InfoContentBox>
           <InfoContentBox>
             <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-            <InfoAnchor>https://seoulpark.com</InfoAnchor>
+            <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
           </InfoContentBox>
         </InfoDiv>
         {/* 리뷰 */}
