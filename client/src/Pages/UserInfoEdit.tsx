@@ -9,7 +9,7 @@ import Input from '../Components/Input';
 import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
-import { getUserInfo, petUpdate, petDelete } from '../util/UserApi';
+import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
@@ -38,9 +38,9 @@ const UserInfoEdit: FC = () => {
   const species = location.state.species;
   const code = location.state.code;
   const profileImage = location.state.profileImage;
-  const imgUrl = profileImage.profileImage;
-  const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
-  console.log(files);
+  // const imgUrl = profileImage.profileImage;
+  // const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
+  // console.log(files);
   const [renderCount, setRenderCount] = useState<number>(0);
   const [isPetName, setIsPetName] = useState<string>(petName);
   const [isOpen, setIsOpen] = useState(false);
@@ -49,16 +49,13 @@ const UserInfoEdit: FC = () => {
   const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
   const [isAge, setIsAge] = useState<number>(age);
   const [address, setAddress] = useState<number | null>(code);
-  const [formData, setFormData] = useState<FormData>({ profileImage: files });
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const petId: string | null = localStorage.getItem('petId');
-  console.log('저긴가1', formData);
-  console.log('저긴가2', formData.profileImage);
-  console.log('pet', petName);
-  if (renderCount === 0) {
-    setRenderCount(renderCount + 1);
-    setFormData({ ...formData, ['profileImage']: files });
-    console.log('여긴가', formData);
-  }
+  // if (renderCount === 0) {
+  //   setRenderCount(renderCount + 1);
+  //   setFormData({ ...formData, ['profileImage']: files });
+  //   console.log('여긴가', formData);
+  // }
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -67,7 +64,8 @@ const UserInfoEdit: FC = () => {
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
-    console.log(formData);
+    console.log('formData', formData);
+    console.log('formData.profileImage', formData.profileImage);
   };
 
   const catHandler = () => {
@@ -98,7 +96,6 @@ const UserInfoEdit: FC = () => {
   };
 
   const updateHandler = async () => {
-    if (!formData.profileImage) return;
     const headers = {
       'Content-Type': 'multipart/form-data',
       Authorization: jwtToken,
@@ -111,7 +108,9 @@ const UserInfoEdit: FC = () => {
     data.append('gender', gender);
     data.append('species', species);
     data.append('code', '11680');
-    data.append('profileImage', formData.profileImage);
+    formData.profileImage !== null
+      ? data.append('profileImage', formData.profileImage)
+      : console.log('img전송x', formData.profileImage);
     console.log(data);
     console.log(formData);
     console.log(formData.profileImage);
@@ -123,8 +122,8 @@ const UserInfoEdit: FC = () => {
       console.log(value);
     }
     try {
-      await axios.post(`${url}/patch/${petId}`, data, { headers });
-      navigate('/login');
+      await axios.patch(`${url}/pets/${petId}`, data, { headers });
+      navigate('/mypage');
       // 비동기 에러 날 것 같으면 .then 사용
     } catch (error) {
       console.error('Error', error);
@@ -166,6 +165,7 @@ const UserInfoEdit: FC = () => {
             <input
               type='file'
               id='input-file'
+              name='profileImage'
               onChange={saveFileImage}
               style={{ display: 'none' }}
             />
@@ -177,6 +177,7 @@ const UserInfoEdit: FC = () => {
             <input
               type='file'
               id='input-file'
+              name='profileImage'
               onChange={saveFileImage}
               style={{ display: 'none' }}
             />

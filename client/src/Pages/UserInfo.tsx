@@ -45,7 +45,6 @@ const UserInfo: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const { id, petname, password } = location.state;
-
   const [fileImage, setFileImage] = useState<string>();
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -55,7 +54,8 @@ const UserInfo: React.FC = () => {
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
-    console.log(files);
+    console.log('formData', formData);
+    console.log('formData.profileImage', formData.profileImage);
   };
 
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
