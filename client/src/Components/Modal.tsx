@@ -404,6 +404,17 @@ const Reviews = styled.div`
     100vh - 537px - 50px - 100px
   ); // 100vh - 위의 콘텐츠 높이 - 헤더 높이 - 리뷰 작성 박스 높이
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #DCCDC8;
+    border-radius: 100px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #A9908D;
+    border-radius: 100px;
+  }
 `;
 
 const Review = styled.div`
