@@ -56,6 +56,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const [editReview, setEditReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+  const [test, setTest] = useState<number>(0);
   const [myPick, setMyPick] = useState<boolean>(bookmark);
   const [mapdata, setMapdata] = useState<MapData>({
     details: {
@@ -79,7 +80,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [test]);
 
   async function getData() {
     await axios
@@ -141,27 +142,31 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   };
 
   const reviewPostHandler = () => {
+    setTest(test + 1);
     mapReviewEdit(id, review);
-    // window.location.reload();
+    console.log(test);
+    alert(' 되었습니다.');
   };
-  const reviewUpdateHandler = () => {
+  const reviewUpdateHandler = (commentId: number) => {
     if (!confirm('정말 수정 하시겠어요?')) {
       alert('취소 되었습니다.');
     } else {
-      mapReviewUPDATE(id, editReview);
+      mapReviewUPDATE(commentId, editReview);
       setEditActivate(0);
+      setTest(test + 1);
+      console.log(test);
       alert('수정 되었습니다.');
     }
-    // window.location.reload();
   };
   const reviewDeleteHandler = (commentId: number) => {
     if (!confirm('정말 삭제 하시겠어요?')) {
       alert('취소 되었습니다.');
     } else {
       mapReviewDELETE(commentId);
+      setTest(test + 1);
+      console.log(test);
       alert('삭제 되었습니다.');
     }
-    // mapReviewDELETE(commentId);
   };
   const reviewActivateHandler = (commentId: number) => {
     setEditActivate(commentId);
@@ -270,7 +275,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                                   onChange={editReviewHandler}
                                 />
                               </ReviewInputBox>
-                              <ReviewButton onClick={reviewUpdateHandler}>
+                              <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
                                 <Icon
                                   icon='material-symbols:check-small-rounded'
                                   color={yellow}
