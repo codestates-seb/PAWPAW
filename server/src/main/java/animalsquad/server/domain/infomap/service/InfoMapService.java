@@ -28,6 +28,8 @@ public class InfoMapService {
     private static final String folderName = "map";
 
     public List<InfoMap> findInfos(int code, String filter) {
+        Optional<Address> address = addressRepository.findByCode(code);
+        address.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
 
         List<InfoMap> infoMaps = new ArrayList<>();
 
