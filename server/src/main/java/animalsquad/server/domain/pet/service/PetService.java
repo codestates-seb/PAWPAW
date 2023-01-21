@@ -5,6 +5,7 @@ import animalsquad.server.domain.address.repository.AddressRepository;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
+import animalsquad.server.global.auth.dto.AuthRequestDto;
 import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -137,6 +139,18 @@ public class PetService {
             fileUploadService.deleteFile(image, folder);
         }
         petRepository.deleteById(id);
+    }
+    // TODO: 관리자 승인 요청 (권한 컬럼 2개?)
+    public void verifiedAdmin(long id, long petId, String adminCode) {
+        Pet findPet = findVerifiedPet(id);
+
+        verifiedToken(findPet, petId);
+
+        if(!adminCode.equals("동물특공대")) {
+            throw new BusinessLogicException(ExceptionCode.ADMIN_CODE_NOT_MATCH);
+        }
+        findPet.getRoles().add((Role.ROLE_ADMIN.name()));
+        petRepository.save(findPet);
     }
 
     private void verifiedToken(Pet pet, long petId) {

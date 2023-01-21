@@ -90,14 +90,11 @@ public class AuthService {
         redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
 
     }
-
-
     public Pet findVerifiedPet(String loginId) {
         Optional<Pet> member = petRepository.findByLoginId(loginId);
 
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PET_NOT_FOUND));
     }
-
 
     public AuthResponseDto.TokenInfo doGenerateToken(Pet pet) {
         Map<String, Object> claims = new HashMap<>();

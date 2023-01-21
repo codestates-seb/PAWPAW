@@ -14,6 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +39,18 @@ public class PetController {
 
         return new ResponseEntity(result, HttpStatus.OK);
     }
+    //TODO: 관리자 승인 요청
+    @PostMapping ("/admin/{pet-id}")
+    public ResponseEntity verifiedAdmin(@PathVariable("pet-id") long id,
+                                        String adminCode, //body?
+                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+        long petId = principal.getId();
+
+        petService.verifiedAdmin(id, petId, adminCode);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@PathVariable("pet-id") long id,
                                     PetPatchDto petPatchDto,
@@ -45,13 +59,16 @@ public class PetController {
 
         petPatchDto.setId(id);
 
-        Pet pet = petService.updatePet(mapper.petPatchToPet(petPatchDto), petId ,petPatchDto.getProfileImage());
+        petService.updatePet(mapper.petPatchToPet(petPatchDto), petId ,petPatchDto.getProfileImage());
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    //TODO: post 조회
     @GetMapping("/{pet-id}")
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
+//                                 @Positive @RequestParam(defaultValue = "1") int page,
+//                                 @Positive @RequestParam(defaultValue = "15") int size,
                                  @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
