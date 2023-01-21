@@ -49,6 +49,10 @@ const HomeMap = () => {
     }
   }, []);
 
+  if(localStorage.getItem('count') === '1'){ 
+    localStorage.removeItem('count')
+    window.location.reload();
+  }
   // selected, address, isModalOpen이 업데이트될 때마다 실행되는 useEffect
   useEffect(() => {
     if (address) {
@@ -63,13 +67,13 @@ const HomeMap = () => {
       }
     }
   }, [selected, address, isModalOpen]);
-  if (localStorage.getItem('check') !== '1') {
-    localStorage.setItem('check', '1');
-    window.location.reload();
-  } else {
-    // localStorage.removeItem('check');
-  }
-  // 응급조치 ㅠㅡㅜ
+  // if (localStorage.getItem('check') !== '1') {
+  //   localStorage.setItem('check', '1');
+  //   window.location.reload();
+  // } else {
+  //   // localStorage.removeItem('check');
+  // }
+  // // 응급조치 ㅠㅡㅜ
   // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
     const geocoder = new kakao.maps.services.Geocoder();

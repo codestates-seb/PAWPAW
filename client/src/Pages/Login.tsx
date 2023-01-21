@@ -105,7 +105,8 @@ const Login: React.FC = () => {
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('code', code.toString());
         localStorage.setItem('petId', petid);
-        navigate('/map');
+        localStorage.setItem('count', '1');
+        navigate('/map')
       } catch (error) {
         console.error('Error', error);
         alert(error);
