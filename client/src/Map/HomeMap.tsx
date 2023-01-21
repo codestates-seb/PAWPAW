@@ -2,18 +2,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
-import axios from 'axios';
-
 import color from '../color';
 import Header from '../Components/Header';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
 import { addressToCode } from '../util/ConvertAddress';
-import headers from '../util/headers';
 import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
 const { coral, brown } = color;
-const url = process.env.REACT_APP_API_ROOT;
-const petId = localStorage.getItem('petId') as string;
 const code = localStorage.getItem('code') as string;
 
 export interface IProps {
@@ -68,7 +63,13 @@ const HomeMap = () => {
       }
     }
   }, [selected, address, isModalOpen]);
-
+  if (localStorage.getItem('check') !== '1') {
+    localStorage.setItem('check', '1');
+    window.location.reload();
+  } else {
+    // localStorage.removeItem('check');
+  }
+  // 응급조치 ㅠㅡㅜ
   // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
     const geocoder = new kakao.maps.services.Geocoder();

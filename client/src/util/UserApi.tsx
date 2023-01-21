@@ -99,6 +99,7 @@ export const petLogout = async () => {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
     localStorage.removeItem('petId');
+    localStorage.removeItem('code');
   }
 };
 
