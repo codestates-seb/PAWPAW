@@ -14,7 +14,7 @@ import jwt_decode from 'jwt-decode';
 const { brown, red } = color;
 
 // 전체 화면
-interface Info {
+export interface Info {
   petName: string;
   petId: number;
   exp: number;
@@ -59,13 +59,11 @@ const Login: React.FC = () => {
         const jwtToken_decode = jwt_decode(jwtToken) as Info;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
-        const code = jwtToken_decode.code as number;
         setPetId(petid.toString());
         console.log('petId', petId);
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
-        localStorage.setItem('code', code.toString());
         localStorage.setItem('petId', petid);
         navigate('/map');
         // window.location.reload();
