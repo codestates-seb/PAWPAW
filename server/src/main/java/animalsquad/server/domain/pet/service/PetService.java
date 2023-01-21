@@ -123,8 +123,6 @@ public class PetService {
         return findVerifiedPet(id);
     }
 
-    // redis 설정 시 refreshToken 삭제 추가
-
     public void deletePet(long id, long petId) throws IllegalAccessException {
         Pet findPet = findVerifiedPet(id);
 
@@ -164,7 +162,7 @@ public class PetService {
     private Pet findVerifiedPet(long id) {
         Optional<Pet> optionalPet = petRepository.findById(id);
         Pet findPet = optionalPet.orElseThrow(() ->
-                new NoSuchElementException(ExceptionCode.PET_NOT_FOUND.getMessage()));
+                new BusinessLogicException(ExceptionCode.PET_NOT_FOUND));
 
         return findPet;
     }
