@@ -8,6 +8,7 @@ import UserInfo from './Pages/UserInfo';
 import UserInfoEdit from './Pages/UserInfoEdit';
 import HomeMap from './Map/HomeMap';
 import Mypage from './Pages/Mypage';
+import Post from './Pages/Post';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path='/userinfoedit' element={<UserInfoEdit />} />
         <Route path='/map' element={<HomeMap />} />
         <Route path='/mypage' element={<Mypage />} />
+        <Route path='/post' element={<Post />} />
       </Routes>
     </BrowserRouter>
   );
