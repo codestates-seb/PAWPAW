@@ -7,8 +7,10 @@ import Header from '../Components/Header';
 import color from '../color';
 import { getUserInfo, petLogout } from '../util/UserApi';
 import { codeToAddress } from '../util/ConvertAddress';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
 
-const { darkgrey, brown, mediumgrey, bordergrey } = color;
+const { ivory, darkgrey, brown, mediumgrey, bordergrey } = color;
 
 interface FormData {
   profileImage: Blob | null;
@@ -51,7 +53,7 @@ const Mypage = () => {
     setFormData({ profileImage: profileImage });
     setCount(count + 1);
   }
-  console.log('info', info);
+
   const UserImg = formData.profileImage as unknown as string;
   const goEditPage = () => {
     navigate('/userinfoedit', {
@@ -59,14 +61,14 @@ const Mypage = () => {
         petName: info.petName,
         code: info.address,
         age: info.age,
-        gender: info.isMale,
-        species: info.isCat,
+        isMale: info.isMale,
+        isCat: info.isCat,
         profileImage: formData,
       },
     });
   };
   const logoutHandler = () => {
-    if (!confirm('로그아웃하시겠습니까?')) {
+    if (!confirm('로그아웃 하시겠습니까?')) {
       alert('취소 되었습니다.');
     } else {
       petLogout().then(() => navigate('/'));
@@ -80,7 +82,27 @@ const Mypage = () => {
       <Container>
         <ProfileContainerBox>
           <ProfileBox>
-            <img className='profile' src={UserImg}></img>
+            <AvatarDiv>
+              {UserImg ? (
+                <img
+                  className='profile'
+                  src={UserImg}
+                  style={{ margin: 'auto', width: '175px', height: '175px' }}
+                ></img>
+              ) : info.isCat === 'CAT' ? (
+                <img
+                  className='baseimojidog'
+                  src={Dog}
+                  style={{ width: '100px', height: '100px' }}
+                ></img>
+              ) : (
+                <img
+                  className='baseimojicat'
+                  src={Cat}
+                  style={{ width: '100px', height: '100px' }}
+                ></img>
+              )}
+            </AvatarDiv>
           </ProfileBox>
           <InfoBox>
             <InfoTopBox>
@@ -148,14 +170,30 @@ const ProfileContainerBox = styled.div`
   display: flex;
 `;
 
-const ProfileBox = styled.div`
-  .profile {
-    width: 207px;
+const ProfileBox = styled.div``;
+
+const AvatarDiv = styled.div`
+  width: 175px;
+  height: 175px;
+  border-radius: 50%;
+  overflow: hidden;
+  font-size: 100px;
+  background-color: ${ivory};
+  line-height: 180px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    object-fit: cover;
   }
 `;
 
 const InfoBox = styled.div`
   margin-left: 30px;
+  width: 100%;
+  padding: 30px;
 `;
 
 const InfoTopBox = styled.div`
@@ -216,7 +254,9 @@ const InfoPosBox = styled.div`
   margin-left: 5px;
 `;
 
-const WriteContainerBox = styled.div``;
+const WriteContainerBox = styled.div`
+  padding: 20px;
+`;
 
 const WriteTitleBox = styled.div`
   font-size: 24px;
