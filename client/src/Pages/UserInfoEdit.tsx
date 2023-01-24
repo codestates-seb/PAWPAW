@@ -2,61 +2,56 @@ import React, { FC, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
+
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
 import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
-const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
+const { ivory, brown, yellow, darkivory, bordergrey } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
-const url = process.env.REACT_APP_API_ROOT;
+const headers = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: jwtToken,
+  Refresh: refreshToken,
+};
 
 interface FormData {
   profileImage: Blob | null;
 }
+
 interface Info {
   petName: string;
   isMale: 'MALE' | 'FEMALE';
   isCat: 'CAT' | 'DOG';
   age: number;
-  address: string | null;
 }
 
 const UserInfoEdit: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const petName = location.state.petName;
-  const age = location.state.age as number;
-  const gender = location.state.gender;
-  const species = location.state.species;
-  const code = location.state.code;
-  const profileImage = location.state.profileImage;
-  // const imgUrl = profileImage.profileImage;
-  // const files = new File([imgUrl], `${imgUrl}`, { type: 'image/png' });
-  // console.log(files);
-  const [renderCount, setRenderCount] = useState<number>(0);
-  const [isPetName, setIsPetName] = useState<string>(petName);
+  const petId: string | null = localStorage.getItem('petId');
+  const { petName, age, isMale, isCat, code, profileImage } = location.state;
+  const [info, setInfo] = useState<Info>({
+    petName: petName,
+    isMale: isMale,
+    isCat: isCat,
+    age: age,
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const [fileImage, setFileImage] = useState<string>();
-  const [isMale, setIsMale] = useState<'MALE' | 'FEMALE'>(gender);
-  const [isCat, setIsCat] = useState<'CAT' | 'DOG'>(species);
-  const [isAge, setIsAge] = useState<number>(age);
   const [address, setAddress] = useState<number | null>(code);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const petId: string | null = localStorage.getItem('petId');
-  // if (renderCount === 0) {
-  //   setRenderCount(renderCount + 1);
-  //   setFormData({ ...formData, ['profileImage']: files });
-  //   console.log('여긴가', formData);
-  // }
+
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -70,26 +65,26 @@ const UserInfoEdit: FC = () => {
   };
 
   const catHandler = () => {
-    if (isCat === 'CAT') {
-      setIsCat('DOG');
+    if (info.isCat === 'CAT') {
+      setInfo({ ...info, isCat: 'DOG' });
     } else {
-      setIsCat('CAT');
+      setInfo({ ...info, isCat: 'CAT' });
     }
-    console.log(isCat);
   };
 
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsAge(Number(e.target.value));
+    setInfo({ ...info, age: Number(e.target.value) });
     console.log((e.target as HTMLInputElement).value);
   };
 
   const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsPetName((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
+    setInfo({ ...info, petName: e.target.value });
   };
 
   const deleteHandler = () => {
     petDelete(petId as string);
+    navigate('/');
+    alert('탈퇴되었습니다.');
   };
 
   const openAddressModal = () => {
@@ -97,38 +92,32 @@ const UserInfoEdit: FC = () => {
   };
 
   const updateHandler = async () => {
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-      Authorization: jwtToken,
-      Refresh: refreshToken,
-    };
+    if (address) {
+      const data = new FormData();
+      data.append('petName', info.petName);
+      data.append('age', info.age.toString());
+      data.append('gender', info.isMale);
+      data.append('species', info.isCat);
+      data.append('code', address.toString());
+      formData.profileImage
+        ? data.append('profileImage', formData.profileImage)
+        : console.log('img전송x', formData.profileImage);
 
-    const data = new FormData();
-    data.append('petName', isPetName);
-    data.append('age', isAge.toString());
-    data.append('gender', gender);
-    data.append('species', species);
-    data.append('code', '11680');
-    formData.profileImage !== null
-      ? data.append('profileImage', formData.profileImage)
-      : console.log('img전송x', formData.profileImage);
-    console.log(data);
-    console.log(formData);
-    console.log(formData.profileImage);
+      for (const key of data.keys()) {
+        console.log(key);
+      }
+      for (const value of data.values()) {
+        console.log(value);
+      }
 
-    for (const key of data.keys()) {
-      console.log(key);
-    }
-    for (const value of data.values()) {
-      console.log(value);
-    }
-    try {
-      await axios.patch(`${url}/pets/${petId}`, data, { headers });
-      navigate('/mypage');
-      // 비동기 에러 날 것 같으면 .then 사용
-    } catch (error) {
-      console.error('Error', error);
-      alert(error);
+      try {
+        await axios.patch(`${process.env.REACT_APP_API_ROOT}/pets/${petId}`, data, { headers });
+        navigate('/mypage');
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        console.error('Error', error);
+        alert(error);
+      }
     }
   };
 
@@ -138,6 +127,7 @@ const UserInfoEdit: FC = () => {
       <Box>
         <LeftDiv>
           <AvatarDiv>
+            {/* 업로드한 파일 이미지 없으면 ? 기존 프로필 이미지 없으면? 기본 고양이/강아지 이미지 */}
             {fileImage ? (
               <img
                 className='userprofile'
@@ -145,16 +135,23 @@ const UserInfoEdit: FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : isCat === 'DOG' ? (
+            ) : profileImage.profileImage ? (
               <img
-                className='baseimojidog'
-                src={Dog}
+                className='userprofile'
+                alt='sample'
+                src={profileImage.profileImage}
+                style={{ margin: 'auto', width: '175px', height: '175px' }}
+              />
+            ) : info.isCat === 'CAT' ? (
+              <img
+                className='baseimojicat'
+                src={Cat}
                 style={{ width: '100px', height: '100px' }}
               ></img>
             ) : (
               <img
-                className='baseimojicat'
-                src={Cat}
+                className='baseimojidog'
+                src={Dog}
                 style={{ width: '100px', height: '100px' }}
               ></img>
             )}
@@ -187,7 +184,7 @@ const UserInfoEdit: FC = () => {
             {isEdit ? (
               <Input type='text' width={'150px'} placeholder={petName} onChange={petNameHandler} />
             ) : (
-              <span className='name'>{petName}</span>
+              <span className='name'>{info.petName}</span>
             )}
             <span className='icon' onClick={() => setIsEdit(!isEdit)}>
               <Icon icon='mdi:pencil' color='white' style={{ fontSize: '24px' }} />
@@ -198,12 +195,7 @@ const UserInfoEdit: FC = () => {
         <RightDiv>
           <InputsDiv>
             <InputDiv>
-              <Input
-                type='text'
-                placeholder={`${age} 살`}
-                marginBottom='40px'
-                onChange={ageHandler}
-              />
+              <Input type='text' placeholder={`${age}`} marginBottom='35px' onChange={ageHandler} />
               <SvgSpan>
                 <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '24px' }} />
               </SvgSpan>
@@ -213,6 +205,7 @@ const UserInfoEdit: FC = () => {
                 type='text'
                 readOnly={true}
                 placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
+                marginBottom='35px'
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>
@@ -221,12 +214,12 @@ const UserInfoEdit: FC = () => {
             </InputDiv>
           </InputsDiv>
 
-          <GenderDiv isMale={isMale}>
+          <GenderDiv isMale={info.isMale}>
             <TextSpan>성별</TextSpan>
-            <IconButton onClick={() => setIsMale('MALE')}>
+            <IconButton onClick={() => setInfo({ ...info, isMale: 'MALE' })}>
               <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '48px' }} />
             </IconButton>
-            <IconButton onClick={() => setIsMale('FEMALE')}>
+            <IconButton onClick={() => setInfo({ ...info, isMale: 'FEMALE' })}>
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
@@ -236,23 +229,23 @@ const UserInfoEdit: FC = () => {
             <ToggleDiv>
               <CircleDiv
                 onClick={catHandler}
-                isCat={isCat}
-                className={isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+                isCat={info.isCat}
+                className={info.isCat === 'CAT' ? 'cat' : 'dog'}
               />
-              <CatSpan onClick={catHandler} isCat={isCat}>
+              <CatSpan onClick={catHandler} isCat={info.isCat}>
                 <img src={Cat} style={{ width: '36px' }}></img>
               </CatSpan>
-              <DogSpan onClick={catHandler} isCat={isCat}>
+              <DogSpan onClick={catHandler} isCat={info.isCat}>
                 <img src={Dog} style={{ width: '36px' }}></img>
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
           <ButtonDiv>
             <Button text='수정' onClick={updateHandler} />
+            <DeleteButton onClick={deleteHandler}>회원 탈퇴</DeleteButton>
           </ButtonDiv>
         </RightDiv>
       </Box>
-      <DeleteButton onClick={deleteHandler} />
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
@@ -355,11 +348,11 @@ const GenderDiv = styled.div<{ isMale: string }>`
   align-items: center;
 
   button:first-of-type {
-    ${(props) => props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'MALE' && `background-color: ${darkivory}`}
   }
 
   button:last-of-type {
-    ${(props) => !props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'FEMALE' && `background-color: ${darkivory}`}
   }
 `;
 
@@ -409,11 +402,11 @@ const CircleDiv = styled.div<{ isCat: string; className: string }>`
   transition: all 0.6s;
 
   &.cat {
-    transform: translateX(104px);
+    transform: translateX(2px);
   }
 
   &.dog {
-    transform: translateX(2px);
+    transform: translateX(104px);
   }
 `;
 
@@ -435,16 +428,22 @@ const DogSpan = styled.span<{ isCat: string }>`
 `;
 const ButtonDiv = styled.div`
   margin-top: 45px;
+  position: relative;
 `;
 
 const DeleteButton = styled.div`
-  z-index: 999;
-  color: ${red};
-  font-size: 15px;
-  font-weight: Bold;
-  left: 1000px;
-  top: 1000px;
+  z-index: 9;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  top: 70px;
+  left: -465px;
   cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const WhiteCirclePencilSVG = (
