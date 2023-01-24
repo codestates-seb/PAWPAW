@@ -5,7 +5,6 @@ import UserInfo from './UserInfo';
 import UserInfoEdit from './UserInfoEdit';
 import HomeMap from '../Map/HomeMap';
 import Mypage from './Mypage';
-import Post from './Post';
 import PrivateRoute from '../Components/PrivateRouter';
 
 export default function Router() {
@@ -21,7 +20,6 @@ export default function Router() {
           <Route path='/userinfoedit' element={<UserInfoEdit />} />
           <Route path='/map' element={<HomeMap />} />
           <Route path='/mypage' element={<Mypage />} />
-          <Route path='/post' element={<Post />} />
         </Route>
       </Routes>
     </BrowserRouter>
