@@ -146,7 +146,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     setTest(test + 1);
     mapReviewEdit(id, review);
     console.log(test);
-    alert(' 되었습니다.');
+    alert('작성 되었습니다.');
   };
   const reviewUpdateHandler = (commentId: number) => {
     if (!confirm('정말 수정 하시겠어요?')) {

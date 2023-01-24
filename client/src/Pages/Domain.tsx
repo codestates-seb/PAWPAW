@@ -1,36 +1,27 @@
-import React, { useState } from 'react';
-import Header from '../Components/Header';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './Login';
+import SignUp from './SignUp';
+import UserInfo from './UserInfo';
+import UserInfoEdit from './UserInfoEdit';
+import HomeMap from '../Map/HomeMap';
+import Mypage from './Mypage';
+import PrivateRoute from '../Components/PrivateRouter';
 
-const Container = styled.div``;
-
-const Body = styled.div`
-  padding-top: 50px;
-`;
-
-const Domain: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true); // 나중에 false로 수정하기
-  const navigate = useNavigate();
-
+export default function Router() {
   return (
-    <>
-      <Container>
-        <Header />
-        <Body>
-          <div>
-            <button onClick={() => navigate('/login')}>로그인</button>
-            <button onClick={() => navigate('/signup')}>회원가입</button>
-            <button onClick={() => navigate('/userinfo')}>사용자 상세 정보 입력</button>
-            <button onClick={() => navigate('/userinfoedit')}>사용자 정보 수정</button>
-            <button onClick={() => navigate('/map')}>맵</button>
-            <button onClick={() => navigate('/modal')}>모달</button>
-            <button onClick={() => navigate('/mypage')}>마이페이지</button>
-          </div>
-        </Body>
-      </Container>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<PrivateRoute authentication={false} />}>
+          <Route path='/' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/userinfo' element={<UserInfo />} />
+        </Route>
+        <Route element={<PrivateRoute authentication={true} />}>
+          <Route path='/userinfoedit' element={<UserInfoEdit />} />
+          <Route path='/map' element={<HomeMap />} />
+          <Route path='/mypage' element={<Mypage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
-};
-
-export default Domain;
+}

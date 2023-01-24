@@ -25,7 +25,6 @@ export interface IProps {
 }
 
 interface Info {
-  petName: string;
   isMale: 'MALE' | 'FEMALE';
   isCat: 'CAT' | 'DOG';
   age: number;
@@ -36,7 +35,6 @@ const UserInfo: React.FC = () => {
   const location = useLocation();
 
   const [info, setInfo] = useState<Info>({
-    petName: 'test',
     isMale: 'MALE',
     isCat: 'CAT',
     age: 0,
@@ -92,11 +90,11 @@ const UserInfo: React.FC = () => {
     const data = new FormData();
     data.append('loginId', id);
     data.append('password', password);
-    data.append('petName', info.petName);
+    data.append('petName', petname);
     data.append('age', info.age.toString());
     data.append('species', 'CAT');
     data.append('gender', info.isMale);
-    data.append('code', '11680');
+    data.append('code', `${address}`);
     data.append('profileImage', formData.profileImage);
     console.log(data);
     console.log(formData);

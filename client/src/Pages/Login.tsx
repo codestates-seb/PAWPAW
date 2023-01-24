@@ -21,7 +21,7 @@ interface Info {
   sub: string;
   code: number;
 }
-const sampleAddress = 11680;
+
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -105,8 +105,8 @@ const Login: React.FC = () => {
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('code', code.toString());
         localStorage.setItem('petId', petid);
-        navigate('/map');
-        // window.location.reload();
+        localStorage.setItem('count', '1');
+        navigate('/map')
       } catch (error) {
         console.error('Error', error);
         alert(error);
