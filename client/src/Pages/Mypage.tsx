@@ -69,7 +69,7 @@ const Mypage = () => {
     if (!confirm('로그아웃하시겠습니까?')) {
       alert('취소 되었습니다.');
     } else {
-      petLogout().then(() => navigate('/login'));
+      petLogout().then(() => navigate('/'));
       alert('로그아웃 되었습니다.');
     }
   };

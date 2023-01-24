@@ -28,7 +28,6 @@ export interface IProps {
 }
 
 interface Info {
-  petName: string;
   isMale: 'MALE' | 'FEMALE';
   isCat: 'CAT' | 'DOG';
   age: number;
@@ -39,7 +38,6 @@ const UserInfo: React.FC = () => {
   const location = useLocation();
 
   const [info, setInfo] = useState<Info>({
-    petName: 'test',
     isMale: 'MALE',
     isCat: 'CAT',
     age: 0,
@@ -118,7 +116,6 @@ const UserInfo: React.FC = () => {
       for (const value of data.values()) {
         console.log(value);
       }
-
       try {
         await axios.post(`${process.env.REACT_APP_API_ROOT}/pets/signup`, data, { headers });
         alert('회원가입이 완료되었습니다.');
@@ -128,7 +125,6 @@ const UserInfo: React.FC = () => {
         console.error('Error', error);
         alert(error);
       }
-    }
   };
 
   const printErrorMessage = () => {

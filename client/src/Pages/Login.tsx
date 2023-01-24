@@ -65,8 +65,8 @@ const Login: React.FC = () => {
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('petId', petid);
-        navigate('/map');
-        // window.location.reload();
+        localStorage.setItem('count', '1');
+        navigate('/map')
       } catch (error) {
         console.error('Error', error);
         setPwErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다.');

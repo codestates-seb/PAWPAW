@@ -8,6 +8,7 @@ import color from '../color';
 import { CProps } from '../Map/Marker';
 import { mapReviewEdit, mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi';
 import headers from '../util/headers';
+import load from '../img/paw.gif';
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -54,7 +55,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const [review, setReview] = useState<string>('');
   const [editReview, setEditReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
   const [test, setTest] = useState<number>(0);
   const [myPick, setMyPick] = useState<boolean>(bookmark);
   const [mapdata, setMapdata] = useState<MapData>({
@@ -82,15 +83,25 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   }, [test]);
 
   async function getData() {
+    setLoading(true);
+    await delay(1000);
+
     await axios
       .get(`${url}/maps/details/${id}`, { headers })
       .then((res) => {
         setResData(res.data);
         setMapdata(res.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  function delay(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
 
   const bookmarkHandler = () => {
@@ -135,7 +146,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     setTest(test + 1);
     mapReviewEdit(id, review);
     console.log(test);
-    alert(' 되었습니다.');
+    alert('작성 되었습니다.');
   };
   const reviewUpdateHandler = (commentId: number) => {
     if (!confirm('정말 수정 하시겠어요?')) {
@@ -166,145 +177,155 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     <div>
       {mapdata.reviews !== null ? (
         <Container onClick={(e) => e.stopPropagation()}>
-          <FlexBox>
-            <InfoDiv>
-              {/* 사진 */}
-              <Image src={ModalSample} />
+          {loading ? (
+            <Loading>
+              <img className='load' src={load}></img>
+            </Loading>
+          ) : (
+            <FlexBox>
+              <InfoDiv>
+                {/* 사진 */}
+                <Image src={ModalSample} />
 
-              {/* 이름 */}
-              <InfoTitleBox>
-                <InfoTitle>{mapdata.details.name}</InfoTitle>
-                <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
-                <BookmarkButton onClick={bookmarkHandler}>
-                  {myPick === false ? (
-                    <Icon icon='ic:round-star-outline' color={brown} style={{ fontSize: '30px' }} />
-                  ) : (
-                    <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
-                  )}
-                </BookmarkButton>
-              </InfoTitleBox>
+                {/* 이름 */}
+                <InfoTitleBox>
+                  <InfoTitle>{mapdata.details.name}</InfoTitle>
+                  <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
+                  <BookmarkButton onClick={bookmarkHandler}>
+                    {myPick === false ? (
+                      <Icon
+                        icon='ic:round-star-outline'
+                        color={brown}
+                        style={{ fontSize: '30px' }}
+                      />
+                    ) : (
+                      <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
+                    )}
+                  </BookmarkButton>
+                </InfoTitleBox>
 
-              {/* 정보 */}
-              <InfoContentBox>
-                <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-                <InfoContent>{mapdata.details.mapAddress}</InfoContent>
-              </InfoContentBox>
-              <InfoContentBox>
-                <Icon
-                  icon='ic:round-access-time-filled'
-                  color={brown}
-                  style={{ fontSize: '30px' }}
-                />
-                <InfoContent>{mapdata.details.operationTime}</InfoContent>
-              </InfoContentBox>
-              <InfoContentBox>
-                <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-                <InfoContent>{mapdata.details.tel}</InfoContent>
-              </InfoContentBox>
-              <InfoContentBox>
-                <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-                <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
-              </InfoContentBox>
-            </InfoDiv>
-
-            {/* 리뷰 */}
-            <ReviewBox>
-              <ReviewTitle>리뷰</ReviewTitle>
-              <Reviews>
-                {mapdata.reviews.length === 0 ? (
-                  <EmptyMessage>
-                    리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-                  </EmptyMessage>
-                ) : (
-                  mapdata.reviews.map((el: any, idx: number) => {
-                    return (
-                      <Review key={idx}>
-                        {el.commentId !== editActivate ? (
-                          <ReviewWrite>
-                            <ReviewUserBox>
-                              <ReviewUserImage src={UserImg1} />
-                              <ReviewUserName>{el.petName}</ReviewUserName>
-                            </ReviewUserBox>
-                            <ReviewTextBox>
-                              <ReviewText>
-                                {el.contents}
-                                {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                                {el.petId === Number(petId) ? (
-                                  <EditDelButtons>
-                                    <button onClick={() => reviewActivateHandler(el.commentId)}>
-                                      <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
-                                    </button>
-                                    <button onClick={() => reviewDeleteHandler(el.commentId)}>
-                                      <Icon
-                                        icon='material-symbols:delete-outline-rounded'
-                                        style={{ fontSize: '15px' }}
-                                      />
-                                    </button>
-                                  </EditDelButtons>
-                                ) : (
-                                  ''
-                                )}
-                              </ReviewText>
-                              <ReviewDate>{el.createdAt}</ReviewDate>
-                            </ReviewTextBox>
-                          </ReviewWrite>
-                        ) : (
-                          <ReviewWrite>
-                            <ReviewUserBox>
-                              <ReviewUserImage src={UserImg1} />
-                              <ReviewUserName>{el.username}</ReviewUserName>
-                            </ReviewUserBox>
-                            <ReviewInputTextBox>
-                              <ReviewInputBox>
-                                <ReviewInput
-                                  type='text'
-                                  placeholder={el.content}
-                                  onChange={editReviewHandler}
-                                />
-                              </ReviewInputBox>
-                              <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
-                                <Icon
-                                  icon='material-symbols:check-small-rounded'
-                                  color={yellow}
-                                  style={{ fontSize: '20px' }}
-                                />
-                              </ReviewButton>
-                            </ReviewInputTextBox>
-                          </ReviewWrite>
-                        )}
-                      </Review>
-                    );
-                  })
-                )}
-              </Reviews>
-            </ReviewBox>
-            {/* 리뷰 작성 */}
-            <ReviewWrite>
-              <ReviewUserBox>
-                <ReviewUserImage src={UserImg1} />
-                <ReviewUserName>유저 이름</ReviewUserName>
-              </ReviewUserBox>
-              <ReviewInputTextBox>
-                <ReviewInputBox>
-                  <ReviewInput
-                    type='text'
-                    placeholder='이 공간이 어땠나요?'
-                    onChange={reviewHandler}
+                {/* 정보 */}
+                <InfoContentBox>
+                  <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
+                  <InfoContent>{mapdata.details.mapAddress}</InfoContent>
+                </InfoContentBox>
+                <InfoContentBox>
+                  <Icon
+                    icon='ic:round-access-time-filled'
+                    color={brown}
+                    style={{ fontSize: '30px' }}
                   />
-                </ReviewInputBox>
-                <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
-              </ReviewInputTextBox>
-            </ReviewWrite>
-            {/* 닫기 버튼 */}
-            <CloseBox onClick={selectHandler}>
-              <Icon
-                className='close'
-                icon='material-symbols:arrow-back-ios-rounded'
-                color='#FFF8F0'
-                style={{ fontSize: '45px' }}
-              />
-            </CloseBox>
-          </FlexBox>
+                  <InfoContent>{mapdata.details.operationTime}</InfoContent>
+                </InfoContentBox>
+                <InfoContentBox>
+                  <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
+                  <InfoContent>{mapdata.details.tel}</InfoContent>
+                </InfoContentBox>
+                <InfoContentBox>
+                  <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
+                  <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
+                </InfoContentBox>
+              </InfoDiv>
+
+              {/* 리뷰 */}
+              <ReviewBox>
+                <ReviewTitle>리뷰</ReviewTitle>
+                <Reviews>
+                  {mapdata.reviews.length === 0 ? (
+                    <EmptyMessage>
+                      리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                    </EmptyMessage>
+                  ) : (
+                    mapdata.reviews.map((el: any, idx: number) => {
+                      return (
+                        <Review key={idx}>
+                          {el.commentId !== editActivate ? (
+                            <ReviewWrite>
+                              <ReviewUserBox>
+                                <ReviewUserImage src={UserImg1} />
+                                <ReviewUserName>{el.petName}</ReviewUserName>
+                              </ReviewUserBox>
+                              <ReviewTextBox>
+                                <ReviewText>
+                                  {el.contents}
+                                  {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                                  {el.petId === Number(petId) ? (
+                                    <EditDelButtons>
+                                      <button onClick={() => reviewActivateHandler(el.commentId)}>
+                                        <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
+                                      </button>
+                                      <button onClick={() => reviewDeleteHandler(el.commentId)}>
+                                        <Icon
+                                          icon='material-symbols:delete-outline-rounded'
+                                          style={{ fontSize: '15px' }}
+                                        />
+                                      </button>
+                                    </EditDelButtons>
+                                  ) : (
+                                    ''
+                                  )}
+                                </ReviewText>
+                                <ReviewDate>{el.createdAt}</ReviewDate>
+                              </ReviewTextBox>
+                            </ReviewWrite>
+                          ) : (
+                            <ReviewWrite>
+                              <ReviewUserBox>
+                                <ReviewUserImage src={UserImg1} />
+                                <ReviewUserName>{el.username}</ReviewUserName>
+                              </ReviewUserBox>
+                              <ReviewInputTextBox>
+                                <ReviewInputBox>
+                                  <ReviewInput
+                                    type='text'
+                                    placeholder={el.content}
+                                    onChange={editReviewHandler}
+                                  />
+                                </ReviewInputBox>
+                                <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
+                                  <Icon
+                                    icon='material-symbols:check-small-rounded'
+                                    color={yellow}
+                                    style={{ fontSize: '20px' }}
+                                  />
+                                </ReviewButton>
+                              </ReviewInputTextBox>
+                            </ReviewWrite>
+                          )}
+                        </Review>
+                      );
+                    })
+                  )}
+                </Reviews>
+              </ReviewBox>
+              {/* 리뷰 작성 */}
+              <ReviewWrite>
+                <ReviewUserBox>
+                  <ReviewUserImage src={UserImg1} />
+                  <ReviewUserName>유저 이름</ReviewUserName>
+                </ReviewUserBox>
+                <ReviewInputTextBox>
+                  <ReviewInputBox>
+                    <ReviewInput
+                      type='text'
+                      placeholder='이 공간이 어땠나요?'
+                      onChange={reviewHandler}
+                    />
+                  </ReviewInputBox>
+                  <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
+                </ReviewInputTextBox>
+              </ReviewWrite>
+              {/* 닫기 버튼 */}
+              <CloseBox onClick={selectHandler}>
+                <Icon
+                  className='close'
+                  icon='material-symbols:arrow-back-ios-rounded'
+                  color='#FFF8F0'
+                  style={{ fontSize: '45px' }}
+                />
+              </CloseBox>
+            </FlexBox>
+          )}
         </Container>
       ) : (
         <div>로딩중!</div>
@@ -319,6 +340,20 @@ const Container = styled.div`
   position: relative;
   z-index: 100;
   box-shadow: rgba(149, 157, 165, 0.8) 14px 0px 14px -14px;
+  background-color: white;
+`;
+
+const Loading = styled.div`
+  background-color: #fdfcfc;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .load {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const FlexBox = styled.div`
@@ -411,11 +446,11 @@ const Reviews = styled.div`
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background-color: #DCCDC8;
+    background-color: #dccdc8;
     border-radius: 100px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #A9908D;
+    background-color: #a9908d;
     border-radius: 100px;
   }
 `;
