@@ -1,6 +1,7 @@
 package animalsquad.server.domain.pet.controller;
 
 import animalsquad.server.domain.pet.dto.PetPatchDto;
+import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.dto.PetPostDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.mapper.PetMapper;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Map;
@@ -39,14 +41,15 @@ public class PetController {
 
         return new ResponseEntity(result, HttpStatus.OK);
     }
-    //TODO: 관리자 승인 요청
+
     @PostMapping ("/admin/{pet-id}")
     public ResponseEntity verifiedAdmin(@PathVariable("pet-id") long id,
-                                        String adminCode, //body?
-                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+                                        @RequestBody PetPostAdminDto petPostAdminDto,
+                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal,
+                                        HttpServletResponse response) {
         long petId = principal.getId();
 
-        petService.verifiedAdmin(id, petId, adminCode);
+        petService.verifiedAdmin(id, petId, petPostAdminDto, response);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -2,10 +2,12 @@ package animalsquad.server.domain.pet.service;
 
 import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
+import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.global.auth.dto.AuthRequestDto;
+import animalsquad.server.global.auth.dto.AuthResponseDto;
 import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
@@ -19,10 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -35,6 +39,7 @@ public class PetService {
     private final PasswordEncoder passwordEncoder;
     private final FileUploadService fileUploadService;
     private final RedisTemplate redisTemplate;
+    private final JwtTokenProvider jwtTokenProvider;
     private final String folder = "profile";
 
 
@@ -140,17 +145,24 @@ public class PetService {
         }
         petRepository.deleteById(id);
     }
-    // TODO: 관리자 승인 요청 (권한 컬럼 2개?)
-    public void verifiedAdmin(long id, long petId, String adminCode) {
+    // 관리자 권한 승인 요청
+    public void verifiedAdmin(long id, long petId, PetPostAdminDto petPostAdminDto, HttpServletResponse response) {
         Pet findPet = findVerifiedPet(id);
 
         verifiedToken(findPet, petId);
 
-        if(!adminCode.equals("동물특공대")) {
+        if(!petPostAdminDto.getAdminCode().equals("동물특공대")) {
             throw new BusinessLogicException(ExceptionCode.ADMIN_CODE_NOT_MATCH);
         }
         findPet.getRoles().add((Role.ROLE_ADMIN.name()));
         petRepository.save(findPet);
+
+        AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(findPet);
+
+        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
+        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+
+        redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
     }
 
     private void verifiedToken(Pet pet, long petId) {
