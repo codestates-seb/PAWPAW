@@ -1,19 +1,22 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Icon } from '@iconify/react';
+
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
+const headers = {
+  'Content-Type': 'multipart/form-data',
+};
 
-const { ivory, brown, yellow, darkivory, bordergrey } = color;
-const url = process.env.REACT_APP_API_ROOT;
 interface FormData {
   profileImage: Blob | null;
 }
@@ -44,6 +47,11 @@ const UserInfo: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const { id, petname, password } = location.state;
   const [fileImage, setFileImage] = useState<string>();
+  const [ageErrorMessage, setAgeErrorMessage] = useState<string>('');
+  const [addrErrorMessage, setAddrErrorMessage] = useState<string>('');
+  const ageRef = useRef<HTMLInputElement>(null);
+  const addrRef = useRef<HTMLInputElement>(null);
+
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -69,9 +77,11 @@ const UserInfo: React.FC = () => {
     }
     console.log('1', info.isCat);
   };
+
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
+
   const backgroundRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
   // 배경 클릭시 모달이 닫힌다.
@@ -82,50 +92,64 @@ const UserInfo: React.FC = () => {
   });
 
   const submitHandler = async () => {
-    if (!formData.profileImage) return;
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-    };
+    printErrorMessage();
 
-    const data = new FormData();
-    data.append('loginId', id);
-    data.append('password', password);
-    data.append('petName', petname);
-    data.append('age', info.age.toString());
-    data.append('species', 'CAT');
-    data.append('gender', info.isMale);
-    data.append('code', `${address}`);
-    data.append('profileImage', formData.profileImage);
-    console.log(data);
-    console.log(formData);
-    console.log(formData.profileImage);
-    console.log(`file size = ${formData.profileImage.size} byte`);
-    for (const key of data.keys()) {
-      console.log(key);
-    }
-    for (const value of data.values()) {
-      console.log(value);
-    }
-    if (info.age === 0) {
-      alert('나이가 입력 되어야 합니다.');
-    } else if (id === '' || password === '') {
-      alert('입력되지 않은 값이 있습니다.');
-    } else {
+    if (!formData.profileImage) return;
+    if (info.age !== 0 && id !== '' && password !== '' && address) {
+      const data = new FormData();
+      data.append('loginId', id);
+      data.append('password', password);
+      data.append('petName', info.petName);
+      data.append('age', info.age.toString());
+      data.append('species', 'CAT');
+      data.append('gender', info.isMale);
+      data.append('code', address.toString());
+      data.append('profileImage', formData.profileImage);
+      console.log(data);
+      console.log(formData);
+      console.log(formData.profileImage);
+      console.log(`file size = ${formData.profileImage.size} byte`);
+
+      for (const key of data.keys()) {
+        console.log(key);
+      }
+      for (const value of data.values()) {
+        console.log(value);
+      }
       try {
-        await axios.post(`${url}/pets/signup`, data, { headers });
+        await axios.post(`${process.env.REACT_APP_API_ROOT}/pets/signup`, data, { headers });
+        alert('회원가입이 완료되었습니다.');
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
         console.error('Error', error);
         alert(error);
       }
+  };
+
+  const printErrorMessage = () => {
+    if (info.age === 0) {
+      setAgeErrorMessage('나이를 입력해주세요.');
+      ageRef.current && ageRef.current.focus(); // age에 포커스
+    } else {
+      setAgeErrorMessage('');
+    }
+
+    if (!address) {
+      setAddrErrorMessage('주소를 선택해주세요.');
+      addrRef.current && addrRef.current.focus(); // address에 포커스
+    } else {
+      setAddrErrorMessage('');
     }
   };
+
   return (
     <Container>
       <Background ref={backgroundRef} />
       <Box>
+        {/* 왼쪽 영역 */}
         <LeftDiv>
+          {/* 아바타 이미지 */}
           <AvatarDiv>
             {fileImage ? (
               <img
@@ -148,7 +172,11 @@ const UserInfo: React.FC = () => {
               ></img>
             )}
           </AvatarDiv>
+
+          {/* 반려동물 이름 */}
           <NameDiv>{petname}</NameDiv>
+
+          {/* 파일 선택 */}
           <PlusDiv>
             <form>
               <label className='input-file-button' htmlFor='input-file'>
@@ -179,21 +207,40 @@ const UserInfo: React.FC = () => {
           </PlusDiv>
           <input type='file' id='input-file' style={{ display: 'none' }} />
         </LeftDiv>
+
+        {/* 오른쪽 영역 */}
         <RightDiv>
           <InputsDiv>
-            <Input type='text' placeholder='나이' marginBottom='40px' onChange={ageHandler} />
+            {/* 나이 */}
+            <InputDiv>
+              <Input
+                type='text'
+                placeholder='나이'
+                marginBottom='35px'
+                onChange={ageHandler}
+                ref={ageRef}
+              />
+              <MessageDiv>{ageErrorMessage}</MessageDiv>
+            </InputDiv>
+
+            {/* 주소 */}
             <InputDiv>
               <Input
                 type='text'
                 readOnly={true}
                 placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
+                marginBottom='35px'
                 openAddressModal={openAddressModal}
+                ref={addrRef}
               />
               <SvgSpan onClick={openAddressModal}>
                 <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
               </SvgSpan>
+              <MessageDiv>{addrErrorMessage}</MessageDiv>
             </InputDiv>
           </InputsDiv>
+
+          {/* 성별 */}
           <GenderDiv isMale={info.isMale}>
             <TextSpan>성별</TextSpan>
             <IconButton onClick={() => setInfo({ ...info, isMale: 'MALE' })}>
@@ -203,6 +250,8 @@ const UserInfo: React.FC = () => {
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
+
+          {/* 강아지 or 고양이 */}
           <TypeDiv>
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
@@ -219,11 +268,14 @@ const UserInfo: React.FC = () => {
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
+
           <ButtonDiv>
             <Button text='시작하기' onClick={submitHandler} />
           </ButtonDiv>
         </RightDiv>
       </Box>
+
+      {/* 주소 모달창 */}
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
@@ -261,6 +313,7 @@ const AvatarDiv = styled.div`
 
   .userprofile {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 
@@ -275,7 +328,6 @@ const PlusDiv = styled.div`
   position: absolute;
   top: 270px;
   right: 525px;
-  cursor: pointer;
 
   &.invisible {
     display: none;
@@ -283,6 +335,10 @@ const PlusDiv = styled.div`
 
   &:hover + .invisible {
     display: block;
+  }
+
+  label {
+    cursor: pointer;
   }
 `;
 
@@ -394,6 +450,16 @@ const DogSpan = styled.span<{ isCat: string }>`
 
 const ButtonDiv = styled.div`
   margin-top: 45px;
+`;
+
+const MessageDiv = styled.div`
+  width: 102%;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${red};
+  position: absolute;
+  top: 69%;
+  text-align: center;
 `;
 
 const WhitePlusSVG = (

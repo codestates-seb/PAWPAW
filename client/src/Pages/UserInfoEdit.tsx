@@ -2,11 +2,12 @@ import React, { FC, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
+
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import { Icon } from '@iconify/react';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
 import { petDelete } from '../util/UserApi';
@@ -16,7 +17,11 @@ import Dog from '../img/dogface.png';
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
-const url = process.env.REACT_APP_API_ROOT;
+const headers = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: jwtToken,
+  Refresh: refreshToken,
+};
 
 interface FormData {
   profileImage: Blob | null;
@@ -52,11 +57,13 @@ const UserInfoEdit: FC = () => {
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const petId: string | null = localStorage.getItem('petId');
+
   // if (renderCount === 0) {
   //   setRenderCount(renderCount + 1);
   //   setFormData({ ...formData, ['profileImage']: files });
   //   console.log('여긴가', formData);
   // }
+
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -97,40 +104,38 @@ const UserInfoEdit: FC = () => {
   };
 
   const updateHandler = async () => {
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-      Authorization: jwtToken,
-      Refresh: refreshToken,
-    };
+    if (address) {
+      const data = new FormData();
+      data.append('petName', isPetName);
+      data.append('age', isAge.toString());
+      data.append('gender', isMale);
+      data.append('species', species);
+      data.append('code', address.toString());
+      formData.profileImage !== null
+        ? data.append('profileImage', formData.profileImage)
+        : console.log('img전송x', formData.profileImage);
+      console.log(data);
+      console.log(formData);
+      console.log(formData.profileImage);
 
-    const data = new FormData();
-    data.append('petName', isPetName);
-    data.append('age', isAge.toString());
-    data.append('gender', gender);
-    data.append('species', species);
-    data.append('code', '11680');
-    formData.profileImage !== null
-      ? data.append('profileImage', formData.profileImage)
-      : console.log('img전송x', formData.profileImage);
-    console.log(data);
-    console.log(formData);
-    console.log(formData.profileImage);
-
-    for (const key of data.keys()) {
-      console.log(key);
-    }
-    for (const value of data.values()) {
-      console.log(value);
-    }
-    try {
-      await axios.patch(`${url}/pets/${petId}`, data, { headers });
-      navigate('/mypage');
-      // 비동기 에러 날 것 같으면 .then 사용
-    } catch (error) {
-      console.error('Error', error);
-      alert(error);
+      for (const key of data.keys()) {
+        console.log(key);
+      }
+      for (const value of data.values()) {
+        console.log(value);
+      }
+      try {
+        await axios.patch(`${process.env.REACT_APP_API_ROOT}/pets/${petId}`, data, { headers });
+        navigate('/mypage');
+        // 비동기 에러 날 것 같으면 .then 사용
+      } catch (error) {
+        console.error('Error', error);
+        alert(error);
+      }
     }
   };
+
+  console.log(profileImage);
 
   return (
     <Container>
@@ -145,7 +150,7 @@ const UserInfoEdit: FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : isCat === 'DOG' ? (
+            ) : isCat === 'CAT' ? (
               <img
                 className='baseimojidog'
                 src={Dog}
@@ -201,7 +206,7 @@ const UserInfoEdit: FC = () => {
               <Input
                 type='text'
                 placeholder={`${age} 살`}
-                marginBottom='40px'
+                marginBottom='35px'
                 onChange={ageHandler}
               />
               <SvgSpan>
@@ -213,6 +218,7 @@ const UserInfoEdit: FC = () => {
                 type='text'
                 readOnly={true}
                 placeholder={address === null ? '어디에 사시나요?' : `${codeToAddress(address)}`}
+                marginBottom='35px'
                 openAddressModal={openAddressModal}
               />
               <SvgSpan onClick={openAddressModal}>
@@ -355,11 +361,11 @@ const GenderDiv = styled.div<{ isMale: string }>`
   align-items: center;
 
   button:first-of-type {
-    ${(props) => props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'MALE' && `background-color: ${darkivory}`}
   }
 
   button:last-of-type {
-    ${(props) => !props.isMale && `background-color: ${darkivory}`}
+    ${(props) => props.isMale === 'FEMALE' && `background-color: ${darkivory}`}
   }
 `;
 

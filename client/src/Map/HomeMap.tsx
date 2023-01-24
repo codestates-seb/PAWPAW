@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
+import jwt_decode from 'jwt-decode';
 import color from '../color';
 import Header from '../Components/Header';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
 import { addressToCode } from '../util/ConvertAddress';
 import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
+import { Info } from '../Pages/Login';
 const { coral, brown } = color;
-const code = localStorage.getItem('code') as string;
+const jwtToken = localStorage.getItem('Authorization') as string;
+const jwtTokenDecode = jwt_decode(jwtToken) as Info;
+const code = jwtTokenDecode.code;
 
 export interface IProps {
   id: number;
@@ -35,7 +41,7 @@ const HomeMap = () => {
   const [data, setData] = useState<IProps[] | null>(null); // 데이터
 
   const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 }); // 현재 위치 좌표
-  const [address, setAddress] = useState<string | undefined>(code); // 현재 위치의 주소 코드 ex. 11680
+  const [address, setAddress] = useState<string | undefined>(code.toString()); // 현재 위치의 주소 코드 ex. 11680
 
   const [newLocation, setNewLocation] = useState(currentLocation); // 이동한 위치 좌표
   const [fullAddress, setFullAddress] = useState<string[]>([]); // 이동한 위치의 주소 ex. ['서울', '강남구' '...']
