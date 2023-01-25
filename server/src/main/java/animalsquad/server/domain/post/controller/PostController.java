@@ -1,14 +1,14 @@
 package animalsquad.server.domain.post.controller;
 
-import animalsquad.server.domain.post.dto.PostCommentPatchDto;
-import animalsquad.server.domain.post.dto.PostCommentPostDto;
-import animalsquad.server.domain.post.dto.PostDto;
-import animalsquad.server.domain.post.dto.PostPatchDto;
+import animalsquad.server.domain.post.dto.*;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.entity.PostComment;
+import animalsquad.server.domain.post.entity.PostLikes;
 import animalsquad.server.domain.post.mapper.PostCommentMapper;
+import animalsquad.server.domain.post.mapper.PostLikesMapper;
 import animalsquad.server.domain.post.mapper.PostMapper;
 import animalsquad.server.domain.post.service.PostCommentService;
+import animalsquad.server.domain.post.service.PostLikesService;
 import animalsquad.server.domain.post.service.PostService;
 import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,12 @@ public class PostController {
     private final PostService postService;
     private final PostCommentService postCommentService;
 
+    private final PostLikesService likesService;
+
     private final PostMapper mapper;
 
     private final PostCommentMapper commentMapper;
+    private final PostLikesMapper likesMapper;
 
 
     @PostMapping
@@ -106,5 +109,16 @@ public class PostController {
         postCommentService.deleteComment(commentId, petId);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/likes/{post-id}")
+    public ResponseEntity postLike(@PathVariable("post-id") long postId,
+                                   @Valid @RequestBody PostLikesDto postLikesDto,
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+        PostLikes postLikes = likesMapper.postLikesDtoToPostLikes(postLikesDto, postId);
+        long id = principal.getId();
+        PostLikes result = likesService.postLikes(postLikes, id);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

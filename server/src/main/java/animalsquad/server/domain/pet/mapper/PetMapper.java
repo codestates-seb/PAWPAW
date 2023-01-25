@@ -78,12 +78,12 @@ public interface PetMapper {
                     postInfo.setContents(post.getContents());
                     postInfo.setPetName(post.getPet().getPetName());
                     postInfo.setCreatedAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
-                    postInfo.setLikesCnt(
-                            post.getPostLikes().stream()
-                                    .map(postLikes -> postLikes.getVoteStatus().getVoteNumber())
-                                    .mapToInt(Integer::intValue)
-                                    .sum()
-                    );
+//                    postInfo.setLikesCnt(
+//                            post.getPostLikes().stream()
+//                                    .map(postLikes -> postLikes.getVoteStatus().getVoteNumber())
+//                                    .mapToInt(Integer::intValue)
+//                                    .sum()
+//                    );
                     return postInfo;
                 }).collect(Collectors.toList());
     }

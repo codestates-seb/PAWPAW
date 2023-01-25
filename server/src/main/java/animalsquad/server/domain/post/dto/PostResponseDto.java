@@ -1,6 +1,6 @@
 package animalsquad.server.domain.post.dto;
 
-import animalsquad.server.domain.post.entity.VoteStatus;
+//import animalsquad.server.domain.post.entity.VoteStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,8 +17,6 @@ public class PostResponseDto {
 
     private String contents;
 
-    private VoteStatus voteStatus;
+//    private VoteStatus voteStatus;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
 }
