@@ -11,7 +11,8 @@ const petId = localStorage.getItem('petId') as string;
 
 const CommunityDetail: React.FC = () => {
   const [postDetail, setPostDetail] = useState<object>({});
-  const postId = useParams();
+  const id = useParams();
+  const postId = id.id;
   console.log(postId);
   useEffect(() => {
     getData();
@@ -32,7 +33,7 @@ const CommunityDetail: React.FC = () => {
   return (
     <>
       <Header />
-      <Container>{postId.id}</Container>
+      <Container>{postId}</Container>
     </>
   );
 };
