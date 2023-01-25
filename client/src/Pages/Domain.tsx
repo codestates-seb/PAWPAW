@@ -6,6 +6,7 @@ import UserInfoEdit from './UserInfoEdit';
 import HomeMap from '../Map/HomeMap';
 import Mypage from './Mypage';
 import Community from './Community';
+import CommunityDetail from './CommunityDetail';
 import PrivateRoute from '../Components/PrivateRouter';
 
 export default function Router() {
@@ -22,6 +23,7 @@ export default function Router() {
           <Route path='/map' element={<HomeMap />} />
           <Route path='/mypage' element={<Mypage />} />
           <Route path='/community' element={<Community />} />
+          <Route path='/community/:id' element={<CommunityDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>
