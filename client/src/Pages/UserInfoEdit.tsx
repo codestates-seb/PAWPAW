@@ -92,7 +92,7 @@ const UserInfoEdit: FC = () => {
   };
 
   const updateHandler = async () => {
-    if (address) {
+    if (info.petName && address) {
       const data = new FormData();
       data.append('petName', info.petName);
       data.append('age', info.age.toString());
