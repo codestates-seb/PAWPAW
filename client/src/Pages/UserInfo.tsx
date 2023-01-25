@@ -102,7 +102,7 @@ const UserInfo: React.FC = () => {
       data.append('password', password);
       data.append('petName', info.petName);
       data.append('age', info.age.toString());
-      data.append('species', 'CAT');
+      data.append('species', info.isCat);
       data.append('gender', info.isMale);
       data.append('code', address.toString());
       if (formData.profileImage) {
@@ -161,14 +161,14 @@ const UserInfo: React.FC = () => {
               />
             ) : info.isCat === 'CAT' ? (
               <img
-                className='baseimojidog'
-                src={Dog}
+                className='baseimojicat'
+                src={Cat}
                 style={{ width: '100px', height: '100px' }}
               ></img>
             ) : (
               <img
-                className='baseimojicat'
-                src={Cat}
+                className='baseimojidog'
+                src={Dog}
                 style={{ width: '100px', height: '100px' }}
               ></img>
             )}
@@ -416,11 +416,11 @@ const CircleDiv = styled.div<{ isCat: string; className: string }>`
   transition: all 0.6s;
 
   &.cat {
-    transform: translateX(104px);
+    transform: translateX(2px);
   }
 
   &.dog {
-    transform: translateX(2px);
+    transform: translateX(104px);
   }
 `;
 
