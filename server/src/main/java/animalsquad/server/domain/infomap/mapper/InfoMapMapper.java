@@ -21,7 +21,7 @@ public interface InfoMapMapper {
     default InfoMap postDtoToInfoMap(InfoMapPostDto infoMapPostDto) {
         InfoMap infoMap = new InfoMap();
         Address address = new Address();
-        address.setId(infoMapPostDto.getAddressId());
+        address.setCode(infoMapPostDto.getCode());
 
         infoMap.setCategory(infoMapPostDto.getCategory());
         infoMap.setHomepage(infoMapPostDto.getHomepage());

@@ -61,7 +61,7 @@ public class InfoMapService {
     }
 
     public InfoMap createMaps(InfoMap infoMap, MultipartFile file) throws IllegalAccessException {
-        Optional<Address> optionalAddress = addressRepository.findById(infoMap.getAddress().getId());
+        Optional<Address> optionalAddress = addressRepository.findByCode(infoMap.getAddress().getCode());
         Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
 
         infoMap.setAddress(address);
