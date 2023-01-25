@@ -21,7 +21,8 @@ public enum ExceptionCode {
     INFO_MAP_COMMENT_NOT_FOUND(404,"Info map comment not found"),
 
     EXISTS_MY_PLACE(409, "My place exists"),
-    MY_PLACE_NOT_FOUND(404, "My place not found");
+    MY_PLACE_NOT_FOUND(404, "My place not found"),
+    POST_NOT_FOUND(404, "Post not found");
     @Getter
     private int status;
 

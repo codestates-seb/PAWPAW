@@ -1,10 +1,7 @@
 package animalsquad.server.domain.post.mapper;
 
 import animalsquad.server.domain.pet.entity.Pet;
-import animalsquad.server.domain.post.dto.PostCommentPatchDto;
-import animalsquad.server.domain.post.dto.PostCommentPostDto;
-import animalsquad.server.domain.post.dto.PostCommentResponseDto;
-import animalsquad.server.domain.post.dto.PostDto;
+import animalsquad.server.domain.post.dto.*;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.entity.PostComment;
 import animalsquad.server.domain.post.entity.PostImage;
@@ -22,6 +19,16 @@ public interface PostMapper {
         post.setPet(pet);
         post.setTitle(postDto.getTitle());
         post.setContents(postDto.getContent());
+
+        return post;
+    }
+
+    default Post patchDtoToPost(PostPatchDto postPatchDto) {
+        Post post = new Post();
+
+        post.setId(postPatchDto.getId());
+        post.setTitle(postPatchDto.getTitle());
+        post.setContents(postPatchDto.getContent());
 
         return post;
     }
