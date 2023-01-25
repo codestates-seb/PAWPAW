@@ -115,7 +115,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
 `;
-// 공간 확보를 위함 임시 파일
 
 const LeftNav = styled.div`
   width: 235px;
