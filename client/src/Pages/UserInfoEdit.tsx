@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
@@ -14,7 +15,7 @@ import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
-const { ivory, brown, yellow, darkivory, bordergrey } = color;
+const { ivory, brown, yellow, darkivory, bordergrey, lightgrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const headers = {
@@ -82,9 +83,27 @@ const UserInfoEdit: FC = () => {
   };
 
   const deleteHandler = () => {
-    petDelete(petId as string);
-    navigate('/');
-    alert('탈퇴되었습니다.');
+    Swal.fire({
+      title: '정말 탈퇴하시겠습니까?',
+      text: '탈퇴한 계정은 복구할 수 없으니 주의해주세요!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: red,
+      cancelButtonColor: bordergrey,
+      confirmButtonText: '네, 확인했습니다.',
+      cancelButtonText: '아니요',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '탈퇴 완료',
+          text: '회원 탈퇴가 성공적으로 처리되었습니다.',
+          icon: 'success',
+          confirmButtonColor: yellow,
+        });
+        petDelete(petId as string);
+        navigate('/');
+      }
+    });
   };
 
   const openAddressModal = () => {

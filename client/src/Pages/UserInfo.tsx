@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
@@ -118,7 +119,15 @@ const UserInfo: React.FC = () => {
 
       try {
         await axios.post(`${process.env.REACT_APP_API_ROOT}/pets/signup`, data, { headers });
-        alert('회원가입이 완료되었습니다.');
+        // alert('회원가입이 완료되었습니다.');
+        Swal.fire({
+          title: '회원가입이 완료되었습니다.',
+          icon: 'success',
+          confirmButtonText: '<b>확인</b>',
+          confirmButtonColor: yellow,
+          color: brown,
+          padding: '20px 0px 30px 0px',
+        });
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {

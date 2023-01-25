@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import color from '../color';
@@ -10,7 +11,7 @@ import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
-const { ivory, darkgrey, brown, mediumgrey, bordergrey } = color;
+const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
 
 interface FormData {
   profileImage: Blob | null;
@@ -75,12 +76,28 @@ const Mypage = () => {
     });
   };
   const logoutHandler = () => {
-    if (!confirm('로그아웃 하시겠습니까?')) {
-      alert('취소 되었습니다.');
-    } else {
-      petLogout().then(() => navigate('/'));
-      alert('로그아웃 되었습니다.');
-    }
+    Swal.fire({
+      title: '로그아웃 하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '<b>로그아웃</b>',
+      cancelButtonText: '<b>취소</b>',
+      color: brown,
+      confirmButtonColor: yellow,
+      cancelButtonColor: red,
+      padding: '40px 0px 30px 0px',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '로그아웃 되었습니다.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+          color: brown,
+          padding: '20px 0px 40px 0px',
+        });
+        petLogout().then(() => navigate('/'));
+      }
+    });
   };
 
   return (
