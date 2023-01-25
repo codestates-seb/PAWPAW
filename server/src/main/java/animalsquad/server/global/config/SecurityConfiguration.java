@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -63,6 +64,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                                 .antMatchers("/").permitAll()
 //                        .antMatchers("/login").permitAll()
+                                .antMatchers(HttpMethod.POST,"/maps").hasRole("ADMIN")
                                 .antMatchers("/pets/test").hasRole("USER") //권한 테스트용
                                 .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")

@@ -63,7 +63,7 @@ public class InfoMapController {
 
         infoMapService.createMaps(infoMap, infoMapPostDto.getFile());
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PostMapping("/review")

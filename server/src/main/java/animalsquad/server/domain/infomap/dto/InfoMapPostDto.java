@@ -14,23 +14,22 @@ import java.math.BigDecimal;
 public class InfoMapPostDto {
     private String name;
 
-    private BigDecimal latitude;
-
-    private BigDecimal longitude;
+    private int code;
 
     private InfoMapCategory category;
+
+    private String homepage;
 
     private MultipartFile file;
 
     private String mapAddress;
 
-    private long addressId;
+    private BigDecimal latitude;
 
+    private BigDecimal longitude;
 
     private String operationTime;
 
     private String tel;
-
-    private String homepage;
 
 }

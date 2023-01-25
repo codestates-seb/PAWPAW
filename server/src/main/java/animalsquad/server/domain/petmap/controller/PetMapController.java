@@ -9,18 +9,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-
+@Validated
 public class PetMapController {
 
     private final PetMapService petMapService;
     private final PetMapMapper mapper;
 
     @PostMapping("/maps/addplace")
-    public ResponseEntity createPlace(@RequestBody MyPlaceDto addPlaceDto,
+    public ResponseEntity createPlace(@Valid @RequestBody MyPlaceDto addPlaceDto,
                                       @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
 
         long petId = principal.getId();
@@ -31,7 +34,7 @@ public class PetMapController {
     }
 
     @DeleteMapping("/maps/cancel")
-    public ResponseEntity deletePlace(@RequestBody MyPlaceDto deletePlaceDto,
+    public ResponseEntity deletePlace(@Valid @RequestBody MyPlaceDto deletePlaceDto,
                                       @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
 
         PetMap petMap = mapper.myPlaceDtoToPetMap(deletePlaceDto);

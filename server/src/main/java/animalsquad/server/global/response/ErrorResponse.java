@@ -24,17 +24,19 @@ public class ErrorResponse {
     }
 
     private ErrorResponse(final List<FieldError> fieldErrors,
-                          final List<ConstraintViolationError> violationErrors) {
+                          final List<ConstraintViolationError> violationErrors,
+                          int status) {
         this.fieldErrors = fieldErrors;
         this.violationErrors = violationErrors;
+        this.status = status;
     }
 
-    public static ErrorResponse of(BindingResult bindingResult) {
-        return new ErrorResponse(FieldError.of(bindingResult), null);
+    public static ErrorResponse of(BindingResult bindingResult, int status) {
+        return new ErrorResponse(FieldError.of(bindingResult), null, status);
     }
 
-    public static ErrorResponse of(Set<ConstraintViolation<?>> violations) {
-        return new ErrorResponse(null, ConstraintViolationError.of(violations));
+    public static ErrorResponse of(Set<ConstraintViolation<?>> violations, int status) {
+        return new ErrorResponse(null, ConstraintViolationError.of(violations), status);
     }
 
     public static ErrorResponse of(ExceptionCode exceptionCode) {
