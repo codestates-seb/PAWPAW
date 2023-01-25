@@ -40,6 +40,7 @@ public class PetDetailsService implements UserDetailsService {
             setPassword(pet.getPassword());
             setRoles(pet.getRoles());
             setPetName(pet.getPetName());
+            setAddress(pet.getAddress());
         }
 
         @Override

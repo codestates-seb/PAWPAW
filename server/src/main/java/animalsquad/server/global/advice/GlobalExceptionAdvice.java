@@ -20,7 +20,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getBindingResult());
+        final ErrorResponse response = ErrorResponse.of(e.getBindingResult(),400);
 
         return response;
     }
@@ -28,7 +28,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getConstraintViolations());
+        final ErrorResponse response = ErrorResponse.of(e.getConstraintViolations(),400);
 
         return response;
     }
@@ -40,9 +40,4 @@ public class GlobalExceptionAdvice {
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getExceptionCode().getStatus()));
     }
 
-//    @ExceptionHandler
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    public ErrorResponse expiredJwtException(ExpiredJwtException ee) {
-//        return ErrorResponse.of(HttpStatus.UNAUTHORIZED,ee.getMessage());
-//    }
 }

@@ -13,10 +13,10 @@ public class PetPatchDto {
 
     private long id;
     private String petName;
-    private int age;
+    private Integer age;
     private Gender gender;
     private Species species;
-    private int code;
+    private Integer code;
     private MultipartFile profileImage;
 
 }

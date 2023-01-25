@@ -67,6 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         claims.put("petId", pet.getId());
         claims.put("roles", pet.getRoles());
         claims.put("petName",pet.getPetName());
+        claims.put("code",pet.getAddress().getCode());
 
         String subject = pet.getLoginId();
         return jwtTokenProvider.generateToken(claims, subject);

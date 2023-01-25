@@ -32,7 +32,7 @@ public class Pet extends Auditable {
     private String password;
     @Column(length = 30, nullable = false)
     private String petName;
-    private int age;
+    private Integer age;
     @Column(length = 6)
     @Enumerated(EnumType.STRING)    // 실제 DB에 varchar 타입의 컬럼 생상
     private Gender gender;

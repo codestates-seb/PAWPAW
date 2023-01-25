@@ -40,21 +40,23 @@ public class PetService {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
+
         int code = pet.getAddress().getCode();
         Address address = verifiedAddress(code);
         pet.setAddress(address);
 
         String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
         String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
+
         // 디폴트 이미지는 S3에 저장해두고 Url만 저장
-        if( (file.isEmpty()) && pet.getSpecies() == Species.DOG) {
+        if (file == null && pet.getSpecies() == Species.DOG) {
             pet.setProfileImage(defaultDogImageUrl);
-        } else if ( (file.isEmpty()) && pet.getSpecies() == Species.CAT) {
+        } else if ( file == null && pet.getSpecies() == Species.CAT) {
             pet.setProfileImage(defaultCatImageUrl);
         } else {
                 String imageUrl = fileUploadService.uploadImage(file, folder);
                 pet.setProfileImage(imageUrl);
-            }
+        }
 
         return petRepository.save(pet);
     }
@@ -77,16 +79,25 @@ public class PetService {
                         Address address = verifiedAddress(code);
                         findPet.setAddress(address);
                     });
-        // 프로필 이미지 수정, 디폴트 이미지
-        if(!file.isEmpty()) {
+
+        String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
+        String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
+
+        // 프로필 이미지 수정, 디폴트 이미지, 종에 따라 디폴트 이미지 변경
+        if(file != null && !file.isEmpty()) {
             String beforeImage = findPet.getProfileImage();
             fileUploadService.deleteFile(beforeImage, folder);
 
             String imageUrl = fileUploadService.uploadImage(file, folder);
             findPet.setProfileImage(imageUrl);
-        } else if (!file.isEmpty() && findPet.getProfileImage().contains("default")) {
+
+        } else if (file != null && findPet.getProfileImage().contains("default")) {
             String imageUrl = fileUploadService.uploadImage(file, folder);
             findPet.setProfileImage(imageUrl);
+        } else if (file == null && findPet.getProfileImage().contains("default") && findPet.getSpecies() == Species.DOG) {
+            findPet.setProfileImage(defaultDogImageUrl);
+        } else if (file == null && findPet.getProfileImage().contains("default") && findPet.getSpecies() == Species.CAT) {
+            findPet.setProfileImage(defaultCatImageUrl);
         }
 
         Pet savedPet = petRepository.save(findPet);
@@ -111,8 +122,6 @@ public class PetService {
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }
-
-    // redis 설정 시 refreshToken 삭제 추가
 
     public void deletePet(long id, long petId) throws IllegalAccessException {
         Pet findPet = findVerifiedPet(id);
@@ -153,7 +162,7 @@ public class PetService {
     private Pet findVerifiedPet(long id) {
         Optional<Pet> optionalPet = petRepository.findById(id);
         Pet findPet = optionalPet.orElseThrow(() ->
-                new NoSuchElementException(ExceptionCode.PET_NOT_FOUND.getMessage()));
+                new BusinessLogicException(ExceptionCode.PET_NOT_FOUND));
 
         return findPet;
     }
