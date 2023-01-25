@@ -12,6 +12,7 @@ import animalsquad.server.domain.post.service.PostLikesService;
 import animalsquad.server.domain.post.service.PostService;
 import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @Validated
 @RestController
@@ -59,12 +61,29 @@ public class PostController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+
+    @GetMapping
+    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page,
+                                   @Positive @RequestParam(defaultValue = "15") int size) {
+
+        Page<Post> posts = postService.findPosts(page - 1, size);
+        PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts);
+        return new ResponseEntity(postsResponseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{post-id}")
+    public ResponseEntity getPost(@PathVariable("post-id") long postId,
+                                  @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+
+        Post post = postService.findPost(postId);
+        long petId = principal.getId();
+        PostDetailsResponseDto postDetailsResponseDto = mapper.postToPostDetailsDto(post, petId);
+
+        return new ResponseEntity(postDetailsResponseDto, HttpStatus.OK);
+
+    }
+
     //
-//    @GetMapping("/posts")
-//    public ResponseEntity getPost() {
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
-//
     @DeleteMapping("/{post-id}")
     public ResponseEntity deletePost(@PathVariable("post-id") long id,
                                      @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
@@ -73,12 +92,6 @@ public class PostController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    //
-//    @GetMapping("/{post-id}")
-//    public ResponseEntity getdetailPost() {
-//        return new ResponseEntity(HttpStatus.OK);
-//
-//    }
     @PostMapping("/comment")
     public ResponseEntity postComment(@Valid @RequestBody PostCommentPostDto commentPostDto,
                                       @AuthenticationPrincipal PetDetailsService.PetDetails principal) {

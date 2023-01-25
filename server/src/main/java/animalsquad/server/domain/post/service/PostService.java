@@ -9,6 +9,9 @@ import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,22 +72,23 @@ public class PostService {
         return savedPost;
     }
 
-//    public Post findPost(long postId) {
-//        return findVerifiedPost(postId);
-//    }
+    public Page<Post> findPosts(int page, int size) {
+        return postRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
+    }
 
-    //    public List<Post> findPosts() {
-//        return null;
-//    }
-//
+    public Post findPost(long postId) {
+        return findVerifiedPost(postId);
+    }
+
     public void deletePost(long petId, long postId) {
         Post findPost = findVerifiedPost(postId);
-        if(petId != findPost.getPet().getId()) {
+        if (petId != findPost.getPet().getId()) {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
         postRepository.deleteById(postId);
     }
+
     public Post findVerifiedPost(long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
 

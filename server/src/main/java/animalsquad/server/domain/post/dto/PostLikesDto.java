@@ -1,6 +1,5 @@
 package animalsquad.server.domain.post.dto;
 
-//import animalsquad.server.domain.post.entity.VoteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
