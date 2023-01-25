@@ -23,7 +23,6 @@ public class InfoMapDetailsResponseDto {
         this.pageInfo = new PageInfo(page.getNumber() + 1, page.getSize(), page.getTotalElements(), page.getTotalPages());
     }
 
-
     @Getter
     @Setter
     public static class Details {

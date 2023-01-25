@@ -2,9 +2,16 @@ package animalsquad.server.domain.pet.service;
 
 import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
+import animalsquad.server.domain.infomap.entity.InfoMapComment;
+import animalsquad.server.domain.infomap.repository.InfoMapCommentRepository;
+import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
+import animalsquad.server.domain.post.entity.Post;
+import animalsquad.server.domain.post.repository.PostRepository;
+import animalsquad.server.global.auth.dto.AuthRequestDto;
+import animalsquad.server.global.auth.dto.AuthResponseDto;
 import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
@@ -12,19 +19,25 @@ import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
-@RequiredArgsConstructor // final 붙은 필드 생성자 자동 생성
+@RequiredArgsConstructor
 @Slf4j
 public class PetService {
 
@@ -33,7 +46,9 @@ public class PetService {
     private final PasswordEncoder passwordEncoder;
     private final FileUploadService fileUploadService;
     private final RedisTemplate redisTemplate;
+    private final JwtTokenProvider jwtTokenProvider;
     private final String folder = "profile";
+    private final PostRepository postRepository;
 
 
     public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
@@ -48,7 +63,6 @@ public class PetService {
         String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
         String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
 
-        // 디폴트 이미지는 S3에 저장해두고 Url만 저장
         if (file == null && pet.getSpecies() == Species.DOG) {
             pet.setProfileImage(defaultDogImageUrl);
         } else if ( file == null && pet.getSpecies() == Species.CAT) {
@@ -108,7 +122,7 @@ public class PetService {
     public Boolean checkLoginId(String loginId) {
         return petRepository.existsByLoginId(loginId);
     }
-    // 커뮤니티 기능 구현 전 나의 정보만 조회
+
     // 저장된 유저의 id와 요청한 유저의 id가 맞는지 검증하는 로직
     public Pet petVerifiedToken(long id, long petId) {
         Pet findPet = findPet(id);
@@ -122,13 +136,17 @@ public class PetService {
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }
+    // 나의 게시글 조회
+    public Page<Post> findPost(int page, int size, long petId) {
+        return postRepository.findAllByPet_Id(PageRequest.of(page, size, Sort.by("id").descending()), petId);
+    }
 
     public void deletePet(long id, long petId) throws IllegalAccessException {
         Pet findPet = findVerifiedPet(id);
 
         verifiedToken(findPet, petId);
 
-        // redis에서 RefreshToken 삭제
+
         String findPetLoginId = findPet.getLoginId();
         redisTemplate.delete("RT:" + findPetLoginId);
         // S3에서 image삭제
@@ -137,6 +155,25 @@ public class PetService {
             fileUploadService.deleteFile(image, folder);
         }
         petRepository.deleteById(id);
+    }
+    // 관리자 권한 승인 요청
+    public void verifiedAdmin(long id, long petId, PetPostAdminDto petPostAdminDto, HttpServletResponse response) {
+        Pet findPet = findVerifiedPet(id);
+
+        verifiedToken(findPet, petId);
+
+        if(!petPostAdminDto.getAdminCode().equals("동물특공대")) {
+            throw new BusinessLogicException(ExceptionCode.ADMIN_CODE_NOT_MATCH);
+        }
+        findPet.getRoles().add((Role.ROLE_ADMIN.name()));
+        petRepository.save(findPet);
+
+        AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(findPet);
+
+        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
+        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+
+        redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
     }
 
     private void verifiedToken(Pet pet, long petId) {
