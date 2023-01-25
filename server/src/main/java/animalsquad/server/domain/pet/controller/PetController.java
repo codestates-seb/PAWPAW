@@ -80,7 +80,7 @@ public class PetController {
         Pet findPet = petService.petVerifiedToken(id, petId);
         Page<Post> posts = petService.findPost(page -1, size, id);
 
-        return new ResponseEntity(mapper.petToPetResponseDto(findPet),HttpStatus.OK);
+        return new ResponseEntity(mapper.petToPetResponseDto(findPet, posts),HttpStatus.OK);
     }
     @DeleteMapping("/{pet-id}")
     public ResponseEntity deletePet(@PathVariable("pet-id") long id,
