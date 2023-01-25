@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         Pet pet = (Pet) authResult.getPrincipal();
 
-        AuthResponseDto.TokenInfo tokenInfo = delegateToken(pet);
+        AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(pet);
 
         response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
         response.setHeader("Refresh", tokenInfo.getRefreshToken());
@@ -62,14 +62,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     //AccessToken, Refresh Token 생성 메서드
     //나중에 Profile Image 등 필요한 정보 있으면 변경 가능성 있음
-    private AuthResponseDto.TokenInfo delegateToken(Pet pet) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("petId", pet.getId());
-        claims.put("roles", pet.getRoles());
-        claims.put("petName",pet.getPetName());
-        claims.put("code",pet.getAddress().getCode());
-
-        String subject = pet.getLoginId();
-        return jwtTokenProvider.generateToken(claims, subject);
-    }
+//    private AuthResponseDto.TokenInfo delegateToken(Pet pet) {
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("petId", pet.getId());
+//        claims.put("roles", pet.getRoles());
+//        claims.put("petName",pet.getPetName());
+//        claims.put("code",pet.getAddress().getCode());
+//
+//        String subject = pet.getLoginId();
+//        return jwtTokenProvider.generateToken(claims, subject);
+//    }
 }

@@ -1,5 +1,6 @@
 package animalsquad.server.global.auth.jwt;
 
+import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.global.auth.dto.AuthResponseDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -131,6 +132,17 @@ public class JwtTokenProvider {
 //        Claims body = getClaims(token).getBody();
         Claims body = parseClaims(token);
         return Long.parseLong(String.valueOf(body.get("petId")));
+    }
+
+    public AuthResponseDto.TokenInfo delegateToken(Pet pet) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("petId", pet.getId());
+        claims.put("roles", pet.getRoles());
+        claims.put("petName",pet.getPetName());
+        claims.put("code",pet.getAddress().getCode());
+
+        String subject = pet.getLoginId();
+        return generateToken(claims, subject);
     }
 
 }

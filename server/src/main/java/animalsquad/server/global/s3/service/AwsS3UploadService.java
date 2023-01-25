@@ -13,7 +13,6 @@ import java.io.InputStream;
 
 @Component
 @RequiredArgsConstructor
-
 public class AwsS3UploadService implements UploadService {
 
     private final AmazonS3 amazonS3;

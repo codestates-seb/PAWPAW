@@ -51,6 +51,9 @@ public class Pet extends Auditable {
     @OneToMany(mappedBy = "pet")
     private List<PetMap> petMaps = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "pet")
+//    private List<Post> posts = new ArrayList<>();
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 }
