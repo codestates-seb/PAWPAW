@@ -16,21 +16,20 @@ const refreshToken = localStorage.getItem('Refresh');
 const headers = {
   'Content-Type': 'multipart/form-data',
   Authorization: jwtToken,
-  Refresh: refreshToken,
 };
 
 export interface IPost {
   petId: string | null;
   title: string;
-  contents: string;
+  content: string;
 }
 
-const Post: React.FC = () => {
+const Post = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<IPost>({
     petId: petId,
     title: '',
-    contents: '',
+    content: '',
   });
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [file, setFile] = useState<any>(null);
@@ -40,8 +39,8 @@ const Post: React.FC = () => {
     setData({ ...data, title: e.target.value });
   };
 
-  const contentsHandler = (e: string) => {
-    setData({ ...data, contents: e });
+  const contentHandler = (e: string) => {
+    setData({ ...data, content: e });
   };
 
   const imageHandler = () => {
@@ -64,13 +63,13 @@ const Post: React.FC = () => {
     };
   };
 
-  const submitHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (data.petId && data.title && data.contents) {
+    if (data.petId && data.title && data.content) {
       formData.append('petId', data.petId);
       formData.append('title', data.title);
-      formData.append('contents', data.contents);
+      formData.append('content', data.content);
       formData.append('file', file);
 
       for (const key of formData.keys()) {
@@ -80,13 +79,17 @@ const Post: React.FC = () => {
         console.log(value);
       }
 
-      axios
-        .post(`${process.env.REACT_APP_API_ROOT}/posts`, formData, { headers })
-        .then((res) => {
-          console.log(res);
-          // navigate('/community');
-        })
-        .catch((err) => alert(err));
+      try {
+        await axios
+          .post(`${process.env.REACT_APP_API_ROOT}/posts`, formData, { headers })
+          .then((res) => {
+            console.log('성공', res);
+            navigate('/community');
+          });
+      } catch (err) {
+        console.log('에러', err);
+        alert(err);
+      }
     } else {
       alert('제목과 본문을 입력해주세요.');
     }
@@ -176,7 +179,7 @@ const Post: React.FC = () => {
           </div>
           <EditorContainer>
             <ReactQuill
-              onChange={contentsHandler}
+              onChange={contentHandler}
               modules={modules}
               placeholder='사진은 최대 1장만 첨부할 수 있어요.'
             />
