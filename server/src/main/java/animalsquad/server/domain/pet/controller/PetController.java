@@ -1,5 +1,6 @@
 package animalsquad.server.domain.pet.controller;
 
+import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.dto.PetPatchDto;
 import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.dto.PetPostDto;
@@ -8,6 +9,7 @@ import animalsquad.server.domain.pet.mapper.PetMapper;
 import animalsquad.server.domain.pet.service.PetService;
 import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -70,16 +72,16 @@ public class PetController {
     //TODO: post 조회
     @GetMapping("/{pet-id}")
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
-//                                 @Positive @RequestParam(defaultValue = "1") int page,
-//                                 @Positive @RequestParam(defaultValue = "15") int size,
+                                 @Positive @RequestParam(defaultValue = "1") int page,
+                                 @Positive @RequestParam(defaultValue = "15") int size,
                                  @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
         Pet findPet = petService.petVerifiedToken(id, petId);
+        Page<Post> posts = petService.findPost(page -1, size, id);
 
         return new ResponseEntity(mapper.petToPetResponseDto(findPet),HttpStatus.OK);
     }
-
     @DeleteMapping("/{pet-id}")
     public ResponseEntity deletePet(@PathVariable("pet-id") long id,
                                     @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {

@@ -2,6 +2,8 @@ package animalsquad.server.domain.pet.service;
 
 import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
+import animalsquad.server.domain.infomap.entity.InfoMapComment;
+import animalsquad.server.domain.infomap.repository.InfoMapCommentRepository;
 import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
@@ -15,6 +17,9 @@ import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +46,7 @@ public class PetService {
     private final RedisTemplate redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
     private final String folder = "profile";
+    private final InfoMapCommentRepository infoMapCommentRepository;
 
 
     public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
@@ -128,6 +134,10 @@ public class PetService {
     // repository에 저장된 유저를 가져오는 로직
     public Pet findPet(long id) {
         return findVerifiedPet(id);
+    }
+
+    public Page<Post> findPost(int page, int size, long petId) {
+        return PostRepository.findByPet_Id(PageRequest.of(page, size, Sort.by("id")), petId);
     }
 
     public void deletePet(long id, long petId) throws IllegalAccessException {
