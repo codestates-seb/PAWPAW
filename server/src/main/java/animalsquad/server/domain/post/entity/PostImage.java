@@ -22,4 +22,6 @@ public class PostImage {
 
     @Column(name = "IMAGEURL")
     private String imageUrl;
+
+    private String originalFileName;
 }
