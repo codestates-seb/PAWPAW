@@ -5,6 +5,8 @@ import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.domain.petmap.entity.PetMap;
+import animalsquad.server.domain.post.entity.Post;
+import animalsquad.server.domain.post.entity.PostComment;
 import animalsquad.server.global.audit.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,8 +53,11 @@ public class Pet extends Auditable {
     @OneToMany(mappedBy = "pet")
     private List<PetMap> petMaps = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "pet")
-//    private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "pet")
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "pet")
+    private List<PostComment> postComments = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();

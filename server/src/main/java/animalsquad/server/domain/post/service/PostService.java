@@ -85,7 +85,7 @@ public class PostService {
 
         postRepository.deleteById(postId);
     }
-    private Post findVerifiedPost(long postId) {
+    public Post findVerifiedPost(long postId) {
         Optional<Post> optionalPost = postRepository.findById(postId);
 
         return optionalPost.orElseThrow(() -> new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));

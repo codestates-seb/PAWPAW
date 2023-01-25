@@ -23,7 +23,9 @@ public enum ExceptionCode {
 
     EXISTS_MY_PLACE(409, "My place exists"),
     MY_PLACE_NOT_FOUND(404, "My place not found"),
-    POST_NOT_FOUND(404, "Post not found");
+    POST_NOT_FOUND(404, "Post not found"),
+
+    POST_COMMENT_NOT_FOUND(404, "Post comment not found");
     @Getter
     private int status;
 

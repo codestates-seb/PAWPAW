@@ -33,37 +33,5 @@ public interface PostMapper {
         return post;
     }
 
-//    default PostCommentPatchDto postCommentPatchToPost(PostCommentPatchDto postCommentPatchDto) {
-//        Post post = new Post();
-//        PostComment postComment = new PostComment();
-//        PostCommentPatchDto postCommentPatchDto = new PostCommentPatchDto();
-//
-//        postCommentPatchDto.setCommentId(postComment.getId());
-//        postCommentPatchDto.setContents(postComment.getContents());
-//
-//        return postCommentPatchDto;
-//    }
-//
-//    default PostCommentResponseDto postCommentToResponseDto(PostCommentResponseDto postCommentResponseDto) {
-//        PostComment postComment= new PostComment();
-//        PostImage postImage = new PostImage();
-//        PostCommentResponseDto postCommentResponseDto = new PostCommentResponseDto();
-//
-//        postCommentResponseDto.setPostId(postComment.getId());
-//        postCommentResponseDto.setContents(postComment.getContents());
-//        postCommentResponseDto.setCreatedAt(postComment.getCreatedAt());
-//        postCommentResponseDto.setImageUrl(postImage.getImageUrl());
-//
-//        return postCommentResponseDto;
-//    }
-//
-//    default PostCommentPostDto postCommentPostDto(PostCommentPostDto postCommentPostDto) {
-//        Post post = new Post();
-//        PostCommentPostDto postCommentPostDto = new PostCommentPostDto();
-//
-//        postCommentPostDto.setPostId(post.getId());
-//        postCommentPostDto.setContents(post.getContents());
-//
-//        return postCommentPostDto;
-//    }
+
 }
