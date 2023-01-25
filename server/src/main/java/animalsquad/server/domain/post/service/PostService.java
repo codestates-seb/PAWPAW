@@ -26,8 +26,16 @@ public class PostService {
     private final PetService petService;
     private final PostImageService postImageService;
 
-    public Post createPost(Post post, long postId) throws IllegalAccessException {
-        verifyPostId(post.getId());
+    public Post createPost(Post post, List<MultipartFile> files,long id) throws IllegalAccessException {
+        long petId = post.getPet().getId();
+
+        if(petId != id) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
+        }
+
+        Pet pet = petService.findPet(petId);
+
+        post.setPet(pet);
         post.setTitle(post.getTitle());
         post.setContents(post.getContents());
 
