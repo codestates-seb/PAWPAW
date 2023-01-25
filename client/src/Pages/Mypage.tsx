@@ -17,6 +17,12 @@ interface FormData {
 }
 
 interface ResponseData {
+  myPost: any; // 수정 필요
+  pageInfo: any; // 수정 필요
+  petInfo: petInfo;
+}
+
+interface petInfo {
   petName: string;
   code: string;
   profileImage: File | null;
@@ -48,7 +54,8 @@ const Mypage = () => {
   const [count, setCount] = useState<number>(0);
 
   if (!error && responseData && count === 0) {
-    const { petName, code, profileImage, age, gender, species } = responseData as ResponseData;
+    const { petInfo } = responseData as ResponseData;
+    const { petName, code, profileImage, age, gender, species } = petInfo;
     setInfo({ ...info, petName: petName, address: code, age: age, isMale: gender, isCat: species });
     setFormData({ profileImage: profileImage });
     setCount(count + 1);
