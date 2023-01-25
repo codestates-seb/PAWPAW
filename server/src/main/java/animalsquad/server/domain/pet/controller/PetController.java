@@ -7,6 +7,7 @@ import animalsquad.server.domain.pet.dto.PetPostDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.mapper.PetMapper;
 import animalsquad.server.domain.pet.service.PetService;
+import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.global.auth.userdetails.PetDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

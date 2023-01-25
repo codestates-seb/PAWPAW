@@ -8,6 +8,8 @@ import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
+import animalsquad.server.domain.post.entity.Post;
+import animalsquad.server.domain.post.repository.PostRepository;
 import animalsquad.server.global.auth.dto.AuthRequestDto;
 import animalsquad.server.global.auth.dto.AuthResponseDto;
 import animalsquad.server.global.s3.service.FileUploadService;
@@ -35,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
-@RequiredArgsConstructor // final 붙은 필드 생성자 자동 생성
+@RequiredArgsConstructor
 @Slf4j
 public class PetService {
 
@@ -46,7 +48,7 @@ public class PetService {
     private final RedisTemplate redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
     private final String folder = "profile";
-    private final InfoMapCommentRepository infoMapCommentRepository;
+    private final PostRepository postRepository;
 
 
     public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
@@ -61,7 +63,6 @@ public class PetService {
         String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
         String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
 
-        // 디폴트 이미지는 S3에 저장해두고 Url만 저장
         if (file == null && pet.getSpecies() == Species.DOG) {
             pet.setProfileImage(defaultDogImageUrl);
         } else if ( file == null && pet.getSpecies() == Species.CAT) {
@@ -121,7 +122,7 @@ public class PetService {
     public Boolean checkLoginId(String loginId) {
         return petRepository.existsByLoginId(loginId);
     }
-    // 커뮤니티 기능 구현 전 나의 정보만 조회
+
     // 저장된 유저의 id와 요청한 유저의 id가 맞는지 검증하는 로직
     public Pet petVerifiedToken(long id, long petId) {
         Pet findPet = findPet(id);
@@ -135,9 +136,9 @@ public class PetService {
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }
-
+    // 나의 게시글 조회
     public Page<Post> findPost(int page, int size, long petId) {
-        return PostRepository.findByPet_Id(PageRequest.of(page, size, Sort.by("id")), petId);
+        return postRepository.findAllByPet_Id(PageRequest.of(page, size, Sort.by("id").descending()), petId);
     }
 
     public void deletePet(long id, long petId) throws IllegalAccessException {
@@ -145,7 +146,7 @@ public class PetService {
 
         verifiedToken(findPet, petId);
 
-        // redis에서 RefreshToken 삭제
+
         String findPetLoginId = findPet.getLoginId();
         redisTemplate.delete("RT:" + findPetLoginId);
         // S3에서 image삭제

@@ -6,6 +6,7 @@ import animalsquad.server.domain.pet.dto.PetPatchDto;
 import animalsquad.server.domain.pet.dto.PetPostDto;
 import animalsquad.server.domain.pet.dto.PetResponseDto;
 import animalsquad.server.domain.pet.entity.Pet;
+import animalsquad.server.domain.post.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
@@ -67,18 +68,21 @@ public interface PetMapper {
 
         return petInfo;
     }
-    //TODO: 게시글 가져오기
-    default List<PetResponseDto.PostInfo> setPostInfo(List<Post> posts){
+    default List<PetResponseDto.MyPosts> setPostInfo(List<Post> posts){
         return posts.stream()
                 .map(post -> {
-                    PetResponseDto.PostInfo postInfo = new PetResponseDto.PostInfo();
-                    postInfo.setPostId(posts.getId);
-                    postInfo.setTitle(posts.getTitle);
-                    postInfo.setContents(posts.getContent);
-//                    postInfo.setPetName();
-                    postInfo.setCreatedAt(posts.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
-//                    postInfo.setLikeCount();
-
+                    PetResponseDto.MyPosts postInfo = new PetResponseDto.MyPosts();
+                    postInfo.setPostId(post.getId());
+                    postInfo.setTitle(post.getTitle());
+                    postInfo.setContents(post.getContents());
+                    postInfo.setPetName(post.getPet().getPetName());
+                    postInfo.setCreatedAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
+                    postInfo.setLikesCnt(
+                            post.getPostLikes().stream()
+                                    .map(postLikes -> postLikes.getVoteStatus().getVoteNumber())
+                                    .mapToInt(Integer::intValue)
+                                    .sum()
+                    );
                     return postInfo;
                 }).collect(Collectors.toList());
     }
@@ -86,7 +90,7 @@ public interface PetMapper {
     default PetResponseDto petToPetResponseDto(Pet pet, Page<Post> postPage) {
         List<Post> posts = postPage.getContent();
         PetResponseDto.PetInfo petInfo = setPetInfo(pet);
-        List<PetResponseDto.PostInfo> postInfo = setPostInfo(posts);
+        List<PetResponseDto.MyPosts> postInfo = setPostInfo(posts);
 
         return new PetResponseDto(petInfo, postInfo, postPage);
     }

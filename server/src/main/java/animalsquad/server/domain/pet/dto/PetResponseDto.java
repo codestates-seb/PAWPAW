@@ -21,12 +21,12 @@ import java.util.List;
 @AllArgsConstructor
 public class PetResponseDto {
     private PetInfo petInfo;
-    private List<PostInfo> postInfos;
+    private List<MyPosts> myPosts;
     private PageInfo pageInfo;
 
-    public PetResponseDto(PetInfo petInfo, List<PostInfo> postInfos, Page page) {
+    public PetResponseDto(PetInfo petInfo, List<MyPosts> myPosts, Page page) {
         this.petInfo = petInfo;
-        this.postInfos = postInfos;
+        this.myPosts = myPosts;
         this.pageInfo = new PageInfo(page.getNumber() + 1, page.getSize(), page.getTotalElements(), page.getTotalPages());
     }
     @Getter
@@ -42,13 +42,13 @@ public class PetResponseDto {
 
     @Getter
     @Setter
-    public static class PostInfo {
-        private int postId;
+    public static class MyPosts {
+        private long postId;
         private String petName;
         private String title;
         private String contents;
         private String createdAt;
-        private int likeCount;
+        private int likesCnt;
 
     }
 
