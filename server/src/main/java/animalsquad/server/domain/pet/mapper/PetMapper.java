@@ -59,6 +59,7 @@ public interface PetMapper {
 
         PetResponseDto.PetInfo petInfo = new PetResponseDto.PetInfo();
 
+        petInfo.setPetId(pet.getId());
         petInfo.setPetName(pet.getPetName());
         petInfo.setCode(code);
         petInfo.setProfileImage(pet.getProfileImage());

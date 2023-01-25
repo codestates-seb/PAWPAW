@@ -32,6 +32,7 @@ public class PetResponseDto {
     @Getter
     @Setter
     public static class PetInfo {
+        private long petId;
         private String petName;
         private int code;
         private String profileImage;
