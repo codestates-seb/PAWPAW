@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import color from '../color';
@@ -66,18 +67,20 @@ const Community: React.FC = () => {
         <LeftNav />
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
-          <SortButtonContainer></SortButtonContainer>
+          {/* <SortButtonContainer></SortButtonContainer> */}
           <PostList>
             {dummy.post.length === 0 ? (
               <EmptyMessage>
                 리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
               </EmptyMessage>
             ) : (
-              dummy.post.map((el: any, idx: number) => {
+              dummy.post.map((el: any) => {
                 return (
-                  <WriteBox key={idx}>
+                  <WriteBox key={el.postId}>
                     <div className='top'>
-                      <TitleBox>{el.title}</TitleBox>
+                      <Link to={`/community/${el.postId}`}>
+                        <TitleBox>{el.title}</TitleBox>
+                      </Link>
                       <DayBox>{el.createdAt}</DayBox>
                     </div>
                     <ContentBox>{el.content}</ContentBox>
