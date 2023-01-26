@@ -5,42 +5,47 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 import color from '../color';
 import axios from 'axios';
 import headers from '../util/headers';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import load from '../img/paw.gif';
+import { PostReviewEdit, PostReviewUPDATE, PostReviewDELETE } from '../util/PostReviewApi';
 
-const { ivory, brown, bordergrey, lightgrey, red } = color;
+const { ivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 const petName = localStorage.getItem('petName') as string;
 
 interface PostData {
-  postId: number;
-  petname: string;
+  petId: number;
+  petName: string;
   content: string;
+  profileImageUrl: string | null;
   createdAt: string;
-  likesCnt: 10;
 }
 interface PostList {
   comments: PostData[] | null;
   post: {
-    content: string;
-    createdAt: string;
-    imageUrl: string | null;
-    likeActive: boolean;
-    likesCnt: number;
-    petName: string;
     postId: number;
     title: string;
+    content: string;
+    imageUrl: string | null;
+    petName: string;
+    createdAt: string;
+    likesCnt: number;
+    likeActive: boolean;
   };
 }
 
 const CommunityDetail: React.FC = () => {
   const navigate = useNavigate();
   const [like, setLike] = useState(true);
+  const [editActivate, setEditActivate] = useState<number>(0);
+  const [editReview, setEditReview] = useState<string>('');
+  const [test, setTest] = useState<number>(0);
   const [postDetail, setPostDetail] = useState<PostList>({
     comments: [],
     post: {
@@ -112,6 +117,82 @@ const CommunityDetail: React.FC = () => {
     }
   };
   console.log(postDetail.post.imageUrl);
+
+  const reviewDeleteHandler = (commentId: number) => {
+    Swal.fire({
+      title: '정말 삭제하시겠어요?',
+      icon: 'warning',
+      showCancelButton: true,
+      color: brown,
+      confirmButtonColor: yellow,
+      cancelButtonColor: bordergrey,
+      confirmButtonText: '<b>확인</b>',
+      cancelButtonText: '<b>취소</b>',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '삭제되었습니다.',
+          icon: 'error',
+          color: brown,
+          confirmButtonColor: yellow,
+          confirmButtonText: '<b>확인</b>',
+        });
+        PostReviewDELETE(commentId);
+        setTest(test + 1);
+      }
+    });
+  };
+  const reviewActivateHandler = (petId: number) => {
+    setEditActivate(petId);
+    console.log(editActivate);
+  };
+  const reviewUpdateHandler = (commentId: number) => {
+    if (editReview === '') {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        iconHtml: '⚠',
+        title: '내용을 입력해주세요. ',
+        color: brown,
+        padding: '20px 0px 40px 0px',
+      });
+      return;
+    } else {
+      Swal.fire({
+        title: '정말 수정하시겠어요?',
+        icon: 'warning',
+        showCancelButton: true,
+        color: brown,
+        confirmButtonColor: yellow,
+        cancelButtonColor: bordergrey,
+        confirmButtonText: '<b>확인</b>',
+        cancelButtonText: '<b>취소</b>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: '수정되었습니다.',
+            icon: 'success',
+            color: brown,
+            confirmButtonColor: yellow,
+            confirmButtonText: '<b>확인</b>',
+          });
+          PostReviewUPDATE(commentId, editReview);
+          setEditActivate(0);
+          setTest(test + 1);
+        }
+      });
+      setEditReview('');
+    }
+  };
+  const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setEditReview((e.target as HTMLInputElement).value);
+    console.log('editreviewhandler', (e.target as HTMLInputElement).value);
+  };
+  const reviewEditCancelHandler = () => {
+    setEditActivate(0);
+    setEditReview('');
+  };
+
   const type = 'board';
   return (
     <>
@@ -130,9 +211,9 @@ const CommunityDetail: React.FC = () => {
             </div>
             <ImageDiv>
               {postDetail.post.imageUrl === null ? (
-                <Image src={load} />
+                <ImageTop src={load} />
               ) : (
-                <Image src={postDetail.post.imageUrl[0]} />
+                <ImageTop src={postDetail.post.imageUrl[0]} />
               )}
             </ImageDiv>
             <EditorContainer>
@@ -161,6 +242,86 @@ const CommunityDetail: React.FC = () => {
                 <DeleteButton>삭제</DeleteButton>
               </ButtonsDiv>
             </FooterDiv>
+            <ReviewContainer>
+              <ReviewBox>
+                <ReviewTitle>리뷰</ReviewTitle>
+                <Reviews>
+                  {postDetail.comments === null ? (
+                    <EmptyMessage>
+                      리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                    </EmptyMessage>
+                  ) : (
+                    dummy.map((el: any, idx: number) => {
+                      return (
+                        <Review key={idx}>
+                          {el.petId !== editActivate ? (
+                            <ReviewWrite>
+                              <ReviewUserBox>
+                                <ReviewUserImage src={el.profileImageUrl} />
+                                <ReviewUserName>{el.petname}</ReviewUserName>
+                              </ReviewUserBox>
+                              <ReviewTextBox>
+                                <ReviewText>
+                                  {el.content}
+                                  {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                                  {el.petId === Number(petId) ? (
+                                    <EditDelButtons>
+                                      <button onClick={() => reviewActivateHandler(el.petId)}>
+                                        <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
+                                      </button>
+                                      <button onClick={() => reviewDeleteHandler(el.petId)}>
+                                        <Icon
+                                          icon='material-symbols:delete-outline-rounded'
+                                          style={{ fontSize: '15px' }}
+                                        />
+                                      </button>
+                                    </EditDelButtons>
+                                  ) : (
+                                    ''
+                                  )}
+                                </ReviewText>
+                                <ReviewDate>{el.createdAt}</ReviewDate>
+                              </ReviewTextBox>
+                            </ReviewWrite>
+                          ) : (
+                            <ReviewWrite>
+                              <ReviewUserBox>
+                                <ReviewUserImage src={el.profileImageUrl} />
+                                <ReviewUserName>{el.petName}</ReviewUserName>
+                              </ReviewUserBox>
+                              <ReviewInputTextBox>
+                                <ReviewInputBox>
+                                  <ReviewInput
+                                    type='text'
+                                    placeholder={el.contents}
+                                    onChange={editReviewHandler}
+                                    id='basereview'
+                                  ></ReviewInput>
+                                </ReviewInputBox>
+                                <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
+                                  <Icon
+                                    icon='mdi:check-bold'
+                                    color='#ffc57e'
+                                    style={{ fontSize: '20px' }}
+                                  />
+                                </ReviewButton>
+                                <ReviewEditCancelButton onClick={reviewEditCancelHandler}>
+                                  <Icon
+                                    icon='mdi:cancel-bold'
+                                    color='#f79483'
+                                    style={{ fontSize: '22px' }}
+                                  />
+                                </ReviewEditCancelButton>
+                              </ReviewInputTextBox>
+                            </ReviewWrite>
+                          )}
+                        </Review>
+                      );
+                    })
+                  )}
+                </Reviews>
+              </ReviewBox>
+            </ReviewContainer>
           </PostContainer>
         </Body>
       </Container>
@@ -258,9 +419,9 @@ const ImageDiv = styled.div`
   padding-left: 80px;
 `;
 
-const Image = styled.img`
+const ImageTop = styled.img`
   margin-top: 15px;
-  max-width: 500px;
+  max-width: 300px;
   max-height: 300px;
   border-radius: 20px;
   object-fit: cover;
@@ -313,3 +474,249 @@ const LikeCnt = styled.div`
   padding-top: 5px;
   margin-left: 20px;
 `;
+
+const ReviewContainer = styled.div``;
+
+const ReviewBox = styled.div`
+  background-color: white;
+`;
+const Reviews = styled.div`
+  height: calc(
+    100vh - 537px - 50px - 100px
+  ); // 100vh - 위의 콘텐츠 높이 - 헤더 높이 - 리뷰 작성 박스 높이
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #dccdc8;
+    border-radius: 100px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #a9908d;
+    border-radius: 100px;
+  }
+`;
+
+const Review = styled.div`
+  width: 100%;
+  min-height: 90px;
+  display: flex;
+`;
+
+const ReviewTitle = styled.div`
+  color: ${brown};
+  font-weight: 900;
+  padding: 15px 19px;
+`;
+
+const ReviewUserBox = styled.div`
+  width: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ReviewUserImage = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-size: cover;
+`;
+
+const ReviewUserName = styled.div`
+  margin-top: 8px;
+  color: ${brown};
+  font-size: 14px;
+  font-weight: Bold;
+`;
+
+const ReviewTextBox = styled.div`
+  padding: 20px 15px 20px 10px;
+  width: calc(100% - 70px);
+  min-height: 80px;
+`;
+
+const ReviewText = styled.div`
+  width: 100%;
+  height: 100%;
+  color: ${brown};
+  font-size: 14px;
+  font-weight: 500;
+
+  display: flex;
+  justify-content: space-between;
+`;
+
+const ReviewDate = styled.div`
+  text-align: end;
+  color: ${lightgrey};
+  font-size: 11px;
+  margin-right: 7px;
+`;
+
+const ReviewInputBox = styled.div`
+  flex-grow: 1;
+  color: ${brown};
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+type Props = {
+  type: string;
+  placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const ReviewInput = styled.input<Props>`
+  padding: 10px;
+  width: 100%;
+  height: 50px;
+  font-size: 14px;
+  color: ${brown};
+  border: 1px solid ${bordergrey};
+  border-radius: 15px;
+  resize: none;
+
+  &:focus {
+    outline: 1px solid ${bordergrey};
+  }
+  &::placeholder {
+    color: ${lightgrey};
+  }
+`;
+const ReviewButton = styled.button`
+  margin-left: 4px;
+  margin-right: 4px;
+  padding: 7px 10px;
+  font-weight: bold;
+  background: ${brown};
+  border-radius: 12px;
+  border: 0;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${darkbrown};
+  }
+`;
+const ReviewInputTextBox = styled.div`
+  padding: 10px;
+  width: calc(100% - 70px);
+  display: flex;
+  align-items: center;
+`;
+
+const CloseBox = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: 48%;
+  left: 357px;
+  bottom: 0;
+  right: 0;
+  opacity: 0.8;
+  .close {
+    cursor: pointer;
+  }
+`;
+
+const ReviewWrite = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  background-color: white;
+  border-bottom: 1px solid ${bordergrey};
+`;
+
+const EmptyMessage = styled.div`
+  margin-top: 35px;
+  text-align: center;
+  font-size: 14px;
+  color: ${brown};
+`;
+
+const EditDelButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  button {
+    padding: 5px;
+    border: transparent;
+    border-radius: 5px;
+    color: ${lightgrey};
+    background: none;
+    cursor: pointer;
+    line-height: 0px;
+
+    &:hover {
+      color: ${yellow};
+      background-color: ${ivory};
+    }
+  }
+`;
+
+const ReviewEditCancelButton = styled.button`
+  padding: 7px 10px;
+  font-weight: bold;
+  background: ${ivory};
+  border-radius: 12px;
+  border: 1px solid ${bordergrey};
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${darkbrown};
+  }
+`;
+
+const dummy = [
+  {
+    petId: 7,
+    petName: 'jelly',
+    content: '좋아연',
+    profileImageUrl:
+      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/0e366be8-58c7-4bbb-ae3d-458031d9b809.jpeg',
+    createdAt: '23-01-26',
+  },
+  {
+    petId: 7,
+    petName: 'jelly',
+    content: '좋아연@@',
+    profileImageUrl:
+      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/84745c99-fed5-4de2-9b04-1c3a52d07b53.jpeg',
+    createdAt: '23-01-26',
+  },
+  {
+    petId: 4,
+    petName: 'jelly',
+    content: '좋아연',
+    profileImageUrl:
+      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/0e366be8-58c7-4bbb-ae3d-458031d9b809.jpeg',
+    createdAt: '23-01-26',
+  },
+  {
+    petId: 3,
+    petName: 'jelly',
+    content: '좋아연@@',
+    profileImageUrl:
+      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/84745c99-fed5-4de2-9b04-1c3a52d07b53.jpeg',
+    createdAt: '23-01-26',
+  },
+  {
+    petId: 2,
+    petName: 'jelly',
+    content: '좋아연',
+    profileImageUrl:
+      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/0e366be8-58c7-4bbb-ae3d-458031d9b809.jpeg',
+    createdAt: '23-01-26',
+  },
+  {
+    petId: 1,
+    petName: 'jelly',
+    content: '좋아연@@',
+    profileImageUrl:
+      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/84745c99-fed5-4de2-9b04-1c3a52d07b53.jpeg',
+    createdAt: '23-01-26',
+  },
+];
