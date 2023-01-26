@@ -280,7 +280,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   };
 
   const reviewEditCancelHandler = (commentId: number) => {
-    mapReviewUPDATE(commentId, editReview);
     setEditActivate(0);
     setTest(test + 1);
   };
