@@ -43,6 +43,7 @@ interface PostList {
 const CommunityDetail: React.FC = () => {
   const navigate = useNavigate();
   const [like, setLike] = useState(true);
+  const [review, setReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
   const [editReview, setEditReview] = useState<string>('');
   const [test, setTest] = useState<number>(0);
@@ -65,7 +66,7 @@ const CommunityDetail: React.FC = () => {
   useEffect(() => {
     getData();
     console.log('resetCheck');
-  }, [like]);
+  }, [like, test]);
 
   async function getData() {
     await axios
@@ -193,6 +194,43 @@ const CommunityDetail: React.FC = () => {
     setEditReview('');
   };
 
+  const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setReview((e.target as HTMLInputElement).value);
+    console.log('reviewhandler', (e.target as HTMLInputElement).value);
+  };
+
+  const reviewPostHandler = () => {
+    setTest(test + 1);
+    PostReviewEdit(Number(postId), review);
+    console.log('test', test);
+    if (review === '') {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        iconHtml: '⚠',
+        title: '내용을 입력해주세요. ',
+        color: brown,
+        padding: '20px 0px 40px 0px',
+      });
+      return;
+    } else {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        iconHtml: '🐾',
+        title: '작성되었습니다.',
+        color: brown,
+        padding: '20px 0px 40px 0px',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setReview('');
+      setTimeout(() => {
+        window.location.reload(), 1500;
+      });
+    }
+  };
+
   const type = 'board';
   return (
     <>
@@ -244,7 +282,7 @@ const CommunityDetail: React.FC = () => {
             </FooterDiv>
             <ReviewContainer>
               <ReviewBox>
-                <ReviewTitle>리뷰</ReviewTitle>
+                <ReviewTitle>댓글</ReviewTitle>
                 <Reviews>
                   {postDetail.comments === null ? (
                     <EmptyMessage>
@@ -320,6 +358,22 @@ const CommunityDetail: React.FC = () => {
                     })
                   )}
                 </Reviews>
+                <ReviewWrite>
+                  <ReviewUserBox>
+                    <ReviewUserImage />
+                    <ReviewUserName>뚱이</ReviewUserName>
+                  </ReviewUserBox>
+                  <ReviewInputTextBox>
+                    <ReviewInputBox>
+                      <ReviewInput
+                        type='text'
+                        placeholder='이 공간이 어땠나요?'
+                        onChange={reviewHandler}
+                      />
+                    </ReviewInputBox>
+                    <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
+                  </ReviewInputTextBox>
+                </ReviewWrite>
               </ReviewBox>
             </ReviewContainer>
           </PostContainer>
