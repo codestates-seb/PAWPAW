@@ -6,6 +6,7 @@ import color from '../color';
 import Pagination from 'react-js-pagination';
 import axios from 'axios';
 import headers from '../util/headers';
+import Nav from '../Components/Nav';
 import '../App.css';
 
 const { darkgrey, brown, mediumgrey, bordergrey } = color;
@@ -47,7 +48,7 @@ const Community: React.FC = () => {
 
   async function getData() {
     await axios
-      .get(`${url}/posts/page=${page * 15 - 14}&size=${page * 15}`, { headers })
+      .get(`${url}/posts/page=${page * 7 - 6}&size=${page * 7}`, { headers })
       .then((res) => {
         setPostData(res.data);
       })
@@ -64,7 +65,7 @@ const Community: React.FC = () => {
     <>
       <Header />
       <Container>
-        <LeftNav />
+        <Nav />
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
           {/* <SortButtonContainer></SortButtonContainer> */}
@@ -132,6 +133,7 @@ const RightBlank = styled.div`
 const CommunityContainer = styled.div`
   width: 100%;
   display: flex;
+  margin-top: 30px;
   flex-direction: column;
   justify-content: center;
 `;
@@ -250,70 +252,6 @@ const dummy = {
       content: 'test7',
       createdAt: '2023-01-07',
       likesCnt: 7,
-    },
-    {
-      postId: 8,
-      petname: 'test8',
-      title: 'test8',
-      content: 'test8',
-      createdAt: '2023-01-08',
-      likesCnt: 8,
-    },
-    {
-      postId: 9,
-      petname: 'test9',
-      title: 'test9',
-      content: 'test9',
-      createdAt: '2023-01-09',
-      likesCnt: 9,
-    },
-    {
-      postId: 10,
-      petname: 'test10',
-      title: 'test10',
-      content: 'test10',
-      createdAt: '2023-01-10',
-      likesCnt: 10,
-    },
-    {
-      postId: 11,
-      petname: 'test11',
-      title: 'test11',
-      content: 'test11',
-      createdAt: '2023-01-11',
-      likesCnt: 11,
-    },
-    {
-      postId: 12,
-      petname: 'test12',
-      title: 'test12',
-      content: 'test12',
-      createdAt: '2023-01-12',
-      likesCnt: 12,
-    },
-    {
-      postId: 13,
-      petname: 'test13',
-      title: 'test13',
-      content: 'test13',
-      createdAt: '2023-01-13',
-      likesCnt: 13,
-    },
-    {
-      postId: 14,
-      petname: 'test14',
-      title: 'test14',
-      content: 'test14',
-      createdAt: '2023-01-14',
-      likesCnt: 14,
-    },
-    {
-      postId: 15,
-      petname: 'test15',
-      title: 'test15',
-      content: 'test15',
-      createdAt: '2023-01-15',
-      likesCnt: 15,
     },
   ],
   pageInfo: {
