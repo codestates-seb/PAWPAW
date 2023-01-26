@@ -42,12 +42,14 @@ public class PostService {
         post.setTitle(post.getTitle());
         post.setContents(post.getContents());
 
-        for (MultipartFile file : files) {
-            if (file != null && !file.isEmpty()) {
-                postImageService.uploadImage(post, file);
+        if(files != null){
+            for (MultipartFile file : files) {
+                if (file != null && !file.isEmpty()) {
+                    postImageService.uploadImage(post, file);
+                }
             }
-        }
 
+        }
         return postRepository.save(post);
     }
 
