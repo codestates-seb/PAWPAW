@@ -14,7 +14,7 @@ const Header: React.FC = () => {
     if (jwtToken !== null) {
       navigate('/map');
     } else {
-      navigate('/login');
+      navigate('/');
     }
   };
 
@@ -23,9 +23,17 @@ const Header: React.FC = () => {
     if (jwtToken !== null) {
       navigate('/mypage');
     } else {
-      navigate('/login');
+      navigate('/');
     }
   };
+  const goToCommunity = () => {
+    const jwtToken = localStorage.getItem('Authorization');
+    if (jwtToken !== null) {
+      navigate('/community');
+    } else {
+      navigate('/');
+    }
+  }
 
   return (
     <Container>
@@ -37,7 +45,7 @@ const Header: React.FC = () => {
         <IconSpan onClick={goToMap}>
           <Icon icon='material-symbols:map' style={{ fontSize: '35px' }} />
         </IconSpan>
-        <IconSpan>
+        <IconSpan onClick={goToCommunity}>
           <Icon icon='gridicons:posts' style={{ fontSize: '35px' }} />
         </IconSpan>
         <IconSpan onClick={goToMyPage}>
