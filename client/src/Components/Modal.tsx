@@ -179,14 +179,14 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   };
   const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEditReview((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
+    console.log('editreviewhandler', (e.target as HTMLInputElement).value);
   };
 
   const reviewPostHandler = () => {
     setTest(test + 1);
     mapReviewEdit(id, review);
     console.log('test', test);
-    if (review === '') {      
+    if (review === '') {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -211,29 +211,43 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     }
   };
   const reviewUpdateHandler = (commentId: number) => {
-    Swal.fire({
-      title: '정말 수정하시겠어요?',
-      icon: 'warning',
-      showCancelButton: true,
-      color: brown,
-      confirmButtonColor: yellow,
-      cancelButtonColor: bordergrey,
-      confirmButtonText: '<b>확인</b>',
-      cancelButtonText: '<b>취소</b>',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '수정되었습니다.',
-          icon: 'success',
-          color: brown,
-          confirmButtonColor: yellow,
-          confirmButtonText: '<b>확인</b>',
-        });
-        mapReviewUPDATE(commentId, editReview);
-        setEditActivate(0);
-        setTest(test + 1);
-      }
-    });
+    console.log('editreview', editReview);
+    if (editReview === '') {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        iconHtml: '⚠',
+        title: '내용을 입력해주세요. ',
+        color: brown,
+        padding: '20px 0px 40px 0px',
+      });
+      return;
+    } else {
+      Swal.fire({
+        title: '정말 수정하시겠어요?',
+        icon: 'warning',
+        showCancelButton: true,
+        color: brown,
+        confirmButtonColor: yellow,
+        cancelButtonColor: bordergrey,
+        confirmButtonText: '<b>확인</b>',
+        cancelButtonText: '<b>취소</b>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: '수정되었습니다.',
+            icon: 'success',
+            color: brown,
+            confirmButtonColor: yellow,
+            confirmButtonText: '<b>확인</b>',
+          });
+          mapReviewUPDATE(commentId, editReview);
+          setEditActivate(0);
+          setTest(test + 1);
+        }
+      });
+      setEditReview('');
+    }
   };
 
   const reviewDeleteHandler = (commentId: number) => {
@@ -263,6 +277,12 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const reviewActivateHandler = (commentId: number) => {
     setEditActivate(commentId);
     console.log(editActivate);
+  };
+
+  const reviewEditCancelHandler = (commentId: number) => {
+    mapReviewUPDATE(commentId, editReview);
+    setEditActivate(0);
+    setTest(test + 1);
   };
   return (
     <div>
@@ -362,24 +382,35 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                           ) : (
                             <ReviewWrite>
                               <ReviewUserBox>
-                                <ReviewUserImage src={UserImg1} />
-                                <ReviewUserName>{el.username}</ReviewUserName>
+                                <ReviewUserImage src={el.profileImage} />
+                                <ReviewUserName>{el.petName}</ReviewUserName>
                               </ReviewUserBox>
                               <ReviewInputTextBox>
                                 <ReviewInputBox>
                                   <ReviewInput
                                     type='text'
-                                    placeholder={el.content}
+                                    placeholder={el.contents}
                                     onChange={editReviewHandler}
-                                  />
+                                    id='basereview'
+                                  >
+                                  </ReviewInput>
                                 </ReviewInputBox>
                                 <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
                                   <Icon
-                                    icon='material-symbols:check-small-rounded'
-                                    color={yellow}
+                                    icon='mdi:check-bold'
+                                    color='#ffc57e'
                                     style={{ fontSize: '20px' }}
                                   />
                                 </ReviewButton>
+                                <ReviewEditCancelButton
+                                  onClick={() => reviewEditCancelHandler(el.commentId)}
+                                >
+                                  <Icon
+                                    icon='mdi:cancel-bold'
+                                    color='#f79483'
+                                    style={{ fontSize: '22px' }}
+                                  />
+                                </ReviewEditCancelButton>
                               </ReviewInputTextBox>
                             </ReviewWrite>
                           )}
@@ -635,9 +666,9 @@ const ReviewInput = styled.input<Props>`
   }
 `;
 const ReviewButton = styled.button`
-  margin-left: 8px;
+  margin-left: 4px;
+  margin-right: 4px;
   padding: 7px 10px;
-  font-size: 14px;
   font-weight: bold;
   background: ${brown};
   border-radius: 12px;
@@ -701,6 +732,20 @@ const EditDelButtons = styled.div`
       color: ${yellow};
       background-color: ${ivory};
     }
+  }
+`;
+
+const ReviewEditCancelButton = styled.button`
+  padding: 7px 10px;
+  font-weight: bold;
+  background: ${ivory};
+  border-radius: 12px;
+  border: 1px solid ${bordergrey};
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${darkbrown};
   }
 `;
 
