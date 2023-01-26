@@ -63,9 +63,8 @@ public class PostController {
 
 
     @GetMapping
-    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page,
-                                   @Positive @RequestParam(defaultValue = "15") int size) {
-
+    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page) {
+        int size = 7;
         Page<Post> posts = postService.findPosts(page - 1, size);
         PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts);
         return new ResponseEntity(postsResponseDto, HttpStatus.OK);
