@@ -193,11 +193,11 @@ const UserInfoEdit: FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : profileImage.profileImage ? (
+            ) : profileImage ? (
               <img
                 className='userprofile'
                 alt='sample'
-                src={profileImage.profileImage}
+                src={profileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
             ) : info.isCat === 'CAT' ? (
