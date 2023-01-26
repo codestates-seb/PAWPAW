@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
+import { getUserInfo } from '../util/UserApi';
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
@@ -21,6 +21,15 @@ interface IReqData {
   infoMapId: number;
 }
 
+interface ResponseData {
+  petInfo: petInfo;
+}
+
+interface petInfo {
+  petName: string;
+  profileImage: File | null;
+}
+
 interface IReview {
   petId: number;
   commentId: number;
@@ -28,6 +37,15 @@ interface IReview {
   petName: string;
   contents: string;
   createdAt: string;
+}
+
+interface UserInfo {
+  petName: string;
+  profileImage: File | null;
+}
+
+interface FormData {
+  profileImage: Blob | null;
 }
 
 interface MapData {
@@ -79,6 +97,25 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
       totalPages: 1,
     },
   });
+  const petId = localStorage.getItem('petId') as string;
+  const { responseData, error } = getUserInfo(petId);
+  const [info, setInfo] = useState<UserInfo>({
+    petName: '',
+    profileImage: null,
+  });
+
+  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [count, setCount] = useState<number>(0);
+
+  if (!error && responseData && count === 0) {
+    const { petInfo } = responseData as ResponseData;
+    const { petName, profileImage } = petInfo;
+    setInfo({ ...info, petName: petName });
+    setFormData({ profileImage: profileImage });
+    setCount(count + 1);
+  }
+
+  const UserImg = formData.profileImage as unknown as string;
 
   useEffect(() => {
     getData();
@@ -93,6 +130,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
       .then((res) => {
         setResData(res.data);
         setMapdata(res.data);
+        console.log(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -282,7 +320,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                           {el.commentId !== editActivate ? (
                             <ReviewWrite>
                               <ReviewUserBox>
-                                <ReviewUserImage src={UserImg1} />
+                                <ReviewUserImage src={el.profileImage} />
                                 <ReviewUserName>{el.petName}</ReviewUserName>
                               </ReviewUserBox>
                               <ReviewTextBox>
@@ -341,8 +379,8 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
               {/* 리뷰 작성 */}
               <ReviewWrite>
                 <ReviewUserBox>
-                  <ReviewUserImage src={UserImg1} />
-                  <ReviewUserName>유저 이름</ReviewUserName>
+                  <ReviewUserImage src={UserImg} />
+                  <ReviewUserName>{info.petName}</ReviewUserName>
                 </ReviewUserBox>
                 <ReviewInputTextBox>
                   <ReviewInputBox>
