@@ -4,13 +4,15 @@ import { useNavigate } from 'react-router';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import sanitizeHtml from 'sanitize-html';
 import headers from '../util/headers';
 import Header from '../Components/Header';
 import color from '../color';
-import { getUserInfo, petLogout } from '../util/UserApi';
+import { petLogout } from '../util/UserApi';
 import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+import { Link } from 'react-router-dom';
 
 const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -52,7 +54,7 @@ interface PostData {
   title: string;
 }
 interface PostList {
-  posts: PostData[] | null;
+  myPosts: PostData[] | null;
   pageInfo: {
     page: number;
     size: number;
@@ -73,7 +75,7 @@ interface PostList {
 const Mypage = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList>({
-    posts: [],
+    myPosts: [],
     pageInfo: {
       page: 0,
       size: 0,
@@ -203,20 +205,30 @@ const Mypage = () => {
             <span>작성한 리뷰</span>
             <Icon icon='mdi:paw' style={{ fontSize: '20px' }} />
           </WriteTitleBox>
-          <WriteBox>
-            <div className='top'>
-              <TitleBox>동물 병원 추천</TitleBox>
-              <DayBox>2023.01.04</DayBox>
-            </div>
-            <ContentBox>저렴한 동물 병원 추천해주세요</ContentBox>
-          </WriteBox>
-          <WriteBox>
-            <div className='top'>
-              <TitleBox>동물 병원 추천</TitleBox>
-              <DayBox>2023.01.04</DayBox>
-            </div>
-            <ContentBox>저렴한 동물 병원 추천해주세요</ContentBox>
-          </WriteBox>
+          {postData.myPosts === null ? (
+            <EmptyMessage>작성한 글이 없어요 🐾</EmptyMessage>
+          ) : (
+            postData.myPosts.map((el: any) => {
+              return (
+                <WriteBox key={el.postId}>
+                  <div className='top'>
+                    <Link to={`/community/${el.postId}`}>
+                      <TitleBox>{el.title}</TitleBox>
+                    </Link>
+                    <DayBox>{el.createdAt}</DayBox>
+                  </div>
+                  <ContentBox
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(el.contents, {
+                        allowedTags: [],
+                        allowedAttributes: false,
+                      }),
+                    }}
+                  />
+                </WriteBox>
+              );
+            })
+          )}
         </WriteContainerBox>
         <LogoutBox>
           <button onClick={logoutHandler}>로그아웃</button>
@@ -348,7 +360,7 @@ const WriteBox = styled.div`
     margin-bottom: 8px;
   }
   border-bottom: 1px solid ${bordergrey};
-  height: 170px;
+  height: 100px;
 `;
 
 const TitleBox = styled.div`
@@ -368,6 +380,11 @@ const DayBox = styled.div`
 const ContentBox = styled.div`
   color: ${darkgrey};
   font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;
 
 const LogoutBox = styled.div`
@@ -387,6 +404,12 @@ const LogoutBox = styled.div`
       color: ${brown};
     }
   }
+`;
+
+const EmptyMessage = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: ${brown};
 `;
 
 export default Mypage;
