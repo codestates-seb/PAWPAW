@@ -124,7 +124,7 @@ const Community: React.FC = () => {
         </CommunityContainer>
         <RightBlank>
           <EditButton onClick={goToEditPage}>
-            <Icon icon='mdi:pencil' color='black' style={{ fontSize: '50px' }} />
+            <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '50px' }} />
           </EditButton>
         </RightBlank>
       </Container>
@@ -132,7 +132,7 @@ const Community: React.FC = () => {
         <Pagination
           activePage={page}
           itemsCountPerPage={15}
-          totalItemsCount={dummy.pageInfo.totalPages * 15}
+          totalItemsCount={postData.pageInfo.totalPages * 15}
           pageRangeDisplayed={10}
           prevPageText={'‹'}
           nextPageText={'›'}
@@ -193,6 +193,7 @@ const PostBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  border-bottom: 1px solid ${bordergrey};
 `;
 
 const WriteBox = styled.div`
@@ -201,8 +202,8 @@ const WriteBox = styled.div`
     margin-top: 20px;
     margin-bottom: 8px;
   }
-  border-bottom: 1px solid ${bordergrey};
   height: 80px;
+  width: 100%;
 `;
 
 const TitleBox = styled.div`
@@ -261,69 +262,3 @@ const EmptyMessage = styled.div`
   font-size: 14px;
   color: ${brown};
 `;
-const dummy = {
-  post: [
-    {
-      postId: 1,
-      petname: 'test1',
-      title: 'test',
-      content: 'test',
-      createdAt: '2023-01-01',
-      likesCnt: 0,
-    },
-    {
-      postId: 2,
-      petname: 'test2',
-      title: 'test2',
-      content: 'test2',
-      createdAt: '2023-01-02',
-      likesCnt: 2,
-    },
-    {
-      postId: 3,
-      petname: 'test3',
-      title: 'test3',
-      content: 'test3',
-      createdAt: '2023-01-03',
-      likesCnt: 3,
-    },
-    {
-      postId: 4,
-      petname: 'test4',
-      title: 'test4',
-      content: 'test4',
-      createdAt: '2023-01-04',
-      likesCnt: 4,
-    },
-    {
-      postId: 5,
-      petname: 'test5',
-      title: 'test5',
-      content: 'test5',
-      createdAt: '2023-01-05',
-      likesCnt: 5,
-    },
-    {
-      postId: 6,
-      petname: 'test6',
-      title: 'test6',
-      content: 'test6',
-      createdAt: '2023-01-06',
-      likesCnt: 6,
-    },
-    {
-      postId: 7,
-      petname: 'test7',
-      title: 'test7',
-      content: 'test7',
-      createdAt: '2023-01-07',
-      likesCnt: 7,
-    },
-  ],
-  pageInfo: {
-    page: 1,
-    size: 15,
-    totalElements: 0,
-    totalPages: 10,
-  },
-};
