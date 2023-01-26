@@ -74,59 +74,61 @@ const Community: React.FC = () => {
   };
   return (
     <>
-      <Header />
       <Container>
-        <Nav />
-        <CommunityContainer>
-          <CommunityBanner>자유게시판</CommunityBanner>
-          {/* <SortButtonContainer></SortButtonContainer> */}
-          <PostList>
-            {postData.posts === null ? (
-              <EmptyMessage>
-                리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-              </EmptyMessage>
-            ) : (
-              postData.posts.map((el: any) => {
-                return (
-                  <PostBox key={el.id}>
-                    <WriteBox>
-                      <div className='top'>
-                        <Link to={`/community/${el.id}`}>
-                          <TitleBox>{el.title}</TitleBox>
-                        </Link>
-                        <DayBox>{el.createdAt}</DayBox>
-                      </div>
-                      <ContentBox
-                        dangerouslySetInnerHTML={{
-                          __html: sanitizeHtml(el.content, {
-                            allowedTags: [],
-                            allowedAttributes: false,
-                          }),
-                        }}
-                      />
-                    </WriteBox>
-                    <LikeContainer>
-                      <div>{el.petname}</div>
-                      <div>
-                        <Icon
-                          icon='ph:paw-print-fill'
-                          color='#FFBF71'
-                          style={{ fontSize: '15px' }}
+        <Header />
+        <Body>
+          <Nav />
+          <CommunityContainer>
+            <CommunityBanner>자유게시판</CommunityBanner>
+            {/* <SortButtonContainer></SortButtonContainer> */}
+            <PostList>
+              {postData.posts === null ? (
+                <EmptyMessage>
+                  리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                </EmptyMessage>
+              ) : (
+                postData.posts.map((el: any) => {
+                  return (
+                    <PostBox key={el.id}>
+                      <WriteBox>
+                        <div className='top'>
+                          <Link to={`/community/${el.id}`}>
+                            <TitleBox>{el.title}</TitleBox>
+                          </Link>
+                          <DayBox>{el.createdAt}</DayBox>
+                        </div>
+                        <ContentBox
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeHtml(el.content, {
+                              allowedTags: [],
+                              allowedAttributes: false,
+                            }),
+                          }}
                         />
-                        {el.likesCnt}
-                      </div>
-                    </LikeContainer>
-                  </PostBox>
-                );
-              })
-            )}
-          </PostList>
-        </CommunityContainer>
-        <RightBlank>
-          <EditButton onClick={goToEditPage}>
-            <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '50px' }} />
-          </EditButton>
-        </RightBlank>
+                      </WriteBox>
+                      <LikeContainer>
+                        <div>{el.petname}</div>
+                        <div>
+                          <Icon
+                            icon='ph:paw-print-fill'
+                            color='#FFBF71'
+                            style={{ fontSize: '15px' }}
+                          />
+                          {el.likesCnt}
+                        </div>
+                      </LikeContainer>
+                    </PostBox>
+                  );
+                })
+              )}
+            </PostList>
+          </CommunityContainer>
+          <RightBlank>
+            <EditButton onClick={goToEditPage}>
+              <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
+            </EditButton>
+          </RightBlank>
+        </Body>
       </Container>
       <PageContainer>
         <Pagination
@@ -146,14 +148,16 @@ const Community: React.FC = () => {
 export default Community;
 
 const Container = styled.div`
-  width: 100%;
-  padding-top: 50px;
+  height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
 `;
 
-const LeftNav = styled.div`
-  width: 235px;
+const Body = styled.div`
+  margin-top: 50px;
+  flex-grow: 1;
+  display: flex;
 `;
 
 const RightBlank = styled.div`
@@ -166,7 +170,7 @@ const RightBlank = styled.div`
 `;
 
 const CommunityContainer = styled.div`
-  width: 100%;
+  width: 680px;
   display: flex;
   margin-top: 30px;
   flex-direction: column;
@@ -242,12 +246,12 @@ const PageContainer = styled.div`
 `;
 
 const EditButton = styled.button`
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   background-color: ${ivory};
   border-radius: 50px;
   border: 0px;
-  box-shadow: 2px 2px 2px 2px gray;
+  box-shadow: 1px 1px 1px 1px gray;
   position: absolute;
   right: 80px;
   top: 70vh;
