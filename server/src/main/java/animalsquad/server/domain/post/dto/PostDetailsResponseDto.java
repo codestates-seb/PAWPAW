@@ -22,6 +22,7 @@ public class PostDetailsResponseDto {
     @Getter
     @Setter
     public static class PostResponseDto {
+        private long postId;
         private String title;
         private String content;
         private List<String> imageUrl;

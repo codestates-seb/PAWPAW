@@ -63,7 +63,7 @@ public class PostService {
                 .ifPresent(title -> findPost.setTitle(title));
         Optional.ofNullable(post.getContents())
                 .ifPresent(content -> findPost.setContents(content));
-        if (files.size() != 0) {
+        if (files != null && !files.isEmpty()) {
             List<PostImage> postImages = postImageService.updateImage(post, files);
         }
 

@@ -62,6 +62,7 @@ public interface PostMapper {
     default PostDetailsResponseDto postToPostDetailsDto(Post post, long petId) {
         PostDetailsResponseDto.PostResponseDto postResponseDto = new PostDetailsResponseDto.PostResponseDto();
 
+        postResponseDto.setPostId(post.getId());
         postResponseDto.setTitle(post.getTitle());
         postResponseDto.setContent(post.getContents());
         List<String> images = post.getPostImages().stream()
