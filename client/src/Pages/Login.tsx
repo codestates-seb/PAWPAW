@@ -15,6 +15,7 @@ import { PawIconSVG } from '../Components/PawIconSVG';
 const { ivory, yellow, brown, red } = color;
 
 export interface Info {
+  petName: string;
   petNameSpan: string;
   petId: number;
   exp: number;
@@ -58,6 +59,7 @@ const Login: React.FC = () => {
         const jwtToken_decode = jwt_decode(jwtToken) as Info;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
+        const petName = jwtToken_decode.petName as string;
         const code = jwtToken_decode.code as number;
         setPetId(petid.toString());
         console.log('petId', petId);
@@ -65,8 +67,8 @@ const Login: React.FC = () => {
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('petId', petid);
+        localStorage.setItem('petName', petName);
         localStorage.setItem('code', code.toString());
-        localStorage.setItem('count', '1');
         navigate('/map');
       } catch (error) {
         console.error('Error', error);

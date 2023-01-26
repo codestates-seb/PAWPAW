@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 import color from '../color';
 import axios from 'axios';
 import headers from '../util/headers';
@@ -10,9 +12,10 @@ import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import load from '../img/paw.gif';
 
-const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
+const { ivory, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
+const petName = localStorage.getItem('petName') as string;
 
 interface PostData {
   postId: number;
@@ -36,6 +39,8 @@ interface PostList {
 }
 
 const CommunityDetail: React.FC = () => {
+  const navigate = useNavigate();
+  const [like, setLike] = useState(false);
   const [postDetail, setPostDetail] = useState<PostList>({
     comments: [],
     post: {
@@ -55,13 +60,15 @@ const CommunityDetail: React.FC = () => {
   useEffect(() => {
     getData();
     console.log('resetCheck');
-  }, []);
+  }, [like]);
 
   async function getData() {
     await axios
       .get(`${url}/posts/${postId}`, { headers })
       .then((res) => {
         setPostDetail(res.data);
+        setLike(postDetail.post.likeActive);
+        console.log('value', postDetail.post.likeActive);
         console.log('res', res);
         console.log('res.data', res.data);
         console.log('postData', postDetail);
@@ -70,32 +77,84 @@ const CommunityDetail: React.FC = () => {
         console.error(error);
       });
   }
+
+  const goToEdit = () => {
+    navigate('/postedit', { state: { postId: postId } });
+  };
+  const likeUp = async () => {
+    try {
+      await axios.post(
+        `${url}/posts/likes/${postId}`,
+        {
+          petId: petId,
+          status: 1,
+        },
+        { headers },
+      );
+      setLike(true);
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+  const likeDown = async () => {
+    try {
+      await axios.post(
+        `${url}/posts/likes/${postId}`,
+        {
+          petId: petId,
+          status: 0,
+        },
+        { headers },
+      );
+      setLike(false);
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
   console.log(postDetail.post.imageUrl);
+  const type = 'board';
   return (
     <>
       <Container>
         <Header />
         <Body>
-          <Nav />
+          <Nav type={type} />
           <PostContainer>
             <div>
               <Title>자유</Title>
               <Title>{postDetail.post.title}</Title>
             </div>
+            <ImageDiv>
+              {postDetail.post.imageUrl === null ? (
+                <Image src={load} />
+              ) : (
+                <Image src={postDetail.post.imageUrl[0]} />
+              )}
+            </ImageDiv>
             <EditorContainer>
               <ReactQuill value={postDetail.post.content} readOnly={true} theme={'bubble'} />
             </EditorContainer>
             <FooterDiv>
-              <ImageDiv>
-                {postDetail.post.imageUrl === null ? (
-                  <Image src={load} />
-                ) : (
-                  <Image src={postDetail.post.imageUrl[0]} />
-                )}
-              </ImageDiv>
               <ButtonsDiv>
-                <SubmitButton>등록</SubmitButton>
-                <CancelButton>취소</CancelButton>
+                {like === true ? (
+                  <LikeButton onClick={likeDown}>
+                    <FixedIcon
+                      icon='ph:paw-print-fill'
+                      color={'#FFBF71'}
+                      style={{ fontSize: '25px' }}
+                    />
+                    <LikeCnt>{postDetail.post.likesCnt}</LikeCnt>
+                  </LikeButton>
+                ) : (
+                  <LikeButton onClick={likeUp}>
+                    <FixedIcon icon='ph:paw-print' color={'#'} style={{ fontSize: '25px' }} />
+                    <LikeCnt>{postDetail.post.likesCnt}</LikeCnt>
+                  </LikeButton>
+                )}
+              </ButtonsDiv>
+              <ButtonsDiv>
+                <Button onClick={goToEdit}>수정</Button>
+                <DeleteButton>삭제</DeleteButton>
               </ButtonsDiv>
             </FooterDiv>
           </PostContainer>
@@ -137,23 +196,9 @@ const Title = styled.div`
   }
 `;
 
-const TitleInput = styled.input`
-  margin-bottom: 20px;
-  padding: 0px 11px;
-  border: 1px solid ${bordergrey};
-  border-radius: 5px;
-  width: 750px;
-  height: 50px;
-  font-size: 20px;
-
-  &::placeholder {
-    color: ${lightgrey};
-  }
-`;
-
 const EditorContainer = styled.div`
   .ql-editor {
-    height: 500px;
+    height: 100%;
     font-size: 18px;
   }
 
@@ -212,35 +257,44 @@ const ButtonsDiv = styled.div`
   justify-content: flex-end;
 `;
 
-const SubmitButton = styled.button`
-  margin-right: 15px;
-  width: 150px;
-  height: 50px;
+const Button = styled.button`
+  width: 46px;
+  height: 33px;
   border: none;
   border-radius: 15px;
-  color: white;
+  color: ${brown};
   font-weight: bold;
-  font-size: 18px;
-  background-color: ${brown};
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${darkbrown};
-  }
-`;
-
-const CancelButton = styled.button`
-  width: 100px;
-  height: 50px;
-  border: none;
-  border-radius: 15px;
-  color: ${red};
-  font-weight: bold;
-  font-size: 18px;
+  font-size: 15px;
   background-color: #f8f8f8;
   cursor: pointer;
 
   &:hover {
     background-color: #efefef;
   }
+`;
+
+const DeleteButton = styled(Button)`
+  color: ${red};
+`;
+
+const LikeButton = styled.button`
+  width: 74px;
+  height: 48px;
+  border: none;
+  border-radius: 15px;
+  color: ${brown};
+  background-color: ${ivory};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const FixedIcon = styled(Icon)`
+  position: absolute;
+  margin-right: 20px;
+`;
+const LikeCnt = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  padding-top: 5px;
+  margin-left: 20px;
 `;
