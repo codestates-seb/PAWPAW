@@ -2,19 +2,28 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import color from '../color';
 import { getUserInfo, petLogout } from '../util/UserApi';
 import { codeToAddress } from '../util/ConvertAddress';
+import Cat from '../img/catface.png';
+import Dog from '../img/dogface.png';
 
-const { darkgrey, brown, mediumgrey, bordergrey } = color;
+const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
 
 interface FormData {
   profileImage: Blob | null;
 }
 
 interface ResponseData {
+  myPost: any; // 수정 필요
+  pageInfo: any; // 수정 필요
+  petInfo: petInfo;
+}
+
+interface petInfo {
   petName: string;
   code: string;
   profileImage: File | null;
@@ -46,12 +55,13 @@ const Mypage = () => {
   const [count, setCount] = useState<number>(0);
 
   if (!error && responseData && count === 0) {
-    const { petName, code, profileImage, age, gender, species } = responseData as ResponseData;
+    const { petInfo } = responseData as ResponseData;
+    const { petName, code, profileImage, age, gender, species } = petInfo;
     setInfo({ ...info, petName: petName, address: code, age: age, isMale: gender, isCat: species });
     setFormData({ profileImage: profileImage });
     setCount(count + 1);
   }
-  console.log('info', info);
+
   const UserImg = formData.profileImage as unknown as string;
   const goEditPage = () => {
     navigate('/userinfoedit', {
@@ -59,19 +69,35 @@ const Mypage = () => {
         petName: info.petName,
         code: info.address,
         age: info.age,
-        gender: info.isMale,
-        species: info.isCat,
+        isMale: info.isMale,
+        isCat: info.isCat,
         profileImage: formData,
       },
     });
   };
   const logoutHandler = () => {
-    if (!confirm('로그아웃하시겠습니까?')) {
-      alert('취소 되었습니다.');
-    } else {
-      petLogout().then(() => navigate('/'));
-      alert('로그아웃 되었습니다.');
-    }
+    Swal.fire({
+      title: '로그아웃하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '<b>로그아웃</b>',
+      cancelButtonText: '<b>취소</b>',
+      color: brown,
+      confirmButtonColor: yellow,
+      cancelButtonColor: red,
+      padding: '40px 0px 30px 0px',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '로그아웃 되었습니다.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+          color: brown,
+          padding: '20px 0px 40px 0px',
+        });
+        petLogout().then(() => navigate('/'));
+      }
+    });
   };
 
   return (
@@ -80,7 +106,27 @@ const Mypage = () => {
       <Container>
         <ProfileContainerBox>
           <ProfileBox>
-            <img className='profile' src={UserImg}></img>
+            <AvatarDiv>
+              {UserImg ? (
+                <img
+                  className='profile'
+                  src={UserImg}
+                  style={{ margin: 'auto', width: '175px', height: '175px' }}
+                ></img>
+              ) : info.isCat === 'CAT' ? (
+                <img
+                  className='baseimojidog'
+                  src={Dog}
+                  style={{ width: '100px', height: '100px' }}
+                ></img>
+              ) : (
+                <img
+                  className='baseimojicat'
+                  src={Cat}
+                  style={{ width: '100px', height: '100px' }}
+                ></img>
+              )}
+            </AvatarDiv>
           </ProfileBox>
           <InfoBox>
             <InfoTopBox>
@@ -148,14 +194,30 @@ const ProfileContainerBox = styled.div`
   display: flex;
 `;
 
-const ProfileBox = styled.div`
-  .profile {
-    width: 207px;
+const ProfileBox = styled.div``;
+
+const AvatarDiv = styled.div`
+  width: 175px;
+  height: 175px;
+  border-radius: 50%;
+  overflow: hidden;
+  font-size: 100px;
+  background-color: ${ivory};
+  line-height: 180px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    object-fit: cover;
   }
 `;
 
 const InfoBox = styled.div`
   margin-left: 30px;
+  width: 100%;
+  padding: 30px;
 `;
 
 const InfoTopBox = styled.div`
@@ -216,7 +278,9 @@ const InfoPosBox = styled.div`
   margin-left: 5px;
 `;
 
-const WriteContainerBox = styled.div``;
+const WriteContainerBox = styled.div`
+  padding: 20px;
+`;
 
 const WriteTitleBox = styled.div`
   font-size: 24px;

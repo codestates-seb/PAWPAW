@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
+
 import color from '../color';
 import Header from '../Components/Header';
 import MapFilter from './MapFilter';
@@ -45,12 +46,12 @@ const HomeMap = () => {
   useEffect(() => {
     if (address) {
       getCenter(address).then((res) => setCurrentLocation(res));
-      getAll(address);
+      // getAll(address);
     }
   }, []);
 
-  if(localStorage.getItem('count') === '1'){ 
-    localStorage.removeItem('count')
+  if (localStorage.getItem('count') === '1') {
+    localStorage.removeItem('count');
     window.location.reload();
   }
   // selected, address, isModalOpen이 업데이트될 때마다 실행되는 useEffect
@@ -67,6 +68,7 @@ const HomeMap = () => {
       }
     }
   }, [selected, address, isModalOpen]);
+
   // if (localStorage.getItem('check') !== '1') {
   //   localStorage.setItem('check', '1');
   //   window.location.reload();
@@ -74,6 +76,7 @@ const HomeMap = () => {
   //   // localStorage.removeItem('check');
   // }
   // // 응급조치 ㅠㅡㅜ
+
   // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
     const geocoder = new kakao.maps.services.Geocoder();

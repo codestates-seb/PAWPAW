@@ -7,6 +7,8 @@ import HomeMap from '../Map/HomeMap';
 import Mypage from './Mypage';
 import Community from './Community';
 import CommunityDetail from './CommunityDetail';
+import Post from './Post';
+import AddMarker from './AddMarker';
 import PrivateRoute from '../Components/PrivateRouter';
 
 export default function Router() {
@@ -24,6 +26,8 @@ export default function Router() {
           <Route path='/mypage' element={<Mypage />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
+          <Route path='/post' element={<Post />} />
+          <Route path='/addmarker' element={<AddMarker />} />
         </Route>
       </Routes>
     </BrowserRouter>
