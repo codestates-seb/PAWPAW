@@ -128,7 +128,7 @@ const UserInfo: React.FC = () => {
           color: brown,
           padding: '20px 0px',
         });
-        navigate('/login');
+        navigate('/');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
         console.error('Error', error);
