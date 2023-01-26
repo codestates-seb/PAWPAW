@@ -279,9 +279,9 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     console.log(editActivate);
   };
 
-  const reviewEditCancelHandler = (commentId: number) => {
+  const reviewEditCancelHandler = () => {
     setEditActivate(0);
-    setTest(test + 1);
+    setEditReview('');
   };
   return (
     <div>
@@ -402,7 +402,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                                   />
                                 </ReviewButton>
                                 <ReviewEditCancelButton
-                                  onClick={() => reviewEditCancelHandler(el.commentId)}
+                                  onClick={reviewEditCancelHandler}
                                 >
                                   <Icon
                                     icon='mdi:cancel-bold'
