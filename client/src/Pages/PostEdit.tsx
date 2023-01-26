@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
@@ -26,6 +26,8 @@ export interface IPost {
 
 const PostEdit = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { postId } = location.state;
   const [data, setData] = useState<IPost>({
     petId: petId,
     title: '',
@@ -38,7 +40,6 @@ const PostEdit = () => {
   // 글 받아오기
   useEffect(() => {
     getPost().then((post) => {
-      console.log('post', post);
       setData({
         ...data,
         title: post.title,
@@ -53,7 +54,7 @@ const PostEdit = () => {
   }, []);
 
   async function getPost() {
-    const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/5`, { headers });
+    const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`, { headers });
     return res.data.post;
   }
 
@@ -103,7 +104,7 @@ const PostEdit = () => {
 
       try {
         await axios
-          .patch(`${process.env.REACT_APP_API_ROOT}/posts/5`, formData, { headers })
+          .patch(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`, formData, { headers })
           .then((res) => {
             console.log('성공', res);
             navigate('/community');
