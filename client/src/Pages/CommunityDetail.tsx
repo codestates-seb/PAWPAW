@@ -12,7 +12,12 @@ import headers from '../util/headers';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import load from '../img/paw.gif';
-import { PostReviewEdit, PostReviewUPDATE, PostReviewDELETE } from '../util/PostReviewApi';
+import {
+  PostReviewEdit,
+  PostReviewUPDATE,
+  PostReviewDELETE,
+  PostDELETE,
+} from '../util/PostReviewApi';
 
 const { ivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -118,6 +123,31 @@ const CommunityDetail: React.FC = () => {
     }
   };
   console.log(postDetail.post.imageUrl);
+
+  const postDeleteHandler = () => {
+    Swal.fire({
+      title: '정말 삭제하시겠어요?',
+      icon: 'warning',
+      showCancelButton: true,
+      color: brown,
+      confirmButtonColor: yellow,
+      cancelButtonColor: bordergrey,
+      confirmButtonText: '<b>확인</b>',
+      cancelButtonText: '<b>취소</b>',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '삭제되었습니다.',
+          icon: 'error',
+          color: brown,
+          confirmButtonColor: yellow,
+          confirmButtonText: '<b>확인</b>',
+        });
+        PostDELETE(Number(postId));
+        setTest(test + 1);
+      }
+    });
+  };
 
   const reviewDeleteHandler = (commentId: number) => {
     Swal.fire({
@@ -277,7 +307,7 @@ const CommunityDetail: React.FC = () => {
               </ButtonsDiv>
               <ButtonsDiv>
                 <Button onClick={goToEdit}>수정</Button>
-                <DeleteButton>삭제</DeleteButton>
+                <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
               </ButtonsDiv>
             </FooterDiv>
             <ReviewContainer>

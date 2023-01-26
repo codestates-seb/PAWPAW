@@ -46,3 +46,11 @@ export const PostReviewDELETE = async (postId: number) => {
     console.error('Error', error);
   }
 };
+
+export const PostDELETE = async (postId: number) => {
+  try {
+    await axios.delete(`${url}/post/${postId}`, { headers });
+  } catch (error) {
+    console.error('Error', error);
+  }
+};
