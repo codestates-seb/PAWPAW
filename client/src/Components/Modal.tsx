@@ -175,7 +175,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setReview((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
+    console.log('reviewhandler', (e.target as HTMLInputElement).value);
   };
   const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEditReview((e.target as HTMLInputElement).value);
@@ -185,17 +185,30 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   const reviewPostHandler = () => {
     setTest(test + 1);
     mapReviewEdit(id, review);
-    console.log(test);
-    Swal.fire({
-      position: 'center',
-      icon: 'warning',
-      iconHtml: '🐾',
-      title: '작성되었습니다.',
-      color: brown,
-      padding: '20px 0px 40px 0px',
-      showConfirmButton: false,
-      timer: 1500,
-    });
+    console.log('test', test);
+    if (review === '') {      
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        iconHtml: '⚠',
+        title: '내용을 입력해주세요. ',
+        color: brown,
+        padding: '20px 0px 40px 0px',
+      });
+      return;
+    } else {
+      Swal.fire({
+        position: 'center',
+        icon: 'warning',
+        iconHtml: '🐾',
+        title: '작성되었습니다.',
+        color: brown,
+        padding: '20px 0px 40px 0px',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setReview('');
+    }
   };
   const reviewUpdateHandler = (commentId: number) => {
     Swal.fire({
