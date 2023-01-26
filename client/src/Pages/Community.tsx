@@ -7,6 +7,7 @@ import color from '../color';
 import Pagination from 'react-js-pagination';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import sanitizeHtml from 'sanitize-html';
 import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
@@ -23,7 +24,7 @@ interface PostData {
   likesCnt: 10;
 }
 interface PostList {
-  post: PostData[] | null;
+  posts: PostData[] | null;
   pageInfo: {
     page: number;
     size: number;
@@ -35,7 +36,7 @@ interface PostList {
 const Community: React.FC = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList>({
-    post: [],
+    posts: [],
     pageInfo: {
       page: 1,
       size: 15,
@@ -51,9 +52,12 @@ const Community: React.FC = () => {
 
   async function getData() {
     await axios
-      .get(`${url}/posts/page=${page * 7 - 6}&size=${page * 7}`, { headers })
+      .get(`${url}/posts?page=${page}`, { headers })
       .then((res) => {
         setPostData(res.data);
+        console.log('res', res);
+        console.log('res.data', res.data);
+        console.log('postData', postData);
       })
       .catch((error) => {
         console.error(error);
@@ -77,22 +81,29 @@ const Community: React.FC = () => {
           <CommunityBanner>자유게시판</CommunityBanner>
           {/* <SortButtonContainer></SortButtonContainer> */}
           <PostList>
-            {dummy.post.length === 0 ? (
+            {postData.posts === null ? (
               <EmptyMessage>
                 리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
               </EmptyMessage>
             ) : (
-              dummy.post.map((el: any) => {
+              postData.posts.map((el: any) => {
                 return (
-                  <PostBox key={el.postId}>
+                  <PostBox key={el.id}>
                     <WriteBox>
                       <div className='top'>
-                        <Link to={`/community/${el.postId}`}>
+                        <Link to={`/community/${el.id}`}>
                           <TitleBox>{el.title}</TitleBox>
                         </Link>
                         <DayBox>{el.createdAt}</DayBox>
                       </div>
-                      <ContentBox>{el.content}</ContentBox>
+                      <ContentBox
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeHtml(el.content, {
+                            allowedTags: [],
+                            allowedAttributes: false,
+                          }),
+                        }}
+                      />
                     </WriteBox>
                     <LikeContainer>
                       <div>{el.petname}</div>
@@ -211,6 +222,11 @@ const DayBox = styled.div`
 const ContentBox = styled.div`
   color: ${darkgrey};
   font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;
 
 const LikeContainer = styled.div`
