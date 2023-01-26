@@ -12,7 +12,7 @@ import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import load from '../img/paw.gif';
 
-const { ivory, brown, darkbrown, bordergrey, lightgrey, red } = color;
+const { ivory, brown, bordergrey, lightgrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 const petName = localStorage.getItem('petName') as string;
@@ -121,8 +121,12 @@ const CommunityDetail: React.FC = () => {
           <Nav type={type} />
           <PostContainer>
             <div>
-              <Title>자유</Title>
+              <Tag>자유</Tag>
               <Title>{postDetail.post.title}</Title>
+              <NameCreatedAtConatiner>
+                <NameBox>{postDetail.post.petName}</NameBox>
+                <CreatedAtBox>{postDetail.post.createdAt}</CreatedAtBox>
+              </NameCreatedAtConatiner>
             </div>
             <ImageDiv>
               {postDetail.post.imageUrl === null ? (
@@ -184,9 +188,14 @@ const PostContainer = styled.div`
   height: 100%;
   flex-grow: 1;
 `;
-
+const Tag = styled.div`
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #aa8080;
+`;
 const Title = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   font-size: 30px;
   font-weight: bold;
   color: ${brown};
@@ -194,6 +203,23 @@ const Title = styled.div`
   &.body {
     margin-top: 20px;
   }
+`;
+const NameCreatedAtConatiner = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+const NameBox = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 10px;
+  margin-right: 20px;
+  color: #969696;
+`;
+const CreatedAtBox = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: #969696;
 `;
 
 const EditorContainer = styled.div`
@@ -228,27 +254,16 @@ const FooterDiv = styled.div`
   align-items: flex-end;
 `;
 
-const ImageDiv = styled.div``;
+const ImageDiv = styled.div`
+  padding-left: 80px;
+`;
 
 const Image = styled.img`
   margin-top: 15px;
-  max-width: 300px;
+  max-width: 500px;
   max-height: 300px;
   border-radius: 20px;
   object-fit: cover;
-`;
-
-const EmptyDiv = styled.div`
-  margin-top: 15px;
-  width: 100px;
-  height: 100px;
-  border-radius: 20px;
-  background-color: ${bordergrey};
-  cursor: pointer;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 const ButtonsDiv = styled.div`
