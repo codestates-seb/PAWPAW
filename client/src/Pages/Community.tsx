@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import color from '../color';
 import Pagination from 'react-js-pagination';
+import { Icon } from '@iconify/react';
 import axios from 'axios';
 import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
 
-const { darkgrey, brown, mediumgrey, bordergrey } = color;
+const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -31,6 +33,7 @@ interface PostList {
 }
 
 const Community: React.FC = () => {
+  const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList>({
     post: [],
     pageInfo: {
@@ -61,6 +64,10 @@ const Community: React.FC = () => {
     setPage(page);
     console.log(page);
   };
+
+  const goToEditPage = () => {
+    navigate('/post');
+  };
   return (
     <>
       <Header />
@@ -77,21 +84,38 @@ const Community: React.FC = () => {
             ) : (
               dummy.post.map((el: any) => {
                 return (
-                  <WriteBox key={el.postId}>
-                    <div className='top'>
-                      <Link to={`/community/${el.postId}`}>
-                        <TitleBox>{el.title}</TitleBox>
-                      </Link>
-                      <DayBox>{el.createdAt}</DayBox>
-                    </div>
-                    <ContentBox>{el.content}</ContentBox>
-                  </WriteBox>
+                  <PostBox key={el.postId}>
+                    <WriteBox>
+                      <div className='top'>
+                        <Link to={`/community/${el.postId}`}>
+                          <TitleBox>{el.title}</TitleBox>
+                        </Link>
+                        <DayBox>{el.createdAt}</DayBox>
+                      </div>
+                      <ContentBox>{el.content}</ContentBox>
+                    </WriteBox>
+                    <LikeContainer>
+                      <div>{el.petname}</div>
+                      <div>
+                        <Icon
+                          icon='ph:paw-print-fill'
+                          color='#FFBF71'
+                          style={{ fontSize: '15px' }}
+                        />
+                        {el.likesCnt}
+                      </div>
+                    </LikeContainer>
+                  </PostBox>
                 );
               })
             )}
           </PostList>
         </CommunityContainer>
-        <RightBlank />
+        <RightBlank>
+          <EditButton onClick={goToEditPage}>
+            <Icon icon='mdi:pencil' color='black' style={{ fontSize: '50px' }} />
+          </EditButton>
+        </RightBlank>
       </Container>
       <PageContainer>
         <Pagination
@@ -154,6 +178,12 @@ const PostList = styled.div`
   padding-left: 40px;
 `;
 
+const PostBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const WriteBox = styled.div`
   .top {
     display: flex;
@@ -183,11 +213,31 @@ const ContentBox = styled.div`
   font-size: 16px;
 `;
 
+const LikeContainer = styled.div`
+  margin-top: 20px;
+`;
+
 const PageContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+`;
+
+const EditButton = styled.button`
+  width: 80px;
+  height: 80px;
+  background-color: ${ivory};
+  border-radius: 50px;
+  border: 0px;
+  box-shadow: 2px 2px 2px 2px gray;
+  position: absolute;
+  right: 80px;
+  top: 70vh;
+  @media (min-height: 1200px) {
+    right: 100px;
+    top: 55vh;
+  }
 `;
 
 const EmptyMessage = styled.div`

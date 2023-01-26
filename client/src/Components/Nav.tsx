@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../color';
 const { brown, yellow } = color;
@@ -8,15 +9,22 @@ const Nav: React.FC = () => {
 
   return (
     <Container>
-      <Menu className={selected === 'board' ? 'selected' : ''} onClick={() => setSelected('board')}>
-        자유게시판
-      </Menu>
-      <Menu
-        className={selected === 'addPlace' ? 'selected' : ''}
-        onClick={() => setSelected('addPlace')}
-      >
-        장소 추가하기
-      </Menu>
+      <Link to={'/community'}>
+        <Menu
+          className={selected === 'board' ? 'selected' : ''}
+          onClick={() => setSelected('board')}
+        >
+          자유게시판
+        </Menu>
+      </Link>
+      <Link to={'/addmarker'}>
+        <Menu
+          className={selected === 'addPlace' ? 'selected' : ''}
+          onClick={() => setSelected('addPlace')}
+        >
+          장소 추가하기
+        </Menu>
+      </Link>
     </Container>
   );
 };

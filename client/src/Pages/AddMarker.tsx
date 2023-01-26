@@ -168,17 +168,20 @@ const AddMarker = () => {
           alert('등록이 완료되었습니다.');
           navigate('/community');
         })
-        .catch((err) => {console.error('Error', err);alert(err)});
+        .catch((err) => {
+          console.error('Error', err);
+          alert(err);
+        });
 
-        // try {
-        //   await axios.post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers });
-        //   alert('등록이 완료되었습니다.');
-        //   navigate('/community');
-        //   // 비동기 에러 날 것 같으면 .then 사용
-        // } catch (error) {
-        //   console.error('Error', error);
-        //   alert(error);
-        // }
+      // try {
+      //   await axios.post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers });
+      //   alert('등록이 완료되었습니다.');
+      //   navigate('/community');
+      //   // 비동기 에러 날 것 같으면 .then 사용
+      // } catch (error) {
+      //   console.error('Error', error);
+      //   alert(error);
+      // }
     }
   };
 
@@ -309,7 +312,11 @@ const AddMarker = () => {
           <Flex>
             <TimeBox>
               <Title>영업 시간</Title>
-              <InputData placeholder='0900-2200' onChange={operationtimeHandler} ref={operationtimeRef}></InputData>
+              <InputData
+                placeholder='0900-2200'
+                onChange={operationtimeHandler}
+                ref={operationtimeRef}
+              ></InputData>
             </TimeBox>
           </Flex>
           <Flex>
