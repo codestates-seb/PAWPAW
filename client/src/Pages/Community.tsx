@@ -7,6 +7,7 @@ import color from '../color';
 import Pagination from 'react-js-pagination';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import sanitizeHtml from 'sanitize-html';
 import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
@@ -23,7 +24,7 @@ interface PostData {
   likesCnt: 10;
 }
 interface PostList {
-  post: PostData[] | null;
+  posts: PostData[] | null;
   pageInfo: {
     page: number;
     size: number;
@@ -35,7 +36,7 @@ interface PostList {
 const Community: React.FC = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList>({
-    post: [],
+    posts: [],
     pageInfo: {
       page: 1,
       size: 15,
@@ -51,9 +52,12 @@ const Community: React.FC = () => {
 
   async function getData() {
     await axios
-      .get(`${url}/posts/page=${page * 7 - 6}&size=${page * 7}`, { headers })
+      .get(`${url}/posts?page=${page}`, { headers })
       .then((res) => {
         setPostData(res.data);
+        console.log('res', res);
+        console.log('res.data', res.data);
+        console.log('postData', postData);
       })
       .catch((error) => {
         console.error(error);
@@ -73,58 +77,67 @@ const Community: React.FC = () => {
 
   return (
     <>
-      <Header />
       <Container>
-        <Nav type={type}/>
-        <CommunityContainer>
-          <CommunityBanner>자유게시판</CommunityBanner>
-          {/* <SortButtonContainer></SortButtonContainer> */}
-          <PostList>
-            {dummy.post.length === 0 ? (
-              <EmptyMessage>
-                리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-              </EmptyMessage>
-            ) : (
-              dummy.post.map((el: any) => {
-                return (
-                  <PostBox key={el.postId}>
-                    <WriteBox>
-                      <div className='top'>
-                        <Link to={`/community/${el.postId}`}>
-                          <TitleBox>{el.title}</TitleBox>
-                        </Link>
-                        <DayBox>{el.createdAt}</DayBox>
-                      </div>
-                      <ContentBox>{el.content}</ContentBox>
-                    </WriteBox>
-                    <LikeContainer>
-                      <div>{el.petname}</div>
-                      <div>
-                        <Icon
-                          icon='ph:paw-print-fill'
-                          color='#FFBF71'
-                          style={{ fontSize: '15px' }}
+        <Header />
+        <Body>
+          <Nav type={type} />
+          <CommunityContainer>
+            <CommunityBanner>자유게시판</CommunityBanner>
+            {/* <SortButtonContainer></SortButtonContainer> */}
+            <PostList>
+              {postData.posts === null ? (
+                <EmptyMessage>
+                  리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                </EmptyMessage>
+              ) : (
+                postData.posts.map((el: any) => {
+                  return (
+                    <PostBox key={el.id}>
+                      <WriteBox>
+                        <div className='top'>
+                          <Link to={`/community/${el.id}`}>
+                            <TitleBox>{el.title}</TitleBox>
+                          </Link>
+                          <DayBox>{el.createdAt}</DayBox>
+                        </div>
+                        <ContentBox
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeHtml(el.content, {
+                              allowedTags: [],
+                              allowedAttributes: false,
+                            }),
+                          }}
                         />
-                        {el.likesCnt}
-                      </div>
-                    </LikeContainer>
-                  </PostBox>
-                );
-              })
-            )}
-          </PostList>
-        </CommunityContainer>
-        <RightBlank>
-          <EditButton onClick={goToEditPage}>
-            <Icon icon='mdi:pencil' color='black' style={{ fontSize: '50px' }} />
-          </EditButton>
-        </RightBlank>
+                      </WriteBox>
+                      <LikeContainer>
+                        <div>{el.petname}</div>
+                        <div>
+                          <Icon
+                            icon='ph:paw-print-fill'
+                            color='#FFBF71'
+                            style={{ fontSize: '15px' }}
+                          />
+                          {el.likesCnt}
+                        </div>
+                      </LikeContainer>
+                    </PostBox>
+                  );
+                })
+              )}
+            </PostList>
+          </CommunityContainer>
+          <RightBlank>
+            <EditButton onClick={goToEditPage}>
+              <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
+            </EditButton>
+          </RightBlank>
+        </Body>
       </Container>
       <PageContainer>
         <Pagination
           activePage={page}
           itemsCountPerPage={15}
-          totalItemsCount={dummy.pageInfo.totalPages * 15}
+          totalItemsCount={postData.pageInfo.totalPages * 15}
           pageRangeDisplayed={10}
           prevPageText={'‹'}
           nextPageText={'›'}
@@ -138,14 +151,16 @@ const Community: React.FC = () => {
 export default Community;
 
 const Container = styled.div`
-  width: 100%;
-  padding-top: 50px;
+  height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
 `;
 
-const LeftNav = styled.div`
-  width: 235px;
+const Body = styled.div`
+  margin-top: 50px;
+  flex-grow: 1;
+  display: flex;
 `;
 
 const RightBlank = styled.div`
@@ -158,7 +173,7 @@ const RightBlank = styled.div`
 `;
 
 const CommunityContainer = styled.div`
-  width: 100%;
+  width: 690px;
   display: flex;
   margin-top: 30px;
   flex-direction: column;
@@ -185,6 +200,7 @@ const PostBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  border-bottom: 1px solid ${bordergrey};
 `;
 
 const WriteBox = styled.div`
@@ -193,8 +209,8 @@ const WriteBox = styled.div`
     margin-top: 20px;
     margin-bottom: 8px;
   }
-  border-bottom: 1px solid ${bordergrey};
   height: 80px;
+  width: 100%;
 `;
 
 const TitleBox = styled.div`
@@ -214,6 +230,11 @@ const DayBox = styled.div`
 const ContentBox = styled.div`
   color: ${darkgrey};
   font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;
 
 const LikeContainer = styled.div`
@@ -228,12 +249,12 @@ const PageContainer = styled.div`
 `;
 
 const EditButton = styled.button`
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   background-color: ${ivory};
   border-radius: 50px;
   border: 0px;
-  box-shadow: 2px 2px 2px 2px gray;
+  box-shadow: 1px 1px 1px 1px gray;
   position: absolute;
   right: 80px;
   top: 70vh;
@@ -248,69 +269,3 @@ const EmptyMessage = styled.div`
   font-size: 14px;
   color: ${brown};
 `;
-const dummy = {
-  post: [
-    {
-      postId: 1,
-      petname: 'test1',
-      title: 'test',
-      content: 'test',
-      createdAt: '2023-01-01',
-      likesCnt: 0,
-    },
-    {
-      postId: 2,
-      petname: 'test2',
-      title: 'test2',
-      content: 'test2',
-      createdAt: '2023-01-02',
-      likesCnt: 2,
-    },
-    {
-      postId: 3,
-      petname: 'test3',
-      title: 'test3',
-      content: 'test3',
-      createdAt: '2023-01-03',
-      likesCnt: 3,
-    },
-    {
-      postId: 4,
-      petname: 'test4',
-      title: 'test4',
-      content: 'test4',
-      createdAt: '2023-01-04',
-      likesCnt: 4,
-    },
-    {
-      postId: 5,
-      petname: 'test5',
-      title: 'test5',
-      content: 'test5',
-      createdAt: '2023-01-05',
-      likesCnt: 5,
-    },
-    {
-      postId: 6,
-      petname: 'test6',
-      title: 'test6',
-      content: 'test6',
-      createdAt: '2023-01-06',
-      likesCnt: 6,
-    },
-    {
-      postId: 7,
-      petname: 'test7',
-      title: 'test7',
-      content: 'test7',
-      createdAt: '2023-01-07',
-      likesCnt: 7,
-    },
-  ],
-  pageInfo: {
-    page: 1,
-    size: 15,
-    totalElements: 0,
-    totalPages: 10,
-  },
-};
