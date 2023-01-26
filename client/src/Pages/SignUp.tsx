@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
-const { ivory, brown, red } = color;
+const { ivory, yellow, brown, red } = color;
 
 const SignUp: FC = () => {
   const navigate = useNavigate();
@@ -52,12 +53,25 @@ const SignUp: FC = () => {
   };
 
   const idValidationHandler = async () => {
+    const notAllowedChar = id.search(/[`ㄱ-ㅎ|ㅏ-ㅣ|가-힣~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi); // 특수문자나 한글 있는지 확인
+
     if (id === '') {
       idRef.current && idRef.current.focus(); // id에 포커스
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디를 입력해주세요.' };
       });
+      return;
+    } else if (notAllowedChar > 0) {
+      setErrorMessage((prev) => {
+        return { ...prev, idErrorMessage: '아이디는 영문, 숫자만 입력할 수 있습니다.' };
+      });
+      return;
     } else {
+      setErrorMessage((prev) => {
+        return { ...prev, idErrorMessage: '' };
+      });
+    }
+    {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/pets/check/${id}`);
         const value = response.data as boolean;
@@ -72,10 +86,25 @@ const SignUp: FC = () => {
           setErrorMessage((prev) => {
             return { ...prev, idErrorMessage: '사용 가능한 아이디입니다.' };
           });
-          alert('유효한 아이디 입니다.');
+          Swal.fire({
+            title: '유효한 아이디입니다.',
+            confirmButtonText: '<b>사용하기</b>',
+            color: brown,
+            confirmButtonColor: yellow,
+            padding: '40px 0px 30px 0px',
+          });
         } else if (response.data === true) {
           setIsUniqueId(false);
-          alert('중복된 아이디 입니다.');
+          setErrorMessage((prev) => {
+            return { ...prev, idErrorMessage: '중복된 아이디입니다.' };
+          });
+          Swal.fire({
+            icon: 'error',
+            title: '중복된 아이디입니다.',
+            confirmButtonText: '<b>확인</b>',
+            color: brown,
+            confirmButtonColor: yellow,
+          });
         }
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {

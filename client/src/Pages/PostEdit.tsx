@@ -1,47 +1,60 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../color';
-const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
+const { brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const headers = {
   'Content-Type': 'multipart/form-data',
   Authorization: jwtToken,
+  Refresh: refreshToken,
 };
 
 export interface IPost {
   petId: string | null;
   title: string;
-  content: string;
+  contents: string;
 }
 
-const Post = () => {
+const Post: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<IPost>({
     petId: petId,
     title: '',
-    content: '',
+    contents: '',
   });
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [file, setFile] = useState<any>(null);
   const formData = new FormData();
 
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+
+  // // postId 필요
+  // async function getData() {
+  //   const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`);
+  //   const { post } = res.data;
+  //   const { title, content, image } = post;
+  //   setData({ ...data, title: title, contents: content });
+  //   setImageUrl(image);
+  // }
+
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, title: e.target.value });
   };
 
-  const contentHandler = (e: string) => {
-    setData({ ...data, content: e });
+  const contentsHandler = (e: string) => {
+    setData({ ...data, contents: e });
   };
 
   const imageHandler = () => {
@@ -64,13 +77,13 @@ const Post = () => {
     };
   };
 
-  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submitHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (data.petId && data.title && data.content) {
+    if (data.petId && data.title && data.contents) {
       formData.append('petId', data.petId);
       formData.append('title', data.title);
-      formData.append('content', data.content);
+      formData.append('contents', data.contents);
       formData.append('file', file);
 
       for (const key of formData.keys()) {
@@ -80,25 +93,15 @@ const Post = () => {
         console.log(value);
       }
 
-      try {
-        await axios
-          .post(`${process.env.REACT_APP_API_ROOT}/posts`, formData, { headers })
-          .then((res) => {
-            console.log('성공', res);
-            navigate('/community');
-          });
-      } catch (err) {
-        console.log('에러', err);
-        alert(err);
-      }
+      axios
+        .patch(`${process.env.REACT_APP_API_ROOT}/posts`, formData, { headers })
+        .then((res) => {
+          console.log(res);
+          // navigate('/community/postId?');
+        })
+        .catch((err) => alert(err));
     } else {
-      Swal.fire({
-        icon: 'warning',
-        title: '제목과 본문을 입력해주세요.',
-        confirmButtonText: '<b>확인</b>',
-        color: brown,
-        confirmButtonColor: yellow,
-      });
+      alert('제목과 본문을 입력해주세요.');
     }
   };
 
@@ -186,7 +189,7 @@ const Post = () => {
           </div>
           <EditorContainer>
             <ReactQuill
-              onChange={contentHandler}
+              onChange={contentsHandler}
               modules={modules}
               placeholder='사진은 최대 1장만 첨부할 수 있어요.'
             />

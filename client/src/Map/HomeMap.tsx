@@ -46,7 +46,7 @@ const HomeMap = () => {
   useEffect(() => {
     if (address) {
       getCenter(address).then((res) => setCurrentLocation(res));
-      getAll(address);
+      // getAll(address);
     }
   }, []);
 
@@ -68,6 +68,7 @@ const HomeMap = () => {
       }
     }
   }, [selected, address, isModalOpen]);
+
   // if (localStorage.getItem('check') !== '1') {
   //   localStorage.setItem('check', '1');
   //   window.location.reload();
@@ -75,6 +76,7 @@ const HomeMap = () => {
   //   // localStorage.removeItem('check');
   // }
   // // 응급조치 ㅠㅡㅜ
+
   // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
     const geocoder = new kakao.maps.services.Geocoder();
