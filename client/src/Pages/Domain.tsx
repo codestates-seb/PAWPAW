@@ -8,7 +8,9 @@ import Mypage from './Mypage';
 import Community from './Community';
 import CommunityDetail from './CommunityDetail';
 import Post from './Post';
+import PostEdit from './PostEdit';
 import AddMarker from './AddMarker';
+import NotFound from './NotFound';
 import PrivateRoute from '../Components/PrivateRouter';
 
 export default function Router() {
@@ -27,7 +29,9 @@ export default function Router() {
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
           <Route path='/post' element={<Post />} />
+          <Route path='/postedit' element={<PostEdit />} />
           <Route path='/addmarker' element={<AddMarker />} />
+          <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
