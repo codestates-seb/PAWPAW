@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import color from '../color';
 import Header from '../Components/Header';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
-import { addressToCode } from '../util/ConvertAddress';
+import { addressToCode, codeToAddress } from '../util/ConvertAddress';
 import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
-const { coral, brown } = color;
+const { yellow, coral, brown } = color;
 const code = localStorage.getItem('code') as string;
 
 export interface IProps {
@@ -40,13 +41,13 @@ const HomeMap = () => {
 
   const [newLocation, setNewLocation] = useState(currentLocation); // 이동한 위치 좌표
   const [fullAddress, setFullAddress] = useState<string[]>([]); // 이동한 위치의 주소 ex. ['서울', '강남구' '...']
+  const [newAddress, setNewAddress] = useState<string | undefined>(undefined); // 이동한 구 ex. 강남구
   const [isLocationChanged, setIsLocationChanged] = useState<boolean>(false); // 이동했는지 여부
 
   // 가장 처음 렌더링 시 딱 한번만 실행되는 useEffect
   useEffect(() => {
     if (address) {
       getCenter(address).then((res) => setCurrentLocation(res));
-      // getAll(address);
     }
   }, []);
 
@@ -92,7 +93,7 @@ const HomeMap = () => {
   // 마우스 드래그 이벤트가 감지될 때마다 실행되는 함수
   // isLocationChange를 true로 바꾸고, 현재 지도의 중심 좌표를 newLocation으로 업데이트한다.
   const dragHandler = (map: any) => {
-    setIsLocationChanged(true);
+    setNewAddress(fullAddress[1]);
     setNewLocation({
       lat: map.getCenter().getLat(),
       lng: map.getCenter().getLng(),
@@ -112,9 +113,28 @@ const HomeMap = () => {
       setAddress(addressToCode(fullAddress[1]));
       setIsLocationChanged(false);
     } else {
-      console.log('서비스 지역이 아닙니다');
+      Swal.fire({
+        icon: 'question',
+        title: '서비스 지역이 아닙니다.',
+        text: '현재 서비스는 서울에서만 제공되고 있어요😢',
+        footer: '<a href="/map" className="swal">내 지역으로 돌아가기</a>',
+
+        confirmButtonText: '<b>확인</b>',
+        color: brown,
+        confirmButtonColor: coral,
+        padding: '40px 0px 30px 0px',
+      });
     }
   };
+
+  // 만약 현재 구와 새로운 주소의 구(newAddress)가 다르면 isLocationChanged를 true로 바꾼다.
+  useMemo(() => {
+    if (codeToAddress(Number(address)) !== fullAddress[0]) {
+      setIsLocationChanged(true);
+    } else {
+      setIsLocationChanged(false);
+    }
+  }, [newAddress]);
 
   return (
     <Container>
@@ -147,9 +167,9 @@ const HomeMap = () => {
           <MapFilter selected={selected} setSelected={setSelected} />
 
           {/* 현재 위치에서 검색하기 버튼 */}
-          {isLocationChanged && (
+          {isLocationChanged && newAddress && (
             <RefreshBtn onClick={updateCurrentLocation}>
-              <span>현재 위치에서 검색하기</span>
+              <span>{newAddress}에서 검색하기</span>
               <Icon icon='mi:refresh' color='white' style={{ fontSize: '25px' }} />
             </RefreshBtn>
           )}
