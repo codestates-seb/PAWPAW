@@ -16,6 +16,9 @@ public class PostCommentPostDto {
     @NotNull(message = "postId를 입력해주세요")
     private Long postId;
 
+    @NotNull(message = "petId를 입력해주세요")
+    private Long petId;
+
     @NotNull(message = "내용을 입력해주세요")
     private String contents;
 }

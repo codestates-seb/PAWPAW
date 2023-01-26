@@ -11,6 +11,9 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "postsLikes", columnNames = {"PET_ID","POST_ID"})
+})
 public class PostLikes {
 
     @Id
@@ -25,8 +28,7 @@ public class PostLikes {
     @JoinColumn(name = "PET_ID")
     private Pet pet;
 
-    @Enumerated(EnumType.STRING)
-    private VoteStatus voteStatus;
+    private int status;
 }
 
 

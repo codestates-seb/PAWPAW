@@ -1,5 +1,6 @@
 package animalsquad.server.domain.post.entity;
 
+import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.global.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +24,11 @@ public class PostComment extends Auditable {
     @JoinColumn(name = "POST_ID")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PET_ID")
+    private Pet pet;
+
     @Column(length = 500, nullable = false)
     private String contents;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
 }
