@@ -9,6 +9,7 @@ import Input from '../Components/Input';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import color from '../color';
 
 const { red, ivory, darkgrey, brown, yellow, bordergrey } = color;
@@ -166,7 +167,13 @@ const AddMarker = () => {
         .post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers })
         .then((res) => {
           console.log(res);
-          alert('등록이 완료되었습니다.');
+          Swal.fire({
+            title: '등록이 완료되었습니다.',
+            confirmButtonText: '<b>확인</b>',
+            color: brown,
+            confirmButtonColor: yellow,
+            padding: '40px 0px 30px 0px',
+          });
           navigate('/community');
         })
         .catch((err) => {
