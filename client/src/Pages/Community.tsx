@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import color from '../color';
 import Pagination from 'react-js-pagination';
+import { Icon } from '@iconify/react';
 import axios from 'axios';
 import headers from '../util/headers';
+import Nav from '../Components/Nav';
 import '../App.css';
 
-const { darkgrey, brown, mediumgrey, bordergrey } = color;
+const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -30,6 +33,7 @@ interface PostList {
 }
 
 const Community: React.FC = () => {
+  const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList>({
     post: [],
     pageInfo: {
@@ -47,7 +51,7 @@ const Community: React.FC = () => {
 
   async function getData() {
     await axios
-      .get(`${url}/posts/page=${page * 15 - 14}&size=${page * 15}`, { headers })
+      .get(`${url}/posts/page=${page * 7 - 6}&size=${page * 7}`, { headers })
       .then((res) => {
         setPostData(res.data);
       })
@@ -60,11 +64,15 @@ const Community: React.FC = () => {
     setPage(page);
     console.log(page);
   };
+
+  const goToEditPage = () => {
+    navigate('/post');
+  };
   return (
     <>
       <Header />
       <Container>
-        <LeftNav />
+        <Nav />
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
           {/* <SortButtonContainer></SortButtonContainer> */}
@@ -76,21 +84,38 @@ const Community: React.FC = () => {
             ) : (
               dummy.post.map((el: any) => {
                 return (
-                  <WriteBox key={el.postId}>
-                    <div className='top'>
-                      <Link to={`/community/${el.postId}`}>
-                        <TitleBox>{el.title}</TitleBox>
-                      </Link>
-                      <DayBox>{el.createdAt}</DayBox>
-                    </div>
-                    <ContentBox>{el.content}</ContentBox>
-                  </WriteBox>
+                  <PostBox key={el.postId}>
+                    <WriteBox>
+                      <div className='top'>
+                        <Link to={`/community/${el.postId}`}>
+                          <TitleBox>{el.title}</TitleBox>
+                        </Link>
+                        <DayBox>{el.createdAt}</DayBox>
+                      </div>
+                      <ContentBox>{el.content}</ContentBox>
+                    </WriteBox>
+                    <LikeContainer>
+                      <div>{el.petname}</div>
+                      <div>
+                        <Icon
+                          icon='ph:paw-print-fill'
+                          color='#FFBF71'
+                          style={{ fontSize: '15px' }}
+                        />
+                        {el.likesCnt}
+                      </div>
+                    </LikeContainer>
+                  </PostBox>
                 );
               })
             )}
           </PostList>
         </CommunityContainer>
-        <RightBlank />
+        <RightBlank>
+          <EditButton onClick={goToEditPage}>
+            <Icon icon='mdi:pencil' color='black' style={{ fontSize: '50px' }} />
+          </EditButton>
+        </RightBlank>
       </Container>
       <PageContainer>
         <Pagination
@@ -132,6 +157,7 @@ const RightBlank = styled.div`
 const CommunityContainer = styled.div`
   width: 100%;
   display: flex;
+  margin-top: 30px;
   flex-direction: column;
   justify-content: center;
 `;
@@ -150,6 +176,12 @@ const SortButtonContainer = styled.div`
 const PostList = styled.div`
   height: 100%;
   padding-left: 40px;
+`;
+
+const PostBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const WriteBox = styled.div`
@@ -181,11 +213,31 @@ const ContentBox = styled.div`
   font-size: 16px;
 `;
 
+const LikeContainer = styled.div`
+  margin-top: 20px;
+`;
+
 const PageContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+`;
+
+const EditButton = styled.button`
+  width: 80px;
+  height: 80px;
+  background-color: ${ivory};
+  border-radius: 50px;
+  border: 0px;
+  box-shadow: 2px 2px 2px 2px gray;
+  position: absolute;
+  right: 80px;
+  top: 70vh;
+  @media (min-height: 1200px) {
+    right: 100px;
+    top: 55vh;
+  }
 `;
 
 const EmptyMessage = styled.div`
@@ -250,70 +302,6 @@ const dummy = {
       content: 'test7',
       createdAt: '2023-01-07',
       likesCnt: 7,
-    },
-    {
-      postId: 8,
-      petname: 'test8',
-      title: 'test8',
-      content: 'test8',
-      createdAt: '2023-01-08',
-      likesCnt: 8,
-    },
-    {
-      postId: 9,
-      petname: 'test9',
-      title: 'test9',
-      content: 'test9',
-      createdAt: '2023-01-09',
-      likesCnt: 9,
-    },
-    {
-      postId: 10,
-      petname: 'test10',
-      title: 'test10',
-      content: 'test10',
-      createdAt: '2023-01-10',
-      likesCnt: 10,
-    },
-    {
-      postId: 11,
-      petname: 'test11',
-      title: 'test11',
-      content: 'test11',
-      createdAt: '2023-01-11',
-      likesCnt: 11,
-    },
-    {
-      postId: 12,
-      petname: 'test12',
-      title: 'test12',
-      content: 'test12',
-      createdAt: '2023-01-12',
-      likesCnt: 12,
-    },
-    {
-      postId: 13,
-      petname: 'test13',
-      title: 'test13',
-      content: 'test13',
-      createdAt: '2023-01-13',
-      likesCnt: 13,
-    },
-    {
-      postId: 14,
-      petname: 'test14',
-      title: 'test14',
-      content: 'test14',
-      createdAt: '2023-01-14',
-      likesCnt: 14,
-    },
-    {
-      postId: 15,
-      petname: 'test15',
-      title: 'test15',
-      content: 'test15',
-      createdAt: '2023-01-15',
-      likesCnt: 15,
     },
   ],
   pageInfo: {

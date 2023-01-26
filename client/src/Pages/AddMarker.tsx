@@ -168,7 +168,10 @@ const AddMarker = () => {
           alert('등록이 완료되었습니다.');
           navigate('/community');
         })
-        .catch((err) => {console.error('Error', err);alert(err)});
+        .catch((err) => {
+          console.error('Error', err);
+          alert(err);
+        });
 
         // try {
         //   await axios.post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers });
@@ -183,81 +186,84 @@ const AddMarker = () => {
   };
 
   return (
-    <div>
+    <WholeFlex>
       <Header />
-      <WholeContainer>
-        <Nav />
-        <Container>
-          <TitleBox>
-            <TitleTopBox>
-              <div>장소 이름</div>
-            </TitleTopBox>
-            <TitleBottomBox>
-              <TitleInputBox>
-                <input
-                  type='text'
-                  onChange={nameHandler}
-                  placeholder='장소 이름을 작성해주세요.'
-                  ref={nameRef}
-                ></input>
-              </TitleInputBox>
-            </TitleBottomBox>
-          </TitleBox>
-          <PositionBox>
-            <TitleTopBox>
-              <div>장소 위치</div>
-            </TitleTopBox>
-            <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
-            {/* 지도 넣기 */}
-            <Map
-              center={{
-                lat: 37.51239516092327,
-                lng: 126.98081682888493,
-              }}
-              style={{
-                width: '90%',
-                height: '500px',
-              }}
-              level={7} // 지도의 확대 레벨
-              onClick={(_t, mouseEvent) =>
-                setPosition({
-                  lat: mouseEvent.latLng.getLat(),
-                  lng: mouseEvent.latLng.getLng(),
-                })
-              }
-            >
-              {position && <MapMarker position={position} />}
-            </Map>
-          </PositionBox>
-          <PosSelectBox>
-            <Title>지역</Title>
-            <InputDiv>
-              <Input
-                type='text'
-                readOnly={true}
-                placeholder={
-                  address === null ? '어디에 위치해있나요?' : `${codeToAddress(address)}`
+      <MarginBox>
+        <NavBox>
+          <Nav />
+        </NavBox>
+        <WholeContainer>
+          <Container>
+            <TitleBox>
+              <TitleTopBox>
+                <div>장소 이름</div>
+              </TitleTopBox>
+              <TitleBottomBox>
+                <TitleInputBox>
+                  <input
+                    type='text'
+                    onChange={nameHandler}
+                    placeholder='장소 이름을 작성해주세요.'
+                    ref={nameRef}
+                  ></input>
+                </TitleInputBox>
+              </TitleBottomBox>
+            </TitleBox>
+            <PositionBox>
+              <TitleTopBox>
+                <div>장소 위치</div>
+              </TitleTopBox>
+              <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
+              {/* 지도 넣기 */}
+              <Map
+                center={{
+                  lat: 37.51239516092327,
+                  lng: 126.98081682888493,
+                }}
+                style={{
+                  width: '90%',
+                  height: '500px',
+                }}
+                level={7} // 지도의 확대 레벨
+                onClick={(_t, mouseEvent) =>
+                  setPosition({
+                    lat: mouseEvent.latLng.getLat(),
+                    lng: mouseEvent.latLng.getLng(),
+                  })
                 }
-                openAddressModal={openAddressModal}
-                ref={addrRef}
-              />
-              <SvgSpan onClick={openAddressModal}>
-                <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
-              </SvgSpan>
-              <MessageDiv>{addrErrorMessage}</MessageDiv>
-            </InputDiv>
-            {isOpen && (
-              <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />
-            )}
-          </PosSelectBox>
-          <Flex>
-            <TagBox>
-              <Title>카테고리 (태그)</Title>
-              {TagArr.map((el, idx) => {
-                return (
-                  <Tag
-                    key={idx}
-                    className={`${currentTab === idx ? 'focused' : ''} 
+              >
+                {position && <MapMarker position={position} />}
+              </Map>
+            </PositionBox>
+            <PosSelectBox>
+              <Title>지역</Title>
+              <InputDiv>
+                <Input
+                  type='text'
+                  readOnly={true}
+                  placeholder={
+                    address === null ? '어디에 위치해있나요?' : `${codeToAddress(address)}`
+                  }
+                  openAddressModal={openAddressModal}
+                  ref={addrRef}
+                />
+                <SvgSpan onClick={openAddressModal}>
+                  <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
+                </SvgSpan>
+                <MessageDiv>{addrErrorMessage}</MessageDiv>
+              </InputDiv>
+              {isOpen && (
+                <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />
+              )}
+            </PosSelectBox>
+            <Flex>
+              <TagBox>
+                <Title>카테고리 (태그)</Title>
+                {TagArr.map((el, idx) => {
+                  return (
+                    <Tag
+                      key={idx}
+                      className={`${currentTab === idx ? 'focused' : ''} 
                       ${click ? '' : 'hide'} ${idx !== 5 ? '' : 'bord'}
                       ${idx === 0 ? 'radius-left' : ''} 
                       ${idx === 5 ? 'radius-right' : ''}
@@ -319,15 +325,29 @@ const AddMarker = () => {
             </NumberBox>
           </Flex>
 
-          <BottomBox>
-            <CancelBtn>취소</CancelBtn>
-            <EnrollBtn onClick={submitHandler}>등록</EnrollBtn>
-          </BottomBox>
-        </Container>
-      </WholeContainer>
-    </div>
+            <BottomBox>
+              <CancelBtn>취소</CancelBtn>
+              <EnrollBtn onClick={submitHandler}>등록</EnrollBtn>
+            </BottomBox>
+          </Container>
+        </WholeContainer>
+      </MarginBox>
+    </WholeFlex>
   );
 };
+
+const WholeFlex = styled.div`
+  display: flex;
+`;
+
+const NavBox = styled.div`
+  margin-top: 50px;
+`;
+
+const MarginBox = styled.div`
+  margin: auto;
+  display: flex;
+`;
 
 const WholeContainer = styled.div`
   display: flex;
