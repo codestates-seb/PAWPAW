@@ -40,7 +40,7 @@ interface PostList {
 
 const CommunityDetail: React.FC = () => {
   const navigate = useNavigate();
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(true);
   const [postDetail, setPostDetail] = useState<PostList>({
     comments: [],
     post: {
