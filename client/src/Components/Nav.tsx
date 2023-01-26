@@ -8,9 +8,9 @@ interface INav {
   type: string;
 }
 
-const Nav = ({type}: INav) => {
+const Nav = ({ type }: INav) => {
   const [selected, setSelected] = useState('');
-  console.log('type', type)
+  console.log('type', type);
 
   return (
     <Container>
@@ -41,6 +41,7 @@ const Container = styled.div`
   border-right: 1px solid #d7d7d7;
   width: 235px;
   height: 100%;
+  min-height: calc(100vh - 50px);
 `;
 
 const Menu = styled.div`
