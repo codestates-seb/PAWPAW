@@ -170,7 +170,7 @@ const RightBlank = styled.div`
 `;
 
 const CommunityContainer = styled.div`
-  width: 680px;
+  width: 690px;
   display: flex;
   margin-top: 30px;
   flex-direction: column;
