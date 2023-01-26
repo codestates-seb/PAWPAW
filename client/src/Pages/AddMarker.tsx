@@ -185,12 +185,15 @@ const AddMarker = () => {
     }
   };
 
+  const type = 'addplace';
+
+
   return (
     <WholeFlex>
       <Header />
       <MarginBox>
         <NavBox>
-          <Nav />
+          <Nav type={type}/>
         </NavBox>
         <WholeContainer>
           <Container>

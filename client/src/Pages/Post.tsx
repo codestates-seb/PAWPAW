@@ -166,11 +166,13 @@ const Post = () => {
     };
   }, []);
 
+  const type = 'board';
+
   return (
     <Container>
       <Header />
       <Body>
-        <Nav />
+        <Nav type={type}/>
         <PostContainer>
           <div>
             <Title>제목</Title>

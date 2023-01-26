@@ -68,11 +68,14 @@ const Community: React.FC = () => {
   const goToEditPage = () => {
     navigate('/post');
   };
+
+  const type = 'board';
+
   return (
     <>
       <Header />
       <Container>
-        <Nav />
+        <Nav type={type}/>
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
           {/* <SortButtonContainer></SortButtonContainer> */}
