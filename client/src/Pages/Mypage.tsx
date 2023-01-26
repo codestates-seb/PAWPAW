@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -12,7 +13,7 @@ import { petLogout } from '../util/UserApi';
 import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
-import { Link } from 'react-router-dom';
+import load from '../img/paw.gif';
 
 const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -200,36 +201,41 @@ const Mypage = () => {
             </InfoBottomBox>
           </InfoBox>
         </ProfileContainerBox>
-        <WriteContainerBox>
-          <WriteTitleBox>
-            <span>작성한 리뷰</span>
-            <Icon icon='mdi:paw' style={{ fontSize: '20px' }} />
-          </WriteTitleBox>
-          {postData.myPosts === null ? (
-            <EmptyMessage>작성한 글이 없어요 🐾</EmptyMessage>
-          ) : (
-            postData.myPosts.map((el: any) => {
-              return (
-                <WriteBox key={el.postId}>
-                  <div className='top'>
-                    <Link to={`/community/${el.postId}`}>
-                      <TitleBox>{el.title}</TitleBox>
-                    </Link>
-                    <DayBox>{el.createdAt}</DayBox>
-                  </div>
-                  <ContentBox
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizeHtml(el.contents, {
-                        allowedTags: [],
-                        allowedAttributes: false,
-                      }),
-                    }}
-                  />
-                </WriteBox>
-              );
-            })
-          )}
-        </WriteContainerBox>
+        {postData.myPosts === null ? (
+          <img src={load} />
+        ) : (
+          <WriteContainerBox>
+            <WriteTitleBox>
+              <span>작성한 리뷰</span>
+              <Icon icon='mdi:paw' style={{ fontSize: '20px' }} />
+            </WriteTitleBox>
+            {postData.myPosts.length === 0 ? (
+              <EmptyMessage>작성한 글이 없어요 🐾</EmptyMessage>
+            ) : (
+              postData.myPosts.map((el: any) => {
+                return (
+                  <WriteBox key={el.postId}>
+                    <div className='top'>
+                      <Link to={`/community/${el.postId}`}>
+                        <TitleBox>{el.title}</TitleBox>
+                      </Link>
+                      <DayBox>{el.createdAt}</DayBox>
+                    </div>
+                    <ContentBox
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeHtml(el.contents, {
+                          allowedTags: [],
+                          allowedAttributes: false,
+                        }),
+                      }}
+                    />
+                  </WriteBox>
+                );
+              })
+            )}
+          </WriteContainerBox>
+        )}
+
         <LogoutBox>
           <button onClick={logoutHandler}>로그아웃</button>
         </LogoutBox>
@@ -407,6 +413,7 @@ const LogoutBox = styled.div`
 `;
 
 const EmptyMessage = styled.div`
+  padding-top: 100px;
   text-align: center;
   font-size: 14px;
   color: ${brown};
