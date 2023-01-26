@@ -6,6 +6,7 @@ import UserInfoEdit from './UserInfoEdit';
 import HomeMap from '../Map/HomeMap';
 import Mypage from './Mypage';
 import Post from './Post';
+import AddMarker from './AddMarker';
 import PrivateRoute from '../Components/PrivateRouter';
 
 export default function Router() {
@@ -23,6 +24,7 @@ export default function Router() {
           <Route path='/mypage' element={<Mypage />} />
           <Route path='/post' element={<Post />} />
         </Route>
+        <Route path='/addmarker' element={<AddMarker />} />
       </Routes>
     </BrowserRouter>
   );
