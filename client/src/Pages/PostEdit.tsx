@@ -5,56 +5,64 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../color';
-const { brown, darkbrown, bordergrey, lightgrey, red } = color;
+const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
 const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
 const headers = {
   'Content-Type': 'multipart/form-data',
   Authorization: jwtToken,
-  Refresh: refreshToken,
 };
 
 export interface IPost {
   petId: string | null;
   title: string;
-  contents: string;
+  content: string;
 }
 
-const Post: React.FC = () => {
+const PostEdit = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<IPost>({
     petId: petId,
     title: '',
-    contents: '',
+    content: '',
   });
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [file, setFile] = useState<any>(null);
   const formData = new FormData();
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  // 글 받아오기
+  useEffect(() => {
+    getPost().then((post) => {
+      console.log('post', post);
+      setData({
+        ...data,
+        title: post.title,
+        content: post.content,
+      });
 
-  // // postId 필요
-  // async function getData() {
-  //   const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`);
-  //   const { post } = res.data;
-  //   const { title, content, image } = post;
-  //   setData({ ...data, title: title, contents: content });
-  //   setImageUrl(image);
-  // }
+      if (post.imageUrl) {
+        setImageUrl(post.imageUrl);
+        setFile(post.imageUrl);
+      }
+    });
+  }, []);
+
+  async function getPost() {
+    const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/5`, { headers });
+    return res.data.post;
+  }
 
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, title: e.target.value });
   };
 
-  const contentsHandler = (e: string) => {
-    setData({ ...data, contents: e });
+  const contentHandler = (e: string) => {
+    setData({ ...data, content: e });
   };
 
   const imageHandler = () => {
@@ -77,14 +85,14 @@ const Post: React.FC = () => {
     };
   };
 
-  const submitHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (data.petId && data.title && data.contents) {
+    if (data.petId && data.title && data.content !== '<p><br></p>') {
       formData.append('petId', data.petId);
       formData.append('title', data.title);
-      formData.append('contents', data.contents);
-      formData.append('file', file);
+      formData.append('content', data.content);
+      file && formData.append('file', file);
 
       for (const key of formData.keys()) {
         console.log(key);
@@ -93,20 +101,35 @@ const Post: React.FC = () => {
         console.log(value);
       }
 
-      axios
-        .patch(`${process.env.REACT_APP_API_ROOT}/posts`, formData, { headers })
-        .then((res) => {
-          console.log(res);
-          // navigate('/community/postId?');
-        })
-        .catch((err) => alert(err));
+      try {
+        await axios
+          .patch(`${process.env.REACT_APP_API_ROOT}/posts/5`, formData, { headers })
+          .then((res) => {
+            console.log('성공', res);
+            navigate('/community');
+          });
+      } catch (err) {
+        console.log('에러', err);
+        alert(err);
+      }
     } else {
-      alert('제목과 본문을 입력해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '제목과 본문을 입력해주세요.',
+        confirmButtonText: '<b>확인</b>',
+        color: brown,
+        confirmButtonColor: yellow,
+      });
     }
   };
 
   const cancelHandler = () => {
     navigate('/');
+  };
+
+  const deleteImage = () => {
+    setFile(null);
+    setImageUrl(null);
   };
 
   const modules = useMemo(() => {
@@ -189,7 +212,8 @@ const Post: React.FC = () => {
           </div>
           <EditorContainer>
             <ReactQuill
-              onChange={contentsHandler}
+              value={data.content}
+              onChange={contentHandler}
               modules={modules}
               placeholder='사진은 최대 1장만 첨부할 수 있어요.'
             />
@@ -197,7 +221,15 @@ const Post: React.FC = () => {
           <FooterDiv>
             <ImageDiv>
               {imageUrl ? (
-                <Image src={imageUrl.toString()} />
+                <>
+                  <Image src={imageUrl.toString()} />
+                  <ImageDelButton onClick={deleteImage}>
+                    <Icon
+                      icon='material-symbols:delete-outline-rounded'
+                      style={{ fontSize: '25px' }}
+                    />
+                  </ImageDelButton>
+                </>
               ) : (
                 <EmptyDiv>
                   <Icon
@@ -297,7 +329,13 @@ const FooterDiv = styled.div`
   align-items: flex-end;
 `;
 
-const ImageDiv = styled.div``;
+const ImageDiv = styled.div`
+  position: relative;
+
+  &:hover > button {
+    display: block;
+  }
+`;
 
 const Image = styled.img`
   margin-top: 15px;
@@ -305,6 +343,17 @@ const Image = styled.img`
   max-height: 300px;
   border-radius: 20px;
   object-fit: cover;
+`;
+
+const ImageDelButton = styled.button`
+  border: none;
+  background: none;
+  color: white;
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  top: 25px;
+  right: 5px;
 `;
 
 const EmptyDiv = styled.div`
@@ -359,4 +408,4 @@ const CancelButton = styled.button`
   }
 `;
 
-export default Post;
+export default PostEdit;

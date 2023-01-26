@@ -13,7 +13,6 @@ import color from '../color';
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
 const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
 const headers = {
   'Content-Type': 'multipart/form-data',
   Authorization: jwtToken,
@@ -71,7 +70,7 @@ const Post = () => {
       formData.append('petId', data.petId);
       formData.append('title', data.title);
       formData.append('content', data.content);
-      formData.append('file', file);
+      file && formData.append('file', file);
 
       for (const key of formData.keys()) {
         console.log(key);
@@ -104,6 +103,11 @@ const Post = () => {
 
   const cancelHandler = () => {
     navigate('/');
+  };
+
+  const deleteImage = () => {
+    setFile(null);
+    setImageUrl(null);
   };
 
   const modules = useMemo(() => {
@@ -186,6 +190,7 @@ const Post = () => {
           </div>
           <EditorContainer>
             <ReactQuill
+              value={data.content}
               onChange={contentHandler}
               modules={modules}
               placeholder='사진은 최대 1장만 첨부할 수 있어요.'
@@ -194,7 +199,15 @@ const Post = () => {
           <FooterDiv>
             <ImageDiv>
               {imageUrl ? (
-                <Image src={imageUrl.toString()} />
+                <>
+                  <Image src={imageUrl.toString()} />
+                  <ImageDelButton onClick={deleteImage}>
+                    <Icon
+                      icon='material-symbols:delete-outline-rounded'
+                      style={{ fontSize: '25px' }}
+                    />
+                  </ImageDelButton>
+                </>
               ) : (
                 <EmptyDiv>
                   <Icon
@@ -294,7 +307,13 @@ const FooterDiv = styled.div`
   align-items: flex-end;
 `;
 
-const ImageDiv = styled.div``;
+const ImageDiv = styled.div`
+  position: relative;
+
+  &:hover > button {
+    display: block;
+  }
+`;
 
 const Image = styled.img`
   margin-top: 15px;
@@ -302,6 +321,17 @@ const Image = styled.img`
   max-height: 300px;
   border-radius: 20px;
   object-fit: cover;
+`;
+
+const ImageDelButton = styled.button`
+  border: none;
+  background: none;
+  color: white;
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  top: 25px;
+  right: 5px;
 `;
 
 const EmptyDiv = styled.div`
