@@ -31,6 +31,7 @@ interface PostData {
   profileImageUrl: string | null;
   createdAt: string;
 }
+// commnetsId가 누락되었다.
 interface PostList {
   comments: PostData[] | null;
   post: {
@@ -742,6 +743,7 @@ const EditDelButtons = styled.div`
 
 const ReviewEditCancelButton = styled.button`
   padding: 7px 10px;
+  /* margin: 4px; */
   font-weight: bold;
   background: ${ivory};
   border-radius: 12px;

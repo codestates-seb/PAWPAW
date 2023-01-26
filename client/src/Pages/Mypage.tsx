@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-
+import axios from 'axios';
+import headers from '../util/headers';
 import Header from '../Components/Header';
 import color from '../color';
 import { getUserInfo, petLogout } from '../util/UserApi';
@@ -12,66 +13,112 @@ import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
 const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
+const url = process.env.REACT_APP_API_ROOT;
+const petId = localStorage.getItem('petId') as string;
 
-interface FormData {
-  profileImage: Blob | null;
-}
+// interface FormData {
+//   profileImage: Blob | null;
+// }
 
-interface ResponseData {
-  myPost: any; // 수정 필요
-  pageInfo: any; // 수정 필요
-  petInfo: petInfo;
-}
+// interface ResponseData {
+//   myPosts: Array<object>; // 수정 필요
+//   pageInfo: any; // 수정 필요
+//   petInfo: petInfo;
+// }
 
-interface petInfo {
+// interface petInfo {
+//   petName: string;
+//   code: string;
+//   profileImage: File | null;
+//   age: number;
+//   gender: 'MALE' | 'FEMALE';
+//   species: 'CAT' | 'DOG';
+// }
+
+// interface Info {
+//   petName: string;
+//   isMale: 'MALE' | 'FEMALE';
+//   isCat: 'CAT' | 'DOG';
+//   age: number;
+//   address: string | null;
+// }
+
+interface PostData {
+  contents: string;
+  createdAt: string;
+  likesCnt: 10;
   petName: string;
-  code: string;
-  profileImage: File | null;
-  age: number;
-  gender: 'MALE' | 'FEMALE';
-  species: 'CAT' | 'DOG';
+  postId: number;
+  title: string;
 }
-
-interface Info {
-  petName: string;
-  isMale: 'MALE' | 'FEMALE';
-  isCat: 'CAT' | 'DOG';
-  age: number;
-  address: string | null;
+interface PostList {
+  posts: PostData[] | null;
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+  petInfo: {
+    age: number;
+    code: number;
+    gender: 'MALE' | 'FEMALE';
+    petId: number;
+    petName: string;
+    profileImage: string;
+    species: 'CAT' | 'DOG';
+  };
 }
 
 const Mypage = () => {
   const navigate = useNavigate();
-  const petId = localStorage.getItem('petId') as string;
-  const { responseData, error } = getUserInfo(petId);
-  const [info, setInfo] = useState<Info>({
-    petName: 'test',
-    isMale: 'MALE',
-    isCat: 'CAT',
-    age: 0,
-    address: null,
+  const [postData, setPostData] = useState<PostList>({
+    posts: [],
+    pageInfo: {
+      page: 0,
+      size: 0,
+      totalElements: 0,
+      totalPages: 0,
+    },
+    petInfo: {
+      age: 0,
+      code: 0,
+      gender: 'MALE',
+      petId: 0,
+      petName: '',
+      profileImage: '',
+      species: 'CAT',
+    },
   });
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
-  const [count, setCount] = useState<number>(0);
 
-  if (!error && responseData && count === 0) {
-    const { petInfo } = responseData as ResponseData;
-    const { petName, code, profileImage, age, gender, species } = petInfo;
-    setInfo({ ...info, petName: petName, address: code, age: age, isMale: gender, isCat: species });
-    setFormData({ profileImage: profileImage });
-    setCount(count + 1);
+  useEffect(() => {
+    getData();
+    console.log('로딩 체크');
+  }, []);
+
+  async function getData() {
+    await axios
+      .get(`${url}/pets/${petId}`, { headers })
+      .then((res) => {
+        setPostData(res.data);
+        console.log('res', res);
+        console.log('res.data', res.data);
+        console.log('postData', postData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-  const UserImg = formData.profileImage as unknown as string;
   const goEditPage = () => {
     navigate('/userinfoedit', {
       state: {
-        petName: info.petName,
-        code: info.address,
-        age: info.age,
-        isMale: info.isMale,
-        isCat: info.isCat,
-        profileImage: formData,
+        petName: postData.petInfo.petName,
+        code: postData.petInfo.code,
+        age: postData.petInfo.age,
+        isMale: postData.petInfo.gender,
+        isCat: postData.petInfo.species,
+        profileImage: postData.petInfo.profileImage,
       },
     });
   };
@@ -107,13 +154,13 @@ const Mypage = () => {
         <ProfileContainerBox>
           <ProfileBox>
             <AvatarDiv>
-              {UserImg ? (
+              {postData.petInfo.profileImage ? (
                 <img
                   className='profile'
-                  src={UserImg}
+                  src={postData.petInfo.profileImage}
                   style={{ margin: 'auto', width: '175px', height: '175px' }}
                 ></img>
-              ) : info.isCat === 'CAT' ? (
+              ) : postData.petInfo.species === 'CAT' ? (
                 <img
                   className='baseimojidog'
                   src={Dog}
@@ -130,10 +177,10 @@ const Mypage = () => {
           </ProfileBox>
           <InfoBox>
             <InfoTopBox>
-              <InfoNameBox>{info.petName}</InfoNameBox>
-              <InfoAgeBox>{info.age}살</InfoAgeBox>
+              <InfoNameBox>{postData.petInfo.petName}</InfoNameBox>
+              <InfoAgeBox>{postData.petInfo.age}살</InfoAgeBox>
               <InfoGenderBox>
-                {info.isMale === 'MALE' ? (
+                {postData.petInfo.gender === 'MALE' ? (
                   <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '20px' }} />
                 ) : (
                   <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '20px' }} />
@@ -147,7 +194,7 @@ const Mypage = () => {
               <InfoIconBox>
                 <Icon icon='mdi:map-marker' color='#7d5a5a' style={{ fontSize: '20px' }} />
               </InfoIconBox>
-              <InfoPosBox>{codeToAddress(Number(info.address))}</InfoPosBox>
+              <InfoPosBox>{codeToAddress(postData.petInfo.code)}</InfoPosBox>
             </InfoBottomBox>
           </InfoBox>
         </ProfileContainerBox>
