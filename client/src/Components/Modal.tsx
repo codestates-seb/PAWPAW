@@ -263,7 +263,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
             <FlexBox>
               <InfoDiv>
                 {/* 사진 */}
-                <Image src={ModalSample} />
+                <Image src={mapdata.details.infoUrl} />
 
                 {/* 이름 */}
                 <InfoTitleBox>
