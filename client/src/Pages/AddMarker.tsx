@@ -43,6 +43,7 @@ interface Info {
 }
 
 const AddMarker = () => {
+  const TagEngArr = ['PARK', 'CAFE', 'RESTAURANT', 'CAMPING', 'POOL', 'HOSPITAL'];
   const TagArr = ['공원', '카페', '음식점', '캠핑', '수영장', '병원'];
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(-1);
@@ -84,8 +85,8 @@ const AddMarker = () => {
     console.log(index);
     setCurrentTab(index);
     setClick(true);
-    setInfo({ ...info, category: TagArr[index] });
-    console.log('tag', TagArr[index]);
+    setInfo({ ...info, category: TagEngArr[index] });
+    console.log('tag', TagEngArr[index]);
   };
 
   // 배경 클릭시 모달이 닫힌다.
@@ -172,16 +173,6 @@ const AddMarker = () => {
           console.error('Error', err);
           alert(err);
         });
-
-        // try {
-        //   await axios.post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers });
-        //   alert('등록이 완료되었습니다.');
-        //   navigate('/community');
-        //   // 비동기 에러 날 것 같으면 .then 사용
-        // } catch (error) {
-        //   console.error('Error', error);
-        //   alert(error);
-        // }
     }
   };
 
@@ -268,62 +259,74 @@ const AddMarker = () => {
                       ${idx === 0 ? 'radius-left' : ''} 
                       ${idx === 5 ? 'radius-right' : ''}
                       `}
-                    onClick={() => {
-                      selectMenuHandler(idx);
-                      categoryHandler;
-                    }}
-                    ref={categoryRef}
-                  >
-                    {el}
-                  </Tag>
-                );
-              })}
-            </TagBox>
-          </Flex>
-          <Flex>
-            <HomepageBox>
-              <Title>홈페이지 주소</Title>
-              <InputData
-                onChange={homepageHandler}
-                ref={homepageRef}
-                placeholder='ex. http://www.pawpaw.com'
-              />
-            </HomepageBox>
-          </Flex>
-          <Flex>
-            <ImageBox>
-              <Title>이미지</Title>
-              <form>
-                <label className='input-file-button' htmlFor='input-file'></label>
-                <input
-                  type='file'
-                  id='input-file'
-                  name='placeImage'
-                  className='ImgUpload'
-                  onChange={saveFileImage}
-                  ref={fileRef}
-                ></input>
-              </form>
-            </ImageBox>
-          </Flex>
-          <Flex>
-            <DetailAddrBox>
-              <Title>주소</Title>
-              <InputData onChange={mapaddressHandler} ref={mapaddressRef}></InputData>
-            </DetailAddrBox>
-          </Flex>
-          <Flex>
-            <TimeBox>
-              <Title>영업 시간</Title>
-              <InputData placeholder='0900-2200' onChange={operationtimeHandler} ref={operationtimeRef}></InputData>
-            </TimeBox>
-          </Flex>
-          <Flex>
-            <NumberBox>
-              <Title>전화번호</Title>
-              <InputData onChange={telHandler} ref={telRef}></InputData>
-            </NumberBox>
-          </Flex>
+                      onClick={() => {
+                        selectMenuHandler(idx);
+                        categoryHandler;
+                      }}
+                      ref={categoryRef}
+                    >
+                      {el}
+                    </Tag>
+                  );
+                })}
+              </TagBox>
+            </Flex>
+            <Flex>
+              <HomepageBox>
+                <Title>홈페이지 주소</Title>
+                <InputData
+                  onChange={homepageHandler}
+                  ref={homepageRef}
+                  placeholder='ex. http://www.pawpaw.com'
+                />
+              </HomepageBox>
+            </Flex>
+            <Flex>
+              <ImageBox>
+                <Title>이미지</Title>
+                <form>
+                  <label className='input-file-button' htmlFor='input-file'></label>
+                  <input
+                    type='file'
+                    id='input-file'
+                    name='placeImage'
+                    className='ImgUpload'
+                    onChange={saveFileImage}
+                    ref={fileRef}
+                  ></input>
+                </form>
+              </ImageBox>
+            </Flex>
+            <Flex>
+              <DetailAddrBox>
+                <Title>주소</Title>
+                <InputData
+                  placeholder='ex. ○○시 ○○구 ○○○길 '
+                  onChange={mapaddressHandler}
+                  ref={mapaddressRef}
+                ></InputData>
+              </DetailAddrBox>
+            </Flex>
+            <Flex>
+              <TimeBox>
+                <Title>영업 시간</Title>
+                <InputData
+                  placeholder='ex. 0900-2200'
+                  onChange={operationtimeHandler}
+                  ref={operationtimeRef}
+                ></InputData>
+              </TimeBox>
+            </Flex>
+            <Flex>
+              <NumberBox>
+                <Title>전화번호</Title>
+                <InputData
+                  placeholder='ex. 02-0000-0000'
+                  onChange={telHandler}
+                  ref={telRef}
+                ></InputData>
+              </NumberBox>
+            </Flex>
 
             <BottomBox>
               <CancelBtn>취소</CancelBtn>
