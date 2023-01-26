@@ -71,12 +71,14 @@ const CommunityDetail: React.FC = () => {
       });
   }
   console.log(postDetail.post.imageUrl);
+
+  const type = 'board';
   return (
     <>
       <Container>
         <Header />
         <Body>
-          <Nav />
+          <Nav type={type} />
           <PostContainer>
             <div>
               <Title>자유</Title>
