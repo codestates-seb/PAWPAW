@@ -126,7 +126,7 @@ const UserInfo: React.FC = () => {
           confirmButtonText: '<b>확인</b>',
           confirmButtonColor: yellow,
           color: brown,
-          padding: '20px 0px 30px 0px',
+          padding: '20px 0px',
         });
         navigate('/login');
         // 비동기 에러 날 것 같으면 .then 사용

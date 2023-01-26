@@ -90,8 +90,8 @@ const UserInfoEdit: FC = () => {
       showCancelButton: true,
       confirmButtonColor: red,
       cancelButtonColor: bordergrey,
-      confirmButtonText: '네, 확인했습니다.',
-      cancelButtonText: '아니요',
+      confirmButtonText: '<b>네, 확인했습니다.</b>',
+      cancelButtonText: '<b>아니요</b>',
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
@@ -99,6 +99,7 @@ const UserInfoEdit: FC = () => {
           text: '회원 탈퇴가 성공적으로 처리되었습니다.',
           icon: 'success',
           confirmButtonColor: yellow,
+          confirmButtonText: '<b>확인</b>',
         });
         petDelete(petId as string);
         navigate('/');

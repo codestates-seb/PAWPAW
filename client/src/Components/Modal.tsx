@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
 import color from '../color';
@@ -146,28 +148,66 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     setTest(test + 1);
     mapReviewEdit(id, review);
     console.log(test);
-    alert('작성 되었습니다.');
+    Swal.fire({
+      position: 'center',
+      icon: 'warning',
+      iconHtml: '🐾',
+      title: '작성되었습니다.',
+      color: brown,
+      padding: '20px 0px 40px 0px',
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
   const reviewUpdateHandler = (commentId: number) => {
-    if (!confirm('정말 수정 하시겠어요?')) {
-      alert('취소 되었습니다.');
-    } else {
-      mapReviewUPDATE(commentId, editReview);
-      setEditActivate(0);
-      setTest(test + 1);
-      console.log(test);
-      alert('수정 되었습니다.');
-    }
+    Swal.fire({
+      title: '정말 수정하시겠어요?',
+      icon: 'warning',
+      showCancelButton: true,
+      color: brown,
+      confirmButtonColor: yellow,
+      cancelButtonColor: bordergrey,
+      confirmButtonText: '<b>확인</b>',
+      cancelButtonText: '<b>취소</b>',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '수정되었습니다.',
+          icon: 'success',
+          color: brown,
+          confirmButtonColor: yellow,
+          confirmButtonText: '<b>확인</b>',
+        });
+        mapReviewUPDATE(commentId, editReview);
+        setEditActivate(0);
+        setTest(test + 1);
+      }
+    });
   };
+
   const reviewDeleteHandler = (commentId: number) => {
-    if (!confirm('정말 삭제 하시겠어요?')) {
-      alert('취소 되었습니다.');
-    } else {
-      mapReviewDELETE(commentId);
-      setTest(test + 1);
-      console.log(test);
-      alert('삭제 되었습니다.');
-    }
+    Swal.fire({
+      title: '정말 삭제하시겠어요?',
+      icon: 'warning',
+      showCancelButton: true,
+      color: brown,
+      confirmButtonColor: yellow,
+      cancelButtonColor: bordergrey,
+      confirmButtonText: '<b>확인</b>',
+      cancelButtonText: '<b>취소</b>',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '삭제되었습니다.',
+          icon: 'error',
+          color: brown,
+          confirmButtonColor: yellow,
+          confirmButtonText: '<b>확인</b>',
+        });
+        mapReviewDELETE(commentId);
+        setTest(test + 1);
+      }
+    });
   };
   const reviewActivateHandler = (commentId: number) => {
     setEditActivate(commentId);

@@ -5,11 +5,12 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../color';
-const { brown, darkbrown, bordergrey, lightgrey, red } = color;
+const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
@@ -91,7 +92,13 @@ const Post = () => {
         alert(err);
       }
     } else {
-      alert('제목과 본문을 입력해주세요.');
+      Swal.fire({
+        icon: 'warning',
+        title: '제목과 본문을 입력해주세요.',
+        confirmButtonText: '<b>확인</b>',
+        color: brown,
+        confirmButtonColor: yellow,
+      });
     }
   };
 

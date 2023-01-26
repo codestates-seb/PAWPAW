@@ -77,7 +77,7 @@ const Mypage = () => {
   };
   const logoutHandler = () => {
     Swal.fire({
-      title: '로그아웃 하시겠습니까?',
+      title: '로그아웃하시겠습니까?',
       showCancelButton: true,
       confirmButtonText: '<b>로그아웃</b>',
       cancelButtonText: '<b>취소</b>',

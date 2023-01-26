@@ -87,7 +87,7 @@ const SignUp: FC = () => {
             return { ...prev, idErrorMessage: '사용 가능한 아이디입니다.' };
           });
           Swal.fire({
-            title: '유효한 아이디 입니다.',
+            title: '유효한 아이디입니다.',
             confirmButtonText: '<b>사용하기</b>',
             color: brown,
             confirmButtonColor: yellow,
@@ -96,11 +96,11 @@ const SignUp: FC = () => {
         } else if (response.data === true) {
           setIsUniqueId(false);
           setErrorMessage((prev) => {
-            return { ...prev, idErrorMessage: '중복된 아이디 입니다.' };
+            return { ...prev, idErrorMessage: '중복된 아이디입니다.' };
           });
           Swal.fire({
             icon: 'error',
-            title: '중복된 아이디 입니다.',
+            title: '중복된 아이디입니다.',
             confirmButtonText: '<b>확인</b>',
             color: brown,
             confirmButtonColor: yellow,
