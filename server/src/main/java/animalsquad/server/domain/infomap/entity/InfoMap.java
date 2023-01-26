@@ -23,9 +23,9 @@ public class InfoMap extends Auditable {
 
     private String name;
 
-    @Column(precision = 8, scale = 6)
+    @Column(precision = 9, scale = 7)
     private BigDecimal latitude;
-    @Column(precision = 9, scale = 6)
+    @Column(precision = 10, scale = 7)
     private BigDecimal longitude;
     @Enumerated(EnumType.STRING)
     private InfoMapCategory category;
