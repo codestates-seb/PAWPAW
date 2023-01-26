@@ -4,14 +4,20 @@ import styled from 'styled-components';
 import color from '../color';
 const { brown, yellow } = color;
 
-const Nav: React.FC = () => {
-  const [selected, setSelected] = useState('board');
+interface INav {
+  type: string;
+}
+
+const Nav = ({type}: INav) => {
+  const [selected, setSelected] = useState('');
+  console.log('type', type)
 
   return (
     <Container>
       <Link to={'/community'}>
         <Menu
-          className={selected === 'board' ? 'selected' : ''}
+          className={`${selected === 'board' ? 'selected' : ''}
+          ${type === 'board' ? 'selected' : ''}`}
           onClick={() => setSelected('board')}
         >
           자유게시판
@@ -19,7 +25,8 @@ const Nav: React.FC = () => {
       </Link>
       <Link to={'/addmarker'}>
         <Menu
-          className={selected === 'addPlace' ? 'selected' : ''}
+          className={`${selected === 'addPlace' ? 'selected' : ''}
+          ${type === 'addplace' ? 'selected' : ''}`}
           onClick={() => setSelected('addPlace')}
         >
           장소 추가하기

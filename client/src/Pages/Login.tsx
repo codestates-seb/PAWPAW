@@ -5,16 +5,17 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { Icon } from '@iconify/react';
 
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
-const { brown, red } = color;
+const { ivory, yellow, brown, red } = color;
 
 export interface Info {
-  petName: string;
+  petNameSpan: string;
   petId: number;
   exp: number;
   code: number;
@@ -100,7 +101,28 @@ const Login: React.FC = () => {
       <Box>
         {/* 왼쪽 영역 */}
         <LeftDiv>
-          <TextDiv>서비스 소개</TextDiv>
+          <IntroDiv>
+            <TitleH1>PAW PAW</TitleH1>
+            <TextDiv>
+              <div>당신과 반려동물의 삶을 더 윤택하게 만들어주는 서비스 .. 어쩌구 ..</div>
+            </TextDiv>
+            <DeveloperDiv>
+              <div>
+                <NameSpan>
+                  <span className='part'>Front</span>
+                  <Icon icon='mdi:paw' style={{ fontSize: '15px' }} color='#FFDC84' />
+                  <span className='name'>김수진 이건희 천지은</span>
+                </NameSpan>
+              </div>
+              <div>
+                <NameSpan>
+                  <span className='part'>Back</span>
+                  <Icon icon='mdi:paw' style={{ fontSize: '15px' }} color={brown} />
+                  <span className='name'>김채원 김현동 오수빈</span>
+                </NameSpan>
+              </div>
+            </DeveloperDiv>
+          </IntroDiv>
         </LeftDiv>
 
         {/* 오른쪽 영역 */}
@@ -146,11 +168,53 @@ const Container = styled.div`
 
 // Background, Box, LeftDiv, RightDiv import
 
-const TextDiv = styled.div`
-  margin-top: 150px;
-  font-size: 32px;
+const IntroDiv = styled.div`
+  padding: 40px;
+  width: 100%;
+  height: 100%;
+  color: ${ivory};
   font-weight: bold;
-  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const TitleH1 = styled.h1`
+  margin: 50px 0px;
+  font-size: 50px;
+  font-family: Rubik Bubbles;
+`;
+
+const TextDiv = styled.div`
+  /* background-color: lavender; */
+  width: 70%;
+  height: 60%;
+  font-size: 25px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+`;
+
+const DeveloperDiv = styled.div``;
+
+const NameSpan = styled.span`
+  display: flex;
+  align-items: center;
+
+  .part {
+    width: 50px;
+    font-family: Rubik Bubbles;
+    font-weight: normal;
+  }
+
+  .name {
+    margin-left: 15px;
+    word-spacing: 5px;
+  }
 `;
 
 const IconDiv = styled.div`

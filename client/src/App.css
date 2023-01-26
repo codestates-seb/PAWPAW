@@ -61,3 +61,7 @@ ul.pagination li a.active {
   height: 30px;
   color: #543434;
 }
+
+a {
+  text-decoration: none;
+}
