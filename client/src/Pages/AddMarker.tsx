@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import Nav from '../Components/Nav';
@@ -7,27 +8,72 @@ import { Icon } from '@iconify/react';
 import Input from '../Components/Input';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
-
+import axios from 'axios';
 import color from '../color';
 
 const { red, ivory, darkgrey, brown, yellow, bordergrey } = color;
+
+const jwtToken = localStorage.getItem('Authorization');
+const refreshToken = localStorage.getItem('Refresh');
+const headers = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: jwtToken,
+  Refresh: refreshToken,
+};
 
 interface IPos {
   lat: number;
   lng: number;
 }
 
+interface FormData {
+  placeImage: Blob | null;
+}
+
+interface Info {
+  name: string;
+  code: number;
+  category: string;
+  homepage: string;
+  mapAddress: string;
+  latitude: number;
+  longitude: number;
+  operationTime: string;
+  tel: string;
+}
+
 const AddMarker = () => {
   const TagArr = ['공원', '카페', '음식점', '캠핑', '수영장', '병원'];
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(-1);
   const [click, setClick] = useState(false);
   const [position, setPosition] = useState<IPos>();
   const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState<FormData>({ placeImage: null });
+  const [fileImage, setFileImage] = useState<string>();
   const [address, setAddress] = useState<number | null>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const categoryRef = useRef<HTMLInputElement>(null);
+  const homepageRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const mapaddressRef = useRef<HTMLInputElement>(null);
+  const operationtimeRef = useRef<HTMLInputElement>(null);
+  const telRef = useRef<HTMLInputElement>(null);
+
+  const [info, setInfo] = useState<Info>({
+    name: '',
+    code: 0,
+    category: '',
+    homepage: '',
+    mapAddress: '',
+    latitude: 0,
+    longitude: 0,
+    operationTime: '',
+    tel: '',
+  });
 
   const [addrErrorMessage, setAddrErrorMessage] = useState<string>('');
   const addrRef = useRef<HTMLInputElement>(null);
-
   const backgroundRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
   const openAddressModal = () => {
@@ -38,6 +84,8 @@ const AddMarker = () => {
     console.log(index);
     setCurrentTab(index);
     setClick(true);
+    setInfo({ ...info, category: TagArr[index] });
+    console.log('tag', TagArr[index]);
   };
 
   // 배경 클릭시 모달이 닫힌다.
@@ -46,6 +94,93 @@ const AddMarker = () => {
       setIsOpen(false);
     }
   });
+
+  const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setFileImage(URL.createObjectURL(event.target.files[0]));
+    const { name, files } = event.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    }
+    console.log('formData', formData);
+    console.log('formData.profileImage', formData.placeImage);
+  };
+
+  const nameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, name: e.target.value });
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const categoryHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, category: TagArr[currentTab] });
+    console.log('tag', TagArr[currentTab]);
+  };
+  const homepageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, homepage: e.target.value });
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const mapaddressHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, mapAddress: e.target.value });
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const operationtimeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, operationTime: e.target.value });
+    console.log((e.target as HTMLInputElement).value);
+  };
+  const telHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInfo({ ...info, tel: e.target.value });
+    console.log((e.target as HTMLInputElement).value);
+  };
+
+  const submitHandler = async () => {
+    if (position && address) {
+      setInfo({ ...info, latitude: position.lat, longitude: position.lng, code: address });
+    }
+    if (info.code !== 0 && address) {
+      const data = new FormData();
+      data.append('name', info.name);
+      data.append('code', address.toString());
+      data.append('category', info.category);
+      data.append('homepage', info.homepage);
+      data.append('mapAddress', info.mapAddress);
+      data.append('latitude', info.latitude.toString());
+      data.append('longitude', info.longitude.toString());
+      data.append('operationTime', info.operationTime);
+      data.append('tel', info.tel);
+
+      if (formData.placeImage) {
+        data.append('file', formData.placeImage);
+      }
+
+      console.log('info', info);
+
+      for (const key of data.keys()) {
+        console.log('key', key);
+      }
+      for (const value of data.values()) {
+        console.log('value', value);
+      }
+
+      axios
+        .post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers })
+        .then((res) => {
+          console.log(res);
+          alert('등록이 완료되었습니다.');
+          navigate('/community');
+        })
+        .catch((err) => {console.error('Error', err);alert(err)});
+
+        // try {
+        //   await axios.post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers });
+        //   alert('등록이 완료되었습니다.');
+        //   navigate('/community');
+        //   // 비동기 에러 날 것 같으면 .then 사용
+        // } catch (error) {
+        //   console.error('Error', error);
+        //   alert(error);
+        // }
+    }
+  };
 
   return (
     <div>
@@ -59,7 +194,12 @@ const AddMarker = () => {
             </TitleTopBox>
             <TitleBottomBox>
               <TitleInputBox>
-                <input placeholder='장소 이름을 작성해주세요.'></input>
+                <input
+                  type='text'
+                  onChange={nameHandler}
+                  placeholder='장소 이름을 작성해주세요.'
+                  ref={nameRef}
+                ></input>
               </TitleInputBox>
             </TitleBottomBox>
           </TitleBox>
@@ -88,15 +228,6 @@ const AddMarker = () => {
             >
               {position && <MapMarker position={position} />}
             </Map>
-            {position && (
-              <p>
-                {'클릭한 위치의 위도는 ' +
-                  position.lat +
-                  ' 이고, 경도는 ' +
-                  position.lng +
-                  ' 입니다'}
-              </p>
-            )}
           </PositionBox>
           <PosSelectBox>
             <Title>지역</Title>
@@ -131,7 +262,11 @@ const AddMarker = () => {
                       ${idx === 0 ? 'radius-left' : ''} 
                       ${idx === 5 ? 'radius-right' : ''}
                       `}
-                    onClick={() => selectMenuHandler(idx)}
+                    onClick={() => {
+                      selectMenuHandler(idx);
+                      categoryHandler;
+                    }}
+                    ref={categoryRef}
                   >
                     {el}
                   </Tag>
@@ -142,45 +277,51 @@ const AddMarker = () => {
           <Flex>
             <HomepageBox>
               <Title>홈페이지 주소</Title>
-              <InputData placeholder='ex. http://www.naver.com' />
+              <InputData
+                onChange={homepageHandler}
+                ref={homepageRef}
+                placeholder='ex. http://www.pawpaw.com'
+              />
             </HomepageBox>
           </Flex>
           <Flex>
             <ImageBox>
               <Title>이미지</Title>
-              <label className='input-img-button' htmlFor='input-file'>
-                이미지 파일 선택
-              </label>
-              <input
-                type='file'
-                id='input-file'
-                className='ImgUpload'
-                style={{ display: 'none' }}
-              ></input>
+              <form>
+                <label className='input-file-button' htmlFor='input-file'></label>
+                <input
+                  type='file'
+                  id='input-file'
+                  name='placeImage'
+                  className='ImgUpload'
+                  onChange={saveFileImage}
+                  ref={fileRef}
+                ></input>
+              </form>
             </ImageBox>
           </Flex>
           <Flex>
             <DetailAddrBox>
               <Title>주소</Title>
-              <InputData></InputData>
+              <InputData onChange={mapaddressHandler} ref={mapaddressRef}></InputData>
             </DetailAddrBox>
           </Flex>
           <Flex>
             <TimeBox>
               <Title>영업 시간</Title>
-              <InputData></InputData>
+              <InputData placeholder='0900-2200' onChange={operationtimeHandler} ref={operationtimeRef}></InputData>
             </TimeBox>
           </Flex>
           <Flex>
             <NumberBox>
               <Title>전화번호</Title>
-              <InputData></InputData>
+              <InputData onChange={telHandler} ref={telRef}></InputData>
             </NumberBox>
           </Flex>
 
           <BottomBox>
             <CancelBtn>취소</CancelBtn>
-            <EnrollBtn>등록</EnrollBtn>
+            <EnrollBtn onClick={submitHandler}>등록</EnrollBtn>
           </BottomBox>
         </Container>
       </WholeContainer>
@@ -377,7 +518,6 @@ const EnrollBtn = styled.button`
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-
 `;
 
 const CancelBtn = styled.button`
