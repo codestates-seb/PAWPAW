@@ -15,7 +15,7 @@ import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 import load from '../img/paw.gif';
 
-const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
+const { ivory, yellow, coral, red, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -206,7 +206,7 @@ const Mypage = () => {
         ) : (
           <WriteContainerBox>
             <WriteTitleBox>
-              <span>작성한 리뷰</span>
+              <span>작성한 글</span>
               <Icon icon='mdi:paw' style={{ fontSize: '20px' }} />
             </WriteTitleBox>
             {postData.myPosts.length === 0 ? (
@@ -214,22 +214,35 @@ const Mypage = () => {
             ) : (
               postData.myPosts.map((el: any) => {
                 return (
-                  <WriteBox key={el.postId}>
-                    <div className='top'>
-                      <Link to={`/community/${el.postId}`}>
-                        <TitleBox>{el.title}</TitleBox>
-                      </Link>
-                      <DayBox>{el.createdAt}</DayBox>
-                    </div>
-                    <ContentBox
-                      dangerouslySetInnerHTML={{
-                        __html: sanitizeHtml(el.contents, {
-                          allowedTags: [],
-                          allowedAttributes: false,
-                        }),
-                      }}
-                    />
-                  </WriteBox>
+                  <FlexBox key={el.postId}>
+                    <WriteBox>
+                      <div className='top'>
+                        <Link to={`/community/${el.postId}`}>
+                          <TitleBox>{el.title}</TitleBox>
+                        </Link>
+                        <DayBox>{el.createdAt}</DayBox>
+                      </div>
+                      <ContentBox
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeHtml(el.contents, {
+                            allowedTags: [],
+                            allowedAttributes: false,
+                          }),
+                        }}
+                      />
+                    </WriteBox>
+                    <RightBox>
+                      <LikeContainer>
+                        <Icon
+                          className='icon'
+                          icon='ph:paw-print-fill'
+                          color='#FFBF71'
+                          style={{ fontSize: '15px' }}
+                        />
+                        <span>{el.likesCnt}</span>
+                      </LikeContainer>
+                    </RightBox>
+                  </FlexBox>
                 );
               })
             )}
@@ -347,7 +360,14 @@ const WriteContainerBox = styled.div`
   padding: 20px;
 `;
 
+const FlexBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid ${bordergrey};
+`;
+
 const WriteTitleBox = styled.div`
+  margin-bottom: 20px;
   font-size: 24px;
   font-weight: 700;
   color: ${brown};
@@ -360,19 +380,25 @@ const WriteTitleBox = styled.div`
 `;
 
 const WriteBox = styled.div`
+  flex-grow: 1;
   .top {
     display: flex;
     margin-top: 20px;
     margin-bottom: 8px;
   }
-  border-bottom: 1px solid ${bordergrey};
-  height: 100px;
+  padding: 10px;
+
+  height: 160px;
 `;
 
 const TitleBox = styled.div`
   color: ${brown};
   font-weight: 600;
   font-size: 20px;
+
+  &:hover {
+    color: ${darkbrown};
+  }
 `;
 
 const DayBox = styled.div`
@@ -391,6 +417,28 @@ const ContentBox = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+`;
+
+const RightBox = styled.div`
+  padding: 15px 10px;
+`;
+
+const LikeContainer = styled.div`
+  height: 30px;
+  border-radius: 10px;
+  background-color: ${ivory};
+  padding: 15px 7px;
+
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 5px;
+  }
+
+  span {
+    font-size: 14px;
+  }
 `;
 
 const LogoutBox = styled.div`
