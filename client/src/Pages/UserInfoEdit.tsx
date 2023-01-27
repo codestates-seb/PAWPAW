@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable camelcase */
 import React, { FC, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
@@ -11,11 +14,11 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
-import { petDelete, petLogout } from '../util/UserApi';
+import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
-const { ivory, brown, yellow, darkivory, bordergrey, lightgrey, red } = color;
+const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
 
 interface FormData {
@@ -29,6 +32,19 @@ interface Info {
   age: number;
 }
 
+interface UserData {
+  0: string;
+  1: string;
+}
+
+export interface TokenInfo {
+  petName: string;
+  petNameSpan: string;
+  petId: number;
+  exp: number;
+  code: number;
+  roles: UserData[] | null;
+}
 const UserInfoEdit: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -103,13 +119,25 @@ const UserInfoEdit: FC = () => {
 
   const adminRequest = async (secretCode: string) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `${url}/pets/admin/${petId}`,
         {
           adminCode: secretCode,
         },
         { headers },
       );
+      localStorage.removeItem('Authorization');
+      localStorage.removeItem('Refresh');
+      localStorage.removeItem('Admin');
+      const jwtToken = response.headers.authorization as string;
+      const refreshToken = response.headers.refresh as string;
+      const jwtToken_decode = jwt_decode(jwtToken) as TokenInfo;
+      const admin = jwtToken_decode.roles;
+      localStorage.setItem('Authorization', jwtToken);
+      localStorage.setItem('Refresh', refreshToken);
+      if (admin !== null) {
+        localStorage.setItem('Admin', admin[1].toString());
+      }
     } catch (error) {
       console.error('Error', error);
     }
@@ -130,16 +158,24 @@ const UserInfoEdit: FC = () => {
     }).then((result) => {
       if (result.value) {
         const code = result.value;
-        Swal.fire({
-          title: '권한 요청 완료',
-          text: '관리자 권한 요청이 성공적으로 처리되었습니다. 로그아웃 됩니다.',
-          icon: 'success',
-          confirmButtonColor: yellow,
-          confirmButtonText: '<b>확인</b>',
-        });
-        console.log(code);
-        adminRequest(code);
-        petLogout().then(() => navigate('/'));
+        {
+          code === `${process.env.REACT_APP_ADMIN}`
+            ? (Swal.fire({
+                title: '권한 요청 완료',
+                text: '관리자 권한 요청이 성공적으로 처리되었습니다.',
+                icon: 'success',
+                confirmButtonColor: yellow,
+                confirmButtonText: '<b>확인</b>',
+              }),
+              adminRequest(code).then(() => navigate('/mypage')))
+            : Swal.fire({
+                title: '권한 요청 실패',
+                text: '관리자 권한 요청이 실패했습니다.',
+                icon: 'warning',
+                confirmButtonColor: red,
+                confirmButtonText: '<b>확인</b>',
+              });
+        }
       }
     });
   }

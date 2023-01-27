@@ -14,12 +14,18 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 const { ivory, yellow, brown, red } = color;
 
+interface UserData {
+  0: string;
+  1: string;
+}
+
 export interface Info {
   petName: string;
   petNameSpan: string;
   petId: number;
   exp: number;
   code: number;
+  roles: UserData[] | null;
 }
 
 const Login: React.FC = () => {
@@ -59,8 +65,8 @@ const Login: React.FC = () => {
         const jwtToken_decode = jwt_decode(jwtToken) as Info;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
-        const petName = jwtToken_decode.petName as string;
         const code = jwtToken_decode.code as number;
+        const admin = jwtToken_decode.roles;
         setPetId(petid.toString());
         console.log('petId', petId);
         const refreshToken = response.headers.refresh as string;
@@ -68,6 +74,9 @@ const Login: React.FC = () => {
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('petId', petid);
         localStorage.setItem('code', code.toString());
+        if (admin !== null) {
+          localStorage.setItem('Admin', admin[1].toString());
+        }
         navigate('/map');
       } catch (error) {
         console.error('Error', error);
