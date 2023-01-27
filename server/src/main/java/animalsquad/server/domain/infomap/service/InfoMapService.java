@@ -72,6 +72,14 @@ public class InfoMapService {
         return infoMapRepository.save(infoMap);
     }
 
+    public InfoMap imageUpload(long mapId, MultipartFile file) throws IllegalAccessException {
+        InfoMap infoMap = findVerifiedInfoMap(mapId);
+        String imageUrl = fileUploadService.uploadImage(file, folderName);
+        infoMap.setImageUrl(imageUrl);
+
+        return infoMap;
+    }
+
     public InfoMap findVerifiedInfoMap(long id) {
         Optional<InfoMap> optionalInfoMap = infoMapRepository.findById(id);
         return optionalInfoMap.orElseThrow(() -> new BusinessLogicException(ExceptionCode.INFO_MAP_NOT_FOUND));

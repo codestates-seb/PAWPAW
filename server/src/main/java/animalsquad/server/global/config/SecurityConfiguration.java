@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                                 .antMatchers("/").permitAll()
 //                        .antMatchers("/login").permitAll()
                                 .antMatchers(HttpMethod.POST,"/maps").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.PATCH,"/maps/admin/**").hasRole("ADMIN")
                                 .antMatchers("/pets/test").hasRole("USER") //권한 테스트용
                                 .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")
