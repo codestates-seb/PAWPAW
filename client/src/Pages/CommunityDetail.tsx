@@ -493,7 +493,7 @@ const Body = styled.div`
 
 const PostContainer = styled.div`
   padding: 50px 90px;
-  width: 930px;
+  width: 1000px;
   height: 100%;
   flex-grow: 1;
 `;
