@@ -139,6 +139,7 @@ const UserInfoEdit: FC = () => {
         });
         console.log(code);
         adminRequest(code);
+        petLogout().then(() => navigate('/'));
       }
     });
   }
