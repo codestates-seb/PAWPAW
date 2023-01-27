@@ -325,7 +325,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                     color={brown}
                     style={{ fontSize: '30px' }}
                   />
-                  {mapdata.details.operationTime === '' ? (
+                  {mapdata.details.operationTime === null ? (
                     <NullData>이용시간을 알려주세요.</NullData>
                   ) : (
                     <InfoContent>{mapdata.details.operationTime}</InfoContent>
@@ -333,7 +333,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-                  {mapdata.details.tel === '' ? (
+                  {mapdata.details.tel === null ? (
                     <NullData>전화번호를 알려주세요.</NullData>
                   ) : (
                     <InfoContent>{mapdata.details.tel}</InfoContent>
@@ -341,10 +341,14 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-                  {mapdata.details.homepage === '' ? (
+                  {mapdata.details.homepage === null ? (
                     <NullData>홈페이지를 알려주세요.</NullData>
                   ) : (
-                    <InfoContent>{mapdata.details.homepage}</InfoContent>
+                    <div className='urlBox'>
+                      <Linka href={mapdata.details.homepage} target='_blank'>
+                        {mapdata.details.homepage}
+                      </Linka>
+                    </div>
                   )}
                 </InfoContentBox>
               </InfoDiv>
@@ -540,6 +544,12 @@ const InfoContentBox = styled.div`
 
   &:last-child {
     margin-bottom: 3px;
+  }
+
+  .urlBox {
+    width: 270px;
+    display: flex;
+    align-items: center;
   }
 `;
 const InfoContent = styled.div`
@@ -765,6 +775,17 @@ const NullData = styled.div`
   margin-left: 13px;
   display: flex;
   align-items: center;
-`
+`;
+
+const Linka = styled.a`
+  font-size: 14px;
+  font-weight: bold;
+  color: ${yellow};
+  margin-left: 13px;
+  display: flex;
+  align-items: center;
+  text-decoration: underline;
+  word-break: break-all;
+`;
 
 export default Modal;
