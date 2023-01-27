@@ -194,7 +194,7 @@ const AddMarker = () => {
       <Body>
         <Nav type={type} />
         <Container>
-          {isAdmin ? (
+          {isAdmin === 'ROLE_ADMIN' ? (
             <>
               <TitleBox>
                 <TitleTopBox>
