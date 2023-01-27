@@ -29,7 +29,9 @@ public enum ExceptionCode {
 
     LIKES_NOT_FOUND(404, "Likes not found"),
 
-    ALREADY_LIKED(400,"Already Liked");
+    ALREADY_LIKED(400,"Already Liked"),
+
+    INVALID_FILE_TYPE(400, "Invalid file type");
     @Getter
     private int status;
 
