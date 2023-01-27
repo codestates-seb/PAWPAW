@@ -61,6 +61,7 @@ interface PostData {
 }
 interface PostList {
   post: {
+    authorId: number;
     postId: number;
     title: string;
     content: string;
@@ -79,7 +80,6 @@ const CommunityDetail: React.FC = () => {
   const [review, setReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
   const [editReview, setEditReview] = useState<string>('');
-  const [test, setTest] = useState<number>(0);
   const [userData, setUserData] = useState<UserList>({
     myPosts: [],
     pageInfo: {
@@ -100,6 +100,7 @@ const CommunityDetail: React.FC = () => {
   });
   const [postDetail, setPostDetail] = useState<PostList>({
     post: {
+      authorId: 0,
       content: '',
       createdAt: '',
       imageUrl: null,
@@ -113,12 +114,11 @@ const CommunityDetail: React.FC = () => {
   });
   const id = useParams();
   const postId = id.id;
-  console.log(postId);
 
   useEffect(() => {
     getData();
     console.log('resetCheck');
-  }, [like, test]);
+  }, [like]);
 
   async function getData() {
     await axios
@@ -206,8 +206,7 @@ const CommunityDetail: React.FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostDELETE(Number(postId));
-        setTest(test + 1);
+        PostDELETE(Number(postId)).then(() => navigate('/community'));
       }
     });
   };
@@ -231,8 +230,7 @@ const CommunityDetail: React.FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostReviewDELETE(commentId);
-        setTest(test + 1);
+        PostReviewDELETE(commentId).then(() => window.location.reload());
       }
     });
   };
@@ -272,10 +270,10 @@ const CommunityDetail: React.FC = () => {
           });
           PostReviewUPDATE(commentId, editReview);
           setEditActivate(0);
-          setTest(test + 1);
+          setEditReview('');
+          window.location.reload();
         }
       });
-      setEditReview('');
     }
   };
   const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -293,9 +291,7 @@ const CommunityDetail: React.FC = () => {
   };
 
   const reviewPostHandler = () => {
-    setTest(test + 1);
     PostReviewEdit(Number(postId), review);
-    console.log('test', test);
     if (review === '') {
       Swal.fire({
         position: 'center',
@@ -318,9 +314,7 @@ const CommunityDetail: React.FC = () => {
         timer: 1500,
       });
       setReview('');
-      setTimeout(() => {
-        window.location.reload(), 1500;
-      });
+      window.location.reload();
     }
   };
 
@@ -368,10 +362,14 @@ const CommunityDetail: React.FC = () => {
                   </LikeButton>
                 )}
               </ButtonsDiv>
-              <ButtonsDiv>
-                <Button onClick={goToEdit}>수정</Button>
-                <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
-              </ButtonsDiv>
+              {petId !== postDetail.post.authorId ? (
+                ''
+              ) : (
+                <ButtonsDiv>
+                  <Button onClick={goToEdit}>수정</Button>
+                  <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
+                </ButtonsDiv>
+              )}
             </FooterDiv>
             <ReviewContainer>
               <ReviewBox>
@@ -385,10 +383,10 @@ const CommunityDetail: React.FC = () => {
                         댓글이 없어요.. <br />첫 번째 댓글을 남겨주세요 🐾
                       </EmptyMessage>
                     ) : (
-                      postDetail.comments.map((el: any, idx: number) => {
+                      postDetail.comments.map((el: any) => {
                         return (
-                          <Review key={idx}>
-                            {el.petId !== editActivate ? (
+                          <Review key={el.commentId}>
+                            {el.commentId !== editActivate ? (
                               <ReviewWrite>
                                 <ReviewUserBox>
                                   <ReviewUserImage src={el.profileImageUrl} />
@@ -398,9 +396,9 @@ const CommunityDetail: React.FC = () => {
                                   <ReviewText>
                                     {el.content}
                                     {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                                    {el.petId === Number(petId) ? (
+                                    {el.petId === petId ? (
                                       <EditDelButtons>
-                                        <button onClick={() => reviewActivateHandler(el.petId)}>
+                                        <button onClick={() => reviewActivateHandler(el.commentId)}>
                                           <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
                                         </button>
                                         <button onClick={() => reviewDeleteHandler(el.commentId)}>
