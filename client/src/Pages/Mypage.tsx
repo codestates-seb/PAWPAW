@@ -199,6 +199,9 @@ const Mypage = () => {
               </InfoIconBox>
               <InfoPosBox>{codeToAddress(postData.petInfo.code)}</InfoPosBox>
             </InfoBottomBox>
+            <LogoutBox>
+              <button onClick={logoutHandler}>로그아웃</button>
+            </LogoutBox>
           </InfoBox>
         </ProfileContainerBox>
         {postData.myPosts === null ? (
@@ -248,10 +251,6 @@ const Mypage = () => {
             )}
           </WriteContainerBox>
         )}
-
-        <LogoutBox>
-          <button onClick={logoutHandler}>로그아웃</button>
-        </LogoutBox>
       </Container>
     </>
   );
@@ -442,8 +441,12 @@ const LikeContainer = styled.div`
 `;
 
 const LogoutBox = styled.div`
-  margin-left: auto;
-  margin-top: 20px;
+  margin-left: 10px;
+  height: 100px;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
   button {
     color: ${darkgrey};
     border: none;
