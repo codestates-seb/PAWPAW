@@ -11,7 +11,6 @@ import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../color';
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
-const petId = localStorage.getItem('petId');
 const jwtToken = localStorage.getItem('Authorization');
 const headers = {
   'Content-Type': 'multipart/form-data',
@@ -19,7 +18,6 @@ const headers = {
 };
 
 export interface IPost {
-  petId: string | null;
   title: string;
   content: string;
 }
@@ -29,7 +27,6 @@ const PostEdit = () => {
   const location = useLocation();
   const { postId } = location.state;
   const [data, setData] = useState<IPost>({
-    petId: petId,
     title: '',
     content: '',
   });
@@ -40,21 +37,19 @@ const PostEdit = () => {
   // 글 받아오기
   useEffect(() => {
     getPost().then((post) => {
-      setData({
-        ...data,
-        title: post.title,
-        content: post.content,
+      setData((data) => {
+        return { ...data, title: post.title, content: post.content };
       });
 
       if (post.imageUrl) {
-        setImageUrl(post.imageUrl);
-        setFile(post.imageUrl);
+        setImageUrl(post.imageUrl[0]);
       }
     });
   }, []);
 
   async function getPost() {
     const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`, { headers });
+    console.log('getPost res', res);
     return res.data.post;
   }
 
@@ -89,8 +84,7 @@ const PostEdit = () => {
   const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (data.petId && data.title && data.content !== '<p><br></p>') {
-      formData.append('petId', data.petId);
+    if (data.title && data.content !== '<p><br></p>') {
       formData.append('title', data.title);
       formData.append('content', data.content);
       file && formData.append('file', file);
@@ -106,6 +100,13 @@ const PostEdit = () => {
         await axios
           .patch(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`, formData, { headers })
           .then((res) => {
+            Swal.fire({
+              title: '수정되었습니다.',
+              icon: 'success',
+              color: brown,
+              confirmButtonColor: yellow,
+              confirmButtonText: '<b>확인</b>',
+            });
             console.log('성공', res);
             navigate('/community');
           });
@@ -194,62 +195,64 @@ const PostEdit = () => {
   }, []);
 
   const type = 'board';
-
+  console.log('imageUrl', imageUrl);
   return (
     <Container>
       <Header />
       <Body>
         <Nav type={type} />
-        <PostContainer>
-          <div>
-            <Title>제목</Title>
-            <TitleInput
-              value={data.title}
-              onChange={titleHandler}
-              type='text'
-              placeholder='제목을 작성해주세요.'
-            />
-          </div>
-          <div>
-            <Title className='body'>본문</Title>
-          </div>
-          <EditorContainer>
-            <ReactQuill
-              value={data.content}
-              onChange={contentHandler}
-              modules={modules}
-              placeholder='사진은 최대 1장만 첨부할 수 있어요.'
-            />
-          </EditorContainer>
-          <FooterDiv>
-            <ImageDiv>
-              {imageUrl ? (
-                <>
-                  <Image src={imageUrl.toString()} />
-                  <ImageDelButton onClick={deleteImage}>
+        {data.title && (
+          <PostContainer>
+            <div>
+              <Title>제목</Title>
+              <TitleInput
+                value={data.title}
+                onChange={titleHandler}
+                type='text'
+                placeholder='제목을 작성해주세요.'
+              />
+            </div>
+            <div>
+              <Title className='body'>본문</Title>
+            </div>
+            <EditorContainer>
+              <ReactQuill
+                value={data.content}
+                onChange={contentHandler}
+                modules={modules}
+                placeholder='사진은 최대 1장만 첨부할 수 있어요.'
+              />
+            </EditorContainer>
+            <FooterDiv>
+              <ImageDiv>
+                {imageUrl ? (
+                  <>
+                    <Image src={imageUrl.toString()} />
+                    <ImageDelButton onClick={deleteImage}>
+                      <Icon
+                        icon='material-symbols:delete-outline-rounded'
+                        style={{ fontSize: '25px' }}
+                      />
+                    </ImageDelButton>
+                  </>
+                ) : (
+                  <EmptyDiv>
                     <Icon
-                      icon='material-symbols:delete-outline-rounded'
-                      style={{ fontSize: '25px' }}
+                      onClick={imageHandler}
+                      icon='ic:baseline-plus'
+                      color='white'
+                      style={{ fontSize: '60px' }}
                     />
-                  </ImageDelButton>
-                </>
-              ) : (
-                <EmptyDiv>
-                  <Icon
-                    onClick={imageHandler}
-                    icon='ic:baseline-plus'
-                    color='white'
-                    style={{ fontSize: '60px' }}
-                  />
-                </EmptyDiv>
-              )}
-            </ImageDiv>
-            <ButtonsDiv>
-              <SubmitButton onClick={submitHandler}>등록</SubmitButton>
-              <CancelButton onClick={cancelHandler}>취소</CancelButton>
-            </ButtonsDiv>
-          </FooterDiv>
-        </PostContainer>
+                  </EmptyDiv>
+                )}
+              </ImageDiv>
+              <ButtonsDiv>
+                <SubmitButton onClick={submitHandler}>등록</SubmitButton>
+                <CancelButton onClick={cancelHandler}>취소</CancelButton>
+              </ButtonsDiv>
+            </FooterDiv>
+          </PostContainer>
+        )}
       </Body>
     </Container>
   );

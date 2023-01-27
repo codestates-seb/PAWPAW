@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useMemo  } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-import headers from '../util/headers';
+
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -17,6 +17,11 @@ import { codeToAddress } from '../util/ConvertAddress';
 import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+const jwtToken = localStorage.getItem('Authorization');
+const headers = {
+  'Content-Type': 'multipart/form-data',
+  Authorization: jwtToken,
+};
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -62,6 +67,12 @@ const UserInfoEdit: FC = () => {
   const [address, setAddress] = useState<number | null>(code);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const localStorageCode = localStorage.getItem('code');
+
+  // 로컬 스토리지에 있는 code가 변경될 때만 실행된다.
+  useMemo(() => {
+    setAddress(Number(localStorageCode));
+  }, [localStorageCode]);
 
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -203,7 +214,11 @@ const UserInfoEdit: FC = () => {
       }
 
       try {
-        await axios.patch(`${process.env.REACT_APP_API_ROOT}/pets/${petId}`, data, { headers });
+        await axios
+          .patch(`${process.env.REACT_APP_API_ROOT}/pets/${petId}`, data, { headers })
+          .then((res) => {
+            localStorage.setItem('code', res.data.code);
+          });
         navigate('/mypage');
         // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
