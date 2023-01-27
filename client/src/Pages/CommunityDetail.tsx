@@ -389,7 +389,7 @@ const CommunityDetail: React.FC = () => {
                               <ReviewWrite>
                                 <ReviewUserBox>
                                   <ReviewUserImage src={el.profileImageUrl} />
-                                  <ReviewUserName>{el.petname}</ReviewUserName>
+                                  <ReviewUserName>{el.petName}</ReviewUserName>
                                 </ReviewUserBox>
                                 <ReviewTextBox>
                                   <ReviewText>
