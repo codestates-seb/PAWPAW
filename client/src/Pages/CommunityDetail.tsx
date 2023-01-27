@@ -65,6 +65,7 @@ interface PostList {
     title: string;
     content: string;
     imageUrl: string | null;
+    petId: number;
     petName: string;
     createdAt: string;
     likesCnt: number;
@@ -105,6 +106,7 @@ const CommunityDetail: React.FC = () => {
       imageUrl: null,
       likeActive: false,
       likesCnt: 0,
+      petId: 0,
       petName: '',
       postId: 0,
       title: '',
@@ -113,12 +115,11 @@ const CommunityDetail: React.FC = () => {
   });
   const id = useParams();
   const postId = id.id;
-  console.log(postId);
 
   useEffect(() => {
     getData();
     console.log('resetCheck');
-  }, [like, test]);
+  }, [like, test, review]);
 
   async function getData() {
     await axios
@@ -208,6 +209,7 @@ const CommunityDetail: React.FC = () => {
         });
         PostDELETE(Number(postId));
         setTest(test + 1);
+        navigate('/community');
       }
     });
   };
@@ -318,9 +320,9 @@ const CommunityDetail: React.FC = () => {
         timer: 1500,
       });
       setReview('');
-      setTimeout(() => {
-        window.location.reload(), 1500;
-      });
+      // setTimeout(() => {
+      //   window.location.reload(), 1500;
+      // });
     }
   };
 
@@ -368,10 +370,14 @@ const CommunityDetail: React.FC = () => {
                   </LikeButton>
                 )}
               </ButtonsDiv>
-              <ButtonsDiv>
-                <Button onClick={goToEdit}>수정</Button>
-                <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
-              </ButtonsDiv>
+              {petId !== postDetail.post.petId ? (
+                ''
+              ) : (
+                <ButtonsDiv>
+                  <Button onClick={goToEdit}>수정</Button>
+                  <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
+                </ButtonsDiv>
+              )}
             </FooterDiv>
             <ReviewContainer>
               <ReviewBox>
@@ -398,7 +404,7 @@ const CommunityDetail: React.FC = () => {
                                   <ReviewText>
                                     {el.content}
                                     {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                                    {el.petId === Number(petId) ? (
+                                    {el.petId === petId ? (
                                       <EditDelButtons>
                                         <button onClick={() => reviewActivateHandler(el.petId)}>
                                           <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
