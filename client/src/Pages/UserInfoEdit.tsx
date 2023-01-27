@@ -4,25 +4,19 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-
+import headers from '../util/headers';
 import color from '../color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
-import { petDelete } from '../util/UserApi';
+import { petDelete, petLogout } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 
 const { ivory, brown, yellow, darkivory, bordergrey, lightgrey, red } = color;
-const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
-const headers = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: jwtToken,
-  Refresh: refreshToken,
-};
+const url = process.env.REACT_APP_API_ROOT;
 
 interface FormData {
   profileImage: Blob | null;
@@ -52,6 +46,7 @@ const UserInfoEdit: FC = () => {
   const [address, setAddress] = useState<number | null>(code);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [secretCode, setSecretCode] = useState('');
 
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -107,6 +102,49 @@ const UserInfoEdit: FC = () => {
     });
   };
 
+  const adminRequest = async (secretCode: string) => {
+    try {
+      await axios.post(
+        `${url}/pets/admin/${petId}`,
+        {
+          adminCode: secretCode,
+        },
+        { headers },
+      );
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+
+  function admin() {
+    Swal.fire({
+      title: '관리자 권한 요청',
+      text: '유효한 코드를 입력해 주세요',
+      input: 'text',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: red,
+      cancelButtonColor: bordergrey,
+      confirmButtonText: '<b>권한 요청</b>',
+      cancelButtonText: '<b>취소</b>',
+    }).then((result) => {
+      if (result.value) {
+        setSecretCode(result.value);
+      }
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '권한 요청 완료',
+          text: '관리자 권한 요청이 성공적으로 처리되었습니다. 로그아웃 됩니다.',
+          icon: 'success',
+          confirmButtonColor: yellow,
+          confirmButtonText: '<b>확인</b>',
+        });
+        adminRequest(secretCode);
+        petLogout().then(() => navigate('/'));
+      }
+    });
+  }
+
   const openAddressModal = () => {
     setIsOpen(!isOpen);
   };
@@ -155,11 +193,11 @@ const UserInfoEdit: FC = () => {
                 src={fileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
-            ) : profileImage.profileImage ? (
+            ) : profileImage ? (
               <img
                 className='userprofile'
                 alt='sample'
-                src={profileImage.profileImage}
+                src={profileImage}
                 style={{ margin: 'auto', width: '175px', height: '175px' }}
               />
             ) : info.isCat === 'CAT' ? (
@@ -263,6 +301,7 @@ const UserInfoEdit: FC = () => {
           <ButtonDiv>
             <Button text='수정' onClick={updateHandler} />
             <DeleteButton onClick={deleteHandler}>회원 탈퇴</DeleteButton>
+            <ManagerButton onClick={admin}>관리자 권한 요청</ManagerButton>
           </ButtonDiv>
         </RightDiv>
       </Box>
@@ -459,6 +498,20 @@ const DeleteButton = styled.div`
   position: absolute;
   top: 70px;
   left: -465px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+const ManagerButton = styled.div`
+  z-index: 9;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  top: 70px;
+  left: -390px;
   cursor: pointer;
 
   &:hover {
