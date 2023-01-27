@@ -112,10 +112,13 @@ const Login: React.FC = () => {
         {/* 왼쪽 영역 */}
         <LeftDiv>
           <IntroDiv>
-            <TitleH1>PAW PAW</TitleH1>
-            <TextDiv>
-              <div>당신과 반려동물의 삶을 더 윤택하게 만들어주는 서비스 .. 어쩌구 ..</div>
-            </TextDiv>
+            <TitleBox>
+              <TitleH1>PAW PAW</TitleH1>
+              <TextDiv>
+                반려동물과 함께라면 <br />
+                어디든 갈 수 있어!
+              </TextDiv>
+            </TitleBox>
             <DeveloperDiv>
               <div>
                 <NameSpan>
@@ -192,7 +195,7 @@ const IntroDiv = styled.div`
 `;
 
 const TitleH1 = styled.h1`
-  margin: 50px 0px;
+  margin: 10px 0px 10px 0px;
   font-size: 50px;
   font-family: Rubik Bubbles;
 `;
@@ -201,12 +204,20 @@ const TextDiv = styled.div`
   /* background-color: lavender; */
   width: 70%;
   height: 60%;
-  font-size: 25px;
+  font-size: 16px;
   text-align: center;
-
   display: flex;
   flex-direction: column;
+  font-weight: 800;
+  line-height: 1.5;
   /* justify-content: center; */
+`;
+
+const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const DeveloperDiv = styled.div``;
