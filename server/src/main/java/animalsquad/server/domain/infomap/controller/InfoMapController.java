@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -44,7 +45,7 @@ public class InfoMapController {
         List<InfoMapsResponseDto> infoMapsResponseDtos = infoMapMapper.infoMapsToResponseDto(infos);
         if (filter.equals("NONE")) {
             Address address = addressService.findAddressByCode(code);
-            return new ResponseEntity(infoMapMapper.infoMapsToWithCenterResponseDto(infoMapsResponseDtos, address),HttpStatus.OK);
+            return new ResponseEntity(infoMapMapper.infoMapsToWithCenterResponseDto(infoMapsResponseDtos, address), HttpStatus.OK);
         }
         return new ResponseEntity(infoMapsResponseDtos, HttpStatus.OK);
     }
@@ -56,7 +57,6 @@ public class InfoMapController {
         return new ResponseEntity(infoMapMapper.infoMapsToResponseDto(infos), HttpStatus.OK);
     }
 
-    //테스트용 post
     @PostMapping
     public ResponseEntity postMaps(InfoMapPostDto infoMapPostDto) throws IllegalAccessException {
         InfoMap infoMap = infoMapMapper.postDtoToInfoMap(infoMapPostDto);
@@ -64,6 +64,13 @@ public class InfoMapController {
         infoMapService.createMaps(infoMap, infoMapPostDto.getFile());
 
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/admin/{info-map-id}")
+    public ResponseEntity patchMapImage(@PathVariable("info-map-id") long mapId, MultipartFile file) throws IllegalAccessException {
+        infoMapService.imageUpload(mapId, file);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/review")

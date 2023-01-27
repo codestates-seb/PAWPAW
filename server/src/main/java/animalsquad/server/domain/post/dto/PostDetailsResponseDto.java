@@ -34,6 +34,7 @@ public class PostDetailsResponseDto {
     @Getter
     @Setter
     public static class CommentDto {
+        private long commentId;
         private long petId;
         private String petName;
         private String content;
