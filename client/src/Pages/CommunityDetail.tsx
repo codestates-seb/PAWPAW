@@ -19,10 +19,9 @@ import {
   PostDELETE,
 } from '../util/PostReviewApi';
 
-const { ivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
+const { ivory, darkivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = Number(localStorage.getItem('petId') as string);
-// const petName = localStorage.getItem('petName') as string;
 
 interface UserData {
   contents: string;
@@ -61,6 +60,7 @@ interface PostData {
 }
 interface PostList {
   post: {
+    authorId: number;
     postId: number;
     title: string;
     content: string;
@@ -79,7 +79,6 @@ const CommunityDetail: React.FC = () => {
   const [review, setReview] = useState<string>('');
   const [editActivate, setEditActivate] = useState<number>(0);
   const [editReview, setEditReview] = useState<string>('');
-  const [test, setTest] = useState<number>(0);
   const [userData, setUserData] = useState<UserList>({
     myPosts: [],
     pageInfo: {
@@ -100,6 +99,7 @@ const CommunityDetail: React.FC = () => {
   });
   const [postDetail, setPostDetail] = useState<PostList>({
     post: {
+      authorId: 0,
       content: '',
       createdAt: '',
       imageUrl: null,
@@ -113,12 +113,11 @@ const CommunityDetail: React.FC = () => {
   });
   const id = useParams();
   const postId = id.id;
-  console.log(postId);
 
   useEffect(() => {
     getData();
     console.log('resetCheck');
-  }, [like, test]);
+  }, [like]);
 
   async function getData() {
     await axios
@@ -206,8 +205,7 @@ const CommunityDetail: React.FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostDELETE(Number(postId));
-        setTest(test + 1);
+        PostDELETE(Number(postId)).then(() => navigate('/community'));
       }
     });
   };
@@ -231,8 +229,7 @@ const CommunityDetail: React.FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostReviewDELETE(commentId);
-        setTest(test + 1);
+        PostReviewDELETE(commentId).then(() => window.location.reload());
       }
     });
   };
@@ -272,10 +269,10 @@ const CommunityDetail: React.FC = () => {
           });
           PostReviewUPDATE(commentId, editReview);
           setEditActivate(0);
-          setTest(test + 1);
+          setEditReview('');
+          window.location.reload();
         }
       });
-      setEditReview('');
     }
   };
   const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -293,9 +290,7 @@ const CommunityDetail: React.FC = () => {
   };
 
   const reviewPostHandler = () => {
-    setTest(test + 1);
     PostReviewEdit(Number(postId), review);
-    console.log('test', test);
     if (review === '') {
       Swal.fire({
         position: 'center',
@@ -318,9 +313,7 @@ const CommunityDetail: React.FC = () => {
         timer: 1500,
       });
       setReview('');
-      setTimeout(() => {
-        window.location.reload(), 1500;
-      });
+      window.location.reload();
     }
   };
 
@@ -368,27 +361,31 @@ const CommunityDetail: React.FC = () => {
                   </LikeButton>
                 )}
               </ButtonsDiv>
-              <ButtonsDiv>
-                <Button onClick={goToEdit}>수정</Button>
-                <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
-              </ButtonsDiv>
+              {petId !== postDetail.post.authorId ? (
+                ''
+              ) : (
+                <ButtonsDiv>
+                  <Button onClick={goToEdit}>수정</Button>
+                  <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
+                </ButtonsDiv>
+              )}
             </FooterDiv>
             <ReviewContainer>
               <ReviewBox>
-                <ReviewTitle>댓글</ReviewTitle>
+                <ReviewTitle>댓글 {postDetail.comments?.length}</ReviewTitle>
                 {postDetail.comments === null ? (
                   <ImageTop src={load} />
                 ) : (
                   <Reviews>
                     {postDetail.comments.length === 0 ? (
                       <EmptyMessage>
-                        리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                        댓글이 없어요.. <br />첫 번째 댓글을 남겨주세요 🐾
                       </EmptyMessage>
                     ) : (
-                      postDetail.comments.map((el: any, idx: number) => {
+                      postDetail.comments.map((el: any) => {
                         return (
-                          <Review key={idx}>
-                            {el.petId !== editActivate ? (
+                          <Review key={el.commentId}>
+                            {el.commentId !== editActivate ? (
                               <ReviewWrite>
                                 <ReviewUserBox>
                                   <ReviewUserImage src={el.profileImageUrl} />
@@ -398,9 +395,9 @@ const CommunityDetail: React.FC = () => {
                                   <ReviewText>
                                     {el.content}
                                     {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                                    {el.petId === Number(petId) ? (
+                                    {el.petId === petId ? (
                                       <EditDelButtons>
-                                        <button onClick={() => reviewActivateHandler(el.petId)}>
+                                        <button onClick={() => reviewActivateHandler(el.commentId)}>
                                           <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
                                         </button>
                                         <button onClick={() => reviewDeleteHandler(el.commentId)}>
@@ -522,9 +519,9 @@ const NameCreatedAtConatiner = styled.div`
   margin-bottom: 20px;
 `;
 const NameBox = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
-  padding-left: 10px;
+  padding-left: 5px;
   margin-right: 20px;
   color: #969696;
 `;
@@ -566,14 +563,11 @@ const FooterDiv = styled.div`
   align-items: flex-end;
 `;
 
-const ImageDiv = styled.div`
-  padding-left: 80px;
-`;
+const ImageDiv = styled.div``;
 
 const ImageTop = styled.img`
-  margin-top: 15px;
-  max-width: 300px;
-  max-height: 300px;
+  margin: 15px 0px;
+  max-width: 750px;
   border-radius: 20px;
   object-fit: cover;
 `;
@@ -588,7 +582,7 @@ const Button = styled.button`
   width: 46px;
   height: 33px;
   border: none;
-  border-radius: 15px;
+  border-radius: 10px;
   color: ${brown};
   font-weight: bold;
   font-size: 15px;
@@ -601,12 +595,12 @@ const Button = styled.button`
 `;
 
 const DeleteButton = styled(Button)`
+  margin-left: 10px;
   color: ${red};
 `;
 
 const LikeButton = styled.button`
-  width: 74px;
-  height: 48px;
+  padding: 10px 17px;
   border: none;
   border-radius: 15px;
   color: ${brown};
@@ -614,6 +608,11 @@ const LikeButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${darkivory};
+  }
 `;
 const FixedIcon = styled(Icon)`
   position: absolute;
@@ -629,6 +628,7 @@ const LikeCnt = styled.div`
 const ReviewContainer = styled.div``;
 
 const ReviewBox = styled.div`
+  margin-top: 10px;
   background-color: white;
 `;
 const Reviews = styled.div`
@@ -657,8 +657,9 @@ const Review = styled.div`
 
 const ReviewTitle = styled.div`
   color: ${brown};
-  font-weight: 900;
-  padding: 15px 19px;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 15px 10px;
 `;
 
 const ReviewUserBox = styled.div`

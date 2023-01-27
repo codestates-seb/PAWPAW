@@ -12,7 +12,7 @@ import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
 
-const { yellow, darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
+const { yellow, darkgrey, brown, darkbrown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -87,7 +87,7 @@ const Community: React.FC = () => {
             <PostList>
               {postData.posts === null ? (
                 <EmptyMessage>
-                  리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                  글이 없어요.. <br />첫 번째 글을 남겨주세요 🐾
                 </EmptyMessage>
               ) : (
                 postData.posts.map((el: any) => {
@@ -109,17 +109,18 @@ const Community: React.FC = () => {
                           }}
                         />
                       </WriteBox>
-                      <LikeContainer>
-                        <div>{el.petname}</div>
-                        <div>
+                      <RightBox>
+                        <NameDiv>{el.petName}</NameDiv>
+                        <LikeContainer>
                           <Icon
+                            className='icon'
                             icon='ph:paw-print-fill'
                             color='#FFBF71'
                             style={{ fontSize: '15px' }}
                           />
-                          {el.likesCnt}
-                        </div>
-                      </LikeContainer>
+                          <span>{el.likesCnt}</span>
+                        </LikeContainer>
+                      </RightBox>
                     </PostBox>
                   );
                 })
@@ -177,6 +178,10 @@ const CommunityBanner = styled.div`
   font-weight: 800;
   display: flex;
   align-items: center;
+
+  &:hover {
+    color: ${darkbrown};
+  }
 `;
 const SortButtonContainer = styled.div`
   height: 1.5vh;
@@ -202,7 +207,7 @@ const WriteBox = styled.div`
     margin-bottom: 8px;
   }
   height: 80px;
-  width: 100%;
+  flex-grow: 1;
 `;
 
 const TitleBox = styled.div`
@@ -229,8 +234,40 @@ const ContentBox = styled.div`
   -webkit-box-orient: vertical;
 `;
 
+const RightBox = styled.div`
+  padding: 15px 10px;
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const NameDiv = styled.div`
+  margin-right: 3px;
+  padding: 0px 5px;
+  height: 30px;
+  color: ${darkgrey};
+  font-weight: bold;
+  white-space: nowrap;
+`;
+
 const LikeContainer = styled.div`
-  margin-top: 20px;
+  height: 30px;
+  border-radius: 10px;
+  background-color: ${ivory};
+  padding: 15px 7px;
+
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 5px;
+  }
+
+  span {
+    font-size: 14px;
+  }
 `;
 
 const PageContainer = styled.div`
