@@ -12,7 +12,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import color from '../color';
 
-const { red, ivory, darkgrey, brown, yellow, bordergrey } = color;
+const { red, ivory, darkgrey, lightgrey, brown, darkbrown, yellow, bordergrey } = color;
 
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
@@ -185,204 +185,194 @@ const AddMarker = () => {
 
   const type = 'addplace';
 
-
   return (
     <WholeFlex>
       <Header />
-      <MarginBox>
-        <NavBox>
-          <Nav type={type}/>
-        </NavBox>
-        <WholeContainer>
-          <Container>
-            <TitleBox>
-              <TitleTopBox>
-                <div>장소 이름</div>
-              </TitleTopBox>
-              <TitleBottomBox>
-                <TitleInputBox>
-                  <input
-                    type='text'
-                    onChange={nameHandler}
-                    placeholder='장소 이름을 작성해주세요.'
-                    ref={nameRef}
-                  ></input>
-                </TitleInputBox>
-              </TitleBottomBox>
-            </TitleBox>
-            <PositionBox>
-              <TitleTopBox>
-                <div>장소 위치</div>
-              </TitleTopBox>
-              <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
-              {/* 지도 넣기 */}
-              <Map
-                center={{
-                  lat: 37.51239516092327,
-                  lng: 126.98081682888493,
-                }}
-                style={{
-                  width: '90%',
-                  height: '500px',
-                }}
-                level={7} // 지도의 확대 레벨
-                onClick={(_t, mouseEvent) =>
-                  setPosition({
-                    lat: mouseEvent.latLng.getLat(),
-                    lng: mouseEvent.latLng.getLng(),
-                  })
-                }
-              >
-                {position && <MapMarker position={position} />}
-              </Map>
-            </PositionBox>
-            <PosSelectBox>
-              <Title>지역</Title>
-              <InputDiv>
-                <Input
+      <Body>
+        <Nav type={type} />
+        <Container>
+          <TitleBox>
+            <TitleTopBox>
+              <div>장소 이름</div>
+            </TitleTopBox>
+            <TitleBottomBox>
+              <TitleInputBox>
+                <input
                   type='text'
-                  readOnly={true}
-                  placeholder={
-                    address === null ? '어디에 위치해있나요?' : `${codeToAddress(address)}`
-                  }
-                  openAddressModal={openAddressModal}
-                  ref={addrRef}
-                />
-                <SvgSpan onClick={openAddressModal}>
-                  <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
-                </SvgSpan>
-                <MessageDiv>{addrErrorMessage}</MessageDiv>
-              </InputDiv>
-              {isOpen && (
-                <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />
-              )}
-            </PosSelectBox>
-            <Flex>
-              <TagBox>
-                <Title>카테고리 (태그)</Title>
-                {TagArr.map((el, idx) => {
-                  return (
-                    <Tag
-                      key={idx}
-                      className={`${currentTab === idx ? 'focused' : ''} 
+                  onChange={nameHandler}
+                  placeholder='장소 이름을 작성해주세요.'
+                  ref={nameRef}
+                ></input>
+              </TitleInputBox>
+            </TitleBottomBox>
+          </TitleBox>
+          <PositionBox>
+            <TitleTopBox>
+              <div>장소 위치</div>
+            </TitleTopBox>
+            <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
+            {/* 지도 넣기 */}
+            <Map
+              center={{
+                lat: 37.51239516092327,
+                lng: 126.98081682888493,
+              }}
+              style={{
+                width: '90%',
+                height: '500px',
+              }}
+              level={7} // 지도의 확대 레벨
+              onClick={(_t, mouseEvent) =>
+                setPosition({
+                  lat: mouseEvent.latLng.getLat(),
+                  lng: mouseEvent.latLng.getLng(),
+                })
+              }
+            >
+              {position && <MapMarker position={position} />}
+            </Map>
+          </PositionBox>
+          <PosSelectBox>
+            <Title>지역</Title>
+            <InputDiv>
+              <Input
+                type='text'
+                readOnly={true}
+                placeholder={
+                  address === null ? '어디에 위치해있나요?' : `${codeToAddress(address)}`
+                }
+                openAddressModal={openAddressModal}
+                ref={addrRef}
+              />
+              <SvgSpan onClick={openAddressModal}>
+                <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
+              </SvgSpan>
+              <MessageDiv>{addrErrorMessage}</MessageDiv>
+            </InputDiv>
+            {isOpen && (
+              <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />
+            )}
+          </PosSelectBox>
+          <Flex>
+            <TagBox>
+              <Title>카테고리 (태그)</Title>
+              {TagArr.map((el, idx) => {
+                return (
+                  <Tag
+                    key={idx}
+                    className={`${currentTab === idx ? 'focused' : ''} 
                       ${click ? '' : 'hide'} ${idx !== 5 ? '' : 'bord'}
                       ${idx === 0 ? 'radius-left' : ''} 
                       ${idx === 5 ? 'radius-right' : ''}
                       `}
-                      onClick={() => {
-                        selectMenuHandler(idx);
-                        categoryHandler;
-                      }}
-                      ref={categoryRef}
-                    >
-                      {el}
-                    </Tag>
-                  );
-                })}
-              </TagBox>
-            </Flex>
-            <Flex>
-              <HomepageBox>
-                <Title>홈페이지 주소</Title>
-                <InputData
-                  onChange={homepageHandler}
-                  ref={homepageRef}
-                  placeholder='ex. http://www.pawpaw.com'
-                />
-              </HomepageBox>
-            </Flex>
-            <Flex>
-              <ImageBox>
-                <Title>이미지</Title>
-                <form>
-                  <label className='input-file-button' htmlFor='input-file'></label>
-                  <input
-                    type='file'
-                    id='input-file'
-                    name='placeImage'
-                    className='ImgUpload'
-                    onChange={saveFileImage}
-                    ref={fileRef}
-                  ></input>
-                </form>
-              </ImageBox>
-            </Flex>
-            <Flex>
-              <DetailAddrBox>
-                <Title>주소</Title>
-                <InputData
-                  placeholder='ex. ○○시 ○○구 ○○○길 '
-                  onChange={mapaddressHandler}
-                  ref={mapaddressRef}
-                ></InputData>
-              </DetailAddrBox>
-            </Flex>
-            <Flex>
-              <TimeBox>
-                <Title>영업 시간</Title>
-                <InputData
-                  placeholder='ex. 0900-2200'
-                  onChange={operationtimeHandler}
-                  ref={operationtimeRef}
-                ></InputData>
-              </TimeBox>
-            </Flex>
-            <Flex>
-              <NumberBox>
-                <Title>전화번호</Title>
-                <InputData
-                  placeholder='ex. 02-0000-0000'
-                  onChange={telHandler}
-                  ref={telRef}
-                ></InputData>
-              </NumberBox>
-            </Flex>
+                    onClick={() => {
+                      selectMenuHandler(idx);
+                      categoryHandler;
+                    }}
+                    ref={categoryRef}
+                  >
+                    {el}
+                  </Tag>
+                );
+              })}
+            </TagBox>
+          </Flex>
+          <Flex>
+            <HomepageBox>
+              <Title>홈페이지 주소</Title>
+              <InputData
+                onChange={homepageHandler}
+                ref={homepageRef}
+                placeholder='ex. http://www.pawpaw.com'
+              />
+            </HomepageBox>
+          </Flex>
+          <Flex>
+            <ImageBox>
+              <Title>이미지</Title>
+              <form>
+                <label className='input-file-button' htmlFor='input-file'></label>
+                <input
+                  type='file'
+                  id='input-file'
+                  name='placeImage'
+                  className='ImgUpload'
+                  onChange={saveFileImage}
+                  ref={fileRef}
+                ></input>
+              </form>
+            </ImageBox>
+          </Flex>
+          <Flex>
+            <DetailAddrBox>
+              <Title>주소</Title>
+              <InputData
+                placeholder='ex. ○○시 ○○구 ○○○길 '
+                onChange={mapaddressHandler}
+                ref={mapaddressRef}
+              ></InputData>
+            </DetailAddrBox>
+          </Flex>
+          <Flex>
+            <TimeBox>
+              <Title>영업 시간</Title>
+              <InputData
+                placeholder='ex. 0900-2200'
+                onChange={operationtimeHandler}
+                ref={operationtimeRef}
+              ></InputData>
+            </TimeBox>
+          </Flex>
+          <Flex>
+            <NumberBox>
+              <Title>전화번호</Title>
+              <InputData
+                placeholder='ex. 02-0000-0000'
+                onChange={telHandler}
+                ref={telRef}
+              ></InputData>
+            </NumberBox>
+          </Flex>
 
-            <BottomBox>
-              <CancelBtn>취소</CancelBtn>
-              <EnrollBtn onClick={submitHandler}>등록</EnrollBtn>
-            </BottomBox>
-          </Container>
-        </WholeContainer>
-      </MarginBox>
+          <BottomBox>
+            <CancelBtn>취소</CancelBtn>
+            <EnrollBtn onClick={submitHandler}>등록</EnrollBtn>
+          </BottomBox>
+        </Container>
+      </Body>
     </WholeFlex>
   );
 };
 
 const WholeFlex = styled.div`
+  height: 100vh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
-const NavBox = styled.div`
+const Body = styled.div`
   margin-top: 50px;
-`;
-
-const MarginBox = styled.div`
-  margin: auto;
-  display: flex;
-`;
-
-const WholeContainer = styled.div`
+  flex-grow: 1;
   display: flex;
 `;
 
 const Container = styled.div`
-  width: 930px;
+  width: 1000px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: auto auto auto 90px;
+  padding: 50px 90px;
 
   input {
     height: 40px;
   }
 `;
 
-const TitleBox = styled.div`
-  margin-top: 80px;
-`;
+const TitleBox = styled.div``;
 
 const TitleTopBox = styled.div`
+  margin-bottom: 20px;
   color: ${brown};
   font-weight: 800;
   font-size: 25px;
@@ -391,18 +381,20 @@ const TitleTopBox = styled.div`
 const TitleBottomBox = styled.div`
   input {
     width: 90%;
-    padding-left: 8px;
-    border: 1px solid ${darkgrey};
+    padding-left: 11px;
+    border: 1px solid ${bordergrey};
     border-radius: 5px;
     color: ${brown};
     font-weight: 500;
     font-size: 15px;
+
+    &::placeholder {
+      color: ${lightgrey};
+    }
   }
 `;
 
-const TitleInputBox = styled.div`
-  margin-top: 10px;
-`;
+const TitleInputBox = styled.div``;
 
 const PositionBox = styled.div`
   margin-top: 40px;
@@ -450,7 +442,7 @@ const Flex = styled.div`
 `;
 
 const Title = styled.div`
-  font-weight: 600;
+  font-weight: 700;
   font-size: 20px;
   color: ${brown};
   width: 170px;
@@ -459,13 +451,17 @@ const Title = styled.div`
 `;
 
 const InputData = styled.input`
-  padding-left: 8px;
-  border: 1px solid ${darkgrey};
+  padding-left: 11px;
+  border: 1px solid ${bordergrey};
   border-radius: 5px;
   color: ${brown};
   font-weight: 500;
   font-size: 15px;
   width: 650px;
+
+  &::placeholder {
+    color: ${lightgrey};
+  }
 `;
 
 const TagBox = styled.div`
@@ -489,7 +485,7 @@ const TagBox = styled.div`
 const Tag = styled.div`
   font-size: 15px;
   font-weight: 600;
-  padding: 10.4px;
+  padding: 10.4px 14px;
   cursor: pointer;
   color: ${brown};
   background-color: ${ivory};
@@ -497,6 +493,10 @@ const Tag = styled.div`
   border-top: 1px solid ${bordergrey};
   border-left: 1px solid ${bordergrey};
   border-bottom: 1px solid ${bordergrey};
+
+  &:hover {
+    background-color: ${yellow};
+  }
 `;
 
 const HomepageBox = styled.div`
@@ -535,7 +535,6 @@ const NumberBox = styled.div`
 
 const BottomBox = styled.div`
   margin-top: 100px;
-  margin-bottom: 100px;
   display: flex;
   flex-direction: row-reverse;
 `;
@@ -549,24 +548,27 @@ const EnrollBtn = styled.button`
   border-radius: 15px;
   width: 80px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${darkbrown};
+  }
 `;
 
 const CancelBtn = styled.button`
   background-color: #f8f8f8;
-  color: red;
+  color: ${red};
   border: none;
   border-radius: 15px;
   height: 50px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: bold;
   width: 60px;
   cursor: pointer;
 
   &:hover {
     background-color: #efefef;
-    color: ${brown};
   }
 `;
 

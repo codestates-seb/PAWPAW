@@ -176,7 +176,7 @@ const Post = () => {
     <Container>
       <Header />
       <Body>
-        <Nav type={type}/>
+        <Nav type={type} />
         <PostContainer>
           <div>
             <Title>제목</Title>
@@ -247,15 +247,15 @@ const Body = styled.div`
 
 const PostContainer = styled.div`
   padding: 50px 90px;
-  width: 930px;
+  width: 1000px;
   height: 100%;
   flex-grow: 1;
 `;
 
 const Title = styled.div`
   margin-bottom: 20px;
-  font-size: 30px;
-  font-weight: bold;
+  font-size: 25px;
+  font-weight: 800;
   color: ${brown};
 
   &.body {
@@ -268,7 +268,7 @@ const TitleInput = styled.input`
   padding: 0px 11px;
   border: 1px solid ${bordergrey};
   border-radius: 5px;
-  width: 750px;
+  width: 820px;
   height: 50px;
   font-size: 20px;
 
