@@ -42,7 +42,7 @@ const PostEdit = () => {
       });
 
       if (post.imageUrl) {
-        setImageUrl(post.imageUrl);
+        setImageUrl(post.imageUrl[0]);
       }
     });
   }, []);
@@ -195,7 +195,7 @@ const PostEdit = () => {
   }, []);
 
   const type = 'board';
-
+  console.log('imageUrl', imageUrl);
   return (
     <Container>
       <Header />
