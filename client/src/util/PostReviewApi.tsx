@@ -11,7 +11,7 @@ const headers = {
 export const PostReviewEdit = async (postId: number, contents: string) => {
   try {
     await axios.post(
-      `${url}/post/comment`,
+      `${url}/posts/comment`,
       {
         petId: petId,
         postId: postId,
@@ -27,7 +27,7 @@ export const PostReviewEdit = async (postId: number, contents: string) => {
 export const PostReviewUPDATE = async (postId: number, contents: string) => {
   try {
     await axios.patch(
-      `${url}/post/comment/${postId}`,
+      `${url}/posts/comment/${postId}`,
       {
         petId: petId,
         contents: contents,
@@ -41,7 +41,7 @@ export const PostReviewUPDATE = async (postId: number, contents: string) => {
 
 export const PostReviewDELETE = async (postId: number) => {
   try {
-    await axios.delete(`${url}/post/comment/${postId}`, { headers });
+    await axios.delete(`${url}/posts/comment/${postId}`, { headers });
   } catch (error) {
     console.error('Error', error);
   }
@@ -49,7 +49,7 @@ export const PostReviewDELETE = async (postId: number) => {
 
 export const PostDELETE = async (postId: number) => {
   try {
-    await axios.delete(`${url}/post/${postId}`, { headers });
+    await axios.delete(`${url}/posts/${postId}`, { headers });
   } catch (error) {
     console.error('Error', error);
   }

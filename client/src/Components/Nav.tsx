@@ -40,7 +40,6 @@ const Container = styled.div`
   padding: 37px 0px 0px 43px;
   border-right: 1px solid #d7d7d7;
   width: 235px;
-  height: 100%;
   min-height: calc(100vh - 50px);
 `;
 

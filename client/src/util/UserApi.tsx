@@ -60,10 +60,6 @@ export const petUpdate = async (
   data.append('species', species);
   data.append('code', code.toString());
   data.append('profileImage', formData.profileImage);
-  console.log('data', data);
-  console.log('5', formData);
-  console.log('6', formData.profileImage);
-  console.log('7');
   for (const key of data.keys()) {
     console.log(key);
   }
@@ -100,6 +96,7 @@ export const petLogout = async () => {
     localStorage.removeItem('Refresh');
     localStorage.removeItem('petId');
     localStorage.removeItem('code');
+    localStorage.removeItem('check');
   }
 };
 

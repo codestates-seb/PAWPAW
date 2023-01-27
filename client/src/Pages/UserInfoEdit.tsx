@@ -46,7 +46,6 @@ const UserInfoEdit: FC = () => {
   const [address, setAddress] = useState<number | null>(code);
   const [formData, setFormData] = useState<FormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [secretCode, setSecretCode] = useState('');
 
   const saveFileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -121,6 +120,7 @@ const UserInfoEdit: FC = () => {
       title: '관리자 권한 요청',
       text: '유효한 코드를 입력해 주세요',
       input: 'text',
+      inputValue: '',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: red,
@@ -129,9 +129,7 @@ const UserInfoEdit: FC = () => {
       cancelButtonText: '<b>취소</b>',
     }).then((result) => {
       if (result.value) {
-        setSecretCode(result.value);
-      }
-      if (result.isConfirmed) {
+        const code = result.value;
         Swal.fire({
           title: '권한 요청 완료',
           text: '관리자 권한 요청이 성공적으로 처리되었습니다. 로그아웃 됩니다.',
@@ -139,7 +137,8 @@ const UserInfoEdit: FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        adminRequest(secretCode);
+        console.log(code);
+        adminRequest(code);
         petLogout().then(() => navigate('/'));
       }
     });
