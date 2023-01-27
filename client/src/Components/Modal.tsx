@@ -345,7 +345,9 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                     <NullData>홈페이지를 알려주세요.</NullData>
                   ) : (
                     <div className='urlBox'>
-                      <Linka href={mapdata.details.homepage}>{mapdata.details.homepage}</Linka>
+                      <Linka href={mapdata.details.homepage} target='_blank'>
+                        {mapdata.details.homepage}
+                      </Linka>
                     </div>
                   )}
                 </InfoContentBox>
@@ -783,7 +785,7 @@ const Linka = styled.a`
   display: flex;
   align-items: center;
   text-decoration: underline;
-  word-break:break-all;
+  word-break: break-all;
 `;
 
 export default Modal;
