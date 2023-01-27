@@ -75,7 +75,6 @@ public class PetController {
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
-    //TODO: post 조회
     @GetMapping("/{pet-id}")
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
                                  @Positive @RequestParam(defaultValue = "1") int page,

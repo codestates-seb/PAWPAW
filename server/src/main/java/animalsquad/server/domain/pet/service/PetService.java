@@ -50,7 +50,6 @@ public class PetService {
     private final String folder = "profile";
     private final PostRepository postRepository;
 
-
     public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
@@ -162,9 +161,15 @@ public class PetService {
 
         verifiedToken(findPet, petId);
 
+        if(findPet.getRoles().contains("ROLE_ADMIN")) {
+            throw new BusinessLogicException(ExceptionCode.PET_ROLE_EXISTS);
+        }
+
         if(!petPostAdminDto.getAdminCode().equals("동물특공대")) {
             throw new BusinessLogicException(ExceptionCode.ADMIN_CODE_NOT_MATCH);
         }
+
+
         findPet.getRoles().add((Role.ROLE_ADMIN.name()));
         petRepository.save(findPet);
 

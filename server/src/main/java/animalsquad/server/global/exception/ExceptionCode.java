@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ExceptionCode {
 
     PET_EXISTS(409, "Pet exists"),
+    PET_ROLE_EXISTS(409, "Pet role exists"),
     PET_NOT_FOUND(404, "Pet not found"),
     INVALID_TOKEN(400, "Invalid token"),
     REFRESH_TOKEN_NOT_FOUND(404, "Refresh token not found"),
