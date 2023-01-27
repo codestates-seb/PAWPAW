@@ -21,19 +21,45 @@ import {
 
 const { ivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
 const url = process.env.REACT_APP_API_ROOT;
-const petId = localStorage.getItem('petId') as string;
-const petName = localStorage.getItem('petName') as string;
+const petId = Number(localStorage.getItem('petId') as string);
+// const petName = localStorage.getItem('petName') as string;
+
+interface UserData {
+  contents: string;
+  createdAt: string;
+  likesCnt: 10;
+  petName: string;
+  postId: number;
+  title: string;
+}
+interface UserList {
+  myPosts: UserData[] | null;
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+  petInfo: {
+    age: number;
+    code: number;
+    gender: 'MALE' | 'FEMALE';
+    petId: number;
+    petName: string;
+    profileImage: string;
+    species: 'CAT' | 'DOG';
+  };
+}
 
 interface PostData {
+  commentId: number;
   petId: number;
   petName: string;
   content: string;
   profileImageUrl: string | null;
   createdAt: string;
 }
-// commnetsId가 누락되었다.
 interface PostList {
-  comments: PostData[] | null;
   post: {
     postId: number;
     title: string;
@@ -44,6 +70,7 @@ interface PostList {
     likesCnt: number;
     likeActive: boolean;
   };
+  comments: PostData[] | null;
 }
 
 const CommunityDetail: React.FC = () => {
@@ -53,8 +80,25 @@ const CommunityDetail: React.FC = () => {
   const [editActivate, setEditActivate] = useState<number>(0);
   const [editReview, setEditReview] = useState<string>('');
   const [test, setTest] = useState<number>(0);
+  const [userData, setUserData] = useState<UserList>({
+    myPosts: [],
+    pageInfo: {
+      page: 0,
+      size: 0,
+      totalElements: 0,
+      totalPages: 0,
+    },
+    petInfo: {
+      age: 0,
+      code: 0,
+      gender: 'MALE',
+      petId: 0,
+      petName: '',
+      profileImage: '',
+      species: 'CAT',
+    },
+  });
   const [postDetail, setPostDetail] = useState<PostList>({
-    comments: [],
     post: {
       content: '',
       createdAt: '',
@@ -65,10 +109,12 @@ const CommunityDetail: React.FC = () => {
       postId: 0,
       title: '',
     },
+    comments: [],
   });
   const id = useParams();
   const postId = id.id;
   console.log(postId);
+
   useEffect(() => {
     getData();
     console.log('resetCheck');
@@ -84,6 +130,22 @@ const CommunityDetail: React.FC = () => {
         console.log('res', res);
         console.log('res.data', res.data);
         console.log('postData', postDetail);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  useEffect(() => {
+    getUserData();
+    console.log('로딩 체크');
+  }, []);
+
+  async function getUserData() {
+    await axios
+      .get(`${url}/pets/${petId}`, { headers })
+      .then((res) => {
+        setUserData(res.data);
       })
       .catch((error) => {
         console.error(error);
@@ -314,85 +376,89 @@ const CommunityDetail: React.FC = () => {
             <ReviewContainer>
               <ReviewBox>
                 <ReviewTitle>댓글</ReviewTitle>
-                <Reviews>
-                  {postDetail.comments === null ? (
-                    <EmptyMessage>
-                      리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
-                    </EmptyMessage>
-                  ) : (
-                    dummy.map((el: any, idx: number) => {
-                      return (
-                        <Review key={idx}>
-                          {el.petId !== editActivate ? (
-                            <ReviewWrite>
-                              <ReviewUserBox>
-                                <ReviewUserImage src={el.profileImageUrl} />
-                                <ReviewUserName>{el.petname}</ReviewUserName>
-                              </ReviewUserBox>
-                              <ReviewTextBox>
-                                <ReviewText>
-                                  {el.content}
-                                  {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
-                                  {el.petId === Number(petId) ? (
-                                    <EditDelButtons>
-                                      <button onClick={() => reviewActivateHandler(el.petId)}>
-                                        <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
-                                      </button>
-                                      <button onClick={() => reviewDeleteHandler(el.petId)}>
-                                        <Icon
-                                          icon='material-symbols:delete-outline-rounded'
-                                          style={{ fontSize: '15px' }}
-                                        />
-                                      </button>
-                                    </EditDelButtons>
-                                  ) : (
-                                    ''
-                                  )}
-                                </ReviewText>
-                                <ReviewDate>{el.createdAt}</ReviewDate>
-                              </ReviewTextBox>
-                            </ReviewWrite>
-                          ) : (
-                            <ReviewWrite>
-                              <ReviewUserBox>
-                                <ReviewUserImage src={el.profileImageUrl} />
-                                <ReviewUserName>{el.petName}</ReviewUserName>
-                              </ReviewUserBox>
-                              <ReviewInputTextBox>
-                                <ReviewInputBox>
-                                  <ReviewInput
-                                    type='text'
-                                    placeholder={el.contents}
-                                    onChange={editReviewHandler}
-                                    id='basereview'
-                                  ></ReviewInput>
-                                </ReviewInputBox>
-                                <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
-                                  <Icon
-                                    icon='mdi:check-bold'
-                                    color='#ffc57e'
-                                    style={{ fontSize: '20px' }}
-                                  />
-                                </ReviewButton>
-                                <ReviewEditCancelButton onClick={reviewEditCancelHandler}>
-                                  <Icon
-                                    icon='mdi:cancel-bold'
-                                    color='#f79483'
-                                    style={{ fontSize: '22px' }}
-                                  />
-                                </ReviewEditCancelButton>
-                              </ReviewInputTextBox>
-                            </ReviewWrite>
-                          )}
-                        </Review>
-                      );
-                    })
-                  )}
-                </Reviews>
+                {postDetail.comments === null ? (
+                  <ImageTop src={load} />
+                ) : (
+                  <Reviews>
+                    {postDetail.comments.length === 0 ? (
+                      <EmptyMessage>
+                        리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                      </EmptyMessage>
+                    ) : (
+                      postDetail.comments.map((el: any, idx: number) => {
+                        return (
+                          <Review key={idx}>
+                            {el.petId !== editActivate ? (
+                              <ReviewWrite>
+                                <ReviewUserBox>
+                                  <ReviewUserImage src={el.profileImageUrl} />
+                                  <ReviewUserName>{el.petname}</ReviewUserName>
+                                </ReviewUserBox>
+                                <ReviewTextBox>
+                                  <ReviewText>
+                                    {el.content}
+                                    {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
+                                    {el.petId === Number(petId) ? (
+                                      <EditDelButtons>
+                                        <button onClick={() => reviewActivateHandler(el.petId)}>
+                                          <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
+                                        </button>
+                                        <button onClick={() => reviewDeleteHandler(el.commentId)}>
+                                          <Icon
+                                            icon='material-symbols:delete-outline-rounded'
+                                            style={{ fontSize: '15px' }}
+                                          />
+                                        </button>
+                                      </EditDelButtons>
+                                    ) : (
+                                      ''
+                                    )}
+                                  </ReviewText>
+                                  <ReviewDate>{el.createdAt}</ReviewDate>
+                                </ReviewTextBox>
+                              </ReviewWrite>
+                            ) : (
+                              <ReviewWrite>
+                                <ReviewUserBox>
+                                  <ReviewUserImage src={el.profileImageUrl} />
+                                  <ReviewUserName>{el.petName}</ReviewUserName>
+                                </ReviewUserBox>
+                                <ReviewInputTextBox>
+                                  <ReviewInputBox>
+                                    <ReviewInput
+                                      type='text'
+                                      placeholder={el.contents}
+                                      onChange={editReviewHandler}
+                                      id='basereview'
+                                    ></ReviewInput>
+                                  </ReviewInputBox>
+                                  <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
+                                    <Icon
+                                      icon='mdi:check-bold'
+                                      color='#ffc57e'
+                                      style={{ fontSize: '20px' }}
+                                    />
+                                  </ReviewButton>
+                                  <ReviewEditCancelButton onClick={reviewEditCancelHandler}>
+                                    <Icon
+                                      icon='mdi:cancel-bold'
+                                      color='#f79483'
+                                      style={{ fontSize: '22px' }}
+                                    />
+                                  </ReviewEditCancelButton>
+                                </ReviewInputTextBox>
+                              </ReviewWrite>
+                            )}
+                          </Review>
+                        );
+                      })
+                    )}
+                  </Reviews>
+                )}
                 <ReviewWrite>
                   <ReviewUserBox>
-                    <ReviewUserImage />
-                    <ReviewUserName>뚱이</ReviewUserName>
+                    <ReviewUserImage src={userData.petInfo.profileImage} />
+                    <ReviewUserName>{userData.petInfo.petName}</ReviewUserName>
                   </ReviewUserBox>
                   <ReviewInputTextBox>
                     <ReviewInputBox>
@@ -755,54 +821,3 @@ const ReviewEditCancelButton = styled.button`
     background-color: ${darkbrown};
   }
 `;
-
-const dummy = [
-  {
-    petId: 7,
-    petName: 'jelly',
-    content: '좋아연',
-    profileImageUrl:
-      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/0e366be8-58c7-4bbb-ae3d-458031d9b809.jpeg',
-    createdAt: '23-01-26',
-  },
-  {
-    petId: 7,
-    petName: 'jelly',
-    content: '좋아연@@',
-    profileImageUrl:
-      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/84745c99-fed5-4de2-9b04-1c3a52d07b53.jpeg',
-    createdAt: '23-01-26',
-  },
-  {
-    petId: 4,
-    petName: 'jelly',
-    content: '좋아연',
-    profileImageUrl:
-      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/0e366be8-58c7-4bbb-ae3d-458031d9b809.jpeg',
-    createdAt: '23-01-26',
-  },
-  {
-    petId: 3,
-    petName: 'jelly',
-    content: '좋아연@@',
-    profileImageUrl:
-      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/84745c99-fed5-4de2-9b04-1c3a52d07b53.jpeg',
-    createdAt: '23-01-26',
-  },
-  {
-    petId: 2,
-    petName: 'jelly',
-    content: '좋아연',
-    profileImageUrl:
-      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/0e366be8-58c7-4bbb-ae3d-458031d9b809.jpeg',
-    createdAt: '23-01-26',
-  },
-  {
-    petId: 1,
-    petName: 'jelly',
-    content: '좋아연@@',
-    profileImageUrl:
-      'https://s3.ap-northeast-2.amazonaws.com/animal-squad/profile/84745c99-fed5-4de2-9b04-1c3a52d07b53.jpeg',
-    createdAt: '23-01-26',
-  },
-];
