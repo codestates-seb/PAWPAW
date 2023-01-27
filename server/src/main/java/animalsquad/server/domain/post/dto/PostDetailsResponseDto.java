@@ -22,6 +22,7 @@ public class PostDetailsResponseDto {
     @Getter
     @Setter
     public static class PostResponseDto {
+        private long authorId;
         private long postId;
         private String title;
         private String content;
