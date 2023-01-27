@@ -12,7 +12,7 @@ import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
 
-const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
+const { yellow, darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -125,25 +125,23 @@ const Community: React.FC = () => {
                 })
               )}
             </PostList>
+            <PageContainer>
+              <Pagination
+                activePage={page}
+                itemsCountPerPage={15}
+                totalItemsCount={postData.pageInfo.totalPages * 15}
+                pageRangeDisplayed={10}
+                prevPageText={'‹'}
+                nextPageText={'›'}
+                onChange={handlePageChange}
+              />
+            </PageContainer>
           </CommunityContainer>
-          <RightBlank>
-            <EditButton onClick={goToEditPage}>
-              <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
-            </EditButton>
-          </RightBlank>
+          <EditButton onClick={goToEditPage}>
+            <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
+          </EditButton>
         </Body>
       </Container>
-      <PageContainer>
-        <Pagination
-          activePage={page}
-          itemsCountPerPage={15}
-          totalItemsCount={postData.pageInfo.totalPages * 15}
-          pageRangeDisplayed={10}
-          prevPageText={'‹'}
-          nextPageText={'›'}
-          onChange={handlePageChange}
-        />
-      </PageContainer>
     </>
   );
 };
@@ -151,10 +149,12 @@ const Community: React.FC = () => {
 export default Community;
 
 const Container = styled.div`
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 
 const Body = styled.div`
@@ -163,28 +163,18 @@ const Body = styled.div`
   display: flex;
 `;
 
-const RightBlank = styled.div`
-  width: 235px;
-  height: 100%;
-  position: relative;
-  @media (max-width: 1200px) {
-    display: none;
-  }
-`;
-
 const CommunityContainer = styled.div`
-  width: 690px;
+  padding: 50px 90px;
+  width: 1000px;
   display: flex;
-  margin-top: 30px;
   flex-direction: column;
   justify-content: center;
 `;
 const CommunityBanner = styled.div`
-  height: 8.5vh;
+  margin-bottom: 40px;
   color: ${brown};
   font-size: 32px;
-  font-weight: bold;
-  padding-left: 50px;
+  font-weight: 800;
   display: flex;
   align-items: center;
 `;
@@ -193,7 +183,6 @@ const SortButtonContainer = styled.div`
 `;
 const PostList = styled.div`
   height: 100%;
-  padding-left: 40px;
 `;
 
 const PostBox = styled.div`
@@ -204,6 +193,9 @@ const PostBox = styled.div`
 `;
 
 const WriteBox = styled.div`
+  max-width: 795px;
+  min-height: 160px;
+  padding: 10px;
   .top {
     display: flex;
     margin-top: 20px;
@@ -242,6 +234,7 @@ const LikeContainer = styled.div`
 `;
 
 const PageContainer = styled.div`
+  margin-top: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -249,18 +242,24 @@ const PageContainer = styled.div`
 `;
 
 const EditButton = styled.button`
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   background-color: ${ivory};
   border-radius: 50px;
   border: 0px;
-  box-shadow: 1px 1px 1px 1px gray;
-  position: absolute;
-  right: 80px;
-  top: 70vh;
-  @media (min-height: 1200px) {
+  box-shadow: rgba(149, 157, 165, 0.3) 0px 2px 5px 1px;
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
+  cursor: pointer;
+
+  /* @media (min-height: 1200px) {
     right: 100px;
     top: 55vh;
+  } */
+
+  &:hover {
+    background-color: ${yellow};
   }
 `;
 

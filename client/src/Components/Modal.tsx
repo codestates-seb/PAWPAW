@@ -391,8 +391,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                                     placeholder={el.contents}
                                     onChange={editReviewHandler}
                                     id='basereview'
-                                  >
-                                  </ReviewInput>
+                                  ></ReviewInput>
                                 </ReviewInputBox>
                                 <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
                                   <Icon
@@ -401,9 +400,7 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                                     style={{ fontSize: '20px' }}
                                   />
                                 </ReviewButton>
-                                <ReviewEditCancelButton
-                                  onClick={reviewEditCancelHandler}
-                                >
+                                <ReviewEditCancelButton onClick={reviewEditCancelHandler}>
                                   <Icon
                                     icon='mdi:cancel-bold'
                                     color='#f79483'
@@ -489,9 +486,10 @@ const InfoDiv = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;
+  width: 350px;
   height: 226px;
   background-size: cover;
+  object-fit: cover;
 `;
 
 const InfoTitleBox = styled.div`
