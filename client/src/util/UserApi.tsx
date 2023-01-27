@@ -97,6 +97,7 @@ export const petLogout = async () => {
     localStorage.removeItem('petId');
     localStorage.removeItem('code');
     localStorage.removeItem('check');
+    localStorage.removeItem('Admin');
   }
 };
 
@@ -112,5 +113,9 @@ export const petDelete = async (id: string) => {
   } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
+    localStorage.removeItem('petId');
+    localStorage.removeItem('code');
+    localStorage.removeItem('check');
+    localStorage.removeItem('Admin');
   }
 };

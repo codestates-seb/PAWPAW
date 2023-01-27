@@ -14,12 +14,18 @@ import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 const { ivory, yellow, brown, red } = color;
 
+interface UserData {
+  0: string;
+  1: string;
+}
+
 export interface Info {
   petName: string;
   petNameSpan: string;
   petId: number;
   exp: number;
   code: number;
+  roles: UserData[] | null;
 }
 
 const Login: React.FC = () => {
@@ -59,15 +65,22 @@ const Login: React.FC = () => {
         const jwtToken_decode = jwt_decode(jwtToken) as Info;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
-        const petName = jwtToken_decode.petName as string;
         const code = jwtToken_decode.code as number;
+        const admin = jwtToken_decode.roles as unknown as UserData;
         setPetId(petid.toString());
         console.log('petId', petId);
+        // if (admin !== null) {
+        //   console.log(admin);
+        //   console.log();
+        // }
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('petId', petid);
         localStorage.setItem('code', code.toString());
+        if (admin[1] !== null) {
+          localStorage.setItem('Admin', admin[1]);
+        }
         navigate('/map');
       } catch (error) {
         console.error('Error', error);
@@ -75,6 +88,7 @@ const Login: React.FC = () => {
         if (pwRef.current) {
           pwRef.current.focus(); // pw에 포커스
           pwRef.current.value = ''; // 값 초기화
+          console.log(password);
         }
       }
     }
@@ -103,10 +117,13 @@ const Login: React.FC = () => {
         {/* 왼쪽 영역 */}
         <LeftDiv>
           <IntroDiv>
-            <TitleH1>PAW PAW</TitleH1>
-            <TextDiv>
-              <div>당신과 반려동물의 삶을 더 윤택하게 만들어주는 서비스 .. 어쩌구 ..</div>
-            </TextDiv>
+            <TitleBox>
+              <TitleH1>PAW PAW</TitleH1>
+              <TextDiv>
+                반려동물과 함께라면 <br />
+                어디든 갈 수 있어!
+              </TextDiv>
+            </TitleBox>
             <DeveloperDiv>
               <div>
                 <NameSpan>
@@ -183,7 +200,7 @@ const IntroDiv = styled.div`
 `;
 
 const TitleH1 = styled.h1`
-  margin: 50px 0px;
+  margin: 10px 0px 10px 0px;
   font-size: 50px;
   font-family: Rubik Bubbles;
 `;
@@ -192,12 +209,20 @@ const TextDiv = styled.div`
   /* background-color: lavender; */
   width: 70%;
   height: 60%;
-  font-size: 25px;
+  font-size: 16px;
   text-align: center;
-
   display: flex;
   flex-direction: column;
+  font-weight: 800;
+  line-height: 1.5;
   /* justify-content: center; */
+`;
+
+const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const DeveloperDiv = styled.div``;
