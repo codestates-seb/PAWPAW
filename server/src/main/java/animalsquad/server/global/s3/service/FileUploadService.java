@@ -1,5 +1,7 @@
 package animalsquad.server.global.s3.service;
 
+import animalsquad.server.global.exception.BusinessLogicException;
+import animalsquad.server.global.exception.ExceptionCode;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class FileUploadService {
-// 추가
+    // 추가
     private final UploadService s3Service;
 
     //Multipart를 통해 전송된 파일을 업로드하는 메소드
@@ -31,7 +33,23 @@ public class FileUploadService {
 
     //기존 확장자명을 유지한 채, 유니크한 파일의 이름을 생성하는 로직
     private String createFileName(String originalFileName) throws IllegalAccessException {
-        return UUID.randomUUID() + "." + getFileExtension(originalFileName);
+        String fileExtension = getFileExtension(originalFileName);
+
+        String fileName;
+
+        switch (fileExtension) {
+            case "png":
+            case "jpg":
+            case "jpeg":
+                fileName = UUID.randomUUID() + "." + fileExtension;
+                break;
+
+            default:
+                throw new BusinessLogicException(ExceptionCode.INVALID_FILE_TYPE);
+
+        }
+
+        return fileName;
     }
 
     //파일의 확장자명을 가져오는 로직
