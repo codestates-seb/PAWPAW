@@ -61,6 +61,11 @@ public class PostService {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
+        List<PostImage> images = findPost.getPostImages();
+        for (PostImage image : images) {
+            postImageService.deleteImage(image);
+        }
+
         Optional.ofNullable(post.getTitle())
                 .ifPresent(title -> findPost.setTitle(title));
         Optional.ofNullable(post.getContents())
