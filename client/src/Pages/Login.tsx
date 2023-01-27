@@ -66,16 +66,20 @@ const Login: React.FC = () => {
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
         const code = jwtToken_decode.code as number;
-        const admin = jwtToken_decode.roles;
+        const admin = jwtToken_decode.roles as unknown as UserData;
         setPetId(petid.toString());
         console.log('petId', petId);
+        // if (admin !== null) {
+        //   console.log(admin);
+        //   console.log();
+        // }
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('petId', petid);
         localStorage.setItem('code', code.toString());
-        if (admin !== null) {
-          localStorage.setItem('Admin', admin[1].toString());
+        if (admin[1] !== null) {
+          localStorage.setItem('Admin', admin[1]);
         }
         navigate('/map');
       } catch (error) {
@@ -84,6 +88,7 @@ const Login: React.FC = () => {
         if (pwRef.current) {
           pwRef.current.focus(); // pw에 포커스
           pwRef.current.value = ''; // 값 초기화
+          console.log(password);
         }
       }
     }

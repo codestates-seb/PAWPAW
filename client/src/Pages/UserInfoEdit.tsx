@@ -111,8 +111,7 @@ const UserInfoEdit: FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        petDelete(petId as string);
-        navigate('/');
+        petDelete(petId as string).then(() => navigate('/'));
       }
     });
   };

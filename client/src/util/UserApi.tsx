@@ -88,15 +88,16 @@ export const petLogout = async () => {
       },
       { headers },
     );
+  } catch (error) {
+    console.error('Error', error);
+    console.log(jwtToken);
+  } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
     localStorage.removeItem('petId');
     localStorage.removeItem('code');
     localStorage.removeItem('check');
     localStorage.removeItem('Admin');
-  } catch (error) {
-    console.error('Error', error);
-    console.log(jwtToken);
   }
 };
 
@@ -107,13 +108,14 @@ export const petDelete = async (id: string) => {
   };
   try {
     await axios.delete(`${url}/pets/${id}`, { headers });
+  } catch (error) {
+    console.error('Error', error);
+  } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');
     localStorage.removeItem('petId');
     localStorage.removeItem('code');
     localStorage.removeItem('check');
     localStorage.removeItem('Admin');
-  } catch (error) {
-    console.error('Error', error);
   }
 };
