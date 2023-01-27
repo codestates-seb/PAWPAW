@@ -15,7 +15,7 @@ import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 import load from '../img/paw.gif';
 
-const { ivory, yellow, coral, red, darkgrey, brown, mediumgrey, bordergrey } = color;
+const { ivory, yellow, coral, red, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -395,6 +395,10 @@ const TitleBox = styled.div`
   color: ${brown};
   font-weight: 600;
   font-size: 20px;
+
+  &:hover {
+    color: ${darkbrown};
+  }
 `;
 
 const DayBox = styled.div`

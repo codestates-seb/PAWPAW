@@ -19,7 +19,7 @@ import {
   PostDELETE,
 } from '../util/PostReviewApi';
 
-const { ivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
+const { ivory, darkivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = Number(localStorage.getItem('petId') as string);
 // const petName = localStorage.getItem('petName') as string;
@@ -375,14 +375,14 @@ const CommunityDetail: React.FC = () => {
             </FooterDiv>
             <ReviewContainer>
               <ReviewBox>
-                <ReviewTitle>댓글</ReviewTitle>
+                <ReviewTitle>댓글 {postDetail.comments?.length}</ReviewTitle>
                 {postDetail.comments === null ? (
                   <ImageTop src={load} />
                 ) : (
                   <Reviews>
                     {postDetail.comments.length === 0 ? (
                       <EmptyMessage>
-                        리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
+                        댓글이 없어요.. <br />첫 번째 댓글을 남겨주세요 🐾
                       </EmptyMessage>
                     ) : (
                       postDetail.comments.map((el: any, idx: number) => {
@@ -522,9 +522,9 @@ const NameCreatedAtConatiner = styled.div`
   margin-bottom: 20px;
 `;
 const NameBox = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
-  padding-left: 10px;
+  padding-left: 5px;
   margin-right: 20px;
   color: #969696;
 `;
@@ -566,14 +566,11 @@ const FooterDiv = styled.div`
   align-items: flex-end;
 `;
 
-const ImageDiv = styled.div`
-  padding-left: 80px;
-`;
+const ImageDiv = styled.div``;
 
 const ImageTop = styled.img`
-  margin-top: 15px;
-  max-width: 300px;
-  max-height: 300px;
+  margin: 15px 0px;
+  max-width: 750px;
   border-radius: 20px;
   object-fit: cover;
 `;
@@ -588,7 +585,7 @@ const Button = styled.button`
   width: 46px;
   height: 33px;
   border: none;
-  border-radius: 15px;
+  border-radius: 10px;
   color: ${brown};
   font-weight: bold;
   font-size: 15px;
@@ -601,12 +598,12 @@ const Button = styled.button`
 `;
 
 const DeleteButton = styled(Button)`
+  margin-left: 10px;
   color: ${red};
 `;
 
 const LikeButton = styled.button`
-  width: 74px;
-  height: 48px;
+  padding: 10px 17px;
   border: none;
   border-radius: 15px;
   color: ${brown};
@@ -614,6 +611,11 @@ const LikeButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${darkivory};
+  }
 `;
 const FixedIcon = styled(Icon)`
   position: absolute;
@@ -629,6 +631,7 @@ const LikeCnt = styled.div`
 const ReviewContainer = styled.div``;
 
 const ReviewBox = styled.div`
+  margin-top: 10px;
   background-color: white;
 `;
 const Reviews = styled.div`
@@ -657,8 +660,9 @@ const Review = styled.div`
 
 const ReviewTitle = styled.div`
   color: ${brown};
-  font-weight: 900;
-  padding: 15px 19px;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 15px 10px;
 `;
 
 const ReviewUserBox = styled.div`

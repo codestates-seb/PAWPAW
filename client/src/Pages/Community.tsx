@@ -12,7 +12,7 @@ import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
 
-const { yellow, darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
+const { yellow, darkgrey, brown, darkbrown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -178,6 +178,10 @@ const CommunityBanner = styled.div`
   font-weight: 800;
   display: flex;
   align-items: center;
+
+  &:hover {
+    color: ${darkbrown};
+  }
 `;
 const SortButtonContainer = styled.div`
   height: 1.5vh;
