@@ -81,6 +81,7 @@ public interface PostMapper {
                 .map(postComment -> {
                     PostDetailsResponseDto.CommentDto comment = new PostDetailsResponseDto.CommentDto();
                     Pet pet = postComment.getPet();
+                    comment.setCommentId(postComment.getId());
                     comment.setPetId(pet.getId());
                     comment.setPetName(pet.getPetName());
                     comment.setContent(postComment.getContents());
