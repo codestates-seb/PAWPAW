@@ -47,13 +47,13 @@ public class Pet extends Auditable {
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
 
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(mappedBy = "pet",  cascade = CascadeType.REMOVE)
     private List<InfoMapComment> infoMapComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(mappedBy = "pet",  cascade = CascadeType.REMOVE)
     private List<PetMap> petMaps = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pet")
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.REMOVE)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "pet")
