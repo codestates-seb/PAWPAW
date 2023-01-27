@@ -12,7 +12,7 @@ import { mapReviewEdit, mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi'
 import headers from '../util/headers';
 import load from '../img/paw.gif';
 
-const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
+const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow, mediumgrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -325,15 +325,27 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                     color={brown}
                     style={{ fontSize: '30px' }}
                   />
-                  <InfoContent>{mapdata.details.operationTime}</InfoContent>
+                  {mapdata.details.operationTime === '' ? (
+                    <NullData>이용시간을 알려주세요.</NullData>
+                  ) : (
+                    <InfoContent>{mapdata.details.operationTime}</InfoContent>
+                  )}
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-                  <InfoContent>{mapdata.details.tel}</InfoContent>
+                  {mapdata.details.tel === '' ? (
+                    <NullData>전화번호를 알려주세요.</NullData>
+                  ) : (
+                    <InfoContent>{mapdata.details.tel}</InfoContent>
+                  )}
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-                  <InfoAnchor>{mapdata.details.homepage}</InfoAnchor>
+                  {mapdata.details.homepage === '' ? (
+                    <NullData>홈페이지를 알려주세요.</NullData>
+                  ) : (
+                    <InfoContent>{mapdata.details.homepage}</InfoContent>
+                  )}
                 </InfoContentBox>
               </InfoDiv>
 
@@ -745,5 +757,14 @@ const ReviewEditCancelButton = styled.button`
     background-color: ${darkbrown};
   }
 `;
+
+const NullData = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${mediumgrey};
+  margin-left: 13px;
+  display: flex;
+  align-items: center;
+`
 
 export default Modal;
