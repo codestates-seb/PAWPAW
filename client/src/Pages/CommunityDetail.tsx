@@ -391,10 +391,10 @@ const CommunityDetail: React.FC = () => {
                         리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
                       </EmptyMessage>
                     ) : (
-                      postDetail.comments.map((el: any, idx: number) => {
+                      postDetail.comments.map((el: any) => {
                         return (
-                          <Review key={idx}>
-                            {el.petId !== editActivate ? (
+                          <Review key={el.commentId}>
+                            {el.commentId !== editActivate ? (
                               <ReviewWrite>
                                 <ReviewUserBox>
                                   <ReviewUserImage src={el.profileImageUrl} />
@@ -406,7 +406,7 @@ const CommunityDetail: React.FC = () => {
                                     {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
                                     {el.petId === petId ? (
                                       <EditDelButtons>
-                                        <button onClick={() => reviewActivateHandler(el.petId)}>
+                                        <button onClick={() => reviewActivateHandler(el.commentId)}>
                                           <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
                                         </button>
                                         <button onClick={() => reviewDeleteHandler(el.commentId)}>
