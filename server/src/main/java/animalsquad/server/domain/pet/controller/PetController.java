@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -65,9 +66,13 @@ public class PetController {
 
         petPatchDto.setId(id);
 
-        petService.updatePet(mapper.petPatchToPet(petPatchDto), petId ,petPatchDto.getProfileImage());
+        Pet response = petService.updatePet(mapper.petPatchToPet(petPatchDto), petId ,petPatchDto.getProfileImage());
 
-        return new ResponseEntity(HttpStatus.OK);
+        int addressCode = response.getAddress().getCode();
+        Map<String, Integer> map = new HashMap<>();
+        map.put("code", addressCode);
+
+        return new ResponseEntity(map, HttpStatus.OK);
     }
 
     //TODO: post 조회
