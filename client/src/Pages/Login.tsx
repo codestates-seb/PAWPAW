@@ -67,7 +67,6 @@ const Login: React.FC = () => {
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
         localStorage.setItem('petId', petid);
-        localStorage.setItem('petName', petName);
         localStorage.setItem('code', code.toString());
         navigate('/map');
       } catch (error) {

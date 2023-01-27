@@ -22,7 +22,6 @@ import {
 const { ivory, darkivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = Number(localStorage.getItem('petId') as string);
-// const petName = localStorage.getItem('petName') as string;
 
 interface UserData {
   contents: string;
