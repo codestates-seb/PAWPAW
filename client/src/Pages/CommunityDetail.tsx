@@ -424,7 +424,7 @@ const CommunityDetail: React.FC = () => {
                                   <ReviewInputBox>
                                     <ReviewInput
                                       type='text'
-                                      placeholder={el.contents}
+                                      placeholder={el.content}
                                       onChange={editReviewHandler}
                                       id='basereview'
                                     ></ReviewInput>
