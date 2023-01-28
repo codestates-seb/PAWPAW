@@ -48,12 +48,11 @@ public class PostService {
                     postImageService.uploadImage(post, file);
                 }
             }
-
         }
         return postRepository.save(post);
     }
 
-    public Post updatePost(Post post, List<MultipartFile> files, long petId) throws IllegalAccessException {
+    public Post updatePost(Post post, List<MultipartFile> files, long petId, Integer isDelete) throws IllegalAccessException {
 
         Post findPost = findVerifiedPost(post.getId());
 
@@ -61,19 +60,20 @@ public class PostService {
             throw new BusinessLogicException(ExceptionCode.TOKEN_AND_ID_NOT_MATCH);
         }
 
-        List<PostImage> images = findPost.getPostImages();
-        for (PostImage image : images) {
-            postImageService.deleteImage(image);
-        }
-
         Optional.ofNullable(post.getTitle())
                 .ifPresent(title -> findPost.setTitle(title));
         Optional.ofNullable(post.getContents())
                 .ifPresent(content -> findPost.setContents(content));
-        if (files != null && !files.isEmpty()) {
-            List<PostImage> postImages = postImageService.updateImage(post, files);
-        }
 
+        if(isDelete == 1) {
+            List<PostImage> images = findPost.getPostImages();
+            for (PostImage image : images) {
+                postImageService.deleteImage(image);
+            }
+            if (files != null && !files.isEmpty()) {
+                List<PostImage> postImages = postImageService.updateImage(post, files);
+            }
+        }
         Post savedPost = postRepository.save(findPost);
 
         return savedPost;

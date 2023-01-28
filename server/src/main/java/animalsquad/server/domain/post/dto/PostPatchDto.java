@@ -15,7 +15,7 @@ public class PostPatchDto {
     private long id;
     private String title;
     private String content;
-
+    private Integer isDelete;
     private List<MultipartFile> file;
 
 }
