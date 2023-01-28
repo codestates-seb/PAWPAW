@@ -146,11 +146,12 @@ export const axiosGetRefresh = axios.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response.message === 'Expired JWT Token' && !originalRequest._retry) {
       originalRequest._retry = true;
       console.log(error);
       console.log(error.config);
       await refresh();
+      originalRequest;
       return window.location.reload();
     }
     return Promise.reject(error);
