@@ -95,7 +95,6 @@ public class SecurityConfiguration {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider, redisTemplate);
-//            jwtAuthenticationFilter.setFilterProcessesUrl("/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new PetAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new PetAuthenticationFailureHandler());
 
