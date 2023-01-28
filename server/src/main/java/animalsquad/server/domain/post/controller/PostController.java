@@ -55,7 +55,7 @@ public class PostController {
 
         Post post = mapper.patchDtoToPost(postPatchDto);
         long petId = principal.getId();
-        postService.updatePost(post, postPatchDto.getFile(), petId);
+        postService.updatePost(post, postPatchDto.getFile(), petId, postPatchDto.getIsDelete());
 
 
         return new ResponseEntity(HttpStatus.OK);
