@@ -63,17 +63,12 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                                 .antMatchers("/").permitAll()
-//                        .antMatchers("/login").permitAll()
                                 .antMatchers(HttpMethod.POST,"/maps").hasRole("ADMIN")
                                 .antMatchers(HttpMethod.PATCH,"/maps/admin/**").hasRole("ADMIN")
-                                .antMatchers("/pets/test").hasRole("USER") //권한 테스트용
-                                .antMatchers("/pets/hell").hasRole("ADMIN") //권한 테스트용
                                 .antMatchers("/logout").hasRole("USER")
                                 .antMatchers("/pets/signup").permitAll()
                                 .antMatchers("/reissue").permitAll()
-//                                .antMatchers("/pets/signup").permitAll()
                                 .antMatchers("/pets/check/**").permitAll()
-//                                .antMatchers("/api/v1/upload").permitAll()
                                 .anyRequest().hasRole("USER")
 
                 );
@@ -100,7 +95,6 @@ public class SecurityConfiguration {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider, redisTemplate);
-//            jwtAuthenticationFilter.setFilterProcessesUrl("/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new PetAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new PetAuthenticationFailureHandler());
 
