@@ -119,3 +119,41 @@ export const petDelete = async (id: string) => {
     localStorage.removeItem('Admin');
   }
 };
+
+const refresh = async () => {
+  const headers = {
+    Authorization: jwtToken,
+  };
+  try {
+    const response = await axios.post(
+      `${url}/reissue`,
+      {
+        accessToken: jwtToken,
+        refreshToken: refreshToken,
+      },
+      { headers },
+    );
+    localStorage.setItem('Authorization', response.headers.authorization as string);
+    localStorage.setItem('Refresh', response.headers.refresh as string);
+  } catch (error) {
+    console.error('Error', error);
+  }
+};
+
+export const axiosGetRefresh = axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.message === 'Expired JWT Token' && !originalRequest._retry) {
+      originalRequest._retry = true;
+      console.log(error);
+      console.log(error.config);
+      await refresh();
+      originalRequest;
+      return window.location.reload();
+    }
+    return Promise.reject(error);
+  },
+);
