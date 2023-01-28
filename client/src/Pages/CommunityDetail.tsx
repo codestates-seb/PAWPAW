@@ -778,7 +778,7 @@ const ReviewWrite = styled.div`
   height: 100px;
   display: flex;
   background-color: white;
-  border-bottom: 1px solid ${bordergrey};
+  border-top: 1px solid ${bordergrey};
 `;
 
 const EmptyMessage = styled.div`
