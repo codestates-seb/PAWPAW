@@ -65,6 +65,13 @@ const AddMarker = () => {
   const mapaddressRef = useRef<HTMLInputElement>(null);
   const operationtimeRef = useRef<HTMLInputElement>(null);
   const telRef = useRef<HTMLInputElement>(null);
+  const [errorMessage, setErrorMessage] = useState({
+    nameErrorMessage: '',
+    latlngErrorMessage: '',
+    categoryErrorMessage: '',
+    addressErrorMessage: '',
+    codeErrorMessage: '',
+  });
 
   const [info, setInfo] = useState<Info>({
     name: '',
@@ -139,6 +146,32 @@ const AddMarker = () => {
   };
 
   const submitHandler = async () => {
+    if (info.name === '') {
+      setErrorMessage((prev) => {
+        return { ...prev, nameErrorMessage: '장소 이름을 입력해주세요.' };
+      });
+    }
+    if (info.latitude === 0) {
+      setErrorMessage((prev) => {
+        return { ...prev, latlngErrorMessage: '장소를 선택해주세요.' };
+      });
+    }
+    if (info.code === 0) {
+      setErrorMessage((prev) => {
+        return { ...prev, codeErrorMessage: '지역을 선택해주세요.' };
+      });
+    }
+    if (info.category === '') {
+      setErrorMessage((prev) => {
+        return { ...prev, categoryErrorMessage: '카테고리를 선택해주세요.' };
+      });
+    }
+    if (info.mapAddress === '') {
+      setErrorMessage((prev) => {
+        return { ...prev, addressErrorMessage: '주소를 입력해주세요.' };
+      });
+    }
+
     if (position && address) {
       setInfo({ ...info, latitude: position.lat, longitude: position.lng, code: address });
     }
@@ -198,9 +231,12 @@ const AddMarker = () => {
             <>
               <TitleBox>
                 <TitleTopBox>
-                  <div>장소 이름</div>
+                  <div>장소 이름 </div>
+                  <Star>*</Star>
                 </TitleTopBox>
                 <TitleBottomBox>
+                  <MessageDiv>{errorMessage.nameErrorMessage}</MessageDiv>
+
                   <TitleInputBox>
                     <input
                       type='text'
@@ -214,7 +250,10 @@ const AddMarker = () => {
               <PositionBox>
                 <TitleTopBox>
                   <div>장소 위치</div>
+                  <Star>*</Star>
                 </TitleTopBox>
+                <MessageDiv>{errorMessage.latlngErrorMessage}</MessageDiv>
+
                 <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
                 {/* 지도 넣기 */}
                 <Map
@@ -238,48 +277,65 @@ const AddMarker = () => {
                 </Map>
               </PositionBox>
               <PosSelectBox>
-                <Title>지역</Title>
-                <InputDiv>
-                  <Input
-                    type='text'
-                    readOnly={true}
-                    placeholder={
-                      address === null ? '어디에 위치해있나요?' : `${codeToAddress(address)}`
-                    }
-                    openAddressModal={openAddressModal}
-                    ref={addrRef}
-                  />
-                  <SvgSpan onClick={openAddressModal}>
-                    <Icon icon='ic:baseline-search' color='#7d5a5a' style={{ fontSize: '23px' }} />
-                  </SvgSpan>
-                  <MessageDiv>{addrErrorMessage}</MessageDiv>
-                </InputDiv>
+                <Title>
+                  지역 <Star>*</Star>
+                </Title>
+                <MessageFlex>
+                  <MessageDiv>{errorMessage.codeErrorMessage}</MessageDiv>
+
+                  <InputDiv>
+                    <Input
+                      type='text'
+                      readOnly={true}
+                      placeholder={
+                        address === null ? '어디에 위치해있나요?' : `${codeToAddress(address)}`
+                      }
+                      openAddressModal={openAddressModal}
+                      ref={addrRef}
+                    />
+                    <SvgSpan onClick={openAddressModal}>
+                      <Icon
+                        icon='ic:baseline-search'
+                        color='#7d5a5a'
+                        style={{ fontSize: '23px' }}
+                      />
+                    </SvgSpan>
+                  </InputDiv>
+                </MessageFlex>
+
                 {isOpen && (
                   <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />
                 )}
               </PosSelectBox>
               <Flex>
                 <TagBox>
-                  <Title>카테고리 (태그)</Title>
-                  {TagArr.map((el, idx) => {
-                    return (
-                      <Tag
-                        key={idx}
-                        className={`${currentTab === idx ? 'focused' : ''} 
+                  <Title>
+                    카테고리 (태그) <Star>*</Star>
+                  </Title>
+                  <MessageFlex>
+                    <MessageDiv>{errorMessage.categoryErrorMessage}</MessageDiv>
+                    <div className='tagflex'>
+                        {TagArr.map((el, idx) => {
+                          return (
+                            <Tag
+                              key={idx}
+                              className={`${currentTab === idx ? 'focused' : ''} 
                       ${click ? '' : 'hide'} ${idx !== 5 ? '' : 'bord'}
                       ${idx === 0 ? 'radius-left' : ''} 
                       ${idx === 5 ? 'radius-right' : ''}
                       `}
-                        onClick={() => {
-                          selectMenuHandler(idx);
-                          categoryHandler;
-                        }}
-                        ref={categoryRef}
-                      >
-                        {el}
-                      </Tag>
-                    );
-                  })}
+                              onClick={() => {
+                                selectMenuHandler(idx);
+                                categoryHandler;
+                              }}
+                              ref={categoryRef}
+                            >
+                              {el}
+                            </Tag>
+                          );
+                        })}
+                    </div>
+                  </MessageFlex>
                 </TagBox>
               </Flex>
               <Flex>
@@ -310,19 +366,25 @@ const AddMarker = () => {
               </Flex>
               <Flex>
                 <DetailAddrBox>
-                  <Title>주소</Title>
-                  <InputData
-                    placeholder='ex. ○○시 ○○구 ○○○길 '
-                    onChange={mapaddressHandler}
-                    ref={mapaddressRef}
-                  ></InputData>
+                  <Title>
+                    주소 <Star>*</Star>
+                  </Title>
+                  <MessageFlex>
+                    <MessageDiv>{errorMessage.addressErrorMessage}</MessageDiv>
+
+                    <InputData
+                      placeholder='ex. ○○시 ○○구 ○○○길 '
+                      onChange={mapaddressHandler}
+                      ref={mapaddressRef}
+                    ></InputData>
+                  </MessageFlex>
                 </DetailAddrBox>
               </Flex>
               <Flex>
                 <TimeBox>
                   <Title>영업 시간</Title>
                   <InputData
-                    placeholder='ex. 0900-2200'
+                    placeholder='ex. 09:00 - 22:00'
                     onChange={operationtimeHandler}
                     ref={operationtimeRef}
                   ></InputData>
@@ -385,6 +447,7 @@ const TitleTopBox = styled.div`
   color: ${brown};
   font-weight: 800;
   font-size: 25px;
+  display: flex;
 `;
 
 const TitleBottomBox = styled.div`
@@ -437,13 +500,9 @@ const SvgSpan = styled.span`
 `;
 
 const MessageDiv = styled.div`
-  width: 102%;
   font-size: 14px;
   font-weight: 500;
   color: ${red};
-  position: absolute;
-  top: 69%;
-  text-align: center;
 `;
 
 const Flex = styled.div`
@@ -488,6 +547,11 @@ const TagBox = styled.div`
   }
   .radius-right {
     border-radius: 0px 5px 5px 0px;
+  }
+
+  .tagflex {
+    display: flex;
+    flex-direction: row;
   }
 `;
 
@@ -579,6 +643,18 @@ const CancelBtn = styled.button`
   &:hover {
     background-color: #efefef;
   }
+`;
+
+const Star = styled.div`
+  color: ${red};
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+`;
+
+const MessageFlex = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export default AddMarker;

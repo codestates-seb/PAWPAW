@@ -32,6 +32,7 @@ const PostEdit = () => {
   });
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [file, setFile] = useState<any>(null);
+  const [isDelete, setIsDelete] = useState<number>(0);
   const formData = new FormData();
 
   // 글 받아오기
@@ -73,6 +74,7 @@ const PostEdit = () => {
         // 파일로 만들어 file 상태에 저장
         const file = input.files[0];
         setFile(file);
+        setIsDelete(1);
 
         // 에디터 아래에 이미지 띄우기
         const imageURL = URL.createObjectURL(file);
@@ -87,6 +89,7 @@ const PostEdit = () => {
     if (data.title && data.content !== '<p><br></p>') {
       formData.append('title', data.title);
       formData.append('content', data.content);
+      formData.append('isDelete', isDelete.toString());
       file && formData.append('file', file);
 
       for (const key of formData.keys()) {
@@ -132,6 +135,7 @@ const PostEdit = () => {
   const deleteImage = () => {
     setFile(null);
     setImageUrl(null);
+    setIsDelete(1);
   };
 
   const modules = useMemo(() => {

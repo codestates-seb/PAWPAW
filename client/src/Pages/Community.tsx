@@ -214,6 +214,10 @@ const TitleBox = styled.div`
   color: ${brown};
   font-weight: 600;
   font-size: 20px;
+
+  &:hover {
+    color: #DFB895;
+  }
 `;
 
 const DayBox = styled.div`
