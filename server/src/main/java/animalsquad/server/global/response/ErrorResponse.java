@@ -95,7 +95,7 @@ public class ErrorResponse {
             return constraintViolations.stream()
                     .map(constraintViolation -> new ConstraintViolationError(
                             constraintViolation.getPropertyPath().toString(),
-                            constraintViolation.getInvalidValue().toString(),
+                            constraintViolation.getInvalidValue() == null ? null : constraintViolation.getInvalidValue().toString(),
                             constraintViolation.getMessage()
                     )).collect(Collectors.toList());
         }

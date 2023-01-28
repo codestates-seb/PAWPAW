@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/maps")
 @RequiredArgsConstructor
+@Validated
 public class InfoMapController {
 
     private final InfoMapService infoMapService;
@@ -58,7 +61,8 @@ public class InfoMapController {
     }
 
     @PostMapping
-    public ResponseEntity postMaps(InfoMapPostDto infoMapPostDto) throws IllegalAccessException {
+    public ResponseEntity postMaps(@Valid InfoMapPostDto infoMapPostDto, BindingResult bindingResult) throws IllegalAccessException {
+
         InfoMap infoMap = infoMapMapper.postDtoToInfoMap(infoMapPostDto);
 
         infoMapService.createMaps(infoMap, infoMapPostDto.getFile());
