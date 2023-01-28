@@ -461,7 +461,7 @@ const CommunityDetail: React.FC = () => {
                     <ReviewInputBox>
                       <ReviewInput
                         type='text'
-                        placeholder='이 공간이 어땠나요?'
+                        placeholder='댓글을 남겨주세요. '
                         onChange={reviewHandler}
                       />
                     </ReviewInputBox>
