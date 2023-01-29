@@ -64,6 +64,7 @@ const AddMarker = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const mapaddressRef = useRef<HTMLInputElement>(null);
   const operationtimeRef = useRef<HTMLInputElement>(null);
+  const latRef = useRef<HTMLInputElement>(null);
   const telRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState({
     nameErrorMessage: '',
@@ -146,77 +147,92 @@ const AddMarker = () => {
   };
 
   const submitHandler = async () => {
-    if (info.name === '') {
-      setErrorMessage((prev) => {
-        return { ...prev, nameErrorMessage: '장소 이름을 입력해주세요.' };
-      });
-    }
-    if (info.latitude === 0) {
-      setErrorMessage((prev) => {
-        return { ...prev, latlngErrorMessage: '장소를 선택해주세요.' };
-      });
-    }
-    if (info.code === 0) {
-      setErrorMessage((prev) => {
-        return { ...prev, codeErrorMessage: '지역을 선택해주세요.' };
-      });
-    }
-    if (info.category === '') {
-      setErrorMessage((prev) => {
-        return { ...prev, categoryErrorMessage: '카테고리를 선택해주세요.' };
-      });
-    }
-    if (info.mapAddress === '') {
-      setErrorMessage((prev) => {
-        return { ...prev, addressErrorMessage: '주소를 입력해주세요.' };
-      });
-    }
-
-    if (position && address) {
-      setInfo({ ...info, latitude: position.lat, longitude: position.lng, code: address });
-    }
-    if (info.code !== 0 && address) {
-      const data = new FormData();
-      data.append('name', info.name);
-      data.append('code', address.toString());
-      data.append('category', info.category);
-      data.append('homepage', info.homepage);
-      data.append('mapAddress', info.mapAddress);
-      data.append('latitude', info.latitude.toString());
-      data.append('longitude', info.longitude.toString());
-      data.append('operationTime', info.operationTime);
-      data.append('tel', info.tel);
-
-      if (formData.placeImage) {
-        data.append('file', formData.placeImage);
-      }
-
-      console.log('info', info);
-
-      for (const key of data.keys()) {
-        console.log('key', key);
-      }
-      for (const value of data.values()) {
-        console.log('value', value);
-      }
-
-      axios
-        .post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers })
-        .then((res) => {
-          console.log(res);
-          Swal.fire({
-            title: '등록이 완료되었습니다.',
-            confirmButtonText: '<b>확인</b>',
-            color: brown,
-            confirmButtonColor: yellow,
-            padding: '40px 0px 30px 0px',
-          });
-          navigate('/community');
-        })
-        .catch((err) => {
-          console.error('Error', err);
-          alert(err);
+    if (
+      info.mapAddress === '' ||
+      info.category === '' ||
+      info.code === 0 ||
+      info.latitude === 0 ||
+      info.name === ''
+    ) {
+      if (info.mapAddress === '') {
+        mapaddressRef.current && mapaddressRef.current.focus();
+        setErrorMessage((prev) => {
+          return { ...prev, addressErrorMessage: '주소를 입력해주세요.' };
         });
+      }
+      if (info.category === '') {
+        categoryRef.current && categoryRef.current.focus();
+        setErrorMessage((prev) => {
+          return { ...prev, categoryErrorMessage: '카테고리를 선택해주세요.' };
+        });
+      }
+      if (info.code === 0) {
+        addrRef.current && addrRef.current.focus();
+        setErrorMessage((prev) => {
+          return { ...prev, codeErrorMessage: '지역을 선택해주세요.' };
+        });
+      }
+
+      if (info.latitude === 0) {
+        latRef.current && latRef.current.focus();
+        setErrorMessage((prev) => {
+          return { ...prev, latlngErrorMessage: '장소를 선택해주세요.' };
+        });
+      }
+
+      if (info.name === '') {
+        nameRef.current && nameRef.current.focus();
+        setErrorMessage((prev) => {
+          return { ...prev, nameErrorMessage: '장소 이름을 입력해주세요.' };
+        });
+      }
+    } else {
+      if (position && address) {
+        setInfo({ ...info, latitude: position.lat, longitude: position.lng, code: address });
+      }
+      if (info.code !== 0 && address) {
+        const data = new FormData();
+        data.append('name', info.name);
+        data.append('code', address.toString());
+        data.append('category', info.category);
+        data.append('homepage', info.homepage);
+        data.append('mapAddress', info.mapAddress);
+        data.append('latitude', info.latitude.toString());
+        data.append('longitude', info.longitude.toString());
+        data.append('operationTime', info.operationTime);
+        data.append('tel', info.tel);
+
+        if (formData.placeImage) {
+          data.append('file', formData.placeImage);
+        }
+
+        console.log('info', info);
+
+        for (const key of data.keys()) {
+          console.log('key', key);
+        }
+        for (const value of data.values()) {
+          console.log('value', value);
+        }
+
+        axios
+          .post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers })
+          .then((res) => {
+            console.log(res);
+            Swal.fire({
+              title: '등록이 완료되었습니다.',
+              confirmButtonText: '<b>확인</b>',
+              color: brown,
+              confirmButtonColor: yellow,
+              padding: '40px 0px 30px 0px',
+            });
+            navigate('/community');
+          })
+          .catch((err) => {
+            console.error('Error', err);
+            alert(err);
+          });
+      }
     }
   };
 
@@ -254,7 +270,7 @@ const AddMarker = () => {
                 </TitleTopBox>
                 <MessageDiv>{errorMessage.latlngErrorMessage}</MessageDiv>
 
-                <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
+                <PosInfoBox ref={latRef}>원하시는 장소를 선택해주세요.</PosInfoBox>
                 {/* 지도 넣기 */}
                 <Map
                   center={{
@@ -315,25 +331,25 @@ const AddMarker = () => {
                   <MessageFlex>
                     <MessageDiv>{errorMessage.categoryErrorMessage}</MessageDiv>
                     <div className='tagflex'>
-                        {TagArr.map((el, idx) => {
-                          return (
-                            <Tag
-                              key={idx}
-                              className={`${currentTab === idx ? 'focused' : ''} 
+                      {TagArr.map((el, idx) => {
+                        return (
+                          <Tag
+                            key={idx}
+                            className={`${currentTab === idx ? 'focused' : ''} 
                       ${click ? '' : 'hide'} ${idx !== 5 ? '' : 'bord'}
                       ${idx === 0 ? 'radius-left' : ''} 
                       ${idx === 5 ? 'radius-right' : ''}
                       `}
-                              onClick={() => {
-                                selectMenuHandler(idx);
-                                categoryHandler;
-                              }}
-                              ref={categoryRef}
-                            >
-                              {el}
-                            </Tag>
-                          );
-                        })}
+                            onClick={() => {
+                              selectMenuHandler(idx);
+                              categoryHandler;
+                            }}
+                            ref={categoryRef}
+                          >
+                            {el}
+                          </Tag>
+                        );
+                      })}
                     </div>
                   </MessageFlex>
                 </TagBox>
