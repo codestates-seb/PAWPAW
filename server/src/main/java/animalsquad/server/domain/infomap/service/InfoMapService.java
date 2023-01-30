@@ -65,9 +65,11 @@ public class InfoMapService {
         Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
 
         infoMap.setAddress(address);
-        String imageUrl = fileUploadService.uploadImage(file, folderName);
 
-        infoMap.setImageUrl(imageUrl);
+        if(file != null) {
+            String imageUrl = fileUploadService.uploadImage(file, folderName);
+            infoMap.setImageUrl(imageUrl);
+        }
 
         return infoMapRepository.save(infoMap);
     }
