@@ -64,7 +64,6 @@ const AddMarker = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const mapaddressRef = useRef<HTMLInputElement>(null);
   const operationtimeRef = useRef<HTMLInputElement>(null);
-  const latRef = useRef<HTMLInputElement>(null);
   const telRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState({
     nameErrorMessage: '',
@@ -100,6 +99,7 @@ const AddMarker = () => {
     setClick(true);
     setInfo({ ...info, category: TagEngArr[index] });
     console.log('tag', TagEngArr[index]);
+    console.log(info);
   };
 
   // 배경 클릭시 모달이 닫힌다.
@@ -150,9 +150,9 @@ const AddMarker = () => {
     if (
       info.mapAddress === '' ||
       info.category === '' ||
-      info.code === 0 ||
-      info.latitude === 0 ||
-      info.name === ''
+      info.name === '' ||
+      address === null ||
+      !position
     ) {
       if (info.mapAddress === '') {
         mapaddressRef.current && mapaddressRef.current.focus();
@@ -172,11 +172,17 @@ const AddMarker = () => {
           return { ...prev, codeErrorMessage: '지역을 선택해주세요.' };
         });
       }
-
+      console.log(info.latitude);
       if (info.latitude === 0) {
-        latRef.current && latRef.current.focus();
         setErrorMessage((prev) => {
           return { ...prev, latlngErrorMessage: '장소를 선택해주세요.' };
+        });
+        Swal.fire({
+          icon: 'error',
+          title: '장소를 선택해주세요.',
+          confirmButtonText: '<b>확인</b>',
+          color: brown,
+          confirmButtonColor: yellow,
         });
       }
 
@@ -270,7 +276,7 @@ const AddMarker = () => {
                 </TitleTopBox>
                 <MessageDiv>{errorMessage.latlngErrorMessage}</MessageDiv>
 
-                <PosInfoBox ref={latRef}>원하시는 장소를 선택해주세요.</PosInfoBox>
+                <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
                 {/* 지도 넣기 */}
                 <Map
                   center={{

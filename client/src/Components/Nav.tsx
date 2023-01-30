@@ -10,7 +10,6 @@ interface INav {
 
 const Nav = ({ type }: INav) => {
   const [selected, setSelected] = useState('');
-  console.log('type', type);
 
   return (
     <Container>
