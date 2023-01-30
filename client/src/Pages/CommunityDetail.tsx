@@ -424,7 +424,7 @@ const CommunityDetail: React.FC = () => {
                                   <ReviewInputBox>
                                     <ReviewInput
                                       type='text'
-                                      placeholder={el.contents}
+                                      placeholder={el.content}
                                       onChange={editReviewHandler}
                                       id='basereview'
                                     ></ReviewInput>
@@ -461,7 +461,7 @@ const CommunityDetail: React.FC = () => {
                     <ReviewInputBox>
                       <ReviewInput
                         type='text'
-                        placeholder='이 공간이 어땠나요?'
+                        placeholder='댓글을 남겨주세요. '
                         onChange={reviewHandler}
                       />
                     </ReviewInputBox>
@@ -778,7 +778,7 @@ const ReviewWrite = styled.div`
   height: 100px;
   display: flex;
   background-color: white;
-  border-bottom: 1px solid ${bordergrey};
+  border-top: 1px solid ${bordergrey};
 `;
 
 const EmptyMessage = styled.div`

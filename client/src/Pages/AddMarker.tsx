@@ -400,7 +400,7 @@ const AddMarker = () => {
                 <TimeBox>
                   <Title>영업 시간</Title>
                   <InputData
-                    placeholder='ex. 0900-2200'
+                    placeholder='ex. 09:00 - 22:00'
                     onChange={operationtimeHandler}
                     ref={operationtimeRef}
                   ></InputData>

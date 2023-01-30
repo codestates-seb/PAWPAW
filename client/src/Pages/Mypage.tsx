@@ -19,33 +19,6 @@ const { ivory, yellow, coral, red, darkgrey, brown, darkbrown, mediumgrey, borde
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
-// interface FormData {
-//   profileImage: Blob | null;
-// }
-
-// interface ResponseData {
-//   myPosts: Array<object>; // 수정 필요
-//   pageInfo: any; // 수정 필요
-//   petInfo: petInfo;
-// }
-
-// interface petInfo {
-//   petName: string;
-//   code: string;
-//   profileImage: File | null;
-//   age: number;
-//   gender: 'MALE' | 'FEMALE';
-//   species: 'CAT' | 'DOG';
-// }
-
-// interface Info {
-//   petName: string;
-//   isMale: 'MALE' | 'FEMALE';
-//   isCat: 'CAT' | 'DOG';
-//   age: number;
-//   address: string | null;
-// }
-
 interface PostData {
   contents: string;
   createdAt: string;
@@ -125,6 +98,7 @@ const Mypage = () => {
       },
     });
   };
+
   const logoutHandler = () => {
     Swal.fire({
       title: '로그아웃하시겠습니까?',

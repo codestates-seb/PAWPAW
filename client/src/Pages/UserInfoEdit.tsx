@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
-import React, { FC, useState, useMemo  } from 'react';
+import React, { FC, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
@@ -19,7 +19,6 @@ import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 const jwtToken = localStorage.getItem('Authorization');
 const headers = {
-  'Content-Type': 'multipart/form-data',
   Authorization: jwtToken,
 };
 
