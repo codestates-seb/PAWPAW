@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { petLogout } from './UserApi';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = process.env.REACT_APP_API_ROOT;
@@ -33,6 +34,10 @@ export const axiosRefresh = axios.interceptors.response.use(
       originalRequest._retry = true;
       await refresh();
       originalRequest;
+      return window.location.reload();
+    }
+    if (error.response.data.message === 'Invalid refresh token' && 'Refresh token not found') {
+      petLogout();
       return window.location.reload();
     }
     return Promise.reject(error);
