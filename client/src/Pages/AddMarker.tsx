@@ -166,7 +166,7 @@ const AddMarker = () => {
           return { ...prev, categoryErrorMessage: '카테고리를 선택해주세요.' };
         });
       }
-      if (info.code === 0) {
+      if (address === null) {
         addrRef.current && addrRef.current.focus();
         setErrorMessage((prev) => {
           return { ...prev, codeErrorMessage: '지역을 선택해주세요.' };
