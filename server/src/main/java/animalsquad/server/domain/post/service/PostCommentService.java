@@ -69,6 +69,4 @@ public class PostCommentService {
     public PostComment findVerifiedPostComment(long id) {
         return postCommentRepository.findById(id).orElseThrow(() -> new BusinessLogicException(ExceptionCode.POST_COMMENT_NOT_FOUND));
     }
-
-
 }

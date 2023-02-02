@@ -37,19 +37,5 @@ public interface PostCommentMapper {
 
         return postComment;
     }
-//
-//    default PostCommentResponseDto postCommentToResponseDto(PostCommentResponseDto postCommentResponseDto) {
-//        PostComment postComment= new PostComment();
-//        PostImage postImage = new PostImage();
-//        PostCommentResponseDto postCommentResponseDto = new PostCommentResponseDto();
-//
-//        postCommentResponseDto.setPostId(postComment.getId());
-//        postCommentResponseDto.setContents(postComment.getContents());
-//        postCommentResponseDto.setCreatedAt(postComment.getCreatedAt());
-//        postCommentResponseDto.setImageUrl(postImage.getImageUrl());
-//
-//        return postCommentResponseDto;
-//    }
-//
 
 }
