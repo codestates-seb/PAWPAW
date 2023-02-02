@@ -71,12 +71,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         return null;
     }
 
-//    private Map<String, Object> verifyJws(HttpServletRequest request) {
-//        String jws = request.getHeader("Authorization").replace("Bearer ", "");
-//
-//        return jwtTokenProvider.getClaims(jws).getBody();
-//    }
-
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String loginId = (String) claims.get("sub");
         List<GrantedAuthority> authorities = ((List<String>) claims.get("roles")).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());

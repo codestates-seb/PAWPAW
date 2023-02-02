@@ -1,8 +1,6 @@
 package animalsquad.server.global.auth.jwt;
 
-import animalsquad.server.global.auth.utils.ErrorResponder;
 import animalsquad.server.global.response.ErrorResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -14,8 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JwtExceptionFilter extends OncePerRequestFilter {
     @Override

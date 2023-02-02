@@ -1,12 +1,10 @@
 package animalsquad.server.domain.infomap.dto;
 
-import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.infomap.entity.InfoMapCategory;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;

@@ -54,14 +54,6 @@ public class AuthService {
 
         Pet pet = findVerifiedPet(authentication.getName());
 
-//        Map<String, Object> claims = new HashMap<>();
-//        claims.put("petId", pet.getPetId());
-//        claims.put("roles", pet.getRoles());
-//        claims.put("petName",pet.getPetName());
-//
-//        String subject = pet.getLoginId();
-//        AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(claims, subject);
-
         //토큰 재발급
         AuthResponseDto.TokenInfo tokenInfo = doGenerateToken(pet);
 

@@ -23,8 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class JwtTokenProvider {
-//    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 5 * 60 * 1000L;              // 30분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분 // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
 
     private final Key key;
@@ -41,7 +40,6 @@ public class JwtTokenProvider {
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
 
-        System.out.println(subject);
         String accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
@@ -61,13 +59,6 @@ public class JwtTokenProvider {
                 .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
-
-//    public Jws<Claims> getClaims(String accessToken) {
-//        return Jwts.parserBuilder()
-//                .setSigningKey(key)
-//                .build()
-//                .parseClaimsJws(accessToken);
-//    }
 
 
     public Authentication getAuthentication(String accessToken) {
@@ -126,13 +117,6 @@ public class JwtTokenProvider {
             return token.substring(7);
         }
         return null;
-    }
-
-    public long getPetId(String token) {
-        token = resolveToken(token);
-//        Claims body = getClaims(token).getBody();
-        Claims body = parseClaims(token);
-        return Long.parseLong(String.valueOf(body.get("petId")));
     }
 
     public AuthResponseDto.TokenInfo delegateToken(Pet pet) {
