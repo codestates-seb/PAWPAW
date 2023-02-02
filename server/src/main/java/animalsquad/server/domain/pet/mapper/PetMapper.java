@@ -1,14 +1,12 @@
 package animalsquad.server.domain.pet.mapper;
 
 import animalsquad.server.domain.address.entity.Address;
-import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.dto.PetPatchDto;
 import animalsquad.server.domain.pet.dto.PetPostDto;
 import animalsquad.server.domain.pet.dto.PetResponseDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.post.entity.Post;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 
 import java.time.format.DateTimeFormatter;
@@ -31,7 +29,6 @@ public interface PetMapper {
         pet.setAge( petPostDto.getAge() );
         pet.setGender( petPostDto.getGender() );
         pet.setSpecies(petPostDto.getSpecies());
-//        pet.setProfileImage( petPostDto.getProfileImage());
         pet.setAddress(address);
 
         return pet;
@@ -48,7 +45,6 @@ public interface PetMapper {
         pet.setAge(petPatchDto.getAge());
         pet.setGender(petPatchDto.getGender());
         pet.setSpecies(petPatchDto.getSpecies());
-//        pet.setProfileImage(petPatchDto.getProfileImage());
         pet.setAddress(address);
 
         return pet;

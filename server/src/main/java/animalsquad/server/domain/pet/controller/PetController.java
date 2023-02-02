@@ -1,6 +1,5 @@
 package animalsquad.server.domain.pet.controller;
 
-import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.dto.PetPatchDto;
 import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.dto.PetPostDto;

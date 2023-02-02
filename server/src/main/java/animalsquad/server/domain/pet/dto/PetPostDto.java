@@ -1,6 +1,5 @@
 package animalsquad.server.domain.pet.dto;
 
-import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.pet.entity.Gender;
 import animalsquad.server.domain.pet.entity.Species;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,6 @@ public class PetPostDto {
     private Species species;
     @NotNull
     private int code;
-//    private String profileImage;
     private MultipartFile profileImage;
 
 }

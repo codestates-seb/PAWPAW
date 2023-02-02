@@ -3,19 +3,15 @@ package animalsquad.server.domain.pet.entity;
 
 import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.infomap.entity.InfoMapComment;
-import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.domain.petmap.entity.PetMap;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.entity.PostComment;
 import animalsquad.server.global.audit.Auditable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import javax.websocket.OnOpen;
 import java.util.ArrayList;
 import java.util.List;
 
