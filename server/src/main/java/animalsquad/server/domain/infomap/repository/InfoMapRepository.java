@@ -15,8 +15,7 @@ public interface InfoMapRepository extends JpaRepository<InfoMap, Long> {
 
     @Query("select im from InfoMap im where im.address.code = :code and im.category = :from")
     List<InfoMap> findInfoMapsWithFilter(int code, InfoMapCategory from);
-//
-//
+
     @Query("select im from InfoMap im join fetch PetMap pm on im.id = pm.infoMap.id where pm.pet.id = :petId")
     List<InfoMap> findInfoMapsMyPick(long petId);
 }
