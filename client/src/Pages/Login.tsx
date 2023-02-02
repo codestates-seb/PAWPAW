@@ -7,12 +7,12 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { Icon } from '@iconify/react';
 
-import color from '../color';
+import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
-const { ivory, yellow, brown, red } = color;
+const { ivory, brown, red } = color;
 
 interface UserData {
   0: string;
@@ -41,12 +41,10 @@ const Login: React.FC = () => {
 
   const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setId((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const passwordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,11 +66,6 @@ const Login: React.FC = () => {
         const code = jwtToken_decode.code as number;
         const admin = jwtToken_decode.roles as unknown as UserData;
         setPetId(petid.toString());
-        console.log('petId', petId);
-        // if (admin !== null) {
-        //   console.log(admin);
-        //   console.log();
-        // }
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
         localStorage.setItem('Refresh', refreshToken);
@@ -86,9 +79,8 @@ const Login: React.FC = () => {
         console.error('Error', error);
         setPwErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다.');
         if (pwRef.current) {
-          pwRef.current.focus(); // pw에 포커스
-          pwRef.current.value = ''; // 값 초기화
-          console.log(password);
+          pwRef.current.focus();
+          pwRef.current.value = '';
         }
       }
     }
@@ -97,14 +89,14 @@ const Login: React.FC = () => {
   const printErrorMessage = () => {
     if (id === '') {
       setIdErrorMessage('아이디를 입력해주세요.');
-      idRef.current && idRef.current.focus(); // id에 포커스
+      idRef.current && idRef.current.focus();
     } else {
       setIdErrorMessage('');
     }
 
     if (password === '') {
       setPwErrorMessage('비밀번호를 입력해주세요.');
-      pwRef.current && pwRef.current.focus(); // pw에 포커스
+      pwRef.current && pwRef.current.focus();
     } else {
       setPwErrorMessage('');
     }
@@ -114,7 +106,6 @@ const Login: React.FC = () => {
     <Container>
       <Background />
       <Box>
-        {/* 왼쪽 영역 */}
         <LeftDiv>
           <IntroDiv>
             <TitleBox>
@@ -142,8 +133,6 @@ const Login: React.FC = () => {
             </DeveloperDiv>
           </IntroDiv>
         </LeftDiv>
-
-        {/* 오른쪽 영역 */}
         <RightDiv>
           <IconDiv>
             <PawIconSVG width='120' height='119' viewBox='0 0 120 119' fill={brown} />
@@ -184,8 +173,6 @@ const Container = styled.div`
   align-items: center;
 `;
 
-// Background, Box, LeftDiv, RightDiv import
-
 const IntroDiv = styled.div`
   padding: 40px;
   width: 100%;
@@ -206,7 +193,6 @@ const TitleH1 = styled.h1`
 `;
 
 const TextDiv = styled.div`
-  /* background-color: lavender; */
   width: 70%;
   height: 60%;
   font-size: 16px;
@@ -215,7 +201,6 @@ const TextDiv = styled.div`
   flex-direction: column;
   font-weight: 800;
   line-height: 1.5;
-  /* justify-content: center; */
 `;
 
 const TitleBox = styled.div`

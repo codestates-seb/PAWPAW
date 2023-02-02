@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
-import color from '../color';
+import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
@@ -34,29 +34,25 @@ const SignUp: FC = () => {
 
   const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPetName((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const userIdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setId((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const pwHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPassword((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const pwconfirmHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPasswordConfirm((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const idValidationHandler = async () => {
-    const notAllowedChar = id.search(/[`ㄱ-ㅎ|ㅏ-ㅣ|가-힣~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi); // 특수문자나 한글 있는지 확인
+    const notAllowedChar = id.search(/[`ㄱ-ㅎ|ㅏ-ㅣ|가-힣~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
 
     if (id === '') {
-      idRef.current && idRef.current.focus(); // id에 포커스
+      idRef.current && idRef.current.focus();
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디를 입력해주세요.' };
       });
@@ -75,12 +71,6 @@ const SignUp: FC = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/pets/check/${id}`);
         const value = response.data as boolean;
-        console.log(value);
-        console.log(response);
-        console.log(response.data);
-        console.log(id);
-        // 타입 설정에 대해서 고민 필요
-        // response 일지 response.status 이것도 아니면 response.body일지는 통신해보면서 정하기
         if (response.data === false) {
           setIsUniqueId(true);
           setErrorMessage((prev) => {
@@ -106,7 +96,6 @@ const SignUp: FC = () => {
             confirmButtonColor: yellow,
           });
         }
-        // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
         console.error('Error', error);
         alert(error);
@@ -116,7 +105,6 @@ const SignUp: FC = () => {
 
   const goNextPage = () => {
     printErrorMessage();
-    // 모든 에러 메세지가 없고, 중복확인도 통과했다면 다음 페이지로 넘어간다.
     if (
       errorMessage.nameErrorMessage === '' &&
       errorMessage.idErrorMessage === '' &&
@@ -130,7 +118,7 @@ const SignUp: FC = () => {
 
   const printErrorMessage = () => {
     if (petName === '') {
-      nameRef.current && nameRef.current.focus(); // name에 포커스
+      nameRef.current && nameRef.current.focus();
       setErrorMessage((prev) => {
         return { ...prev, nameErrorMessage: '반려동물의 이름을 입력해주세요.' };
       });
@@ -141,12 +129,12 @@ const SignUp: FC = () => {
     }
 
     if (id === '') {
-      idRef.current && idRef.current.focus(); // id에 포커스
+      idRef.current && idRef.current.focus();
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디를 입력해주세요.' };
       });
     } else if (!isUniqueId) {
-      idRef.current && idRef.current.focus(); // id에 포커스
+      idRef.current && idRef.current.focus();
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디 중복확인을 해주세요.' };
       });
@@ -157,7 +145,7 @@ const SignUp: FC = () => {
     }
 
     if (password === '') {
-      pwRef.current && pwRef.current.focus(); // pw에 포커스
+      pwRef.current && pwRef.current.focus();
       setErrorMessage((prev) => {
         return { ...prev, pwErrorMessage: '비밀번호를 입력해주세요.' };
       });
@@ -169,7 +157,7 @@ const SignUp: FC = () => {
 
     if (password !== passwordConfirm) {
       setErrorMessage((prev) => {
-        pwCnfmRef.current && pwCnfmRef.current.focus(); // pwCnfm에 포커스
+        pwCnfmRef.current && pwCnfmRef.current.focus();
         return { ...prev, pwCnfmErrorMessage: '비밀번호가 일치하지 않습니다.' };
       });
     } else {
@@ -189,19 +177,14 @@ const SignUp: FC = () => {
     <Container>
       <Background />
       <Box>
-        {/* 왼쪽 영역 */}
         <LeftDiv>
           <IconDiv>
             <PawIconSVG width='120' height='119' viewBox='0 0 120 119' fill={ivory} />
           </IconDiv>
         </LeftDiv>
-
-        {/* 오른쪽 영역 */}
         <RightDiv>
           <TextDiv>회원가입</TextDiv>
-
           <InputsDiv>
-            {/* 반려동물 이름 */}
             <InputDiv>
               <Input
                 type='text'
@@ -211,8 +194,6 @@ const SignUp: FC = () => {
               />
               <MessageDiv>{errorMessage.nameErrorMessage}</MessageDiv>
             </InputDiv>
-
-            {/* 아이디 */}
             <IdDiv>
               <Input
                 type='text'
@@ -224,8 +205,6 @@ const SignUp: FC = () => {
               <ConfirmSpan onClick={idValidationHandler}>중복확인</ConfirmSpan>
               <MessageDiv>{errorMessage.idErrorMessage}</MessageDiv>
             </IdDiv>
-
-            {/* 비밀번호 */}
             <PasswordDiv>
               <Input
                 type={passwordVisible ? 'text' : 'password'}
@@ -247,8 +226,6 @@ const SignUp: FC = () => {
                 )}
               </SvgSpan>
             </PasswordDiv>
-
-            {/* 비밀번호 확인 */}
             <PasswordDiv>
               <Input
                 type={passwordVisible ? 'text' : 'password'}
@@ -272,7 +249,6 @@ const SignUp: FC = () => {
               </SvgSpan>
             </PasswordDiv>
           </InputsDiv>
-
           <ButtonDiv>
             <Button text='회원가입' onClick={goNextPage} />
           </ButtonDiv>
@@ -282,7 +258,6 @@ const SignUp: FC = () => {
   );
 };
 
-// 전체 화면
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -290,8 +265,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-// Background, Box, LeftDiv, RightDiv import
 
 const IconDiv = styled.div`
   margin-top: 87px;

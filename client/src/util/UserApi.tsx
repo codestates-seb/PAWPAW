@@ -60,12 +60,6 @@ export const petUpdate = async (
   data.append('species', species);
   data.append('code', code.toString());
   data.append('profileImage', formData.profileImage);
-  for (const key of data.keys()) {
-    console.log(key);
-  }
-  for (const value of data.values()) {
-    console.log(value);
-  }
   try {
     await axios.post(`${url}/patch/${petId}`, data, { headers });
     navigate('/Mypage');
@@ -90,7 +84,6 @@ export const petLogout = async () => {
     );
   } catch (error) {
     console.error('Error', error);
-    console.log(jwtToken);
   } finally {
     localStorage.removeItem('Authorization');
     localStorage.removeItem('Refresh');

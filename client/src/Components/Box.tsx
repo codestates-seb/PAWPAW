@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import color from '../color';
+import color from '../util/color';
 
 const { coral, ivory } = color;
 
-// Background
 export const Background = styled.div`
   width: 100%;
   height: 100%;
@@ -14,7 +13,6 @@ export const Background = styled.div`
   position: absolute;
 `;
 
-// Box
 export const Box = styled.div`
   width: 800px;
   height: 571px;
@@ -26,7 +24,6 @@ export const Box = styled.div`
   display: flex;
 `;
 
-// 왼쪽 영역
 export const LeftDiv = styled.div`
   background-color: ${coral};
 
@@ -36,7 +33,6 @@ export const LeftDiv = styled.div`
   flex: 1;
 `;
 
-// 오른쪽 영역
 export const RightDiv = styled.div`
   background-color: ${ivory};
 

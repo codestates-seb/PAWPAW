@@ -4,13 +4,13 @@ import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
-import color from '../color';
+import color from '../util/color';
 import Header from '../Components/Header';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
 import { addressToCode, codeToAddress } from '../util/ConvertAddress';
 import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
-const { yellow, coral, brown } = color;
+const { coral, brown } = color;
 const code = localStorage.getItem('code') as string;
 
 export interface IProps {
@@ -32,26 +32,24 @@ export interface ICurLocation {
 
 const HomeMap = () => {
   const { kakao } = window;
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 모달 클릭 여부
-  const [selected, setSelected] = useState<string>('all'); // 선택한 필터
-  const [data, setData] = useState<IProps[] | null>(null); // 데이터
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selected, setSelected] = useState<string>('all');
+  const [data, setData] = useState<IProps[] | null>(null);
 
-  const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 }); // 현재 위치 좌표
-  const [address, setAddress] = useState<string | undefined>(code); // 현재 위치의 주소 코드 ex. 11680
+  const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 });
+  const [address, setAddress] = useState<string | undefined>(code);
 
-  const [newLocation, setNewLocation] = useState(currentLocation); // 이동한 위치 좌표
-  const [fullAddress, setFullAddress] = useState<string[]>([]); // 이동한 위치의 주소 ex. ['서울', '강남구' '...']
-  const [newAddress, setNewAddress] = useState<string | undefined>(undefined); // 이동한 구 ex. 강남구
-  const [isLocationChanged, setIsLocationChanged] = useState<boolean>(false); // 이동했는지 여부
+  const [newLocation, setNewLocation] = useState(currentLocation);
+  const [fullAddress, setFullAddress] = useState<string[]>([]);
+  const [newAddress, setNewAddress] = useState<string | undefined>(undefined);
+  const [isLocationChanged, setIsLocationChanged] = useState<boolean>(false);
 
-  // 가장 처음 렌더링 시 딱 한번만 실행되는 useEffect
   useEffect(() => {
     if (address) {
       getCenter(address).then((res) => setCurrentLocation(res));
     }
   }, []);
 
-  // selected, address, isModalOpen이 업데이트될 때마다 실행되는 useEffect
   useEffect(() => {
     if (address) {
       if (selected === 'all') {
@@ -71,7 +69,6 @@ const HomeMap = () => {
     window.location.reload();
   }
 
-  // 좌표를 주소로 변환해주는 함수
   const getAddress = (lat: number, lng: number) => {
     const geocoder = new kakao.maps.services.Geocoder();
     const coord = new kakao.maps.LatLng(lat, lng);
@@ -83,8 +80,6 @@ const HomeMap = () => {
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
   };
 
-  // 마우스 드래그 이벤트가 감지될 때마다 실행되는 함수
-  // isLocationChange를 true로 바꾸고, 현재 지도의 중심 좌표를 newLocation으로 업데이트한다.
   const dragHandler = (map: any) => {
     setNewAddress(fullAddress[1]);
     setNewLocation({
@@ -95,14 +90,10 @@ const HomeMap = () => {
     getAddress(newLocation.lat, newLocation.lng);
   };
 
-  // 현재 위치에서 검색하기 버튼을 눌렀을 때 실행되는 함수
-  // newLocation을 currentLocation으로 업데이트하고, fullAddress에 기반해 address를 업데이트한다.
   const updateCurrentLocation = () => {
     setCurrentLocation(newLocation);
 
-    // 만약 서울시라면,
     if (fullAddress[0] === '서울') {
-      // 구를 코드로 변환하여 address 상태에 저장한다.
       setAddress(addressToCode(fullAddress[1]));
       setIsLocationChanged(false);
     } else {
@@ -120,7 +111,6 @@ const HomeMap = () => {
     }
   };
 
-  // 만약 현재 구와 새로운 주소의 구(newAddress)가 다르면 isLocationChanged를 true로 바꾼다.
   useMemo(() => {
     if (codeToAddress(Number(address)) !== fullAddress[0]) {
       setIsLocationChanged(true);
@@ -137,7 +127,6 @@ const HomeMap = () => {
   return (
     <Container>
       <Header />
-      {/* 맵 */}
       {address && (
         <>
           <Map
@@ -147,7 +136,6 @@ const HomeMap = () => {
             level={4}
             onDragEnd={(map) => dragHandler(map)}
           >
-            {/* 장소 마커 */}
             {data &&
               data.map((el) => {
                 return (
@@ -160,11 +148,7 @@ const HomeMap = () => {
                 );
               })}
           </Map>
-
-          {/* 필터 버튼 */}
           <MapFilter selected={selected} setSelected={setSelected} />
-
-          {/* 현재 위치에서 검색하기 버튼 */}
           {isLocationChanged && newAddress && (
             <RefreshBtn onClick={updateCurrentLocation}>
               <span>{newAddress}에서 검색하기</span>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import color from '../color';
+import color from '../util/color';
 import styled from 'styled-components';
 
 const { ivory, brown, yellow } = color;
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
     } else {
       navigate('/');
     }
-  }
+  };
 
   return (
     <Container>

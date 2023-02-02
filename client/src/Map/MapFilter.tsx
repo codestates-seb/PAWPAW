@@ -1,8 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import color from '../color';
-// import { FProps } from './HomeMap';
+import color from '../util/color';
 
 const { ivory, yellow } = color;
 
@@ -14,9 +13,8 @@ export interface FProps {
 const MapFilter = ({ selected, setSelected }: FProps) => {
   const showFilteredMarkers = (e: React.MouseEvent) => {
     const target = e.target as HTMLDivElement;
-    const tag = target.classList[2]; // tag : 'park', 'cafe', 'restaurant', 'camping', 'pool', 'hospital', 'mypick'
+    const tag = target.classList[2];
 
-    // 이미 선택된 요소를 또 클릭할 경우, selected를 'all'로 업데이트한다.
     if (selected === tag) {
       setSelected('all');
     } else {

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
-import color from '../color';
+import color from '../util/color';
 
 const { brown, bordergrey } = color;
 

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
-import color from '../color';
+import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
@@ -64,13 +64,10 @@ const UserInfo: React.FC = () => {
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
-    console.log('formData', formData);
-    console.log('formData.profileImage', formData.profileImage);
   };
 
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, age: Number(e.target.value) });
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const catHandler = () => {
@@ -87,7 +84,6 @@ const UserInfo: React.FC = () => {
 
   const backgroundRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
-  // 배경 클릭시 모달이 닫힌다.
   window.addEventListener('click', (e) => {
     if (e.target === backgroundRef.current) {
       setIsOpen(false);
@@ -110,16 +106,8 @@ const UserInfo: React.FC = () => {
         data.append('profileImage', formData.profileImage);
       }
 
-      for (const key of data.keys()) {
-        console.log(key);
-      }
-      for (const value of data.values()) {
-        console.log(value);
-      }
-
       try {
         await axios.post(`${process.env.REACT_APP_API_ROOT}/pets/signup`, data, { headers });
-        // alert('회원가입이 완료되었습니다.');
         Swal.fire({
           title: '회원가입이 완료되었습니다.',
           icon: 'success',
@@ -129,7 +117,6 @@ const UserInfo: React.FC = () => {
           padding: '20px 0px',
         });
         navigate('/');
-        // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
         console.error('Error', error);
         alert(error);
@@ -140,14 +127,14 @@ const UserInfo: React.FC = () => {
   const printErrorMessage = () => {
     if (info.age === 0) {
       setAgeErrorMessage('나이를 입력해주세요.');
-      ageRef.current && ageRef.current.focus(); // age에 포커스
+      ageRef.current && ageRef.current.focus();
     } else {
       setAgeErrorMessage('');
     }
 
     if (!address) {
       setAddrErrorMessage('주소를 선택해주세요.');
-      addrRef.current && addrRef.current.focus(); // address에 포커스
+      addrRef.current && addrRef.current.focus();
     } else {
       setAddrErrorMessage('');
     }
@@ -157,9 +144,7 @@ const UserInfo: React.FC = () => {
     <Container>
       <Background ref={backgroundRef} />
       <Box>
-        {/* 왼쪽 영역 */}
         <LeftDiv>
-          {/* 아바타 이미지 */}
           <AvatarDiv>
             {fileImage ? (
               <img
@@ -182,11 +167,7 @@ const UserInfo: React.FC = () => {
               ></img>
             )}
           </AvatarDiv>
-
-          {/* 반려동물 이름 */}
           <NameDiv>{petname}</NameDiv>
-
-          {/* 파일 선택 */}
           <PlusDiv>
             <form>
               <label className='input-file-button' htmlFor='input-file'>
@@ -217,11 +198,8 @@ const UserInfo: React.FC = () => {
           </PlusDiv>
           <input type='file' id='input-file' style={{ display: 'none' }} />
         </LeftDiv>
-
-        {/* 오른쪽 영역 */}
         <RightDiv>
           <InputsDiv>
-            {/* 나이 */}
             <InputDiv>
               <Input
                 type='text'
@@ -232,8 +210,6 @@ const UserInfo: React.FC = () => {
               />
               <MessageDiv>{ageErrorMessage}</MessageDiv>
             </InputDiv>
-
-            {/* 주소 */}
             <InputDiv>
               <Input
                 type='text'
@@ -249,8 +225,6 @@ const UserInfo: React.FC = () => {
               <MessageDiv>{addrErrorMessage}</MessageDiv>
             </InputDiv>
           </InputsDiv>
-
-          {/* 성별 */}
           <GenderDiv isMale={info.isMale}>
             <TextSpan>성별</TextSpan>
             <IconButton onClick={() => setInfo({ ...info, isMale: 'MALE' })}>
@@ -260,15 +234,13 @@ const UserInfo: React.FC = () => {
               <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '48px' }} />
             </IconButton>
           </GenderDiv>
-
-          {/* 강아지 or 고양이 */}
           <TypeDiv>
             <TextSpan>저는...</TextSpan>
             <ToggleDiv>
               <CircleDiv
                 onClick={catHandler}
                 isCat={info.isCat}
-                className={info.isCat === 'CAT' ? 'cat' : 'dog'} // isCat 상태가 true면 className이 cat, false면 dog가 된다.
+                className={info.isCat === 'CAT' ? 'cat' : 'dog'}
               />
               <CatSpan onClick={catHandler} isCat={info.isCat}>
                 <img src={Cat} style={{ width: '36px' }}></img>
@@ -278,19 +250,16 @@ const UserInfo: React.FC = () => {
               </DogSpan>
             </ToggleDiv>
           </TypeDiv>
-
           <ButtonDiv>
             <Button text='시작하기' onClick={submitHandler} />
           </ButtonDiv>
         </RightDiv>
       </Box>
-
-      {/* 주소 모달창 */}
       {isOpen && <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />}
     </Container>
   );
 };
-// 전체 화면
+
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -304,7 +273,7 @@ const Container = styled.div`
     margin-top: 35px;
   }
 `;
-// Background, Box, LeftDiv, RightDiv import
+
 const AvatarDiv = styled.div`
   width: 175px;
   height: 175px;

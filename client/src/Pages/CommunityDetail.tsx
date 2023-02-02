@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-import color from '../color';
+import color from '../util/color';
 import axios from 'axios';
 import headers from '../util/headers';
 import Header from '../Components/Header';
@@ -116,7 +116,6 @@ const CommunityDetail: React.FC = () => {
 
   useEffect(() => {
     getData();
-    console.log('resetCheck');
   }, [like]);
 
   async function getData() {
@@ -125,10 +124,6 @@ const CommunityDetail: React.FC = () => {
       .then((res) => {
         setPostDetail(res.data);
         setLike(postDetail.post.likeActive);
-        console.log('value', postDetail.post.likeActive);
-        console.log('res', res);
-        console.log('res.data', res.data);
-        console.log('postData', postDetail);
       })
       .catch((error) => {
         console.error(error);
@@ -137,7 +132,6 @@ const CommunityDetail: React.FC = () => {
 
   useEffect(() => {
     getUserData();
-    console.log('로딩 체크');
   }, []);
 
   async function getUserData() {
@@ -184,7 +178,6 @@ const CommunityDetail: React.FC = () => {
       console.error('Error', error);
     }
   };
-  console.log(postDetail.post.imageUrl);
 
   const postDeleteHandler = () => {
     Swal.fire({
@@ -235,7 +228,6 @@ const CommunityDetail: React.FC = () => {
   };
   const reviewActivateHandler = (petId: number) => {
     setEditActivate(petId);
-    console.log(editActivate);
   };
   const reviewUpdateHandler = (commentId: number) => {
     if (editReview === '') {
@@ -277,7 +269,6 @@ const CommunityDetail: React.FC = () => {
   };
   const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEditReview((e.target as HTMLInputElement).value);
-    console.log('editreviewhandler', (e.target as HTMLInputElement).value);
   };
   const reviewEditCancelHandler = () => {
     setEditActivate(0);
@@ -286,7 +277,6 @@ const CommunityDetail: React.FC = () => {
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setReview((e.target as HTMLInputElement).value);
-    console.log('reviewhandler', (e.target as HTMLInputElement).value);
   };
 
   const reviewPostHandler = () => {
@@ -394,7 +384,6 @@ const CommunityDetail: React.FC = () => {
                                 <ReviewTextBox>
                                   <ReviewText>
                                     {el.content}
-                                    {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
                                     {el.petId === petId ? (
                                       <EditDelButtons>
                                         <button onClick={() => reviewActivateHandler(el.commentId)}>
@@ -537,14 +526,12 @@ const EditorContainer = styled.div`
     font-size: 18px;
   }
 
-  // placeholder
   .quill > .ql-container > .ql-editor.ql-blank::before {
     font-size: 18px;
     font-style: normal;
     color: ${lightgrey};
   }
 
-  // border
   .ql-toolbar {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -632,9 +619,7 @@ const ReviewBox = styled.div`
   background-color: white;
 `;
 const Reviews = styled.div`
-  height: calc(
-    100vh - 537px - 50px - 100px
-  ); // 100vh - 위의 콘텐츠 높이 - 헤더 높이 - 리뷰 작성 박스 높이
+  height: calc(100vh - 537px - 50px - 100px);
   overflow-y: scroll;
   ::-webkit-scrollbar {
     width: 8px;
@@ -810,7 +795,6 @@ const EditDelButtons = styled.div`
 
 const ReviewEditCancelButton = styled.button`
   padding: 7px 10px;
-  /* margin: 4px; */
   font-weight: bold;
   background: ${ivory};
   border-radius: 12px;

@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import color from '../color';
+import color from '../util/color';
 import { Map, Polygon } from 'react-kakao-maps-sdk';
-import jsonData from '../seoul-geojson.json';
+import jsonData from '../util/seoul-geojson.json';
 import Button from '../Components/Button';
 import { IProps } from './UserInfo';
 
 const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
-  const [areas, setAreas] = useState(jsonData.features); // 구 25개 배열
+  const [areas, setAreas] = useState(jsonData.features);
   const [clickedCode, setClickedCode] = useState<number | null>(null);
 
-  // 마우스 호버시, 선택된 index의 지역의 isMouseover 속성을 true, 나머지 지역은 false로 바꾼다.
   const handleMouseOver = (idx: number) => {
     setAreas((areas) => [
       ...areas
@@ -26,7 +25,6 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
     ]);
   };
 
-  // 마우스 out시,
   const handleMouseOut = (idx: number) => {
     setAreas((areas) => [
       ...areas.filter((_, i) => i !== idx),
@@ -37,7 +35,6 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
     ]);
   };
 
-  // 마우스 클릭시,
   const handleClick = (idx: number, code: number) => {
     setAreas((areas) => [
       ...areas
@@ -54,7 +51,6 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
     setClickedCode(code);
   };
 
-  // 선택 완료 버튼 클릭시, 주소가 기본값이 아니라면 제출한다.
   const submitAddress = () => {
     setAddress(clickedCode);
 
@@ -63,18 +59,15 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
     }
   };
 
-  // 이미 입력된 주소가 있다면 색칠해서 보여준다.
   useEffect(() => {
     if (address !== 0) {
       setAreas((areas) => [
-        // 선택된 지역은 clicked 처리해 렌더링
         ...areas
           .filter((area) => Number(area.properties.ADM_SECT_C) === address)
           .map((selectedArea) => {
             selectedArea.isClicked = true;
             return selectedArea;
           }),
-        // 선택되지 않은 지역은 clicked 해제해 렌더링
         ...areas
           .filter((area) => Number(area.properties.ADM_SECT_C) !== address)
           .map((unselectedArea) => {
@@ -90,7 +83,6 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
       <MapDiv>
         <Map
           center={{
-            // 지도의 중심좌표
             lat: 37.5591694,
             lng: 126.9882266,
           }}
@@ -101,8 +93,8 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
           draggable={false}
         >
           {areas.map((gu, idx) => {
-            const code = Number(gu.properties.ADM_SECT_C); // 법정동코드
-            const coords = gu.geometry.coordinates[0]; // 좌표들
+            const code = Number(gu.properties.ADM_SECT_C);
+            const coords = gu.geometry.coordinates[0];
             const path = coords.map((coord) => {
               return { lat: coord[1], lng: coord[0] };
             });
@@ -112,12 +104,12 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
                 <Polygon
                   key={code}
                   path={path}
-                  strokeWeight={3} // 선의 두께
-                  strokeColor={yellow} // 선의 색깔
-                  strokeOpacity={0.8} // 선의 불투명도
-                  strokeStyle={'solid'} // 선의 스타일
-                  fillColor={gu.isMouseover || gu.isClicked ? `${yellow}` : 'white'} // 채우기 색깔
-                  fillOpacity={0.8} // 채우기 불투명도
+                  strokeWeight={3}
+                  strokeColor={yellow}
+                  strokeOpacity={0.8}
+                  strokeStyle={'solid'}
+                  fillColor={gu.isMouseover || gu.isClicked ? `${yellow}` : 'white'}
+                  fillOpacity={0.8}
                   onMouseover={() => handleMouseOver(idx)}
                   onMouseout={() => handleMouseOut(idx)}
                   onClick={() => handleClick(idx, code)}

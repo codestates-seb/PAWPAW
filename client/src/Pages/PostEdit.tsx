@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
-import color from '../color';
+import color from '../util/color';
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const headers = {
@@ -35,7 +35,6 @@ const PostEdit = () => {
   const [isDelete, setIsDelete] = useState<number>(0);
   const formData = new FormData();
 
-  // 글 받아오기
   useEffect(() => {
     getPost().then((post) => {
       setData((data) => {
@@ -50,7 +49,6 @@ const PostEdit = () => {
 
   async function getPost() {
     const res = await axios.get(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`, { headers });
-    console.log('getPost res', res);
     return res.data.post;
   }
 
@@ -63,7 +61,7 @@ const PostEdit = () => {
   };
 
   const imageHandler = () => {
-    const input = document.createElement('input'); // input 태그를 동적으로 생성
+    const input = document.createElement('input');
 
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -71,12 +69,10 @@ const PostEdit = () => {
 
     input.onchange = () => {
       if (input.files) {
-        // 파일로 만들어 file 상태에 저장
         const file = input.files[0];
         setFile(file);
         setIsDelete(1);
 
-        // 에디터 아래에 이미지 띄우기
         const imageURL = URL.createObjectURL(file);
         setImageUrl(imageURL);
       }
@@ -92,13 +88,6 @@ const PostEdit = () => {
       formData.append('isDelete', isDelete.toString());
       file && formData.append('file', file);
 
-      for (const key of formData.keys()) {
-        console.log(key);
-      }
-      for (const value of formData.values()) {
-        console.log(value);
-      }
-
       try {
         await axios
           .patch(`${process.env.REACT_APP_API_ROOT}/posts/${postId}`, formData, { headers })
@@ -110,7 +99,6 @@ const PostEdit = () => {
               confirmButtonColor: yellow,
               confirmButtonText: '<b>확인</b>',
             });
-            console.log('성공', res);
             navigate('/community');
           });
       } catch (err) {
@@ -199,7 +187,6 @@ const PostEdit = () => {
   }, []);
 
   const type = 'board';
-  console.log('imageUrl', imageUrl);
   return (
     <Container>
       <Header />
@@ -313,14 +300,12 @@ const EditorContainer = styled.div`
     font-size: 18px;
   }
 
-  // placeholder
   .quill > .ql-container > .ql-editor.ql-blank::before {
     font-size: 18px;
     font-style: normal;
     color: ${lightgrey};
   }
 
-  // border
   .ql-toolbar {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;

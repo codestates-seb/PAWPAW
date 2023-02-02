@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import color from '../color';
+import color from '../util/color';
 import styled from 'styled-components';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import ParkMarker from './Marker/ParkMarker';

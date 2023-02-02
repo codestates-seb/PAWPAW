@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { getUserInfo } from '../util/UserApi';
 import ModalSample from '../img/modalSample.svg';
 import UserImg1 from '../img/UserImg1.png';
-import color from '../color';
+import color from '../util/color';
 import { CProps } from '../Map/Marker';
 import { mapReviewEdit, mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi';
 import headers from '../util/headers';
@@ -130,7 +130,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
       .then((res) => {
         setResData(res.data);
         setMapdata(res.data);
-        console.log(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -175,17 +174,14 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setReview((e.target as HTMLInputElement).value);
-    console.log('reviewhandler', (e.target as HTMLInputElement).value);
   };
   const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEditReview((e.target as HTMLInputElement).value);
-    console.log('editreviewhandler', (e.target as HTMLInputElement).value);
   };
 
   const reviewPostHandler = () => {
     setTest(test + 1);
     mapReviewEdit(id, review);
-    console.log('test', test);
     if (review === '') {
       Swal.fire({
         position: 'center',
@@ -211,7 +207,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     }
   };
   const reviewUpdateHandler = (commentId: number) => {
-    console.log('editreview', editReview);
     if (editReview === '') {
       Swal.fire({
         position: 'center',
@@ -276,7 +271,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   };
   const reviewActivateHandler = (commentId: number) => {
     setEditActivate(commentId);
-    console.log(editActivate);
   };
 
   const reviewEditCancelHandler = () => {
@@ -294,10 +288,8 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
           ) : (
             <FlexBox>
               <InfoDiv>
-                {/* 사진 */}
                 <Image src={mapdata.details.infoUrl} />
 
-                {/* 이름 */}
                 <InfoTitleBox>
                   <InfoTitle>{mapdata.details.name}</InfoTitle>
                   <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
@@ -313,8 +305,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                     )}
                   </BookmarkButton>
                 </InfoTitleBox>
-
-                {/* 정보 */}
                 <InfoContentBox>
                   <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
                   <InfoContent>{mapdata.details.mapAddress}</InfoContent>
@@ -353,7 +343,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                 </InfoContentBox>
               </InfoDiv>
 
-              {/* 리뷰 */}
               <ReviewBox>
                 <ReviewTitle>리뷰</ReviewTitle>
                 <Reviews>
@@ -374,7 +363,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                               <ReviewTextBox>
                                 <ReviewText>
                                   {el.contents}
-                                  {/* 본인 글에만 수정, 삭제 버튼 뜨도록 */}
                                   {el.petId === Number(petId) ? (
                                     <EditDelButtons>
                                       <button onClick={() => reviewActivateHandler(el.commentId)}>
@@ -432,7 +420,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                   )}
                 </Reviews>
               </ReviewBox>
-              {/* 리뷰 작성 */}
               <ReviewWrite>
                 <ReviewUserBox>
                   <ReviewUserImage src={UserImg} />
@@ -449,7 +436,6 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                   <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
                 </ReviewInputTextBox>
               </ReviewWrite>
-              {/* 닫기 버튼 */}
               <CloseBox onClick={selectHandler}>
                 <Icon
                   className='close'
@@ -579,9 +565,7 @@ const ReviewBox = styled.div`
   background-color: white;
 `;
 const Reviews = styled.div`
-  height: calc(
-    100vh - 537px - 50px - 100px
-  ); // 100vh - 위의 콘텐츠 높이 - 헤더 높이 - 리뷰 작성 박스 높이
+  height: calc(100vh - 537px - 50px - 100px);
   overflow-y: scroll;
   ::-webkit-scrollbar {
     width: 8px;
@@ -724,7 +708,6 @@ const ReviewWrite = styled.div`
   height: 100px;
   display: flex;
   background-color: white;
-  /* border-top: 1px solid ${bordergrey}; */
 `;
 
 const EmptyMessage = styled.div`

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import Header from '../Components/Header';
 import styled from 'styled-components';
-import color from '../color';
+import color from '../util/color';
 import Pagination from 'react-js-pagination';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
@@ -14,7 +14,6 @@ import '../App.css';
 
 const { yellow, darkgrey, brown, darkbrown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
-const petId = localStorage.getItem('petId') as string;
 
 interface PostData {
   postId: number;
@@ -47,7 +46,6 @@ const Community: React.FC = () => {
   const [page, setPage] = useState(1);
   useEffect(() => {
     getData();
-    console.log('리셋');
   }, [page]);
 
   async function getData() {
@@ -55,9 +53,6 @@ const Community: React.FC = () => {
       .get(`${url}/posts?page=${page}`, { headers })
       .then((res) => {
         setPostData(res.data);
-        console.log('res', res);
-        console.log('res.data', res.data);
-        console.log('postData', postData);
       })
       .catch((error) => {
         console.error(error);
@@ -66,7 +61,6 @@ const Community: React.FC = () => {
 
   const handlePageChange = (page: React.SetStateAction<number>) => {
     setPage(page);
-    console.log(page);
   };
 
   const goToEditPage = () => {
@@ -83,7 +77,6 @@ const Community: React.FC = () => {
           <Nav type={type} />
           <CommunityContainer>
             <CommunityBanner>자유게시판</CommunityBanner>
-            {/* <SortButtonContainer></SortButtonContainer> */}
             <PostList>
               {postData.posts === null ? (
                 <EmptyMessage>
@@ -216,7 +209,7 @@ const TitleBox = styled.div`
   font-size: 20px;
 
   &:hover {
-    color: #DFB895;
+    color: #dfb895;
   }
 `;
 

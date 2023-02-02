@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
-import color from '../color';
+import color from '../util/color';
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
 const jwtToken = localStorage.getItem('Authorization');
@@ -44,7 +44,7 @@ const Post = () => {
   };
 
   const imageHandler = () => {
-    const input = document.createElement('input'); // input 태그를 동적으로 생성
+    const input = document.createElement('input');
 
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -52,11 +52,8 @@ const Post = () => {
 
     input.onchange = () => {
       if (input.files) {
-        // 파일로 만들어 file 상태에 저장
         const file = input.files[0];
         setFile(file);
-
-        // 에디터 아래에 이미지 띄우기
         const imageURL = URL.createObjectURL(file);
         setImageUrl(imageURL);
       }
@@ -72,22 +69,13 @@ const Post = () => {
       formData.append('content', data.content);
       file && formData.append('file', file);
 
-      for (const key of formData.keys()) {
-        console.log(key);
-      }
-      for (const value of formData.values()) {
-        console.log(value);
-      }
-
       try {
         await axios
           .post(`${process.env.REACT_APP_API_ROOT}/posts`, formData, { headers })
           .then((res) => {
-            console.log('성공', res);
             navigate('/community');
           });
       } catch (err) {
-        console.log('에러', err);
         alert(err);
       }
     } else {
@@ -283,14 +271,12 @@ const EditorContainer = styled.div`
     font-size: 18px;
   }
 
-  // placeholder
   .quill > .ql-container > .ql-editor.ql-blank::before {
     font-size: 18px;
     font-style: normal;
     color: ${lightgrey};
   }
 
-  // border
   .ql-toolbar {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;

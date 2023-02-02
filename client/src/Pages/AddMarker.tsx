@@ -11,7 +11,7 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import Input from '../Components/Input';
 import AddressModal from './AddressModal';
 import { codeToAddress } from '../util/ConvertAddress';
-import color from '../color';
+import color from '../util/color';
 import NoAuth from '../Components/NoAuth';
 
 const { red, ivory, darkgrey, lightgrey, brown, darkbrown, yellow, bordergrey } = color;
@@ -94,15 +94,11 @@ const AddMarker = () => {
   };
 
   const selectMenuHandler = (index: number) => {
-    console.log(index);
     setCurrentTab(index);
     setClick(true);
     setInfo({ ...info, category: TagEngArr[index] });
-    console.log('tag', TagEngArr[index]);
-    console.log(info);
   };
 
-  // 배경 클릭시 모달이 닫힌다.
   window.addEventListener('click', (e) => {
     if (e.target === backgroundRef.current) {
       setIsOpen(false);
@@ -117,33 +113,25 @@ const AddMarker = () => {
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
-    console.log('formData', formData);
-    console.log('formData.profileImage', formData.placeImage);
   };
 
   const nameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, name: e.target.value });
-    console.log((e.target as HTMLInputElement).value);
   };
   const categoryHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, category: TagArr[currentTab] });
-    console.log('tag', TagArr[currentTab]);
   };
   const homepageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, homepage: e.target.value });
-    console.log((e.target as HTMLInputElement).value);
   };
   const mapaddressHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, mapAddress: e.target.value });
-    console.log((e.target as HTMLInputElement).value);
   };
   const operationtimeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, operationTime: e.target.value });
-    console.log((e.target as HTMLInputElement).value);
   };
   const telHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, tel: e.target.value });
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const submitHandler = async () => {
@@ -172,7 +160,6 @@ const AddMarker = () => {
           return { ...prev, codeErrorMessage: '지역을 선택해주세요.' };
         });
       }
-      console.log(info.latitude);
       if (info.latitude === 0) {
         setErrorMessage((prev) => {
           return { ...prev, latlngErrorMessage: '장소를 선택해주세요.' };
@@ -212,19 +199,9 @@ const AddMarker = () => {
           data.append('file', formData.placeImage);
         }
 
-        console.log('info', info);
-
-        for (const key of data.keys()) {
-          console.log('key', key);
-        }
-        for (const value of data.values()) {
-          console.log('value', value);
-        }
-
         axios
           .post(`${process.env.REACT_APP_API_ROOT}/maps`, data, { headers })
           .then((res) => {
-            console.log(res);
             Swal.fire({
               title: '등록이 완료되었습니다.',
               confirmButtonText: '<b>확인</b>',
@@ -258,7 +235,6 @@ const AddMarker = () => {
                 </TitleTopBox>
                 <TitleBottomBox>
                   <MessageDiv>{errorMessage.nameErrorMessage}</MessageDiv>
-
                   <TitleInputBox>
                     <input
                       type='text'
@@ -275,9 +251,7 @@ const AddMarker = () => {
                   <Star>*</Star>
                 </TitleTopBox>
                 <MessageDiv>{errorMessage.latlngErrorMessage}</MessageDiv>
-
                 <PosInfoBox>원하시는 장소를 선택해주세요.</PosInfoBox>
-                {/* 지도 넣기 */}
                 <Map
                   center={{
                     lat: 37.51239516092327,
@@ -287,7 +261,7 @@ const AddMarker = () => {
                     width: '90%',
                     height: '500px',
                   }}
-                  level={7} // 지도의 확대 레벨
+                  level={7}
                   onClick={(_t, mouseEvent) =>
                     setPosition({
                       lat: mouseEvent.latLng.getLat(),
@@ -304,7 +278,6 @@ const AddMarker = () => {
                 </Title>
                 <MessageFlex>
                   <MessageDiv>{errorMessage.codeErrorMessage}</MessageDiv>
-
                   <InputDiv>
                     <Input
                       type='text'
@@ -324,7 +297,6 @@ const AddMarker = () => {
                     </SvgSpan>
                   </InputDiv>
                 </MessageFlex>
-
                 {isOpen && (
                   <AddressModal address={address} setAddress={setAddress} setIsOpen={setIsOpen} />
                 )}

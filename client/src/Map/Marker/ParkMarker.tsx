@@ -1,5 +1,5 @@
 import React from 'react';
-import color from '../../color';
+import color from '../../util/color';
 import styled from 'styled-components';
 import { MapMarker, Map, MapInfoWindow, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';

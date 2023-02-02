@@ -2,8 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-
-import color from '../color';
+import color from '../util/color';
 import Header from '../Components/Header';
 const { yellow, brown, darkbrown } = color;
 

@@ -8,14 +8,14 @@ import axios from 'axios';
 import sanitizeHtml from 'sanitize-html';
 import headers from '../util/headers';
 import Header from '../Components/Header';
-import color from '../color';
+import color from '../util/color';
 import { petLogout } from '../util/UserApi';
 import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 import load from '../img/paw.gif';
 
-const { ivory, yellow, coral, red, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
+const { ivory, yellow, red, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
@@ -69,7 +69,6 @@ const Mypage = () => {
 
   useEffect(() => {
     getData();
-    console.log('로딩 체크');
   }, []);
 
   async function getData() {
@@ -77,9 +76,6 @@ const Mypage = () => {
       .get(`${url}/pets/${petId}`, { headers })
       .then((res) => {
         setPostData(res.data);
-        console.log('res', res);
-        console.log('res.data', res.data);
-        console.log('postData', postData);
       })
       .catch((error) => {
         console.error(error);

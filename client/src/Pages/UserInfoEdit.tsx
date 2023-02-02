@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
-import color from '../color';
+import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
@@ -68,7 +68,6 @@ const UserInfoEdit: FC = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const localStorageCode = localStorage.getItem('code');
 
-  // 로컬 스토리지에 있는 code가 변경될 때만 실행된다.
   useMemo(() => {
     setAddress(Number(localStorageCode));
   }, [localStorageCode]);
@@ -81,8 +80,6 @@ const UserInfoEdit: FC = () => {
     if (files) {
       setFormData({ ...formData, [name]: files[0] });
     }
-    console.log('formData', formData);
-    console.log('formData.profileImage', formData.profileImage);
   };
 
   const catHandler = () => {
@@ -95,7 +92,6 @@ const UserInfoEdit: FC = () => {
 
   const ageHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInfo({ ...info, age: Number(e.target.value) });
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const petNameHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -201,16 +197,7 @@ const UserInfoEdit: FC = () => {
       data.append('gender', info.isMale);
       data.append('species', info.isCat);
       data.append('code', address.toString());
-      formData.profileImage
-        ? data.append('profileImage', formData.profileImage)
-        : console.log('img전송x', formData.profileImage);
-
-      for (const key of data.keys()) {
-        console.log(key);
-      }
-      for (const value of data.values()) {
-        console.log(value);
-      }
+      formData.profileImage ? data.append('profileImage', formData.profileImage) : '';
 
       try {
         await axios
@@ -219,7 +206,6 @@ const UserInfoEdit: FC = () => {
             localStorage.setItem('code', res.data.code);
           });
         navigate('/mypage');
-        // 비동기 에러 날 것 같으면 .then 사용
       } catch (error) {
         console.error('Error', error);
         alert(error);
@@ -233,7 +219,6 @@ const UserInfoEdit: FC = () => {
       <Box>
         <LeftDiv>
           <AvatarDiv>
-            {/* 업로드한 파일 이미지 없으면 ? 기존 프로필 이미지 없으면? 기본 고양이/강아지 이미지 */}
             {fileImage ? (
               <img
                 className='userprofile'
@@ -358,7 +343,6 @@ const UserInfoEdit: FC = () => {
   );
 };
 
-// 전체 화면
 const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -374,8 +358,6 @@ const Container = styled.div`
     margin-top: 35px;
   }
 `;
-
-// Background, Box, LeftDiv, RightDiv import
 
 const AvatarDiv = styled.div`
   width: 175px;
