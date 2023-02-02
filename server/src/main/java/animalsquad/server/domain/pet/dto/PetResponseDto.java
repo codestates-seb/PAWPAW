@@ -1,8 +1,5 @@
 package animalsquad.server.domain.pet.dto;
 
-import animalsquad.server.domain.address.entity.Address;
-import animalsquad.server.domain.infomap.dto.InfoMapDetailsResponseDto;
-import animalsquad.server.domain.infomap.entity.InfoMapComment;
 import animalsquad.server.domain.pet.entity.Gender;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.global.dto.PageInfo;
@@ -12,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

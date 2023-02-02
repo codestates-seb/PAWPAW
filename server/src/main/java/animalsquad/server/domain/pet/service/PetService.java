@@ -2,21 +2,18 @@ package animalsquad.server.domain.pet.service;
 
 import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.repository.AddressRepository;
-import animalsquad.server.domain.infomap.entity.InfoMapComment;
-import animalsquad.server.domain.infomap.repository.InfoMapCommentRepository;
 import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.repository.PostRepository;
-import animalsquad.server.global.auth.dto.AuthRequestDto;
 import animalsquad.server.global.auth.dto.AuthResponseDto;
-import animalsquad.server.global.s3.service.FileUploadService;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
 import animalsquad.server.global.enums.Role;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
+import animalsquad.server.global.s3.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,8 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -131,7 +126,6 @@ public class PetService {
         return findPet;
     }
 
-    // repository에 저장된 유저를 가져오는 로직
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }

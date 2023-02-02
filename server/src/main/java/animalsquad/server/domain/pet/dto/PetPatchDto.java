@@ -1,6 +1,5 @@
 package animalsquad.server.domain.pet.dto;
 
-import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.pet.entity.Gender;
 import animalsquad.server.domain.pet.entity.Species;
 import lombok.Getter;
