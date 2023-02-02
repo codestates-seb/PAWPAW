@@ -101,7 +101,6 @@ public class PostService {
 
         return optionalPost.orElseThrow(() -> new BusinessLogicException(ExceptionCode.POST_NOT_FOUND));
     }
-
 }
 
 
