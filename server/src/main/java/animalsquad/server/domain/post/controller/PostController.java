@@ -81,8 +81,6 @@ public class PostController {
         return new ResponseEntity(postDetailsResponseDto, HttpStatus.OK);
 
     }
-
-    //
     @DeleteMapping("/{post-id}")
     public ResponseEntity deletePost(@PathVariable("post-id") long id,
                                      @AuthenticationPrincipal PetDetailsService.PetDetails principal) {

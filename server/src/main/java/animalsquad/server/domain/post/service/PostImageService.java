@@ -1,6 +1,5 @@
 package animalsquad.server.domain.post.service;
 
-import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.entity.PostImage;
 import animalsquad.server.domain.post.repository.PostImageRepository;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,7 +36,6 @@ public class PostImageService {
 
     public List<PostImage> updateImage(Post post, List<MultipartFile> files) throws IllegalAccessException {
         List<PostImage> postImages = new ArrayList<>();
-//        postImageRepository.deleteAllByPost_Id(post.getId());
         for (MultipartFile file : files) {
             String imageUrl = fileUploadService.uploadImage(file, folderName);
             PostImage postImage = new PostImage();

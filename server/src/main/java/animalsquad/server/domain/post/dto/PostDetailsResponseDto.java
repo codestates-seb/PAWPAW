@@ -1,6 +1,5 @@
 package animalsquad.server.domain.post.dto;
 
-import animalsquad.server.global.dto.PageInfo;
 import lombok.Getter;
 import lombok.Setter;
 
