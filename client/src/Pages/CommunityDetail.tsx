@@ -222,7 +222,7 @@ const CommunityDetail: React.FC = () => {
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostReviewDELETE(commentId).then(() => window.location.reload());
+        PostReviewDELETE(commentId).then(() => getData());
       }
     });
   };
@@ -262,7 +262,7 @@ const CommunityDetail: React.FC = () => {
           PostReviewUPDATE(commentId, editReview);
           setEditActivate(0);
           setEditReview('');
-          window.location.reload();
+          getData();
         }
       });
     }
@@ -280,7 +280,6 @@ const CommunityDetail: React.FC = () => {
   };
 
   const reviewPostHandler = () => {
-    PostReviewEdit(Number(postId), review);
     if (review === '') {
       Swal.fire({
         position: 'center',
@@ -292,6 +291,7 @@ const CommunityDetail: React.FC = () => {
       });
       return;
     } else {
+      PostReviewEdit(Number(postId), review);
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -303,7 +303,7 @@ const CommunityDetail: React.FC = () => {
         timer: 1500,
       });
       setReview('');
-      window.location.reload();
+      getData();
     }
   };
 
@@ -450,6 +450,7 @@ const CommunityDetail: React.FC = () => {
                     <ReviewInputBox>
                       <ReviewInput
                         type='text'
+                        value={review}
                         placeholder='댓글을 남겨주세요. '
                         onChange={reviewHandler}
                       />
