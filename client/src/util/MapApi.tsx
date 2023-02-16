@@ -8,7 +8,7 @@ const headers = {
   Refresh: refreshToken,
 };
 
-export const mapReviewEdit = async (infoMapId: number, contents: string) => {
+export const mapReviewPOST = async (infoMapId: number, contents: string) => {
   try {
     await axios.post(
       `${url}/maps/review`,
