@@ -11,6 +11,7 @@ import sanitizeHtml from 'sanitize-html';
 import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
+import FriendRecommend from '../Components/FriendRecommend';
 
 const { yellow, darkgrey, brown, darkbrown, mediumgrey, bordergrey, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -77,6 +78,7 @@ const Community: React.FC = () => {
           <Nav type={type} />
           <CommunityContainer>
             <CommunityBanner>자유게시판</CommunityBanner>
+            <FriendRecommend />
             <PostList>
               {postData.posts === null ? (
                 <EmptyMessage>
@@ -165,7 +167,7 @@ const CommunityContainer = styled.div`
   justify-content: center;
 `;
 const CommunityBanner = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   color: ${brown};
   font-size: 32px;
   font-weight: 800;
@@ -176,10 +178,9 @@ const CommunityBanner = styled.div`
     color: ${darkbrown};
   }
 `;
-const SortButtonContainer = styled.div`
-  height: 1.5vh;
-`;
+
 const PostList = styled.div`
+  margin-top: 10px;
   height: 100%;
 `;
 
