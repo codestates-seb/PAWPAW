@@ -50,9 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(pet);
 
-//        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
-//        response.setHeader("Refresh", tokenInfo.getRefreshToken());
-        authService.setToken(response, tokenInfo);
+        authService.setToken(tokenInfo);
 
         //유저 인증이 완료되면 AccessToken, RefreshToken 헤더에 입력하고 redis에 Refresh token을 저장한다.
         redisTemplate.opsForValue().set("RT:" + pet.getLoginId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);

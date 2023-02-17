@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class AuthService {
     private final RedisTemplate redisTemplate;
     private final PetRepository petRepository;
 
-    public void reIssue(AuthRequestDto.ReIssue reIssue, HttpServletResponse response) {
+    public void reIssue(AuthRequestDto.ReIssue reIssue) {
         //Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reIssue.getRefreshToken())) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
@@ -59,9 +61,7 @@ public class AuthService {
 
         redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
-//        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
-//        response.setHeader("Refresh", tokenInfo.getRefreshToken());
-        setToken(response, tokenInfo);
+        setToken(tokenInfo);
     }
 
     public void logout(AuthRequestDto.Logout logout) {
@@ -103,9 +103,10 @@ public class AuthService {
         return tokenInfo;
     }
 
-    public void setToken(HttpServletResponse response, AuthResponseDto.TokenInfo tokenInfo) {
+    public void setToken(AuthResponseDto.TokenInfo tokenInfo) {
+        ServletRequestAttributes servletContainer = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletResponse response = servletContainer.getResponse();
         response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
         response.setHeader("Refresh", tokenInfo.getRefreshToken());
     }
-
 }
