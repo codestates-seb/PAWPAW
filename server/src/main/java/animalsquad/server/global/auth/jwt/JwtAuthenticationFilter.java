@@ -3,6 +3,7 @@ package animalsquad.server.global.auth.jwt;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.global.auth.dto.AuthRequestDto;
 import animalsquad.server.global.auth.dto.AuthResponseDto;
+import animalsquad.server.global.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,6 +30,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
+    private final AuthService authService;
 
     @SneakyThrows
     @Override
@@ -48,13 +50,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(pet);
 
-        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
-        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+//        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
+//        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+        authService.setToken(response, tokenInfo);
 
         //유저 인증이 완료되면 AccessToken, RefreshToken 헤더에 입력하고 redis에 Refresh token을 저장한다.
-        redisTemplate.opsForValue().set("RT:" + pet.getLoginId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + pet.getLoginId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
-
-        this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
+        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 }
