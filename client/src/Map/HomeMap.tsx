@@ -20,7 +20,6 @@ export interface IProps {
   latitude: number;
   longitude: number;
   code: number;
-  bookmark: boolean;
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
 }

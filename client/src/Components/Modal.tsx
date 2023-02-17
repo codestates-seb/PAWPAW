@@ -2,30 +2,18 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import { getUserInfo } from '../util/UserApi';
 import color from '../util/color';
-import { CProps } from '../Map/Marker';
-import { mapReviewPOST } from '../util/MapApi';
 import headers from '../util/headers';
 import ModalReview from './ModalReview';
+import ModalReviewWrite from './ModalReviewWrite';
 
-const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow, mediumgrey } = color;
+const { ivory, lightgrey, brown, bordergrey, yellow, mediumgrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
 interface IReqData {
   petId: number;
   infoMapId: number;
-}
-
-interface ResponseData {
-  petInfo: petInfo;
-}
-
-interface petInfo {
-  petName: string;
-  profileImage: File | null;
 }
 
 export interface IReview {
@@ -35,15 +23,6 @@ export interface IReview {
   petName: string;
   contents: string;
   createdAt: string;
-}
-
-interface UserInfo {
-  petName: string;
-  profileImage: File | null;
-}
-
-interface FormData {
-  profileImage: Blob | null;
 }
 
 interface MapData {
@@ -56,7 +35,7 @@ interface MapData {
     tel: string;
     homepage: string;
     myPick: boolean;
-  };
+  } | null;
 
   reviews: IReview[] | null;
 
@@ -65,51 +44,23 @@ interface MapData {
     size: number;
     totalElements: number;
     totalPages: number;
-  };
+  } | null;
 }
 
-const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
-  const [review, setReview] = useState<string>('');
+type MProps = {
+  click: boolean;
+  setClick: (classname: boolean) => void;
+  title: string;
+  id: number;
+};
+
+const Modal = ({ click, setClick, id }: MProps) => {
   const [editActivate, setEditActivate] = useState<number>(0);
-  const [myPick, setMyPick] = useState<boolean>(bookmark);
   const [mapdata, setMapdata] = useState<MapData>({
-    details: {
-      infoUrl: '',
-      name: '',
-      mapAddress: '',
-      category: '',
-      operationTime: '',
-      tel: '',
-      homepage: '',
-      myPick: false,
-    },
-    reviews: [],
-    pageInfo: {
-      page: 1,
-      size: 15,
-      totalElements: 0,
-      totalPages: 1,
-    },
+    details: null,
+    reviews: null,
+    pageInfo: null,
   });
-
-  const { responseData, error } = getUserInfo(petId);
-  const [info, setInfo] = useState<UserInfo>({
-    petName: '',
-    profileImage: null,
-  });
-
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
-  const [count, setCount] = useState<number>(0);
-
-  if (!error && responseData && count === 0) {
-    const { petInfo } = responseData as ResponseData;
-    const { petName, profileImage } = petInfo;
-    setInfo({ ...info, petName: petName });
-    setFormData({ profileImage: profileImage });
-    setCount(count + 1);
-  }
-
-  const UserImg = formData.profileImage as unknown as string;
 
   useEffect(() => {
     getData();
@@ -131,12 +82,10 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
       petId: Number(petId),
       infoMapId: id,
     };
-    if (myPick) {
-      deletePlace(reqData);
-      setMyPick(false);
+    if (!mapdata?.details?.myPick) {
+      addPlace(reqData).then(() => getData());
     } else {
-      addPlace(reqData);
-      setMyPick(true);
+      deletePlace(reqData).then(() => getData());
     }
   };
 
@@ -151,39 +100,8 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
     });
   }
 
-  const selectHandler = () => {
+  const closeBtnHandler = () => {
     setClick(!click);
-  };
-
-  const reviewInputHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setReview((e.target as HTMLInputElement).value);
-  };
-
-  const reviewPostHandler = () => {
-    if (review === '') {
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        iconHtml: '⚠',
-        title: '내용을 입력해주세요. ',
-        color: brown,
-        padding: '20px 0px 40px 0px',
-      });
-      return;
-    } else {
-      mapReviewPOST(id, review).then(() => getData());
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        iconHtml: '🐾',
-        title: '작성되었습니다.',
-        color: brown,
-        padding: '20px 0px 40px 0px',
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      setReview('');
-    }
   };
 
   const reviewActivateHandler = (commentId: number) => {
@@ -191,32 +109,32 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
   };
 
   return (
-    <div>
-      {mapdata.reviews !== null ? (
+    <>
+      {mapdata.reviews && (
         <Container onClick={(e) => e.stopPropagation()}>
           {mapdata && (
             <FlexBox>
               <InfoDiv>
-                <Image src={mapdata.details.infoUrl} />
+                <Image src={mapdata?.details?.infoUrl} />
 
                 <InfoTitleBox>
-                  <InfoTitle>{mapdata.details.name}</InfoTitle>
-                  <InfoSubTitle>{mapdata.details.category}</InfoSubTitle>
+                  <InfoTitle>{mapdata?.details?.name}</InfoTitle>
+                  <InfoSubTitle>{mapdata?.details?.category}</InfoSubTitle>
                   <BookmarkButton onClick={bookmarkHandler}>
-                    {myPick === false ? (
+                    {mapdata?.details?.myPick ? (
+                      <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
+                    ) : (
                       <Icon
                         icon='ic:round-star-outline'
                         color={brown}
                         style={{ fontSize: '30px' }}
                       />
-                    ) : (
-                      <Icon icon='ic:round-star' color={yellow} style={{ fontSize: '30px' }} />
                     )}
                   </BookmarkButton>
                 </InfoTitleBox>
                 <InfoContentBox>
                   <Icon icon='mdi:map-marker' color={brown} style={{ fontSize: '30px' }} />
-                  <InfoContent>{mapdata.details.mapAddress}</InfoContent>
+                  <InfoContent>{mapdata?.details?.mapAddress}</InfoContent>
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon
@@ -224,28 +142,28 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                     color={brown}
                     style={{ fontSize: '30px' }}
                   />
-                  {mapdata.details.operationTime === null ? (
+                  {mapdata?.details?.operationTime === null ? (
                     <NullData>이용시간을 알려주세요.</NullData>
                   ) : (
-                    <InfoContent>{mapdata.details.operationTime}</InfoContent>
+                    <InfoContent>{mapdata?.details?.operationTime}</InfoContent>
                   )}
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon icon='material-symbols:call' color={brown} style={{ fontSize: '30px' }} />
-                  {mapdata.details.tel === null ? (
+                  {mapdata?.details?.tel === null ? (
                     <NullData>전화번호를 알려주세요.</NullData>
                   ) : (
-                    <InfoContent>{mapdata.details.tel}</InfoContent>
+                    <InfoContent>{mapdata?.details?.tel}</InfoContent>
                   )}
                 </InfoContentBox>
                 <InfoContentBox>
                   <Icon icon='material-symbols:home' color={brown} style={{ fontSize: '30px' }} />
-                  {mapdata.details.homepage === null ? (
+                  {mapdata?.details?.homepage === null ? (
                     <NullData>홈페이지를 알려주세요.</NullData>
                   ) : (
                     <div className='urlBox'>
-                      <Linka href={mapdata.details.homepage} target='_blank'>
-                        {mapdata.details.homepage}
+                      <Linka href={mapdata?.details?.homepage} target='_blank'>
+                        {mapdata?.details?.homepage}
                       </Linka>
                     </div>
                   )}
@@ -273,24 +191,10 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
                   )}
                 </Reviews>
               </ReviewBox>
-              <ReviewWrite>
-                <ReviewUserBox>
-                  <ReviewUserImage src={UserImg} />
-                  <ReviewUserName>{info.petName}</ReviewUserName>
-                </ReviewUserBox>
-                <ReviewInputTextBox>
-                  <ReviewInputBox>
-                    <ReviewInput
-                      type='text'
-                      value={review}
-                      placeholder='이 공간이 어땠나요?'
-                      onChange={reviewInputHandler}
-                    />
-                  </ReviewInputBox>
-                  <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
-                </ReviewInputTextBox>
-              </ReviewWrite>
-              <CloseBox onClick={selectHandler}>
+
+              <ModalReviewWrite getData={getData} id={id} />
+
+              <CloseBox onClick={closeBtnHandler}>
                 <Icon
                   className='close'
                   icon='material-symbols:arrow-back-ios-rounded'
@@ -301,10 +205,8 @@ const Modal = ({ click, setClick, id, bookmark }: CProps['clicks']) => {
             </FlexBox>
           )}
         </Container>
-      ) : (
-        <div>로딩중!</div>
       )}
-    </div>
+    </>
   );
 };
 
@@ -426,88 +328,6 @@ const ReviewTitle = styled.div`
   padding: 15px 19px;
 `;
 
-const ReviewUserBox = styled.div`
-  width: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ReviewUserImage = styled.img`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-size: cover;
-`;
-
-const ReviewUserName = styled.div`
-  margin-top: 8px;
-  color: ${brown};
-  font-size: 14px;
-  font-weight: Bold;
-`;
-
-const ReviewTextBox = styled.div`
-  padding: 20px 15px 20px 10px;
-  width: calc(100% - 70px);
-  min-height: 80px;
-`;
-
-const ReviewInputBox = styled.div`
-  flex-grow: 1;
-  color: ${brown};
-  font-size: 14px;
-  font-weight: 500;
-`;
-
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const ReviewInput = styled.input<Props>`
-  padding: 10px;
-  width: 100%;
-  height: 50px;
-  font-size: 14px;
-  color: ${brown};
-  border: 1px solid ${bordergrey};
-  border-radius: 15px;
-  resize: none;
-
-  &:focus {
-    outline: 1px solid ${bordergrey};
-  }
-  &::placeholder {
-    color: ${lightgrey};
-  }
-`;
-
-const ReviewButton = styled.button`
-  margin-left: 4px;
-  margin-right: 4px;
-  padding: 7px 10px;
-  font-weight: bold;
-  background: ${brown};
-  border-radius: 12px;
-  border: 0;
-  color: white;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${darkbrown};
-  }
-`;
-
-const ReviewInputTextBox = styled.div`
-  padding: 10px;
-  width: calc(100% - 70px);
-  display: flex;
-  align-items: center;
-`;
-
 const CloseBox = styled.div`
   position: fixed;
   z-index: 999;
@@ -519,13 +339,6 @@ const CloseBox = styled.div`
   .close {
     cursor: pointer;
   }
-`;
-
-const ReviewWrite = styled.div`
-  width: 100%;
-  height: 100px;
-  display: flex;
-  background-color: white;
 `;
 
 const EmptyMessage = styled.div`
