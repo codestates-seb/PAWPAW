@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class AuthService {
     private final RedisTemplate redisTemplate;
     private final PetRepository petRepository;
 
-    public void reIssue(AuthRequestDto.ReIssue reIssue, HttpServletResponse response) {
+    public void reIssue(AuthRequestDto.ReIssue reIssue) {
         //Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reIssue.getRefreshToken())) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
@@ -59,20 +61,19 @@ public class AuthService {
 
         redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
-        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
-        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+        setToken(tokenInfo);
     }
 
     public void logout(AuthRequestDto.Logout logout) {
         String accessToken = jwtTokenProvider.resolveToken(logout.getAccessToken());
 
-        if(!jwtTokenProvider.validateToken(accessToken)) {
+        if (!jwtTokenProvider.validateToken(accessToken)) {
             throw new BusinessLogicException(ExceptionCode.INVALID_TOKEN);
         }
 
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
-        if(redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
             redisTemplate.delete("RT:" + authentication.getName());
         }
 
@@ -82,6 +83,7 @@ public class AuthService {
         redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
 
     }
+
     public Pet findVerifiedPet(String loginId) {
         Optional<Pet> member = petRepository.findByLoginId(loginId);
 
@@ -92,8 +94,8 @@ public class AuthService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("petId", pet.getId());
         claims.put("roles", pet.getRoles());
-        claims.put("petName",pet.getPetName());
-        claims.put("code",pet.getAddress().getCode());
+        claims.put("petName", pet.getPetName());
+        claims.put("code", pet.getAddress().getCode());
 
         String subject = pet.getLoginId();
         AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(claims, subject);
@@ -101,4 +103,10 @@ public class AuthService {
         return tokenInfo;
     }
 
+    public void setToken(AuthResponseDto.TokenInfo tokenInfo) {
+        ServletRequestAttributes servletContainer = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletResponse response = servletContainer.getResponse();
+        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
+        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+    }
 }
