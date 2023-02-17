@@ -15,23 +15,12 @@ import Modal from '../Components/Modal';
 
 const { brown, yellow } = color;
 
-export interface CProps {
-  clicks: {
-    click: boolean;
-    setClick: (classname: boolean) => void;
-    title: string;
-    id: number;
-    bookmark: boolean;
-  };
-}
-
 const Marker = ({
   id,
   category,
   name,
   latitude,
   longitude,
-  bookmark,
   isModalOpen,
   setIsModalOpen,
 }: IProps) => {
@@ -76,7 +65,7 @@ const Marker = ({
       {click ? (
         <>
           <ModalBack onClick={selectHandler}>
-            <Modal click={click} setClick={setClick} title={name} id={id} bookmark={bookmark} />
+            <Modal click={click} setClick={setClick} title={name} id={id} />
           </ModalBack>
         </>
       ) : (
