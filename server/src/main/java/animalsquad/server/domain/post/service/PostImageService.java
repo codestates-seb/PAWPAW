@@ -22,7 +22,7 @@ public class PostImageService {
 
     private static final String folderName = "post";
 
-    public PostImage uploadImage(Post post, MultipartFile file) throws IllegalAccessException {
+    public PostImage uploadImage(Post post, MultipartFile file)  {
         String imageUrl = fileUploadService.uploadImage(file, folderName);
         PostImage postImage = new PostImage();
         postImage.setImageUrl(imageUrl);
@@ -34,7 +34,7 @@ public class PostImageService {
         return result;
     }
 
-    public List<PostImage> updateImage(Post post, List<MultipartFile> files) throws IllegalAccessException {
+    public List<PostImage> updateImage(Post post, List<MultipartFile> files) {
         List<PostImage> postImages = new ArrayList<>();
         for (MultipartFile file : files) {
             String imageUrl = fileUploadService.uploadImage(file, folderName);
@@ -50,7 +50,7 @@ public class PostImageService {
         return postImages;
     }
 
-    public void deleteImage(PostImage postImage) throws IllegalAccessException {
+    public void deleteImage(PostImage postImage) {
         fileUploadService.deleteFile(postImage.getImageUrl(), folderName);
 
         postImageRepository.deleteById(postImage.getId());
