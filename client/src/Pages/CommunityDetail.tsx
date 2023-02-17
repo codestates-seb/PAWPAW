@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
@@ -12,26 +12,34 @@ import headers from '../util/headers';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import load from '../img/paw.gif';
-import {
-  PostReviewEdit,
-  PostReviewUPDATE,
-  PostReviewDELETE,
-  PostDELETE,
-} from '../util/PostReviewApi';
+import { PostDELETE } from '../util/PostReviewApi';
+import CommunityReview from '../Components/CommunityReview';
 
-const { ivory, darkivory, brown, bordergrey, lightgrey, red, yellow, darkbrown } = color;
-const url = process.env.REACT_APP_API_ROOT;
-const petId = Number(localStorage.getItem('petId') as string);
-
-interface UserData {
-  contents: string;
-  createdAt: string;
-  likesCnt: 10;
-  petName: string;
-  postId: number;
-  title: string;
+export interface PostList {
+  post: {
+    authorId: number;
+    postId: number;
+    title: string;
+    content: string;
+    imageUrl: string | null;
+    petName: string;
+    createdAt: string;
+    likesCnt: number;
+    likeActive: boolean;
+  };
+  comments: Comment[] | null;
 }
-interface UserList {
+
+export interface Comment {
+  commentId: number;
+  petId: number;
+  petName: string;
+  content: string;
+  profileImageUrl: string | undefined; // null
+  createdAt: string;
+}
+
+export interface UserList {
   myPosts: UserData[] | null;
   pageInfo: {
     page: number;
@@ -50,35 +58,36 @@ interface UserList {
   };
 }
 
-interface PostData {
-  commentId: number;
-  petId: number;
-  petName: string;
-  content: string;
-  profileImageUrl: string | null;
+interface UserData {
+  contents: string;
   createdAt: string;
+  likesCnt: 10;
+  petName: string;
+  postId: number;
+  title: string;
 }
-interface PostList {
-  post: {
-    authorId: number;
-    postId: number;
-    title: string;
-    content: string;
-    imageUrl: string | null;
-    petName: string;
-    createdAt: string;
-    likesCnt: number;
-    likeActive: boolean;
-  };
-  comments: PostData[] | null;
-}
+
+const { ivory, darkivory, brown, bordergrey, lightgrey, red, yellow } = color;
+const url = process.env.REACT_APP_API_ROOT;
+const petId = Number(localStorage.getItem('petId') as string);
 
 const CommunityDetail: React.FC = () => {
   const navigate = useNavigate();
   const [like, setLike] = useState(true);
-  const [review, setReview] = useState<string>('');
-  const [editActivate, setEditActivate] = useState<number>(0);
-  const [editReview, setEditReview] = useState<string>('');
+  const [postDetail, setPostDetail] = useState<PostList>({
+    post: {
+      authorId: 0,
+      content: '',
+      createdAt: '',
+      imageUrl: null,
+      likeActive: false,
+      likesCnt: 0,
+      petName: '',
+      postId: 0,
+      title: '',
+    },
+    comments: [],
+  });
   const [userData, setUserData] = useState<UserList>({
     myPosts: [],
     pageInfo: {
@@ -97,20 +106,7 @@ const CommunityDetail: React.FC = () => {
       species: 'CAT',
     },
   });
-  const [postDetail, setPostDetail] = useState<PostList>({
-    post: {
-      authorId: 0,
-      content: '',
-      createdAt: '',
-      imageUrl: null,
-      likeActive: false,
-      likesCnt: 0,
-      petName: '',
-      postId: 0,
-      title: '',
-    },
-    comments: [],
-  });
+
   const id = useParams();
   const postId = id.id;
 
@@ -203,110 +199,6 @@ const CommunityDetail: React.FC = () => {
     });
   };
 
-  const reviewDeleteHandler = (commentId: number) => {
-    Swal.fire({
-      title: '정말 삭제하시겠어요?',
-      icon: 'warning',
-      showCancelButton: true,
-      color: brown,
-      confirmButtonColor: yellow,
-      cancelButtonColor: bordergrey,
-      confirmButtonText: '<b>확인</b>',
-      cancelButtonText: '<b>취소</b>',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '삭제되었습니다.',
-          icon: 'error',
-          color: brown,
-          confirmButtonColor: yellow,
-          confirmButtonText: '<b>확인</b>',
-        });
-        PostReviewDELETE(commentId).then(() => window.location.reload());
-      }
-    });
-  };
-  const reviewActivateHandler = (petId: number) => {
-    setEditActivate(petId);
-  };
-  const reviewUpdateHandler = (commentId: number) => {
-    if (editReview === '') {
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        iconHtml: '⚠',
-        title: '내용을 입력해주세요. ',
-        color: brown,
-        padding: '20px 0px 40px 0px',
-      });
-      return;
-    } else {
-      Swal.fire({
-        title: '정말 수정하시겠어요?',
-        icon: 'warning',
-        showCancelButton: true,
-        color: brown,
-        confirmButtonColor: yellow,
-        cancelButtonColor: bordergrey,
-        confirmButtonText: '<b>확인</b>',
-        cancelButtonText: '<b>취소</b>',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: '수정되었습니다.',
-            icon: 'success',
-            color: brown,
-            confirmButtonColor: yellow,
-            confirmButtonText: '<b>확인</b>',
-          });
-          PostReviewUPDATE(commentId, editReview);
-          setEditActivate(0);
-          setEditReview('');
-          window.location.reload();
-        }
-      });
-    }
-  };
-  const editReviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setEditReview((e.target as HTMLInputElement).value);
-  };
-  const reviewEditCancelHandler = () => {
-    setEditActivate(0);
-    setEditReview('');
-  };
-
-  const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setReview((e.target as HTMLInputElement).value);
-  };
-
-  const reviewPostHandler = () => {
-    PostReviewEdit(Number(postId), review);
-    if (review === '') {
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        iconHtml: '⚠',
-        title: '내용을 입력해주세요. ',
-        color: brown,
-        padding: '20px 0px 40px 0px',
-      });
-      return;
-    } else {
-      Swal.fire({
-        position: 'center',
-        icon: 'warning',
-        iconHtml: '🐾',
-        title: '작성되었습니다.',
-        color: brown,
-        padding: '20px 0px 40px 0px',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      setReview('');
-      window.location.reload();
-    }
-  };
-
   const type = 'board';
   return (
     <>
@@ -360,105 +252,12 @@ const CommunityDetail: React.FC = () => {
                 </ButtonsDiv>
               )}
             </FooterDiv>
-            <ReviewContainer>
-              <ReviewBox>
-                <ReviewTitle>댓글 {postDetail.comments?.length}</ReviewTitle>
-                {postDetail.comments === null ? (
-                  <ImageTop src={load} />
-                ) : (
-                  <Reviews>
-                    {postDetail.comments.length === 0 ? (
-                      <EmptyMessage>
-                        댓글이 없어요.. <br />첫 번째 댓글을 남겨주세요 🐾
-                      </EmptyMessage>
-                    ) : (
-                      postDetail.comments.map((el: any) => {
-                        return (
-                          <Review key={el.commentId}>
-                            {el.commentId !== editActivate ? (
-                              <ReviewWrite>
-                                <ReviewUserBox>
-                                  <ReviewUserImage src={el.profileImageUrl} />
-                                  <ReviewUserName>{el.petName}</ReviewUserName>
-                                </ReviewUserBox>
-                                <ReviewTextBox>
-                                  <ReviewText>
-                                    {el.content}
-                                    {el.petId === petId ? (
-                                      <EditDelButtons>
-                                        <button onClick={() => reviewActivateHandler(el.commentId)}>
-                                          <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
-                                        </button>
-                                        <button onClick={() => reviewDeleteHandler(el.commentId)}>
-                                          <Icon
-                                            icon='material-symbols:delete-outline-rounded'
-                                            style={{ fontSize: '15px' }}
-                                          />
-                                        </button>
-                                      </EditDelButtons>
-                                    ) : (
-                                      ''
-                                    )}
-                                  </ReviewText>
-                                  <ReviewDate>{el.createdAt}</ReviewDate>
-                                </ReviewTextBox>
-                              </ReviewWrite>
-                            ) : (
-                              <ReviewWrite>
-                                <ReviewUserBox>
-                                  <ReviewUserImage src={el.profileImageUrl} />
-                                  <ReviewUserName>{el.petName}</ReviewUserName>
-                                </ReviewUserBox>
-                                <ReviewInputTextBox>
-                                  <ReviewInputBox>
-                                    <ReviewInput
-                                      type='text'
-                                      placeholder={el.content}
-                                      onChange={editReviewHandler}
-                                      id='basereview'
-                                    ></ReviewInput>
-                                  </ReviewInputBox>
-                                  <ReviewButton onClick={() => reviewUpdateHandler(el.commentId)}>
-                                    <Icon
-                                      icon='mdi:check-bold'
-                                      color='#ffc57e'
-                                      style={{ fontSize: '20px' }}
-                                    />
-                                  </ReviewButton>
-                                  <ReviewEditCancelButton onClick={reviewEditCancelHandler}>
-                                    <Icon
-                                      icon='mdi:cancel-bold'
-                                      color='#f79483'
-                                      style={{ fontSize: '22px' }}
-                                    />
-                                  </ReviewEditCancelButton>
-                                </ReviewInputTextBox>
-                              </ReviewWrite>
-                            )}
-                          </Review>
-                        );
-                      })
-                    )}
-                  </Reviews>
-                )}
-                <ReviewWrite>
-                  <ReviewUserBox>
-                    <ReviewUserImage src={userData.petInfo.profileImage} />
-                    <ReviewUserName>{userData.petInfo.petName}</ReviewUserName>
-                  </ReviewUserBox>
-                  <ReviewInputTextBox>
-                    <ReviewInputBox>
-                      <ReviewInput
-                        type='text'
-                        placeholder='댓글을 남겨주세요. '
-                        onChange={reviewHandler}
-                      />
-                    </ReviewInputBox>
-                    <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
-                  </ReviewInputTextBox>
-                </ReviewWrite>
-              </ReviewBox>
-            </ReviewContainer>
+            <CommunityReview
+              getData={getData}
+              postId={postId}
+              postDetail={postDetail}
+              userData={userData}
+            />
           </PostContainer>
         </Body>
       </Container>
@@ -610,199 +409,4 @@ const LikeCnt = styled.div`
   font-weight: 600;
   padding-top: 5px;
   margin-left: 20px;
-`;
-
-const ReviewContainer = styled.div``;
-
-const ReviewBox = styled.div`
-  margin-top: 10px;
-  background-color: white;
-`;
-const Reviews = styled.div`
-  height: calc(100vh - 537px - 50px - 100px);
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: #dccdc8;
-    border-radius: 100px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #a9908d;
-    border-radius: 100px;
-  }
-`;
-
-const Review = styled.div`
-  width: 100%;
-  min-height: 90px;
-  display: flex;
-`;
-
-const ReviewTitle = styled.div`
-  color: ${brown};
-  font-size: 20px;
-  font-weight: 800;
-  padding: 15px 10px;
-`;
-
-const ReviewUserBox = styled.div`
-  width: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ReviewUserImage = styled.img`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-size: cover;
-`;
-
-const ReviewUserName = styled.div`
-  margin-top: 8px;
-  color: ${brown};
-  font-size: 14px;
-  font-weight: Bold;
-`;
-
-const ReviewTextBox = styled.div`
-  padding: 20px 15px 20px 10px;
-  width: calc(100% - 70px);
-  min-height: 80px;
-`;
-
-const ReviewText = styled.div`
-  width: 100%;
-  height: 100%;
-  color: ${brown};
-  font-size: 14px;
-  font-weight: 500;
-
-  display: flex;
-  justify-content: space-between;
-`;
-
-const ReviewDate = styled.div`
-  text-align: end;
-  color: ${lightgrey};
-  font-size: 11px;
-  margin-right: 7px;
-`;
-
-const ReviewInputBox = styled.div`
-  flex-grow: 1;
-  color: ${brown};
-  font-size: 14px;
-  font-weight: 500;
-`;
-
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const ReviewInput = styled.input<Props>`
-  padding: 10px;
-  width: 100%;
-  height: 50px;
-  font-size: 14px;
-  color: ${brown};
-  border: 1px solid ${bordergrey};
-  border-radius: 15px;
-  resize: none;
-
-  &:focus {
-    outline: 1px solid ${bordergrey};
-  }
-  &::placeholder {
-    color: ${lightgrey};
-  }
-`;
-const ReviewButton = styled.button`
-  margin-left: 4px;
-  margin-right: 4px;
-  padding: 7px 10px;
-  font-weight: bold;
-  background: ${brown};
-  border-radius: 12px;
-  border: 0;
-  color: white;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${darkbrown};
-  }
-`;
-const ReviewInputTextBox = styled.div`
-  padding: 10px;
-  width: calc(100% - 70px);
-  display: flex;
-  align-items: center;
-`;
-
-const CloseBox = styled.div`
-  position: fixed;
-  z-index: 999;
-  top: 48%;
-  left: 357px;
-  bottom: 0;
-  right: 0;
-  opacity: 0.8;
-  .close {
-    cursor: pointer;
-  }
-`;
-
-const ReviewWrite = styled.div`
-  width: 100%;
-  height: 100px;
-  display: flex;
-  background-color: white;
-  border-top: 1px solid ${bordergrey};
-`;
-
-const EmptyMessage = styled.div`
-  margin-top: 35px;
-  text-align: center;
-  font-size: 14px;
-  color: ${brown};
-`;
-
-const EditDelButtons = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  button {
-    padding: 5px;
-    border: transparent;
-    border-radius: 5px;
-    color: ${lightgrey};
-    background: none;
-    cursor: pointer;
-    line-height: 0px;
-
-    &:hover {
-      color: ${yellow};
-      background-color: ${ivory};
-    }
-  }
-`;
-
-const ReviewEditCancelButton = styled.button`
-  padding: 7px 10px;
-  font-weight: bold;
-  background: ${ivory};
-  border-radius: 12px;
-  border: 1px solid ${bordergrey};
-  color: white;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${darkbrown};
-  }
 `;
