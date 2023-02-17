@@ -29,7 +29,7 @@ public class PostService {
     private final PetService petService;
     private final PostImageService postImageService;
 
-    public Post createPost(Post post, List<MultipartFile> files, long id) throws IllegalAccessException {
+    public Post createPost(Post post, List<MultipartFile> files, long id)  {
         long petId = post.getPet().getId();
 
         if (petId != id) {
@@ -52,7 +52,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post updatePost(Post post, List<MultipartFile> files, long petId, Integer isDelete) throws IllegalAccessException {
+    public Post updatePost(Post post, List<MultipartFile> files, long petId, Integer isDelete)  {
 
         Post findPost = findVerifiedPost(post.getId());
 

@@ -12,6 +12,8 @@ public enum ExceptionCode {
     REFRESH_TOKEN_NOT_FOUND(404, "Refresh token not found"),
     INVALID_REFRESH_TOKEN(400, "Invalid refresh token"),
 
+    FILE_UPLOAD_FAIL(500, "file upload fail"),
+
     ADDRESS_NOT_FOUND(404, "Address not found"),
     FILTER_NAME_INCORRECT(400, "Filter name incorrect"),
 
