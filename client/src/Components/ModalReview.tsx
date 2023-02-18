@@ -53,8 +53,9 @@ const ModalReview = ({
             title: '수정되었습니다.',
             icon: 'success',
             color: brown,
-            confirmButtonColor: yellow,
-            confirmButtonText: '<b>확인</b>',
+            padding: '20px 0px 40px 0px',
+            showConfirmButton: false,
+            timer: 1000,
           });
           mapReviewUPDATE(commentId, newText).then(() => getData());
           setEditActivate(0);
@@ -89,8 +90,9 @@ const ModalReview = ({
           title: '삭제되었습니다.',
           icon: 'error',
           color: brown,
-          confirmButtonColor: yellow,
-          confirmButtonText: '<b>확인</b>',
+          padding: '20px 0px 40px 0px',
+          showConfirmButton: false,
+          timer: 1000,
         });
         mapReviewDELETE(commentId).then(() => getData());
       }

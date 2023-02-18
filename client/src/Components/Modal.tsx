@@ -16,6 +16,17 @@ interface IReqData {
   infoMapId: number;
 }
 
+interface IDetaills {
+  infoUrl: string;
+  name: string;
+  mapAddress: string;
+  category: string;
+  operationTime: string;
+  tel: string;
+  homepage: string;
+  myPick: boolean;
+}
+
 export interface IReview {
   petId: number;
   commentId: number;
@@ -25,26 +36,17 @@ export interface IReview {
   createdAt: string;
 }
 
+interface IPageInfo {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 interface MapData {
-  details: {
-    infoUrl: string;
-    name: string;
-    mapAddress: string;
-    category: string;
-    operationTime: string;
-    tel: string;
-    homepage: string;
-    myPick: boolean;
-  } | null;
-
+  details: IDetaills;
   reviews: IReview[] | null;
-
-  pageInfo: {
-    page: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  } | null;
+  pageInfo: IPageInfo;
 }
 
 type MProps = {
@@ -56,11 +58,7 @@ type MProps = {
 
 const Modal = ({ click, setClick, id }: MProps) => {
   const [editActivate, setEditActivate] = useState<number>(0);
-  const [mapdata, setMapdata] = useState<MapData>({
-    details: null,
-    reviews: null,
-    pageInfo: null,
-  });
+  const [mapdata, setMapdata] = useState<MapData | null>(null);
 
   useEffect(() => {
     getData();
@@ -110,7 +108,7 @@ const Modal = ({ click, setClick, id }: MProps) => {
 
   return (
     <>
-      {mapdata.reviews && (
+      {mapdata?.reviews && (
         <Container onClick={(e) => e.stopPropagation()}>
           {mapdata && (
             <FlexBox>
@@ -217,19 +215,6 @@ const Container = styled.div`
   z-index: 100;
   box-shadow: rgba(149, 157, 165, 0.8) 14px 0px 14px -14px;
   background-color: white;
-`;
-
-const Loading = styled.div`
-  background-color: #fdfcfc;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .load {
-    width: 100px;
-    height: 100px;
-  }
 `;
 
 const FlexBox = styled.div`

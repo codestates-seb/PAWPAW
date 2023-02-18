@@ -17,13 +17,12 @@ const FriendRecommend = () => {
         <Friend />
         <Friend />
         <Friend />
-        <Friend />
       </UsersDiv>
     </Container>
   );
 };
 
-// 같은 구 유저 데이터 받아와서 랜덤으로 8개 뽑아서 보여주기
+// 같은 구 유저 데이터 받아와서 랜덤으로 7개 뽑아서 보여주기
 
 const Container = styled.div`
   width: 100%;
