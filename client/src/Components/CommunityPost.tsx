@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import color from '../util/color';
 import { Icon } from '@iconify/react';
 import sanitizeHtml from 'sanitize-html';
-import { PostData } from './Community';
+import { PostData } from '../Pages/Community';
 
 const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
 

@@ -10,7 +10,7 @@ import headers from '../util/headers';
 import Nav from '../Components/Nav';
 import '../App.css';
 import FriendRecommend from '../Components/FriendRecommend';
-import CommunityPost from './CommunityPost';
+import CommunityPost from '../Components/CommunityPost';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
