@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class PetController {
     private final PetMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity postPet(@Valid PetPostDto petPostDto) throws IllegalAccessException {
+    public ResponseEntity postPet(@Valid PetPostDto petPostDto) {
         Pet pet = petService.createPet(mapper.petPostToPet(petPostDto), petPostDto.getProfileImage());
         long id = pet.getId();
         return new ResponseEntity(id, HttpStatus.CREATED);
@@ -60,7 +61,7 @@ public class PetController {
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@PathVariable("pet-id") long id,
                                     PetPatchDto petPatchDto,
-                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
         petPatchDto.setId(id);

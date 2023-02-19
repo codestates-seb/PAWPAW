@@ -10,6 +10,7 @@ import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.repository.PostRepository;
 import animalsquad.server.global.auth.dto.AuthResponseDto;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
+import animalsquad.server.global.auth.service.AuthService;
 import animalsquad.server.global.enums.Role;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
@@ -44,8 +45,9 @@ public class PetService {
     private final JwtTokenProvider jwtTokenProvider;
     private final String folder = "profile";
     private final PostRepository postRepository;
+    private final AuthService authService;
 
-    public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
+    public Pet createPet(Pet pet, MultipartFile file) {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
@@ -69,7 +71,7 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet,long petId, MultipartFile file) throws IllegalAccessException {
+    public Pet updatePet(Pet pet,long petId, MultipartFile file){
         Pet findPet = findVerifiedPet(pet.getId());
 
         verifiedToken(pet, petId);
@@ -169,8 +171,9 @@ public class PetService {
 
         AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(findPet);
 
-        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
-        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+        authService.setToken(tokenInfo);
+//        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
+//        response.setHeader("Refresh", tokenInfo.getRefreshToken());
 
         redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
     }
