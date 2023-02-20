@@ -1,7 +1,7 @@
 package animalsquad.server.domain.pet.service;
 
 import animalsquad.server.domain.address.entity.Address;
-import animalsquad.server.domain.address.repository.AddressRepository;
+import animalsquad.server.domain.address.service.AddressService;
 import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.entity.Species;
@@ -10,6 +10,7 @@ import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.repository.PostRepository;
 import animalsquad.server.global.auth.dto.AuthResponseDto;
 import animalsquad.server.global.auth.jwt.JwtTokenProvider;
+import animalsquad.server.global.auth.service.AuthService;
 import animalsquad.server.global.enums.Role;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
@@ -37,15 +38,18 @@ import java.util.concurrent.TimeUnit;
 public class PetService {
 
     private final PetRepository petRepository;
-    private final AddressRepository addressRepository;
+    private final AddressService addressService;
     private final PasswordEncoder passwordEncoder;
     private final FileUploadService fileUploadService;
     private final RedisTemplate redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
-    private final String folder = "profile";
     private final PostRepository postRepository;
+    private final AuthService authService;
+    private final String folder = "profile";
+    private final String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
+    private final String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
 
-    public Pet createPet(Pet pet, MultipartFile file) throws IllegalAccessException {
+    public Pet createPet(Pet pet, MultipartFile file) {
         verifyExistsId(pet.getLoginId());
         pet.setPassword(passwordEncoder.encode(pet.getPassword()));
         pet.setRoles(Collections.singletonList(Role.ROLE_USER.name()));
@@ -53,9 +57,6 @@ public class PetService {
         int code = pet.getAddress().getCode();
         Address address = verifiedAddress(code);
         pet.setAddress(address);
-
-        String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
-        String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
 
         if (file == null && pet.getSpecies() == Species.DOG) {
             pet.setProfileImage(defaultDogImageUrl);
@@ -65,11 +66,10 @@ public class PetService {
                 String imageUrl = fileUploadService.uploadImage(file, folder);
                 pet.setProfileImage(imageUrl);
         }
-
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet,long petId, MultipartFile file) throws IllegalAccessException {
+    public Pet updatePet(Pet pet,long petId, MultipartFile file){
         Pet findPet = findVerifiedPet(pet.getId());
 
         verifiedToken(pet, petId);
@@ -87,9 +87,6 @@ public class PetService {
                         Address address = verifiedAddress(code);
                         findPet.setAddress(address);
                     });
-
-        String defaultDogImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_dog.png";
-        String defaultCatImageUrl = "https://animal-squad.s3.ap-northeast-2.amazonaws.com/profile/default_cat.png";
 
         // 프로필 이미지 수정, 디폴트 이미지, 종에 따라 디폴트 이미지 변경
         if(file != null && !file.isEmpty()) {
@@ -129,16 +126,15 @@ public class PetService {
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }
-    // 나의 게시글 조회
+
     public Page<Post> findPost(int page, int size, long petId) {
         return postRepository.findAllByPet_Id(PageRequest.of(page, size, Sort.by("id").descending()), petId);
     }
 
-    public void deletePet(long id, long petId) throws IllegalAccessException {
+    public void deletePet(long id, long petId) {
         Pet findPet = findVerifiedPet(id);
 
         verifiedToken(findPet, petId);
-
 
         String findPetLoginId = findPet.getLoginId();
         redisTemplate.delete("RT:" + findPetLoginId);
@@ -163,14 +159,12 @@ public class PetService {
             throw new BusinessLogicException(ExceptionCode.ADMIN_CODE_NOT_MATCH);
         }
 
-
         findPet.getRoles().add((Role.ROLE_ADMIN.name()));
         petRepository.save(findPet);
 
         AuthResponseDto.TokenInfo tokenInfo = jwtTokenProvider.delegateToken(findPet);
 
-        response.setHeader("Authorization", "Bearer " + tokenInfo.getAccessToken());
-        response.setHeader("Refresh", tokenInfo.getRefreshToken());
+        authService.setToken(tokenInfo);
 
         redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
     }
@@ -182,9 +176,7 @@ public class PetService {
     }
 
     private Address verifiedAddress(int code) {
-        Optional<Address> optionalAddress = addressRepository.findByCode(code);
-        Address address = optionalAddress.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_FOUND));
-        return address;
+        return addressService.findAddressByCode(code);
     }
 
     private void verifyExistsId(String loginId) {
