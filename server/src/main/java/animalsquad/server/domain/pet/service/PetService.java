@@ -126,7 +126,7 @@ public class PetService {
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }
-    // 나의 게시글 조회
+
     public Page<Post> findPost(int page, int size, long petId) {
         return postRepository.findAllByPet_Id(PageRequest.of(page, size, Sort.by("id").descending()), petId);
     }
