@@ -60,36 +60,36 @@ public class PetService {
 
         if (file == null && pet.getSpecies() == Species.DOG) {
             pet.setProfileImage(defaultDogImageUrl);
-        } else if ( file == null && pet.getSpecies() == Species.CAT) {
+        } else if (file == null && pet.getSpecies() == Species.CAT) {
             pet.setProfileImage(defaultCatImageUrl);
         } else {
-                String imageUrl = fileUploadService.uploadImage(file, folder);
-                pet.setProfileImage(imageUrl);
+            String imageUrl = fileUploadService.uploadImage(file, folder);
+            pet.setProfileImage(imageUrl);
         }
         return petRepository.save(pet);
     }
 
-    public Pet updatePet(Pet pet,long petId, MultipartFile file){
+    public Pet updatePet(Pet pet, long petId, MultipartFile file) {
         Pet findPet = findVerifiedPet(pet.getId());
 
         verifiedToken(pet, petId);
 
-            Optional.ofNullable(pet.getPetName())
-                    .ifPresent(name -> findPet.setPetName(name));
-            Optional.ofNullable(pet.getAge())
-                    .ifPresent(age -> findPet.setAge(age));
-            Optional.ofNullable(pet.getGender())
-                    .ifPresent(gender -> findPet.setGender(gender));
-            Optional.ofNullable(pet.getSpecies())
-                    .ifPresent(species -> findPet.setSpecies(species));
-            Optional.ofNullable(pet.getAddress().getCode())
-                    .ifPresent(code -> {
-                        Address address = verifiedAddress(code);
-                        findPet.setAddress(address);
-                    });
+        Optional.ofNullable(pet.getPetName())
+                .ifPresent(name -> findPet.setPetName(name));
+        Optional.ofNullable(pet.getAge())
+                .ifPresent(age -> findPet.setAge(age));
+        Optional.ofNullable(pet.getGender())
+                .ifPresent(gender -> findPet.setGender(gender));
+        Optional.ofNullable(pet.getSpecies())
+                .ifPresent(species -> findPet.setSpecies(species));
+        Optional.ofNullable(pet.getAddress().getCode())
+                .ifPresent(code -> {
+                    Address address = verifiedAddress(code);
+                    findPet.setAddress(address);
+                });
 
         // 프로필 이미지 수정, 디폴트 이미지, 종에 따라 디폴트 이미지 변경
-        if(file != null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             String beforeImage = findPet.getProfileImage();
             fileUploadService.deleteFile(beforeImage, folder);
 
@@ -145,17 +145,18 @@ public class PetService {
         }
         petRepository.deleteById(id);
     }
+
     // 관리자 권한 승인 요청
     public void verifiedAdmin(long id, long petId, PetPostAdminDto petPostAdminDto, HttpServletResponse response) {
         Pet findPet = findVerifiedPet(id);
 
         verifiedToken(findPet, petId);
 
-        if(findPet.getRoles().contains("ROLE_ADMIN")) {
+        if (findPet.getRoles().contains("ROLE_ADMIN")) {
             throw new BusinessLogicException(ExceptionCode.PET_ROLE_EXISTS);
         }
 
-        if(!petPostAdminDto.getAdminCode().equals("동물특공대")) {
+        if (!petPostAdminDto.getAdminCode().equals("동물특공대")) {
             throw new BusinessLogicException(ExceptionCode.ADMIN_CODE_NOT_MATCH);
         }
 
@@ -166,7 +167,7 @@ public class PetService {
 
         authService.setToken(tokenInfo);
 
-        redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(),tokenInfo.getRefreshToken(),tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
     }
 
     private void verifiedToken(Pet pet, long petId) {

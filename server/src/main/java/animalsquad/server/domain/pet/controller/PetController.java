@@ -43,13 +43,13 @@ public class PetController {
     }
 
     @GetMapping("/check/{login-id}")
-    public ResponseEntity<Boolean> checkPet(@PathVariable ("login-id") String loginId) {
+    public ResponseEntity<Boolean> checkPet(@PathVariable("login-id") String loginId) {
         Boolean result = petService.checkLoginId(loginId);
 
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    @PostMapping ("/admin/{pet-id}")
+    @PostMapping("/admin/{pet-id}")
     public ResponseEntity verifiedAdmin(@PathVariable("pet-id") long id,
                                         @RequestBody PetPostAdminDto petPostAdminDto,
                                         @AuthenticationPrincipal PetDetailsService.PetDetails principal,
@@ -63,13 +63,13 @@ public class PetController {
 
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@PathVariable("pet-id") long id,
-                                    PetPatchDto petPatchDto,
+                                   PetPatchDto petPatchDto,
                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
         petPatchDto.setId(id);
 
-        Pet response = petService.updatePet(mapper.petPatchToPet(petPatchDto), petId ,petPatchDto.getProfileImage());
+        Pet response = petService.updatePet(mapper.petPatchToPet(petPatchDto), petId, petPatchDto.getProfileImage());
 
         int addressCode = response.getAddress().getCode();
         Map<String, Integer> map = new HashMap<>();
@@ -86,13 +86,14 @@ public class PetController {
         long petId = principal.getId();
 
         Pet findPet = petService.petVerifiedToken(id, petId);
-        Page<Post> posts = petService.findPost(page -1, size, id);
+        Page<Post> posts = petService.findPost(page - 1, size, id);
 
-        return new ResponseEntity(mapper.petToPetResponseDto(findPet, posts),HttpStatus.OK);
+        return new ResponseEntity(mapper.petToPetResponseDto(findPet, posts), HttpStatus.OK);
     }
+
     @DeleteMapping("/{pet-id}")
     public ResponseEntity deletePet(@PathVariable("pet-id") long id,
-                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
         petService.deletePet(id, petId);
