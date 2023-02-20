@@ -33,9 +33,12 @@ public class PetController {
     private final PetMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity postPet(@Valid PetPostDto petPostDto) {
+    public ResponseEntity postPet(@Valid PetPostDto petPostDto, BindingResult bindingResult) {
         Pet pet = petService.createPet(mapper.petPostToPet(petPostDto), petPostDto.getProfileImage());
         long id = pet.getId();
+
+        // bindingResult 사용?
+
         return new ResponseEntity(id, HttpStatus.CREATED);
     }
 
