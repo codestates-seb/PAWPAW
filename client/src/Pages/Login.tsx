@@ -12,7 +12,7 @@ import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
-const { ivory, brown, red } = color;
+const { ivory, coral, brown, red, darkbrown } = color;
 
 interface UserData {
   0: string;
@@ -102,6 +102,11 @@ const Login: React.FC = () => {
     }
   };
 
+  const guestLoginHandler = () => {
+    setId('guest1234');
+    setPassword('1234');
+  };
+
   return (
     <Container>
       <Background />
@@ -157,6 +162,10 @@ const Login: React.FC = () => {
             <ButtonDiv>
               <Button text='로그인' />
             </ButtonDiv>
+            <GuestLoginBtn onClick={guestLoginHandler}>
+              <Icon icon='material-symbols:login' fontSize={'20px'} />
+              <TextSpan>게스트 로그인</TextSpan>
+            </GuestLoginBtn>
           </form>
           <SignUpA href='/signup'>회원가입</SignUpA>
         </RightDiv>
@@ -269,6 +278,27 @@ const MessageDiv = styled.div`
   position: absolute;
   top: 73%;
   text-align: center;
+`;
+
+const GuestLoginBtn = styled.button`
+  border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  color: ${brown};
+  top: -25px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+`;
+const TextSpan = styled.span`
+  margin-left: 7px;
 `;
 
 export default Login;
