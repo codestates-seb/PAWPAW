@@ -61,7 +61,7 @@ public class InfoMapController {
     }
 
     @PostMapping
-    public ResponseEntity postMaps(@Valid InfoMapPostDto infoMapPostDto, BindingResult bindingResult) throws IllegalAccessException {
+    public ResponseEntity postMaps(@Valid InfoMapPostDto infoMapPostDto, BindingResult bindingResult) {
 
         InfoMap infoMap = infoMapMapper.postDtoToInfoMap(infoMapPostDto);
 
@@ -71,7 +71,7 @@ public class InfoMapController {
     }
 
     @PatchMapping("/admin/{info-map-id}")
-    public ResponseEntity patchMapImage(@PathVariable("info-map-id") long mapId, MultipartFile file) throws IllegalAccessException {
+    public ResponseEntity patchMapImage(@PathVariable("info-map-id") long mapId, MultipartFile file) {
         infoMapService.imageUpload(mapId, file);
 
         return new ResponseEntity(HttpStatus.OK);

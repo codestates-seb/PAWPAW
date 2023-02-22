@@ -41,7 +41,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity postPost(@Valid PostDto postDto,
-                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
 
         long petId = principal.getId();
         Post post = postService.createPost(mapper.postDtoToPost(postDto), postDto.getFile(), petId);
@@ -50,7 +50,7 @@ public class PostController {
 
     @PatchMapping("/{post-id}")
     public ResponseEntity patchPost(@PathVariable("post-id") long id, PostPatchDto postPatchDto,
-                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         postPatchDto.setId(id);
 
         Post post = mapper.patchDtoToPost(postPatchDto);
@@ -81,6 +81,7 @@ public class PostController {
         return new ResponseEntity(postDetailsResponseDto, HttpStatus.OK);
 
     }
+
     @DeleteMapping("/{post-id}")
     public ResponseEntity deletePost(@PathVariable("post-id") long id,
                                      @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
