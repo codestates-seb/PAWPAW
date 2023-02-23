@@ -51,6 +51,7 @@ public interface PostMapper {
                     postResponseDto.setTitle(content.getTitle());
                     postResponseDto.setContent(content.getContents());
                     postResponseDto.setCreatedAt(content.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
+                    postResponseDto.setPetId(content.getPet().getId());
                     postResponseDto.setPetName(content.getPet().getPetName());
                     postResponseDto.setLikesCnt(content.getLikesCnt());
 

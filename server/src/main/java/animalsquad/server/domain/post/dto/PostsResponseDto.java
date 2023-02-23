@@ -26,6 +26,7 @@ public class PostsResponseDto {
         private String title;
         private String content;
         private String createdAt;
+        private long petId;
         private String petName;
         private int likesCnt;
     }
