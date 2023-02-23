@@ -29,5 +29,6 @@ public class PostsResponseDto {
         private long petId;
         private String petName;
         private int likesCnt;
+        private int commentCnt;
     }
 }
