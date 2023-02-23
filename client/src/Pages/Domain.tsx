@@ -12,7 +12,7 @@ import PostEdit from './PostEdit';
 import AddMarker from './AddMarker';
 import NotFound from './NotFound';
 import PrivateRoute from '../Components/PrivateRouter';
-import { axiosRefresh } from '../util/Inter';
+import { axiosRefresh } from '../util/GlobalAxios';
 
 export default function Router() {
   axiosRefresh;
