@@ -4,6 +4,7 @@ import animalsquad.server.domain.address.entity.Address;
 import animalsquad.server.domain.address.service.AddressService;
 import animalsquad.server.domain.pet.dto.PetPostAdminDto;
 import animalsquad.server.domain.pet.entity.Pet;
+import animalsquad.server.domain.pet.entity.PetStatus;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.domain.post.entity.Post;
@@ -136,6 +137,8 @@ public class PetService {
 
         verifiedToken(findPet, petId);
 
+        findPet.setPetStatus(PetStatus.PET_SLEEP);
+
         String findPetLoginId = findPet.getLoginId();
         redisTemplate.delete("RT:" + findPetLoginId);
         // S3에서 image삭제
@@ -143,7 +146,7 @@ public class PetService {
             String image = findPet.getProfileImage();
             fileUploadService.deleteFile(image, folder);
         }
-        petRepository.deleteById(id);
+//        petRepository.deleteById(id);
     }
 
     // 관리자 권한 승인 요청

@@ -55,6 +55,7 @@ public interface PostMapper {
                     postResponseDto.setPetName(content.getPet().getPetName());
                     postResponseDto.setLikesCnt(content.getLikesCnt());
                     postResponseDto.setCommentCnt(content.getPostComments().size());
+                    postResponseDto.setPetStatus(content.getPet().getPetStatus());
 
                     return postResponseDto;
                 }).collect(Collectors.toList());
@@ -73,6 +74,7 @@ public interface PostMapper {
                 .collect(Collectors.toList());
         postResponseDto.setImageUrl(images);
         postResponseDto.setPetName(post.getPet().getPetName());
+        postResponseDto.setPetStatus(post.getPet().getPetStatus());
         postResponseDto.setCreatedAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
         postResponseDto.setLikesCnt(post.getLikesCnt());
         List<PostLikes> postLikes = post.getPostLikes();
@@ -86,6 +88,7 @@ public interface PostMapper {
                     comment.setCommentId(postComment.getId());
                     comment.setPetId(pet.getId());
                     comment.setPetName(pet.getPetName());
+                    comment.setPetStatus(pet.getPetStatus());
                     comment.setContent(postComment.getContents());
                     comment.setProfileImageUrl(pet.getProfileImage());
                     comment.setCreatedAt(postComment.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
