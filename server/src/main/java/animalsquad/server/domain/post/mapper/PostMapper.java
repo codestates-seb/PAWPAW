@@ -55,6 +55,7 @@ public interface PostMapper {
                     postResponseDto.setPetName(content.getPet().getPetName());
                     postResponseDto.setLikesCnt(content.getLikesCnt());
                     postResponseDto.setCommentCnt(content.getPostComments().size());
+                    postResponseDto.setCode(content.getCode());
                     postResponseDto.setPetStatus(content.getPet().getPetStatus());
 
                     return postResponseDto;

@@ -32,5 +32,6 @@ public class PostsResponseDto {
         private PetStatus petStatus;
         private int likesCnt;
         private int commentCnt;
+        private int code;
     }
 }
