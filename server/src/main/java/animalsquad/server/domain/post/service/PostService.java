@@ -41,6 +41,7 @@ public class PostService {
         post.setPet(pet);
         post.setTitle(post.getTitle());
         post.setContents(post.getContents());
+        post.setCode(pet.getAddress().getCode());
 
         if(files != null){
             for (MultipartFile file : files) {
