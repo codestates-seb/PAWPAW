@@ -30,5 +30,6 @@ public class PostsResponseDto {
         private String petName;
         private int likesCnt;
         private int commentCnt;
+        private int code;
     }
 }

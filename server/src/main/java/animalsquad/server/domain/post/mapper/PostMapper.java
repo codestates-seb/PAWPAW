@@ -55,6 +55,7 @@ public interface PostMapper {
                     postResponseDto.setPetName(content.getPet().getPetName());
                     postResponseDto.setLikesCnt(content.getLikesCnt());
                     postResponseDto.setCommentCnt(content.getPostComments().size());
+                    postResponseDto.setCode(content.getCode());
 
                     return postResponseDto;
                 }).collect(Collectors.toList());
@@ -93,6 +94,4 @@ public interface PostMapper {
                 }).collect(Collectors.toList());
         return new PostDetailsResponseDto(postResponseDto,commentDto);
     }
-
-
 }
