@@ -49,7 +49,8 @@ const SignUp: FC = () => {
   };
 
   const idValidationHandler = async () => {
-    const notAllowedChar = id.search(/[`ㄱ-ㅎ|ㅏ-ㅣ|가-힣~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+    const idSpecifications = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!?@@#$%^&*]/;
+    // const notAllowedChar = id.search(/[`ㄱ-ㅎ|ㅏ-ㅣ|가-힣~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
 
     if (id === '') {
       idRef.current && idRef.current.focus();
@@ -57,7 +58,7 @@ const SignUp: FC = () => {
         return { ...prev, idErrorMessage: '아이디를 입력해주세요.' };
       });
       return;
-    } else if (notAllowedChar > 0) {
+    } else if (idSpecifications.test(id) === true) {
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디는 영문, 숫자만 입력할 수 있습니다.' };
       });
@@ -70,7 +71,7 @@ const SignUp: FC = () => {
     {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/pets/check/${id}`);
-        const value = response.data as boolean;
+        // const value = response.data as boolean;
         if (response.data === false) {
           setIsUniqueId(true);
           setErrorMessage((prev) => {
