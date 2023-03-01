@@ -49,16 +49,17 @@ const SignUp: FC = () => {
   };
 
   const idValidationHandler = async () => {
-    const idSpecifications = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!?@@#$%^&*]/;
-    // const notAllowedChar = id.search(/[`ㄱ-ㅎ|ㅏ-ㅣ|가-힣~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-
+    // const idSpecifications = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|~!?@@#$%^&*]/;
+    // console.log('id', id);
+    // console.log('check', id.replace(/[^a-z|A-Z|0-9]/g, ''));
     if (id === '') {
       idRef.current && idRef.current.focus();
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디를 입력해주세요.' };
       });
       return;
-    } else if (idSpecifications.test(id) === true) {
+    } else if ((id === id.replace(/[^a-z|A-Z|0-9]/g, '')) === false) {
+      setIsUniqueId(false);
       setErrorMessage((prev) => {
         return { ...prev, idErrorMessage: '아이디는 영문, 숫자만 입력할 수 있습니다.' };
       });
