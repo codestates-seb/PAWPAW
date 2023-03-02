@@ -62,6 +62,7 @@ public interface PetMapper {
         petInfo.setAge(pet.getAge());
         petInfo.setGender(pet.getGender());
         petInfo.setSpecies(pet.getSpecies());
+        petInfo.setPetStatus(pet.getPetStatus());
 
         return petInfo;
     }

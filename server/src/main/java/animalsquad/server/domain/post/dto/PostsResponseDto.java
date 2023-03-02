@@ -1,5 +1,6 @@
 package animalsquad.server.domain.post.dto;
 
+import animalsquad.server.domain.pet.entity.PetStatus;
 import animalsquad.server.global.dto.PageInfo;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class PostsResponseDto {
         private String createdAt;
         private long petId;
         private String petName;
+        private PetStatus petStatus;
         private int likesCnt;
         private int commentCnt;
         private int code;

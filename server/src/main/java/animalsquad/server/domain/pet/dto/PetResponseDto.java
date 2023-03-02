@@ -1,6 +1,7 @@
 package animalsquad.server.domain.pet.dto;
 
 import animalsquad.server.domain.pet.entity.Gender;
+import animalsquad.server.domain.pet.entity.PetStatus;
 import animalsquad.server.domain.pet.entity.Species;
 import animalsquad.server.global.dto.PageInfo;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,7 @@ public class PetResponseDto {
         private int age;
         private Gender gender;
         private Species species;
+        private PetStatus petStatus;
     }
 
     @Getter

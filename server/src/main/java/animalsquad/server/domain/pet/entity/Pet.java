@@ -38,10 +38,12 @@ public class Pet extends Auditable {
     @Enumerated(EnumType.STRING)
     private Species species;
     private String profileImage;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PetStatus petStatus = PetStatus.PET_ACTIVE;
 
     @OneToMany(mappedBy = "pet",  cascade = CascadeType.REMOVE)
     private List<InfoMapComment> infoMapComments = new ArrayList<>();

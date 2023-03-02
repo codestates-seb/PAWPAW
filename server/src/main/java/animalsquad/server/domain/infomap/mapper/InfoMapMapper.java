@@ -85,6 +85,7 @@ public interface InfoMapMapper {
                     reviews.setContents(comment.getContents());
                     reviews.setCreatedAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
                     reviews.setCommentId(comment.getId());
+                    reviews.setPetStatus(pet.getPetStatus());
 
                     return reviews;
                 }).collect(Collectors.toList());
