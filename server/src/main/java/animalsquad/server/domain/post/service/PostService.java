@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,14 +84,16 @@ public class PostService {
 //        return postRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
 //    }
 
-    public Page<Post> findPosts(int page, int size, PostSearchDto postSearchDto) {
+    public Page<Post> findPosts(int page, int size, PostSearchDto postSearchDto, String sort) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        String sort = postSearchDto.getSort();
-        if(sort != null && sort.equals("Likes")) {
-            return postRepository.getPostsSortByLikes(postSearchDto, pageRequest);
-        }else {
-            return postRepository.getPostsSortByNewest(postSearchDto, pageRequest);
-        }
+//        String sort = postSearchDto.getSort();
+//        if(sort != null && sort.equals("Likes")) {
+//            return postRepository.getPostsSortByLikes(postSearchDto, pageRequest);
+//        }else {
+//            return postRepository.getPostsSortByNewest(postSearchDto, pageRequest);
+//        }
+
+        return postRepository.getPosts(postSearchDto, pageRequest, sort);
     }
 
     public Post findPost(long postId) {

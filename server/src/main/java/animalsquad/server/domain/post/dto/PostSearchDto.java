@@ -11,13 +11,23 @@ public class PostSearchDto {
     @Nullable
     private Integer code;
 
+    /**
+     * SearchType: author, title, content
+     */
     @Nullable
     private String searchType;
 
+    /**
+     * SearchType 값이 있으면 searchContent 필수
+     */
     @Nullable
     private String searchContent;
 
-    @Nullable
-    private String sort;
+//    /**
+//     * 기본값: id,
+//     * 옵션: likes, comments
+//     */
+//    @NotEmpty
+//    private String sort;
 
 }

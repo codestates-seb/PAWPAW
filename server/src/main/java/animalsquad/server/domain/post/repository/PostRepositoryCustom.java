@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostRepositoryCustom {
 
-    Page<Post> getPostsSortByNewest(PostSearchDto postSearchDto, Pageable pageable);
-    Page<Post> getPostsSortByLikes(PostSearchDto postSearchDto, Pageable pageable);
+//    Page<Post> getPostsSortByNewest(PostSearchDto postSearchDto, Pageable pageable);
+//    Page<Post> getPostsSortByLikes(PostSearchDto postSearchDto, Pageable pageable);
+
+    Page<Post> getPosts(PostSearchDto postSearchDto, Pageable pageable, String sort);
 }

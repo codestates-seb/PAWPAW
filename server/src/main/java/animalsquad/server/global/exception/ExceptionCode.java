@@ -34,7 +34,12 @@ public enum ExceptionCode {
 
     ALREADY_LIKED(400,"Already Liked"),
 
-    INVALID_FILE_TYPE(400, "Invalid file type");
+    INVALID_FILE_TYPE(400, "Invalid file type"),
+
+    SEARCH_TYPE_REQUIRES_CONTENT(400, "Search type requires content"),
+
+    INVALID_SORT_TYPE(400, "Invalid sort type");
+
     @Getter
     private int status;
 
