@@ -2,6 +2,7 @@ package animalsquad.server.domain.post.service;
 
 import animalsquad.server.domain.pet.entity.Pet;
 import animalsquad.server.domain.pet.service.PetService;
+import animalsquad.server.domain.post.dto.PostSearchDto;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.entity.PostImage;
 import animalsquad.server.domain.post.repository.PostRepository;
@@ -29,7 +30,7 @@ public class PostService {
     private final PetService petService;
     private final PostImageService postImageService;
 
-    public Post createPost(Post post, List<MultipartFile> files, long id)  {
+    public Post createPost(Post post, List<MultipartFile> files, long id) {
         long petId = post.getPet().getId();
 
         if (petId != id) {
@@ -43,7 +44,7 @@ public class PostService {
         post.setContents(post.getContents());
         post.setCode(pet.getAddress().getCode());
 
-        if(files != null){
+        if (files != null) {
             for (MultipartFile file : files) {
                 if (file != null && !file.isEmpty()) {
                     postImageService.uploadImage(post, file);
@@ -53,7 +54,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post updatePost(Post post, List<MultipartFile> files, long petId, Integer isDelete)  {
+    public Post updatePost(Post post, List<MultipartFile> files, long petId, Integer isDelete) {
 
         Post findPost = findVerifiedPost(post.getId());
 
@@ -66,7 +67,7 @@ public class PostService {
         Optional.ofNullable(post.getContents())
                 .ifPresent(content -> findPost.setContents(content));
 
-        if(isDelete == 1) {
+        if (isDelete == 1) {
             List<PostImage> images = findPost.getPostImages();
             for (PostImage image : images) {
                 postImageService.deleteImage(image);
@@ -80,8 +81,18 @@ public class PostService {
         return savedPost;
     }
 
-    public Page<Post> findPosts(int page, int size) {
-        return postRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
+//    public Page<Post> findPosts(int page, int size) {
+//        return postRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
+//    }
+
+    public Page<Post> findPosts(int page, int size, PostSearchDto postSearchDto) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        String sort = postSearchDto.getSort();
+        if(sort != null && sort.equals("Likes")) {
+            return postRepository.getPostsSortByLikes(postSearchDto, pageRequest);
+        }else {
+            return postRepository.getPostsSortByNewest(postSearchDto, pageRequest);
+        }
     }
 
     public Post findPost(long postId) {

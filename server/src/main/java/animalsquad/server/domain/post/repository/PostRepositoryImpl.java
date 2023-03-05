@@ -5,6 +5,7 @@ import animalsquad.server.domain.post.entity.Post;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
@@ -28,7 +29,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * type = 제목, 내용, 작성자
      */
 
-
     //최신 순
     @Override
     public Page<Post> getPostsSortByNewest(PostSearchDto postSearchDto, Pageable pageable) {
@@ -36,13 +36,22 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         List<Post> results = queryFactory
                 .select(post)
                 .from(post)
-                .join(post.pet, pet)
+                .leftJoin(post.pet, pet)
                 .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
                 .orderBy(post.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
+        long total = queryFactory
+                .select(post.count())
+                .from(post)
+//                .leftJoin(post.pet, pet)
+                .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
+                .fetchOne();
 
-        return null;
+        return new PageImpl<>(results, pageable, total);
+
     }
 
     //좋아요 많은 순
@@ -52,12 +61,23 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         List<Post> results = queryFactory
                 .select(post)
                 .from(post)
-                .join(post.pet, pet)
+                .leftJoin(post.pet, pet)
                 .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
                 .orderBy(post.likesCnt.desc())
+                .orderBy(post.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .groupBy(post.id)
                 .fetch();
 
-        return null;
+        long total = queryFactory
+                .select(post.count())
+                .from(post)
+//                .leftJoin(post.pet, pet)
+                .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
 
@@ -87,15 +107,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     private BooleanExpression titleEq(String title) {
-        return post.title.eq(title);
+        return post.title.contains(title);
     }
 
     private BooleanExpression contentEq(String content) {
-        return post.contents.eq(content);
+        return post.contents.contains(content);
     }
 
     private BooleanExpression authorEq(String author) {
-        return pet.petName.eq(author);
+        return pet.petName.contains(author);
     }
 
 
