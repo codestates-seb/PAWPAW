@@ -20,7 +20,6 @@ public enum ExceptionCode {
     TOKEN_AND_ID_NOT_MATCH(403, "Token and id not match"),
     NOT_HAVE_PERMISSION_TO_EDIT(403, "Not have permission to edit"),
     ADMIN_CODE_NOT_MATCH(403, "Admin Code not match"),
-
     WITHDRAWN_MEMBER(401, "Withdraw member"),
 
     INFO_MAP_NOT_FOUND(404, "Info map not found"),
