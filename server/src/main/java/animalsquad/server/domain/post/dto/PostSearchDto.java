@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class PostSearchDto {
 
     @Nullable
-    private Integer code;
+    private List<Integer> code;
 
     /**
      * SearchType: author, title, content

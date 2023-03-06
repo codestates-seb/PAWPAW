@@ -5,6 +5,7 @@ import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
 import animalsquad.server.global.querydslutils.QuerydslUtil;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -112,8 +113,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
 
-    private BooleanExpression codeEq(Integer code) {
-        return code == null ? null : post.code.eq(code);
+    private BooleanBuilder codeEq(List<Integer> codes) {
+        if(codes == null) {
+            return null;
+        }
+        BooleanBuilder builder = new BooleanBuilder();
+
+        for (Integer code : codes) {
+            builder.or(post.code.eq(code));
+        }
+
+        return builder;
     }
 
     private BooleanExpression typeEq(PostSearchDto postSearchDto) {
