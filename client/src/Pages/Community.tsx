@@ -65,7 +65,7 @@ const Community: React.FC = () => {
         <Nav type='board' />
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
-          {page === 1 && <FriendRecommend />}
+          {/* {page === 1 && <FriendRecommend />} */}
           <PostList>
             {postData?.posts === null ? (
               <EmptyMessage>
