@@ -4,7 +4,6 @@ import animalsquad.server.domain.post.dto.PostSearchDto;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
-import animalsquad.server.global.querydslutils.QuerydslUtil;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -22,7 +21,6 @@ import java.util.List;
 import static animalsquad.server.domain.pet.entity.QPet.pet;
 import static animalsquad.server.domain.post.entity.QPost.post;
 import static animalsquad.server.domain.post.entity.QPostComment.postComment;
-import static animalsquad.server.global.querydslutils.QuerydslUtil.getSortedColumn;
 
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
@@ -37,63 +35,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
      * 게시글 지역코드별로
      * type = 제목, 내용, 작성자
      */
-
-//    //최신 순
-//    @Override
-//    public Page<Post> getPostsSortByNewest(PostSearchDto postSearchDto, Pageable pageable) {
-//
-//        List<Post> results = queryFactory
-//                .select(post)
-//                .from(post)
-//                .leftJoin(post.pet, pet)
-//                .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
-//                .orderBy(post.id.desc())
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//
-//        long total = queryFactory
-//                .select(post.count())
-//                .from(post)
-////                .leftJoin(post.pet, pet)
-//                .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
-//                .fetchOne();
-//
-//        return new PageImpl<>(results, pageable, total);
-//
-//    }
-//
-//    //좋아요 많은 순
-//    @Override
-//    public Page<Post> getPostsSortByLikes(PostSearchDto postSearchDto, Pageable pageable) {
-//
-//        List<Post> results = queryFactory
-//                .select(post)
-//                .from(post)
-//                .leftJoin(post.pet, pet)
-//                .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
-//                .orderBy(post.likesCnt.desc())
-//                .orderBy(post.id.desc())
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .groupBy(post.id)
-//                .fetch();
-//
-//        long total = queryFactory
-//                .select(post.count())
-//                .from(post)
-////                .leftJoin(post.pet, pet)
-//                .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
-//                .fetchOne();
-//
-//        return new PageImpl<>(results, pageable, total);
-//    }
     @Override
     public Page<Post> getPosts(PostSearchDto postSearchDto, Pageable pageable, String sort) {
         List<Post> results = queryFactory
                 .select(post)
                 .from(post)
-                .leftJoin(post.pet, pet)
+                .leftJoin(post.pet, pet).fetchJoin()
                 .leftJoin(post.postComments, postComment)
                 .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
                 .orderBy(getOrderSpecifier(sort).stream().toArray(OrderSpecifier[]::new))
@@ -105,7 +52,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         long total = queryFactory
                 .select(post.count())
                 .from(post)
-//                .leftJoin(post.pet, pet)
                 .where(codeEq(postSearchDto.getCode()), typeEq(postSearchDto))
                 .fetchOne();
 
@@ -171,15 +117,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
             switch (sort) {
                 case "likes":
-                    orders.add(QuerydslUtil.getSortedColumn(direction, post, "likesCnt"));
-                    orders.add(getSortedColumn(Order.DESC, post, "id"));
+                    orders.add(new OrderSpecifier(direction, post.likesCnt));
+                    orders.add(new OrderSpecifier(direction, post.id));
                     break;
                 case "comments":
                     orders.add(new OrderSpecifier(direction, postComment.id.count()));
-                    orders.add(getSortedColumn(Order.DESC, post, "id"));
+                    orders.add(new OrderSpecifier(direction, post.id));
                     break;
                 case "newest":
-                    orders.add(getSortedColumn(Order.DESC, post, "id"));
+                    orders.add(new OrderSpecifier(direction, post.id));
                     break;
                 default:
                     throw new BusinessLogicException(ExceptionCode.INVALID_SORT_TYPE);

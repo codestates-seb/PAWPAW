@@ -80,18 +80,8 @@ public class PostService {
         return savedPost;
     }
 
-//    public Page<Post> findPosts(int page, int size) {
-//        return postRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending()));
-//    }
-
     public Page<Post> findPosts(int page, int size, PostSearchDto postSearchDto, String sort) {
         PageRequest pageRequest = PageRequest.of(page, size);
-//        String sort = postSearchDto.getSort();
-//        if(sort != null && sort.equals("Likes")) {
-//            return postRepository.getPostsSortByLikes(postSearchDto, pageRequest);
-//        }else {
-//            return postRepository.getPostsSortByNewest(postSearchDto, pageRequest);
-//        }
 
         return postRepository.getPosts(postSearchDto, pageRequest, sort);
     }
