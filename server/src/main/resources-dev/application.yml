@@ -21,6 +21,7 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 10
+        use_sql_comments: true
   servlet:
     multipart:
       max-file-size: 10MB
