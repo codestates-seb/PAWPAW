@@ -83,7 +83,7 @@ public class PetController {
                                  @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
-        Pet findPet = petService.petVerifiedToken(id, petId);
+        Pet findPet = petService.findPet(id);
         Page<Post> posts = petService.findPost(page - 1, size, id);
 
         return new ResponseEntity(mapper.petToPetResponseDto(findPet, posts), HttpStatus.OK);
