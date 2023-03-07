@@ -18,10 +18,12 @@ const url = process.env.REACT_APP_API_ROOT;
 export interface PostData {
   id: number;
   petName: string;
+  petId: number;
   title: string;
   content: string;
   createdAt: string;
-  likesCnt: 10;
+  likesCnt: number;
+  commentCnt: number;
 }
 
 interface PostList {
