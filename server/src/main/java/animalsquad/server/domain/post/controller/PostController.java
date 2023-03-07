@@ -20,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @Validated
 @RestController
@@ -62,10 +61,22 @@ public class PostController {
     }
 
 
+//    @GetMapping
+//    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page) {
+//        int size = 7;
+//        Page<Post> posts = postService.findPosts(page - 1, size);
+//        PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts);
+//        return new ResponseEntity(postsResponseDto, HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity getPosts(@ModelAttribute PostSearchDto postSearchDto,
+                                   @RequestParam(defaultValue = "1") int page,
+                                   @RequestParam(defaultValue = "newest") String sort) {
+
         int size = 7;
-        Page<Post> posts = postService.findPosts(page - 1, size);
+        Page<Post> posts = postService.findPosts(page - 1, size, postSearchDto, sort);
+
         PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts);
         return new ResponseEntity(postsResponseDto, HttpStatus.OK);
     }
