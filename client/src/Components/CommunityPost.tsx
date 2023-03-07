@@ -14,12 +14,19 @@ type PProps = {
 };
 
 const CommunityPost = ({ post }: PProps) => {
+  console.log('post', post);
   return (
     <Container>
       <LeftBox>
         <TitleDateDiv>
           <Link to={`/community/${post.id}`}>
-            <TitleDiv>{post.title}</TitleDiv>
+            <TitleDiv>
+              <TitleSpan>{post.title}</TitleSpan>
+              <CommentSpan>
+                <span className='icon'>{post.commentCnt && <Icon icon='cil:chat-bubble' />}</span>
+                <span className='number'>{post.commentCnt ? post.commentCnt : ''}</span>
+              </CommentSpan>
+            </TitleDiv>
           </Link>
           <DateDiv>{post.createdAt}</DateDiv>
         </TitleDateDiv>
@@ -34,7 +41,9 @@ const CommunityPost = ({ post }: PProps) => {
       </LeftBox>
 
       <RightBox>
-        <NameDiv>{post.petName}</NameDiv>
+        <Link to={`/mypage/${post.petId}`}>
+          <NameDiv>{post.petName}</NameDiv>
+        </Link>
         <LikeContainer>
           <Icon
             className='icon'
@@ -72,9 +81,24 @@ const TitleDiv = styled.div`
   color: ${brown};
   font-weight: 600;
   font-size: 20px;
+  display: flex;
+  align-items: center;
+`;
 
+const TitleSpan = styled.span`
   &:hover {
     color: #dfb895;
+  }
+`;
+
+const CommentSpan = styled.span`
+  margin-left: 5px;
+  font-size: 16px;
+  display: flex;
+
+  .number {
+    margin-left: 5px;
+    font-size: 14px;
   }
 `;
 
@@ -112,6 +136,10 @@ const NameDiv = styled.div`
   color: ${darkgrey};
   font-weight: bold;
   white-space: nowrap;
+
+  &:hover {
+    color: ${mediumgrey};
+  }
 `;
 
 const LikeContainer = styled.div`
