@@ -14,7 +14,6 @@ type PProps = {
 };
 
 const CommunityPost = ({ post }: PProps) => {
-  console.log('post', post);
   return (
     <Container>
       <LeftBox>
@@ -22,10 +21,14 @@ const CommunityPost = ({ post }: PProps) => {
           <Link to={`/community/${post.id}`}>
             <TitleDiv>
               <TitleSpan>{post.title}</TitleSpan>
-              <CommentSpan>
-                <span className='icon'>{post.commentCnt && <Icon icon='cil:chat-bubble' />}</span>
-                <span className='number'>{post.commentCnt ? post.commentCnt : ''}</span>
-              </CommentSpan>
+              {post.commentCnt !== 0 && (
+                <CommentSpan>
+                  <span className='icon'>
+                    <Icon icon='cil:chat-bubble' />
+                  </span>
+                  <span className='number'>{post.commentCnt}</span>
+                </CommentSpan>
+              )}
             </TitleDiv>
           </Link>
           <DateDiv>{post.createdAt}</DateDiv>
@@ -92,7 +95,7 @@ const TitleSpan = styled.span`
 `;
 
 const CommentSpan = styled.span`
-  margin-left: 5px;
+  margin-left: 8px;
   font-size: 16px;
   display: flex;
 
@@ -133,12 +136,12 @@ const NameDiv = styled.div`
   margin-right: 3px;
   padding: 0px 5px;
   height: 30px;
-  color: ${darkgrey};
+  color: ${mediumgrey};
   font-weight: bold;
   white-space: nowrap;
 
   &:hover {
-    color: ${mediumgrey};
+    color: ${darkgrey};
   }
 `;
 

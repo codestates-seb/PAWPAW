@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
@@ -67,7 +67,7 @@ interface UserData {
   title: string;
 }
 
-const { ivory, darkivory, brown, bordergrey, lightgrey, red, yellow } = color;
+const { ivory, darkivory, brown, bordergrey, lightgrey, mediumgrey, darkgrey, red, yellow } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = Number(localStorage.getItem('petId') as string);
 
@@ -199,19 +199,20 @@ const CommunityDetail: React.FC = () => {
     });
   };
 
-  const type = 'board';
   return (
     <>
       <Container>
         <Header />
         <Body>
-          <Nav type={type} />
+          <Nav type='board' />
           <PostContainer>
             <div>
               <Tag>자유</Tag>
               <Title>{postDetail.post.title}</Title>
               <NameCreatedAtConatiner>
-                <NameBox>{postDetail.post.petName}</NameBox>
+                <Link to={`/mypage/${postDetail.post.authorId}`}>
+                  <NameBox>{postDetail.post.petName}</NameBox>
+                </Link>
                 <CreatedAtBox>{postDetail.post.createdAt}</CreatedAtBox>
               </NameCreatedAtConatiner>
             </div>
@@ -243,9 +244,7 @@ const CommunityDetail: React.FC = () => {
                   </LikeButton>
                 )}
               </ButtonsDiv>
-              {petId !== postDetail.post.authorId ? (
-                ''
-              ) : (
+              {petId === postDetail.post.authorId && (
                 <ButtonsDiv>
                   <Button onClick={goToEdit}>수정</Button>
                   <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
@@ -311,7 +310,11 @@ const NameBox = styled.div`
   font-weight: bold;
   padding-left: 5px;
   margin-right: 20px;
-  color: #969696;
+  color: ${mediumgrey};
+
+  &:hover {
+    color: ${darkgrey};
+  }
 `;
 const CreatedAtBox = styled.div`
   font-size: 14px;

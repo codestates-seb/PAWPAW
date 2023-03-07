@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
@@ -48,6 +48,7 @@ interface PostList {
 
 const Mypage = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const [postData, setPostData] = useState<PostList>({
     myPosts: [],
     pageInfo: {
@@ -73,7 +74,7 @@ const Mypage = () => {
 
   async function getData() {
     await axios
-      .get(`${url}/pets/${petId}`, { headers })
+      .get(`${url}/pets/${params.petId}`, { headers })
       .then((res) => {
         setPostData(res.data);
       })
@@ -159,9 +160,11 @@ const Mypage = () => {
                   <Icon icon='mdi:gender-female' color='#F87D7D' style={{ fontSize: '20px' }} />
                 )}
               </InfoGenderBox>
-              <EditBox>
-                <button onClick={goEditPage}>수정</button>
-              </EditBox>
+              {params.petId === petId && (
+                <EditBox>
+                  <button onClick={goEditPage}>수정</button>
+                </EditBox>
+              )}
             </InfoTopBox>
             <InfoBottomBox>
               <InfoIconBox>
@@ -169,9 +172,11 @@ const Mypage = () => {
               </InfoIconBox>
               <InfoPosBox>{codeToAddress(postData.petInfo.code)}</InfoPosBox>
             </InfoBottomBox>
-            <LogoutBox>
-              <button onClick={logoutHandler}>로그아웃</button>
-            </LogoutBox>
+            {params.petId === petId && (
+              <LogoutBox>
+                <button onClick={logoutHandler}>로그아웃</button>
+              </LogoutBox>
+            )}
           </InfoBox>
         </ProfileContainerBox>
         {postData.myPosts === null ? (

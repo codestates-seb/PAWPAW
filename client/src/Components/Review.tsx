@@ -5,6 +5,7 @@ import { Comment } from '../Pages/CommunityDetail';
 import Swal from 'sweetalert2';
 import color from '../util/color';
 import { PostReviewUPDATE, PostReviewDELETE } from '../util/PostReviewApi';
+import { Link } from 'react-router-dom';
 
 type RProps = {
   comment: Comment;
@@ -96,7 +97,9 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
         <>
           <UserBox>
             <UserImage src={comment.profileImageUrl} />
-            <UserName>{comment.petName}</UserName>
+            <Link to={`/mypage/${comment.petId}`}>
+              <UserName>{comment.petName}</UserName>
+            </Link>
           </UserBox>
           <TextBox>
             <Text>
@@ -174,6 +177,10 @@ const UserName = styled.div`
   color: ${brown};
   font-size: 14px;
   font-weight: Bold;
+
+  &:hover {
+    color: ${darkbrown};
+  }
 `;
 
 const TextBox = styled.div`
