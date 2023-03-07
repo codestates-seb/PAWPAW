@@ -137,6 +137,10 @@ public class PetService {
 
         verifiedToken(findPet, petId);
 
+        if(findPet.getLoginId().equals("guest1234")) {
+            throw new BusinessLogicException(ExceptionCode.NOT_HAVE_PERMISSION_TO_EDIT);
+        }
+
         findPet.setPetStatus(PetStatus.PET_SLEEP);
 
         String findPetLoginId = findPet.getLoginId();
@@ -146,7 +150,6 @@ public class PetService {
             String image = findPet.getProfileImage();
             fileUploadService.deleteFile(image, folder);
         }
-//        petRepository.deleteById(id);
     }
 
     // 관리자 권한 승인 요청
