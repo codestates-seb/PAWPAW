@@ -11,6 +11,7 @@ import Nav from '../Components/Nav';
 import '../App.css';
 import FriendRecommend from '../Components/FriendRecommend';
 import CommunityPost from '../Components/CommunityPost';
+import SortModal from '../Components/SortModal';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -40,14 +41,16 @@ const Community: React.FC = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList | null>(null);
   const [page, setPage] = useState(1);
+  const [sorting, setSorting] = useState<string>('newest');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     getData();
-  }, [page]);
+  }, [page, sorting]);
 
   async function getData() {
     await axios
-      .get(`${url}/posts?page=${page}`, { headers })
+      .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
       .then((res) => {
         setPostData(res.data);
       })
@@ -68,6 +71,27 @@ const Community: React.FC = () => {
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
           {page === 1 && <FriendRecommend />}
+          <SortButtonBox>
+            <SortButton onClick={() => setIsOpen(!isOpen)}>
+              <span className='text'>
+                {isOpen
+                  ? '정렬'
+                  : sorting === 'newest'
+                  ? '최신순'
+                  : sorting === 'likes'
+                  ? '인기순'
+                  : '댓글 많은 순'}
+              </span>
+              <span className='icon'>
+                {isOpen ? (
+                  <Icon icon='octicon:triangle-up-16' />
+                ) : (
+                  <Icon icon='octicon:triangle-down-16' />
+                )}
+              </span>
+            </SortButton>
+            {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
+          </SortButtonBox>
           <PostList>
             {postData?.posts === null ? (
               <EmptyMessage>
@@ -122,6 +146,7 @@ const CommunityContainer = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
+
 const CommunityBanner = styled.div`
   margin-bottom: 20px;
   color: ${brown};
@@ -132,6 +157,33 @@ const CommunityBanner = styled.div`
 
   &:hover {
     color: ${darkbrown};
+  }
+`;
+
+const SortButtonBox = styled.div`
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+`;
+
+const SortButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${brown};
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${darkbrown};
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
   }
 `;
 
