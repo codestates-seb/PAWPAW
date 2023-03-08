@@ -48,6 +48,7 @@ public class PetResponseDto {
         private String contents;
         private String createdAt;
         private int likesCnt;
+        private int commentCnt;
 
     }
 
