@@ -6,7 +6,7 @@ import { mapReviewPOST } from '../util/MapApi';
 import color from '../util/color';
 const petId = localStorage.getItem('petId') as string;
 
-const { lightgrey, brown, darkbrown, bordergrey } = color;
+const { yellow, lightgrey, brown, darkbrown, bordergrey } = color;
 
 interface ResponseData {
   petInfo: petInfo;
@@ -60,6 +60,8 @@ const ModalReviewWrite = ({ getData, id }: MProps) => {
         title: '내용을 입력해주세요. ',
         color: brown,
         padding: '20px 0px 40px 0px',
+        confirmButtonColor: yellow,
+        confirmButtonText: '<b>확인</b>',
       });
       return;
     } else {

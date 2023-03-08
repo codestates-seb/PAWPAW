@@ -24,6 +24,7 @@ const headers = {
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
+const petId = localStorage.getItem('petId');
 
 interface FormData {
   profileImage: Blob | null;
@@ -49,10 +50,10 @@ export interface TokenInfo {
   code: number;
   roles: UserData[] | null;
 }
+
 const UserInfoEdit: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const petId: string | null = localStorage.getItem('petId');
   const { petName, age, isMale, isCat, code, profileImage } = location.state;
   const [info, setInfo] = useState<Info>({
     petName: petName,
@@ -205,7 +206,7 @@ const UserInfoEdit: FC = () => {
           .then((res) => {
             localStorage.setItem('code', res.data.code);
           });
-        navigate('/mypage');
+        navigate(`/mypage/${petId}`);
       } catch (error) {
         console.error('Error', error);
         alert(error);

@@ -5,6 +5,7 @@ import color from '../util/color';
 import styled from 'styled-components';
 
 const { ivory, brown, yellow } = color;
+const petId = localStorage.getItem('petId');
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Header: React.FC = () => {
   const goToMyPage = () => {
     const jwtToken = localStorage.getItem('Authorization');
     if (jwtToken !== null) {
-      navigate('/mypage');
+      navigate(`/mypage/${petId}`);
     } else {
       navigate('/');
     }

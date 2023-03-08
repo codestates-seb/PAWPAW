@@ -29,7 +29,7 @@ export default function Router() {
         <Route element={<PrivateRoute authentication={true} />}>
           <Route path='/userinfoedit' element={<UserInfoEdit />} />
           <Route path='/map' element={<HomeMap />} />
-          <Route path='/mypage' element={<Mypage />} />
+          <Route path='/mypage/:petId' element={<Mypage />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
           <Route path='/post' element={<Post />} />
