@@ -77,7 +77,7 @@ const Community: React.FC = () => {
         console.error(error);
       });
   };
-  console.log(postData);
+
   return (
     <Container>
       <Header />
