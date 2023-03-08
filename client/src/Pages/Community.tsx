@@ -12,6 +12,7 @@ import '../App.css';
 import FriendRecommend from '../Components/FriendRecommend';
 import CommunityPost from '../Components/CommunityPost';
 import SortModal from '../Components/SortModal';
+import SearchBar from '../Components/SearchBar';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -63,6 +64,20 @@ const Community: React.FC = () => {
     setPage(page);
   };
 
+  const search = (searchType: string, searchContent: string) => {
+    axios
+      .get(
+        `${url}/posts?page=${page}&sort=${sorting}&searchType=${searchType}&searchContent=${searchContent}`,
+        { headers },
+      )
+      .then((res) => {
+        setPostData(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  console.log(postData);
   return (
     <Container>
       <Header />
@@ -93,29 +108,31 @@ const Community: React.FC = () => {
             {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
           </SortButtonBox>
           <PostList>
-            {postData?.posts === null ? (
-              <EmptyMessage>
-                글이 없어요.. <br />첫 번째 글을 남겨주세요 🐾
-              </EmptyMessage>
+            {postData?.posts === null || postData?.posts.length === 0 ? (
+              <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
             ) : (
               postData?.posts.map((post: PostData) => <CommunityPost key={post.id} post={post} />)
             )}
           </PostList>
 
-          <PageContainer>
-            <Pagination
-              activePage={page}
-              itemsCountPerPage={15}
-              totalItemsCount={
-                postData?.pageInfo.totalPages ? postData?.pageInfo.totalPages * 15 : 15
-              }
-              pageRangeDisplayed={10}
-              prevPageText={'‹'}
-              nextPageText={'›'}
-              onChange={handlePageChange}
-            />
-          </PageContainer>
+          <Footer>
+            <SearchBar search={search} />
+            <PageContainer>
+              <Pagination
+                activePage={page}
+                itemsCountPerPage={15}
+                totalItemsCount={
+                  postData?.pageInfo.totalPages ? postData?.pageInfo.totalPages * 15 : 15
+                }
+                pageRangeDisplayed={10}
+                prevPageText={'<'}
+                nextPageText={'>'}
+                onChange={handlePageChange}
+              />
+            </PageContainer>
+          </Footer>
         </CommunityContainer>
+
         <PostWriteBtn onClick={() => navigate('/post')}>
           <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
         </PostWriteBtn>
@@ -193,7 +210,6 @@ const PostList = styled.div`
 `;
 
 const PageContainer = styled.div`
-  margin-top: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -218,9 +234,18 @@ const PostWriteBtn = styled.button`
 `;
 
 const EmptyMessage = styled.div`
-  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
   color: ${brown};
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export default Community;
