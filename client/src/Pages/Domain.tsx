@@ -12,9 +12,11 @@ import PostEdit from './PostEdit';
 import AddMarker from './AddMarker';
 import NotFound from './NotFound';
 import PrivateRoute from '../Components/PrivateRouter';
-import { axiosRefresh } from '../util/Inter';
+import { axiosRefresh } from '../util/GlobalAxios';
+import AutoLogout from '../util/autoLogout';
 
 export default function Router() {
+  const isLoggedIn = !!localStorage.getItem('Authorization');
   axiosRefresh;
   return (
     <BrowserRouter>
@@ -27,7 +29,7 @@ export default function Router() {
         <Route element={<PrivateRoute authentication={true} />}>
           <Route path='/userinfoedit' element={<UserInfoEdit />} />
           <Route path='/map' element={<HomeMap />} />
-          <Route path='/mypage' element={<Mypage />} />
+          <Route path='/mypage/:petId' element={<Mypage />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
           <Route path='/post' element={<Post />} />
@@ -36,6 +38,7 @@ export default function Router() {
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
+      {isLoggedIn && <AutoLogout />}
     </BrowserRouter>
   );
 }

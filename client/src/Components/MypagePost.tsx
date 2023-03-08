@@ -1,24 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import sanitizeHtml from 'sanitize-html';
+import { Icon } from '@iconify/react';
 import styled from 'styled-components';
 import color from '../util/color';
-import { Icon } from '@iconify/react';
-import sanitizeHtml from 'sanitize-html';
-import { PostData } from '../Pages/Community';
+import { PostData } from '../Pages/Mypage';
 
-const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
+const { ivory, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
 
-type PProps = {
+type MProps = {
   key: number;
   post: PostData;
 };
 
-const CommunityPost = ({ post }: PProps) => {
+const MypagePost = ({ post }: MProps) => {
   return (
     <Container>
       <LeftBox>
         <TitleDateDiv>
-          <Link to={`/community/${post.id}`}>
+          <Link to={`/community/${post.postId}`}>
             <TitleDiv>
               <TitleSpan>{post.title}</TitleSpan>
               {post.commentCnt !== 0 && (
@@ -33,9 +33,9 @@ const CommunityPost = ({ post }: PProps) => {
           </Link>
           <DateDiv>{post.createdAt}</DateDiv>
         </TitleDateDiv>
-        <ContentBox
+        <ContentDiv
           dangerouslySetInnerHTML={{
-            __html: sanitizeHtml(post.content, {
+            __html: sanitizeHtml(post.contents, {
               allowedTags: [],
               allowedAttributes: false,
             }),
@@ -44,9 +44,6 @@ const CommunityPost = ({ post }: PProps) => {
       </LeftBox>
 
       <RightBox>
-        <Link to={`/mypage/${post.petId}`}>
-          <NameDiv>{post.petName}</NameDiv>
-        </Link>
         <LikeContainer>
           <Icon
             className='icon'
@@ -63,15 +60,13 @@ const CommunityPost = ({ post }: PProps) => {
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   border-bottom: 1px solid ${bordergrey};
 `;
 
 const LeftBox = styled.div`
   flex-grow: 1;
-  min-height: 160px;
   padding: 10px;
+  height: 160px;
 `;
 
 const TitleDateDiv = styled.div`
@@ -90,7 +85,7 @@ const TitleDiv = styled.div`
 
 const TitleSpan = styled.span`
   &:hover {
-    color: #dfb895;
+    color: ${darkbrown};
   }
 `;
 
@@ -110,39 +105,21 @@ const DateDiv = styled.div`
   font-size: 14px;
   display: flex;
   align-items: center;
-  margin-left: 14px;
+  margin-left: 10px;
 `;
 
-const ContentBox = styled.div`
+const ContentDiv = styled.div`
   color: ${darkgrey};
   font-size: 16px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 `;
 
 const RightBox = styled.div`
   padding: 15px 10px;
-  height: 30px;
-  line-height: 30px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const NameDiv = styled.div`
-  margin-right: 3px;
-  padding: 0px 5px;
-  height: 30px;
-  color: ${mediumgrey};
-  font-weight: bold;
-  white-space: nowrap;
-
-  &:hover {
-    color: ${darkgrey};
-  }
 `;
 
 const LikeContainer = styled.div`
@@ -163,4 +140,4 @@ const LikeContainer = styled.div`
   }
 `;
 
-export default CommunityPost;
+export default MypagePost;
