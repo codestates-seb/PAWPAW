@@ -17,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.HashMap;
@@ -50,11 +49,10 @@ public class PetController {
     @PostMapping("/admin/{pet-id}")
     public ResponseEntity verifiedAdmin(@PathVariable("pet-id") long id,
                                         @RequestBody PetPostAdminDto petPostAdminDto,
-                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal,
-                                        HttpServletResponse response) {
+                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
-        petService.verifiedAdmin(id, petId, petPostAdminDto, response);
+        petService.verifiedAdmin(id, petId, petPostAdminDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -79,9 +77,7 @@ public class PetController {
     @GetMapping("/{pet-id}")
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
                                  @Positive @RequestParam(defaultValue = "1") int page,
-                                 @Positive @RequestParam(defaultValue = "15") int size,
-                                 @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
-        long petId = principal.getId();
+                                 @Positive @RequestParam(defaultValue = "15") int size) {
 
         Pet findPet = petService.findPet(id);
         Page<Post> posts = petService.findPost(page - 1, size, id);

@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -115,15 +114,6 @@ public class PetService {
         return petRepository.existsByLoginId(loginId);
     }
 
-    // 저장된 유저의 id와 요청한 유저의 id가 맞는지 검증하는 로직
-    public Pet petVerifiedToken(long id, long petId) {
-        Pet findPet = findPet(id);
-
-        verifiedToken(findPet, petId);
-
-        return findPet;
-    }
-
     public Pet findPet(long id) {
         return findVerifiedPet(id);
     }
@@ -153,7 +143,7 @@ public class PetService {
     }
 
     // 관리자 권한 승인 요청
-    public void verifiedAdmin(long id, long petId, PetPostAdminDto petPostAdminDto, HttpServletResponse response) {
+    public void verifiedAdmin(long id, long petId, PetPostAdminDto petPostAdminDto) {
         Pet findPet = findVerifiedPet(id);
 
         verifiedToken(findPet, petId);
