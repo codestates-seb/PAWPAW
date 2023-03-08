@@ -33,6 +33,8 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
         title: '내용을 입력해주세요. ',
         color: brown,
         padding: '20px 0px 40px 0px',
+        confirmButtonColor: yellow,
+        confirmButtonText: '<b>확인</b>',
       });
       return;
     } else {

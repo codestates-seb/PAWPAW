@@ -13,7 +13,7 @@ type CProps = {
   userData: UserList;
 };
 
-const { brown, bordergrey, lightgrey, darkbrown } = color;
+const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
 
 const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
   const [review, setReview] = useState<string>('');
@@ -32,6 +32,8 @@ const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
         title: '내용을 입력해주세요. ',
         color: brown,
         padding: '20px 0px 40px 0px',
+        confirmButtonColor: yellow,
+        confirmButtonText: '<b>확인</b>',
       });
       return;
     } else {
