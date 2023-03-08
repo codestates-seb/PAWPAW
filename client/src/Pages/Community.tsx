@@ -11,6 +11,8 @@ import Nav from '../Components/Nav';
 import '../App.css';
 import FriendRecommend from '../Components/FriendRecommend';
 import CommunityPost from '../Components/CommunityPost';
+import SortModal from '../Components/SortModal';
+import SearchBar from '../Components/SearchBar';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -40,14 +42,16 @@ const Community: React.FC = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList | null>(null);
   const [page, setPage] = useState(1);
+  const [sorting, setSorting] = useState<string>('newest');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     getData();
-  }, [page]);
+  }, [page, sorting]);
 
   async function getData() {
     await axios
-      .get(`${url}/posts?page=${page}`, { headers })
+      .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
       .then((res) => {
         setPostData(res.data);
       })
@@ -60,6 +64,20 @@ const Community: React.FC = () => {
     setPage(page);
   };
 
+  const search = (searchType: string, searchContent: string) => {
+    axios
+      .get(
+        `${url}/posts?page=${page}&sort=${sorting}&searchType=${searchType}&searchContent=${searchContent}`,
+        { headers },
+      )
+      .then((res) => {
+        setPostData(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <Container>
       <Header />
@@ -68,30 +86,53 @@ const Community: React.FC = () => {
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
           {page === 1 && <FriendRecommend />}
+          <SortButtonBox>
+            <SortButton onClick={() => setIsOpen(!isOpen)}>
+              <span className='text'>
+                {isOpen
+                  ? '정렬'
+                  : sorting === 'newest'
+                  ? '최신순'
+                  : sorting === 'likes'
+                  ? '인기순'
+                  : '댓글 많은 순'}
+              </span>
+              <span className='icon'>
+                {isOpen ? (
+                  <Icon icon='octicon:triangle-up-16' />
+                ) : (
+                  <Icon icon='octicon:triangle-down-16' />
+                )}
+              </span>
+            </SortButton>
+            {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
+          </SortButtonBox>
           <PostList>
-            {postData?.posts === null ? (
-              <EmptyMessage>
-                글이 없어요.. <br />첫 번째 글을 남겨주세요 🐾
-              </EmptyMessage>
+            {postData?.posts === null || postData?.posts.length === 0 ? (
+              <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
             ) : (
               postData?.posts.map((post: PostData) => <CommunityPost key={post.id} post={post} />)
             )}
           </PostList>
 
-          <PageContainer>
-            <Pagination
-              activePage={page}
-              itemsCountPerPage={15}
-              totalItemsCount={
-                postData?.pageInfo.totalPages ? postData?.pageInfo.totalPages * 15 : 15
-              }
-              pageRangeDisplayed={10}
-              prevPageText={'‹'}
-              nextPageText={'›'}
-              onChange={handlePageChange}
-            />
-          </PageContainer>
+          <Footer>
+            <SearchBar search={search} />
+            <PageContainer>
+              <Pagination
+                activePage={page}
+                itemsCountPerPage={15}
+                totalItemsCount={
+                  postData?.pageInfo.totalPages ? postData?.pageInfo.totalPages * 15 : 15
+                }
+                pageRangeDisplayed={10}
+                prevPageText={'<'}
+                nextPageText={'>'}
+                onChange={handlePageChange}
+              />
+            </PageContainer>
+          </Footer>
         </CommunityContainer>
+
         <PostWriteBtn onClick={() => navigate('/post')}>
           <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
         </PostWriteBtn>
@@ -122,6 +163,7 @@ const CommunityContainer = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
+
 const CommunityBanner = styled.div`
   margin-bottom: 20px;
   color: ${brown};
@@ -135,13 +177,39 @@ const CommunityBanner = styled.div`
   }
 `;
 
+const SortButtonBox = styled.div`
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+`;
+
+const SortButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${brown};
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${darkbrown};
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+  }
+`;
+
 const PostList = styled.div`
   margin-top: 10px;
   height: 100%;
 `;
 
 const PageContainer = styled.div`
-  margin-top: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -166,9 +234,18 @@ const PostWriteBtn = styled.button`
 `;
 
 const EmptyMessage = styled.div`
-  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
   color: ${brown};
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export default Community;
