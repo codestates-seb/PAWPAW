@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -164,6 +165,11 @@ public class PetService {
         authService.setToken(tokenInfo);
 
         redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+    }
+
+    public List<Pet> findFriends(List<Integer> code,long id) {
+        List<Pet> friends = petRepository.findFriends(code,id);
+        return friends;
     }
 
     private void verifiedToken(Pet pet, long petId) {
