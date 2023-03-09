@@ -41,7 +41,7 @@ public interface PostMapper {
     }
 
 
-    default PostsResponseDto postsToPostsResponseDto(Page<Post> posts) {
+    default PostsResponseDto postsToPostsResponseDto(Page<Post> posts, List<Pet> friends) {
         List<Post> contents = posts.getContent();
 
         List<PostsResponseDto.PostResponseDto> responseDtos = contents.stream()
@@ -61,7 +61,20 @@ public interface PostMapper {
                     return postResponseDto;
                 }).collect(Collectors.toList());
 
-        return new PostsResponseDto(responseDtos, posts);
+        List<PostsResponseDto.FriendsDto> friendsDtos = friends.stream()
+                .map(friend -> {
+                    PostsResponseDto.FriendsDto friendsDto = new PostsResponseDto.FriendsDto();
+                    friendsDto.setPetId(friend.getId());
+                    friendsDto.setProfileImageUrl(friend.getProfileImage());
+                    friendsDto.setPetName(friend.getPetName());
+                    friendsDto.setPetAge(friend.getAge());
+                    friendsDto.setGender(friend.getGender());
+                    friendsDto.setAddressName(friend.getAddress().getName());
+
+                    return friendsDto;
+                }).collect(Collectors.toList());
+
+        return new PostsResponseDto(friendsDtos,responseDtos, posts);
     }
 
     default PostDetailsResponseDto postToPostDetailsDto(Post post, long petId) {
