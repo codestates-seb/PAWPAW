@@ -45,19 +45,13 @@ export const axiosRefresh = axios.interceptors.response.use(
       await refresh();
       return axios(originRequest);
     }
-    if (status === 400 && error.response.data.message === 'Invalid refresh token') {
-      await Logout();
-      window.location.reload();
-    }
-    if (status === 400 && error.response.data.message === 'Invalid token') {
-      await Logout();
-      window.location.reload();
-    }
-    if (status === 404 && error.response.data.message === 'Refresh token not found') {
-      await Logout();
-      window.location.reload();
-    }
-    if (status === 401 && error.response.data.message === 'Unauthorized') {
+    if (
+      (status === 400 || status === 401 || status === 404) &&
+      (error.response.data.message === ('Invalid refresh token' || 'Invalid token') ||
+        error.response.data.message === 'Invalid token' ||
+        error.response.data.message === 'Refresh token not found' ||
+        error.response.data.message === 'Unauthorized')
+    ) {
       await Logout();
       window.location.reload();
     }
