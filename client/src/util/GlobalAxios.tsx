@@ -38,7 +38,15 @@ export const axiosRefresh = axios.interceptors.response.use(
       await refresh();
       return axios(originRequest);
     }
-    if (error.response.data.message === 'Invalid refresh token' && 'Refresh token not found') {
+    if (status === 400 && error.response.data.message === 'Invalid refresh token') {
+      petLogout();
+      return window.location.reload();
+    }
+    if (status === 400 && error.response.data.message === 'Invalid token') {
+      petLogout();
+      return window.location.reload();
+    }
+    if (status === 404 && error.response.data.message === 'Refresh token not found') {
       petLogout();
       return window.location.reload();
     }
