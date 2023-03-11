@@ -16,7 +16,6 @@ import { axiosRefresh } from '../util/GlobalAxios';
 import AutoLogout from '../util/autoLogout';
 
 export default function Router() {
-  const isLoggedIn = !!localStorage.getItem('Authorization');
   axiosRefresh;
   return (
     <BrowserRouter>
@@ -38,7 +37,6 @@ export default function Router() {
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
-      {isLoggedIn && <AutoLogout />}
     </BrowserRouter>
   );
 }
