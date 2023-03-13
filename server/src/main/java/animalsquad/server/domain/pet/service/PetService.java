@@ -136,10 +136,17 @@ public class PetService {
 
         String findPetLoginId = findPet.getLoginId();
         redisTemplate.delete("RT:" + findPetLoginId);
-        // S3에서 image삭제
+
+        // S3에서 image삭제 후 기본 이미지로 변경
         if (!findPet.getProfileImage().contains("default")) {
             String image = findPet.getProfileImage();
             fileUploadService.deleteFile(image, folder);
+
+            if(findPet.getSpecies() == Species.DOG) {
+                findPet.setProfileImage(defaultDogImageUrl);
+            } else {
+                findPet.setProfileImage(defaultCatImageUrl);
+            }
         }
     }
 
