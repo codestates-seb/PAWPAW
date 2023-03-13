@@ -1,9 +1,16 @@
 import axios from 'axios';
-import { petLogout } from './UserApi';
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = process.env.REACT_APP_API_ROOT;
 
+const Logout = async () => {
+  localStorage.removeItem('Authorization');
+  localStorage.removeItem('Refresh');
+  localStorage.removeItem('petId');
+  localStorage.removeItem('code');
+  localStorage.removeItem('check');
+  localStorage.removeItem('Admin');
+};
 const refresh = async () => {
   const headers = {
     Authorization: jwtToken,
@@ -38,9 +45,15 @@ export const axiosRefresh = axios.interceptors.response.use(
       await refresh();
       return axios(originRequest);
     }
-    if (error.response.data.message === 'Invalid refresh token' && 'Refresh token not found') {
-      petLogout();
-      return window.location.reload();
+    if (
+      (status === 400 || status === 401 || status === 404) &&
+      (error.response.data.message === ('Invalid refresh token' || 'Invalid token') ||
+        error.response.data.message === 'Invalid token' ||
+        error.response.data.message === 'Refresh token not found' ||
+        error.response.data.message === 'Unauthorized')
+    ) {
+      await Logout();
+      window.location.reload();
     }
     return Promise.reject(error);
   },

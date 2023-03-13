@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
+
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { Icon } from '@iconify/react';
-
+import Swal from 'sweetalert2';
 import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
@@ -75,9 +76,17 @@ const Login: React.FC = () => {
           localStorage.setItem('Admin', admin[1]);
         }
         navigate('/map');
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error', error);
-        setPwErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다.');
+        error.response.data.message === 'Withdraw member'
+          ? Swal.fire({
+              title: '탈퇴 회원',
+              text: '탈퇴한 회원입니다. 로그인이 불가능합니다.',
+              icon: 'warning',
+              confirmButtonColor: red,
+              confirmButtonText: '<b>확인</b>',
+            })
+          : setPwErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다.');
         if (pwRef.current) {
           pwRef.current.focus();
           pwRef.current.value = '';
