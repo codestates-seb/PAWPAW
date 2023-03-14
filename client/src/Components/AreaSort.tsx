@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Button = (el: string) => {
+  const [testSwitch, setTestSwitch] = useState<boolean>(false);
   const [newSwitch, setNewSwitch] = useState<boolean>(false);
+
   return newSwitch ? (
     <AreaNameCircleOn>
       <AreaButton onClick={() => setNewSwitch(!newSwitch)}>{el}</AreaButton>
@@ -108,6 +110,9 @@ const AreaButton = styled.button`
   color: #7b7b7b;
   font-size: 12px;
   font-weight: bold;
+  width: 100%;
+  height: 100%;
+  text-align: center;
 `;
 const AreaNameCircleOn = styled(AreaNameCircle)`
   background-color: #fff8f0;
