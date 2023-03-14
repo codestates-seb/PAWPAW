@@ -1,65 +1,88 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const Button = (el: string) => {
-  const [testSwitch, setTestSwitch] = useState<boolean>(false);
+const Button = (el: string, testSwitch: boolean, setTestSwitch: any) => {
   const [newSwitch, setNewSwitch] = useState<boolean>(false);
-
-  return newSwitch ? (
+  return testSwitch ? (
+    // 전체 버튼이 켜져 있을 때
+    <AreaNameCircle>
+      <AreaButton
+        onClick={() => {
+          setNewSwitch(true);
+          setTestSwitch(false);
+        }}
+      >
+        {el}
+      </AreaButton>
+    </AreaNameCircle>
+  ) : newSwitch ? (
     <AreaNameCircleOn>
-      <AreaButton onClick={() => setNewSwitch(!newSwitch)}>{el}</AreaButton>
+      <AreaButton onClick={() => setNewSwitch(false)}>{el}</AreaButton>
     </AreaNameCircleOn>
   ) : (
     <AreaNameCircle>
-      <AreaButton onClick={() => setNewSwitch(!newSwitch)}>{el}</AreaButton>
+      <AreaButton onClick={() => setNewSwitch(true)}>{el}</AreaButton>
+    </AreaNameCircle>
+  );
+};
+
+const WholeButton = (el: string, testSwitch: boolean, setTestSwitch: any) => {
+  return testSwitch ? (
+    <AreaNameCircleOn>
+      <AreaButton>{el}</AreaButton>
+    </AreaNameCircleOn>
+  ) : (
+    <AreaNameCircle>
+      <AreaButton onClick={() => setTestSwitch(true)}>{el}</AreaButton>
     </AreaNameCircle>
   );
 };
 
 const AreaSort: React.FC = () => {
+  const [testSwitch, setTestSwitch] = useState<boolean>(true);
   return (
     <>
       <AreaBox>
         <TextBox></TextBox>
         <RowBox>
-          {Button('전체')}
-          {Button('강남구')}
-          {Button('강동구')}
-          {Button('강북구')}
+          {WholeButton('전체', testSwitch, setTestSwitch)}
+          {Button('강남구', testSwitch, setTestSwitch)}
+          {Button('강동구', testSwitch, setTestSwitch)}
+          {Button('강북구', testSwitch, setTestSwitch)}
         </RowBox>
         <RowBox>
-          {Button('강서구')}
-          {Button('관악구')}
-          {Button('광진구')}
-          {Button('구로구')}
+          {Button('강서구', testSwitch, setTestSwitch)}
+          {Button('관악구', testSwitch, setTestSwitch)}
+          {Button('광진구', testSwitch, setTestSwitch)}
+          {Button('구로구', testSwitch, setTestSwitch)}
         </RowBox>
         <RowBox>
-          {Button('금천구')}
-          {Button('노원구')}
-          {Button('도봉구')}
-          {Button('동대문구')}
+          {Button('금천구', testSwitch, setTestSwitch)}
+          {Button('노원구', testSwitch, setTestSwitch)}
+          {Button('도봉구', testSwitch, setTestSwitch)}
+          {Button('동대문구', testSwitch, setTestSwitch)}
         </RowBox>
         <RowBox>
-          {Button('동작구')}
-          {Button('마포구')}
-          {Button('서대문구')}
-          {Button('서초구')}
+          {Button('동작구', testSwitch, setTestSwitch)}
+          {Button('마포구', testSwitch, setTestSwitch)}
+          {Button('서대문구', testSwitch, setTestSwitch)}
+          {Button('서초구', testSwitch, setTestSwitch)}
         </RowBox>
         <RowBox>
-          {Button('성동구')}
-          {Button('성북구')}
-          {Button('송파구')}
-          {Button('양천구')}
+          {Button('성동구', testSwitch, setTestSwitch)}
+          {Button('성북구', testSwitch, setTestSwitch)}
+          {Button('송파구', testSwitch, setTestSwitch)}
+          {Button('양천구', testSwitch, setTestSwitch)}
         </RowBox>
         <RowBox>
-          {Button('영등포구')}
-          {Button('용산구')}
-          {Button('은평구')}
-          {Button('종로구')}
+          {Button('영등포구', testSwitch, setTestSwitch)}
+          {Button('용산구', testSwitch, setTestSwitch)}
+          {Button('은평구', testSwitch, setTestSwitch)}
+          {Button('종로구', testSwitch, setTestSwitch)}
         </RowBox>
         <RowBox>
-          {Button('중구')}
-          {Button('중랑구')}
+          {Button('중구', testSwitch, setTestSwitch)}
+          {Button('중랑구', testSwitch, setTestSwitch)}
           <BlankCircle />
           <BlankCircle />
         </RowBox>
