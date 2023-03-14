@@ -7,7 +7,6 @@ import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
@@ -15,14 +14,10 @@ import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 import color from '../util/color';
 import { codeToAddress } from '../util/ConvertAddress';
+import headers from '../util/formDataHeaders';
 import { petDelete } from '../util/UserApi';
 import AddressModal from './AddressModal';
 import { TokenInfo } from './Login';
-
-const jwtToken = localStorage.getItem('Authorization');
-const headers = {
-  Authorization: jwtToken,
-};
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;

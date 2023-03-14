@@ -6,17 +6,12 @@ import 'react-quill/dist/quill.snow.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../util/color';
+import headers from '../util/formDataHeaders';
 
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
-const jwtToken = localStorage.getItem('Authorization');
-const headers = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: jwtToken,
-};
 
 export interface Data {
   title: string;

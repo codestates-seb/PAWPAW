@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import { Comment } from '../Components/Comment';
 import CommunityComment from '../Components/CommunityComment';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
-import { Comment } from '../Components/Review';
 import load from '../img/paw.gif';
 import color from '../util/color';
+import { PostDELETE } from '../util/CommunityCommentApi';
 import headers from '../util/headers';
-import { PostDELETE } from '../util/PostReviewApi';
 import { PageInfo } from './Community';
 import { PetInfo } from './Mypage';
 

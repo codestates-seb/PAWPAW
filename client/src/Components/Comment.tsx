@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
-import { PostReviewDELETE, PostReviewUPDATE } from '../util/PostReviewApi';
+import { CommunityCommentDELETE, CommunityCommentUPDATE } from '../util/CommunityCommentApi';
 
 const { ivory, brown, bordergrey, lightgrey, yellow, darkbrown } = color;
 const petId = Number(localStorage.getItem('petId') as string);
 
-interface ReviewProps {
+interface CommentProps {
   comment: Comment;
   getData(): void;
   editingCommentId: number;
@@ -25,14 +25,14 @@ export interface Comment {
   createdAt: string;
 }
 
-const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: ReviewProps) => {
+const Comment = ({ comment, getData, editingCommentId, setEditingCommentId }: CommentProps) => {
   const [newText, setNewText] = useState<string>('');
 
-  const reviewEditHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const commentEditHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setNewText(e.target.value);
   };
 
-  const reviewUpdateHandler = (commentId: number) => {
+  const commentUpdateHandler = (commentId: number) => {
     if (newText === '') {
       Swal.fire({
         position: 'center',
@@ -64,7 +64,7 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: Rev
             confirmButtonColor: yellow,
             confirmButtonText: '<b>확인</b>',
           });
-          PostReviewUPDATE(commentId, newText).then(() => getData());
+          CommunityCommentUPDATE(commentId, newText).then(() => getData());
           setEditingCommentId(0);
           setNewText('');
         }
@@ -72,12 +72,12 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: Rev
     }
   };
 
-  const reviewEditCancelHandler = () => {
+  const commentEditCancelHandler = () => {
     setEditingCommentId(0);
     setNewText('');
   };
 
-  const reviewDeleteHandler = (commentId: number) => {
+  const commentDeleteHandler = (commentId: number) => {
     Swal.fire({
       title: '정말 삭제하시겠어요?',
       icon: 'warning',
@@ -96,7 +96,7 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: Rev
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostReviewDELETE(commentId).then(() => getData());
+        CommunityCommentDELETE(commentId).then(() => getData());
       }
     });
   };
@@ -119,7 +119,7 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: Rev
                   <button onClick={() => setEditingCommentId(comment.commentId)}>
                     <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
                   </button>
-                  <button onClick={() => reviewDeleteHandler(comment.commentId)}>
+                  <button onClick={() => commentDeleteHandler(comment.commentId)}>
                     <Icon
                       icon='material-symbols:delete-outline-rounded'
                       style={{ fontSize: '15px' }}
@@ -142,14 +142,14 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: Rev
               <Input
                 type='text'
                 placeholder={comment.content}
-                onChange={reviewEditHandler}
-                id='basereview'
+                onChange={commentEditHandler}
+                id='basecomment'
               ></Input>
             </InputBox>
-            <CheckButton onClick={() => reviewUpdateHandler(comment.commentId)}>
+            <CheckButton onClick={() => commentUpdateHandler(comment.commentId)}>
               <Icon icon='mdi:check-bold' color='#ffc57e' style={{ fontSize: '20px' }} />
             </CheckButton>
-            <XButton onClick={reviewEditCancelHandler}>
+            <XButton onClick={commentEditCancelHandler}>
               <Icon icon='mdi:cancel-bold' color='#f79483' style={{ fontSize: '22px' }} />
             </XButton>
           </InputTextBox>
@@ -304,4 +304,4 @@ const XButton = styled.button`
   }
 `;
 
-export default Review;
+export default Comment;

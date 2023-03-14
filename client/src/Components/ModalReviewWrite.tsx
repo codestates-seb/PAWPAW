@@ -4,10 +4,10 @@ import Swal from 'sweetalert2';
 import color from '../util/color';
 import { mapReviewPOST } from '../util/MapApi';
 import { getUserInfo } from '../util/UserApi';
-import { InputProps } from './Review';
-const petId = localStorage.getItem('petId') as string;
+import { InputProps } from './Comment';
 
 const { yellow, lightgrey, brown, darkbrown, bordergrey } = color;
+const petId = localStorage.getItem('petId') as string;
 
 interface ResponseData {
   petInfo: petInfo;

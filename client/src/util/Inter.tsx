@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { petLogout } from './UserApi';
+
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = process.env.REACT_APP_API_ROOT;

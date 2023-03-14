@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../Components/Header';
 import color from '../util/color';
+
 const { yellow, brown, darkbrown } = color;
 
 function NotFound() {

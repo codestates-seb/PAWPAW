@@ -1,6 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import styled from 'styled-components';
 
 const MyMarker = () => {
   return (
@@ -14,6 +13,6 @@ const IconBox = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 3px;
-`
+`;
 
 export default MyMarker;

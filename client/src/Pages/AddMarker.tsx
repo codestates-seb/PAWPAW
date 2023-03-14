@@ -1,30 +1,21 @@
 import { Icon } from '@iconify/react';
 import axios from 'axios';
 import React, { useRef, useState } from 'react';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import Header from '../Components/Header';
 import Input from '../Components/Input';
 import Nav from '../Components/Nav';
 import NoAuth from '../Components/NoAuth';
 import color from '../util/color';
 import { codeToAddress } from '../util/ConvertAddress';
+import headers from '../util/formDataHeaders';
 import AddressModal from './AddressModal';
 
 const { red, ivory, darkgrey, lightgrey, brown, darkbrown, yellow, bordergrey } = color;
-
-const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
 const isAdmin = localStorage.getItem('Admin');
-
-const headers = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: jwtToken,
-  Refresh: refreshToken,
-};
 
 interface Position {
   lat: number;

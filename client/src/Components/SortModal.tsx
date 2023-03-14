@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import color from '../util/color';
-const { ivory, darkivory, yellow, brown, mediumgrey, darkgrey } = color;
+
+const { ivory, darkivory, yellow, brown } = color;
 
 interface SortModalProps {
   setSorting: React.Dispatch<React.SetStateAction<string>>;

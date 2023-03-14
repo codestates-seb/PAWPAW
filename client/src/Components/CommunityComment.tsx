@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { PostDetail, UserData } from '../Pages/CommunityDetail';
 import color from '../util/color';
-import { PostReviewEdit } from '../util/PostReviewApi';
-import Review, { InputProps } from './Review';
+import { CommunityCommentEdit } from '../util/CommunityCommentApi';
+import Comment, { InputProps } from './Comment';
+
+const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
 
 interface CommunityCommentProps {
   getData(): void;
@@ -13,18 +15,16 @@ interface CommunityCommentProps {
   userData: UserData;
 }
 
-const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
-
 const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCommentProps) => {
-  const [review, setReview] = useState<string>('');
+  const [comment, setComment] = useState<string>('');
   const [editingCommentId, setEditingCommentId] = useState<number>(0);
 
-  const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setReview(e.target.value);
+  const commentHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setComment(e.target.value);
   };
 
-  const reviewPostHandler = () => {
-    if (review === '') {
+  const commentSubmitHandler = () => {
+    if (comment === '') {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -37,7 +37,7 @@ const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCo
       });
       return;
     } else {
-      PostReviewEdit(Number(postId), review).then(() => getData());
+      CommunityCommentEdit(Number(postId), comment).then(() => getData());
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -48,7 +48,7 @@ const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCo
         showConfirmButton: false,
         timer: 1500,
       });
-      setReview('');
+      setComment('');
     }
   };
 
@@ -56,14 +56,14 @@ const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCo
     <Container>
       <Title>댓글 {postDetail.comments?.length}</Title>
       {postDetail.comments && (
-        <Reviews>
+        <Comments>
           {postDetail.comments.length === 0 ? (
             <EmptyMessage>
               댓글이 없어요.. <br />첫 번째 댓글을 남겨주세요 🐾
             </EmptyMessage>
           ) : (
             postDetail.comments.map((comment: any) => (
-              <Review
+              <Comment
                 key={comment.commentId}
                 comment={comment}
                 getData={getData}
@@ -72,27 +72,27 @@ const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCo
               />
             ))
           )}
-        </Reviews>
+        </Comments>
       )}
 
-      <ReviewWrite>
+      <CommentWrite>
         <LeftBox>
-          <ReviewUserImage src={userData.petInfo.profileImage} />
-          <ReviewUserName>{userData.petInfo.petName}</ReviewUserName>
+          <UserImage src={userData.petInfo.profileImage} />
+          <UserName>{userData.petInfo.petName}</UserName>
         </LeftBox>
 
         <RightBox>
           <InputBox>
             <Input
               type='text'
-              value={review}
+              value={comment}
               placeholder='댓글을 남겨주세요. '
-              onChange={reviewHandler}
+              onChange={commentHandler}
             />
           </InputBox>
-          <SubmitButton onClick={reviewPostHandler}>작성</SubmitButton>
+          <SubmitButton onClick={commentSubmitHandler}>작성</SubmitButton>
         </RightBox>
-      </ReviewWrite>
+      </CommentWrite>
     </Container>
   );
 };
@@ -102,7 +102,7 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const Reviews = styled.div`
+const Comments = styled.div`
   height: calc(100vh - 537px - 50px - 100px);
   overflow-y: scroll;
   ::-webkit-scrollbar {
@@ -133,14 +133,14 @@ const LeftBox = styled.div`
   align-items: center;
 `;
 
-const ReviewUserImage = styled.img`
+const UserImage = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background-size: cover;
 `;
 
-const ReviewUserName = styled.div`
+const UserName = styled.div`
   margin-top: 8px;
   color: ${brown};
   font-size: 14px;
@@ -193,7 +193,7 @@ const RightBox = styled.div`
   align-items: center;
 `;
 
-const ReviewWrite = styled.div`
+const CommentWrite = styled.div`
   width: 100%;
   height: 100px;
   display: flex;

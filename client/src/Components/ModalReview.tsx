@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
 import { mapReviewDELETE, mapReviewUPDATE } from '../util/MapApi';
+import { InputProps } from './Comment';
 import { Review } from './Modal';
-import { InputProps } from './Review';
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
 const petId = Number(localStorage.getItem('petId') as string);
