@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
+
 const { yellow, darkbrown, brown } = color;
 
-interface IProps {
+interface SearchBarProps {
   search: (searchType: string, searchContent: string) => void;
 }
 
-function SearchBar({ search }: IProps) {
+function SearchBar({ search }: SearchBarProps) {
   const [type, setType] = useState<string>('author');
   const [text, setText] = useState<string>('');
 

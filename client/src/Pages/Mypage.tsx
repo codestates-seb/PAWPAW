@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useParams } from 'react-router';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-import headers from '../util/headers';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import styled from 'styled-components';
 import Header from '../Components/Header';
-import color from '../util/color';
-import Profile from './Profile';
 import MypagePost from '../Components/MypagePost';
+import color from '../util/color';
+import headers from '../util/headers';
+import { PageInfo } from './Community';
+import Profile from './Profile';
 
 const { brown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 
-interface PostList {
-  myPosts: PostData[] | null;
+interface MyPageData {
+  myPosts: Post[] | null;
   pageInfo: PageInfo;
   petInfo: PetInfo;
 }
 
-export interface PostData {
+export interface Post {
   contents: string;
   createdAt: string;
   likesCnt: number;
@@ -26,13 +27,6 @@ export interface PostData {
   petName: string;
   postId: number;
   title: string;
-}
-
-interface PageInfo {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 }
 
 export interface PetInfo {
@@ -47,7 +41,7 @@ export interface PetInfo {
 
 const Mypage = () => {
   const params = useParams();
-  const [postData, setPostData] = useState<PostList | null>(null);
+  const [myPageData, setMyPageData] = useState<MyPageData | null>(null);
 
   useEffect(() => {
     getData();
@@ -57,30 +51,28 @@ const Mypage = () => {
     await axios
       .get(`${url}/pets/${params.petId}`, { headers })
       .then((res) => {
-        setPostData(res.data);
+        setMyPageData(res.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }
-
+  console.log(myPageData);
   return (
     <>
       <Header />
       <Container>
-        <Profile petInfo={postData?.petInfo} />
-        {postData?.myPosts && (
+        <Profile petInfo={myPageData?.petInfo} />
+        {myPageData?.myPosts && (
           <PostsContainer>
             <TitleDiv>
               <TitleSpan>작성한 글</TitleSpan>
               <Icon icon='mdi:paw' style={{ fontSize: '20px' }} />
             </TitleDiv>
-            {postData?.myPosts.length === 0 ? (
+            {myPageData?.myPosts.length === 0 ? (
               <EmptyMessage>작성한 글이 없어요 🐾</EmptyMessage>
             ) : (
-              postData?.myPosts.map((post: PostData) => (
-                <MypagePost key={post.postId} post={post} />
-              ))
+              myPageData?.myPosts.map((post: Post) => <MypagePost key={post.postId} post={post} />)
             )}
           </PostsContainer>
         )}

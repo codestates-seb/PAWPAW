@@ -1,18 +1,18 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-import Header from '../Components/Header';
-import Nav from '../Components/Nav';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import Header from '../Components/Header';
 import Input from '../Components/Input';
-import AddressModal from './AddressModal';
-import { codeToAddress } from '../util/ConvertAddress';
-import color from '../util/color';
+import Nav from '../Components/Nav';
 import NoAuth from '../Components/NoAuth';
+import color from '../util/color';
+import { codeToAddress } from '../util/ConvertAddress';
+import AddressModal from './AddressModal';
 
 const { red, ivory, darkgrey, lightgrey, brown, darkbrown, yellow, bordergrey } = color;
 
@@ -26,7 +26,7 @@ const headers = {
   Refresh: refreshToken,
 };
 
-interface IPos {
+interface Position {
   lat: number;
   lng: number;
 }
@@ -53,7 +53,7 @@ const AddMarker = () => {
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(-1);
   const [click, setClick] = useState(false);
-  const [position, setPosition] = useState<IPos>();
+  const [position, setPosition] = useState<Position>();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({ placeImage: null });
   const [fileImage, setFileImage] = useState<string>();
@@ -219,12 +219,11 @@ const AddMarker = () => {
     }
   };
 
-  const type = 'addplace';
   return (
     <WholeFlex>
       <Header />
       <Body>
-        <Nav type={type} />
+        <Nav type='addplace' />
         <Container>
           {isAdmin === 'ROLE_ADMIN' ? (
             <>

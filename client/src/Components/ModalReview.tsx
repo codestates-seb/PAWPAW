@@ -1,21 +1,22 @@
+import { Icon } from '@iconify/react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 import color from '../util/color';
-import { mapReviewUPDATE, mapReviewDELETE } from '../util/MapApi';
-import { IReview } from './Modal';
+import { mapReviewDELETE, mapReviewUPDATE } from '../util/MapApi';
+import { Review } from './Modal';
+import { InputProps } from './Review';
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
 const petId = Number(localStorage.getItem('petId') as string);
 
-type MProps = {
-  review: IReview;
+interface ModalReviewProps {
+  review: Review;
   editActivate: number;
   setEditActivate(state: number): void;
   reviewActivateHandler(commentId: number): void;
   getData(): void;
-};
+}
 
 const ModalReview = ({
   review,
@@ -23,7 +24,7 @@ const ModalReview = ({
   setEditActivate,
   reviewActivateHandler,
   getData,
-}: MProps) => {
+}: ModalReviewProps) => {
   const [newText, setNewText] = useState<string>('');
 
   const reviewUpdateHandler = (commentId: number) => {
@@ -217,13 +218,7 @@ const ReviewInputBox = styled.div`
   font-weight: 500;
 `;
 
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const ReviewInput = styled.input<Props>`
+const ReviewInput = styled.input<InputProps>`
   padding: 10px;
   width: 100%;
   height: 50px;

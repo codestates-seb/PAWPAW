@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { Comment } from '../Pages/CommunityDetail';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
-import { PostReviewUPDATE, PostReviewDELETE } from '../util/PostReviewApi';
-import { Link } from 'react-router-dom';
-
-type RProps = {
-  comment: Comment;
-  getData(): void;
-  editingCommentId: number;
-  setEditingCommentId(commentId: number): void;
-};
+import { PostReviewDELETE, PostReviewUPDATE } from '../util/PostReviewApi';
 
 const { ivory, brown, bordergrey, lightgrey, yellow, darkbrown } = color;
 const petId = Number(localStorage.getItem('petId') as string);
 
-const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RProps) => {
+interface ReviewProps {
+  comment: Comment;
+  getData(): void;
+  editingCommentId: number;
+  setEditingCommentId(commentId: number): void;
+}
+
+export interface Comment {
+  commentId: number;
+  petId: number;
+  petName: string;
+  content: string;
+  profileImageUrl: string | undefined;
+  createdAt: string;
+}
+
+const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: ReviewProps) => {
   const [newText, setNewText] = useState<string>('');
 
   const reviewEditHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setNewText((e.target as HTMLInputElement).value);
+    setNewText(e.target.value);
   };
 
   const reviewUpdateHandler = (commentId: number) => {
@@ -216,7 +224,13 @@ const InputBox = styled.div`
   font-weight: 500;
 `;
 
-const Input = styled.input<Props>`
+export interface InputProps {
+  type: string;
+  placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Input = styled.input<InputProps>`
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -289,11 +303,5 @@ const XButton = styled.button`
     background-color: ${darkbrown};
   }
 `;
-
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
 
 export default Review;

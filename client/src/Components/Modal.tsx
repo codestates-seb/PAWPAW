@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import color from '../util/color';
 import headers from '../util/headers';
 import ModalReview from './ModalReview';
@@ -16,7 +16,7 @@ interface IReqData {
   infoMapId: number;
 }
 
-interface IDetaills {
+interface Detail {
   infoUrl: string;
   name: string;
   mapAddress: string;
@@ -27,7 +27,7 @@ interface IDetaills {
   myPick: boolean;
 }
 
-export interface IReview {
+export interface Review {
   petId: number;
   commentId: number;
   profileImage: string;
@@ -36,7 +36,7 @@ export interface IReview {
   createdAt: string;
 }
 
-interface IPageInfo {
+interface PageInfo {
   page: number;
   size: number;
   totalElements: number;
@@ -44,19 +44,19 @@ interface IPageInfo {
 }
 
 interface MapData {
-  details: IDetaills;
-  reviews: IReview[] | null;
-  pageInfo: IPageInfo;
+  details: Detail;
+  reviews: Review[];
+  pageInfo: PageInfo;
 }
 
-type MProps = {
+interface ModalProps {
   click: boolean;
   setClick: (classname: boolean) => void;
   title: string;
   id: number;
-};
+}
 
-const Modal = ({ click, setClick, id }: MProps) => {
+const Modal = ({ click, setClick, id }: ModalProps) => {
   const [editActivate, setEditActivate] = useState<number>(0);
   const [mapdata, setMapdata] = useState<MapData | null>(null);
 
@@ -176,7 +176,7 @@ const Modal = ({ click, setClick, id }: MProps) => {
                       리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
                     </EmptyMessage>
                   ) : (
-                    mapdata.reviews.map((review: IReview) => (
+                    mapdata.reviews.map((review: Review) => (
                       <ModalReview
                         key={review.commentId}
                         review={review}

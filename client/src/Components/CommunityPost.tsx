@@ -1,19 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import color from '../util/color';
 import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
 import sanitizeHtml from 'sanitize-html';
+import styled from 'styled-components';
 import { PostData } from '../Pages/Community';
+import color from '../util/color';
 
 const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
 
-type PProps = {
+interface CommunityPostProps {
   key: number;
   post: PostData;
-};
+}
 
-const CommunityPost = ({ post }: PProps) => {
+const CommunityPost = ({ post }: CommunityPostProps) => {
   return (
     <Container>
       <LeftBox>

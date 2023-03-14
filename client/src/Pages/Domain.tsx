@@ -1,19 +1,18 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PrivateRoute from '../Components/PrivateRouter';
+import HomeMap from '../Map/HomeMap';
+import { axiosRefresh } from '../util/GlobalAxios';
+import AddMarker from './AddMarker';
+import Community from './Community';
+import CommunityDetail from './CommunityDetail';
 import Login from './Login';
+import Mypage from './Mypage';
+import NotFound from './NotFound';
+import Post from './Post';
+import PostEdit from './PostEdit';
 import SignUp from './SignUp';
 import UserInfo from './UserInfo';
 import UserInfoEdit from './UserInfoEdit';
-import HomeMap from '../Map/HomeMap';
-import Mypage from './Mypage';
-import Community from './Community';
-import CommunityDetail from './CommunityDetail';
-import Post from './Post';
-import PostEdit from './PostEdit';
-import AddMarker from './AddMarker';
-import NotFound from './NotFound';
-import PrivateRoute from '../Components/PrivateRouter';
-import { axiosRefresh } from '../util/GlobalAxios';
-import AutoLogout from '../util/autoLogout';
 
 export default function Router() {
   axiosRefresh;

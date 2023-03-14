@@ -1,5 +1,3 @@
-import { any } from 'prop-types';
-
 const jwtToken = localStorage.getItem('Authorization');
 
 const headers = {

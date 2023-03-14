@@ -3,16 +3,17 @@ import styled from 'styled-components';
 import color from '../util/color';
 const { ivory, darkivory, yellow, brown, mediumgrey, darkgrey } = color;
 
-interface SortProps {
+interface SortModalProps {
   setSorting: React.Dispatch<React.SetStateAction<string>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function SortModal({ setSorting, setIsOpen }: SortProps) {
+function SortModal({ setSorting, setIsOpen }: SortModalProps) {
   const clickHandler = (text: string) => {
     setSorting(text);
     setIsOpen(false);
   };
+
   return (
     <Container>
       <Box>

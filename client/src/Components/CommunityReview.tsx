@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import { PostDetail, UserData } from '../Pages/CommunityDetail';
 import color from '../util/color';
 import { PostReviewEdit } from '../util/PostReviewApi';
-import { PostList, UserList } from '../Pages/CommunityDetail';
-import Review from './Review';
+import Review, { InputProps } from './Review';
 
-type CProps = {
+interface CommunityReviewProps {
   getData(): void;
-  postId: string | undefined;
-  postDetail: PostList;
-  userData: UserList;
-};
+  postId?: string;
+  postDetail: PostDetail;
+  userData: UserData;
+}
 
 const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
 
-const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
+const CommunityReview = ({ getData, postId, postDetail, userData }: CommunityReviewProps) => {
   const [review, setReview] = useState<string>('');
   const [editingCommentId, setEditingCommentId] = useState<number>(0);
 
@@ -76,21 +76,22 @@ const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
       )}
 
       <ReviewWrite>
-        <ReviewUserBox>
+        <LeftBox>
           <ReviewUserImage src={userData.petInfo.profileImage} />
           <ReviewUserName>{userData.petInfo.petName}</ReviewUserName>
-        </ReviewUserBox>
-        <ReviewInputTextBox>
-          <ReviewInputBox>
-            <ReviewInput
+        </LeftBox>
+
+        <RightBox>
+          <InputBox>
+            <Input
               type='text'
               value={review}
               placeholder='댓글을 남겨주세요. '
               onChange={reviewHandler}
             />
-          </ReviewInputBox>
-          <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
-        </ReviewInputTextBox>
+          </InputBox>
+          <SubmitButton onClick={reviewPostHandler}>작성</SubmitButton>
+        </RightBox>
       </ReviewWrite>
     </Container>
   );
@@ -124,7 +125,7 @@ const Title = styled.div`
   padding: 15px 10px;
 `;
 
-const ReviewUserBox = styled.div`
+const LeftBox = styled.div`
   width: 70px;
   display: flex;
   flex-direction: column;
@@ -146,14 +147,14 @@ const ReviewUserName = styled.div`
   font-weight: Bold;
 `;
 
-const ReviewInputBox = styled.div`
+const InputBox = styled.div`
   flex-grow: 1;
   color: ${brown};
   font-size: 14px;
   font-weight: 500;
 `;
 
-const ReviewInput = styled.input<Props>`
+const Input = styled.input<InputProps>`
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -170,7 +171,7 @@ const ReviewInput = styled.input<Props>`
     color: ${lightgrey};
   }
 `;
-const ReviewButton = styled.button`
+const SubmitButton = styled.button`
   margin-left: 4px;
   margin-right: 4px;
   padding: 7px 10px;
@@ -185,24 +186,11 @@ const ReviewButton = styled.button`
     background-color: ${darkbrown};
   }
 `;
-const ReviewInputTextBox = styled.div`
+const RightBox = styled.div`
   padding: 10px;
   width: calc(100% - 70px);
   display: flex;
   align-items: center;
-`;
-
-const CloseBox = styled.div`
-  position: fixed;
-  z-index: 999;
-  top: 48%;
-  left: 357px;
-  bottom: 0;
-  right: 0;
-  opacity: 0.8;
-  .close {
-    cursor: pointer;
-  }
 `;
 
 const ReviewWrite = styled.div`
@@ -219,11 +207,5 @@ const EmptyMessage = styled.div`
   font-size: 14px;
   color: ${brown};
 `;
-
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
 
 export default CommunityReview;

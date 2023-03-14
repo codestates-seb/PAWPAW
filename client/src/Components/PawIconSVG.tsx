@@ -1,13 +1,11 @@
-import React from 'react';
-
-type Props = {
+interface PawIconSVGProps {
   width: string;
   height: string;
   viewBox: string;
   fill: string;
-};
+}
 
-export const PawIconSVG = ({ width, height, viewBox, fill }: Props) => {
+export const PawIconSVG = ({ width, height, viewBox, fill }: PawIconSVGProps) => {
   return (
     <svg
       width={width}

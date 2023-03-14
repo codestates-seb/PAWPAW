@@ -17,6 +17,8 @@ import { codeToAddress } from '../util/ConvertAddress';
 import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+import { TokenInfo } from './Login';
+
 const jwtToken = localStorage.getItem('Authorization');
 const headers = {
   Authorization: jwtToken,
@@ -35,20 +37,6 @@ interface Info {
   isMale: 'MALE' | 'FEMALE';
   isCat: 'CAT' | 'DOG';
   age: number;
-}
-
-interface UserData {
-  0: string;
-  1: string;
-}
-
-export interface TokenInfo {
-  petName: string;
-  petNameSpan: string;
-  petId: number;
-  exp: number;
-  code: number;
-  roles: UserData[] | null;
 }
 
 const UserInfoEdit: FC = () => {

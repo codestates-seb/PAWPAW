@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../util/color';
+
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const jwtToken = localStorage.getItem('Authorization');
 const headers = {
@@ -17,7 +18,7 @@ const headers = {
   Authorization: jwtToken,
 };
 
-export interface IPost {
+export interface Data {
   title: string;
   content: string;
 }
@@ -26,7 +27,7 @@ const PostEdit = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { postId } = location.state;
-  const [data, setData] = useState<IPost>({
+  const [data, setData] = useState<Data>({
     title: '',
     content: '',
   });

@@ -4,9 +4,13 @@ import color from '../util/color';
 
 const { brown, darkbrown } = color;
 
-type Props = {
+interface ButtonProps {
   text: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+const Button = ({ text, onClick }: ButtonProps) => {
+  return <StyledButton onClick={onClick}>{text} </StyledButton>;
 };
 
 const StyledButton = styled.button`
@@ -24,9 +28,5 @@ const StyledButton = styled.button`
     background-color: ${darkbrown};
   }
 `;
-
-const Button = ({ text, onClick }: Props) => {
-  return <StyledButton onClick={onClick}>{text} </StyledButton>;
-};
 
 export default Button;

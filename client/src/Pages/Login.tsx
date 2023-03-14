@@ -1,35 +1,35 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
-
-import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { Icon } from '@iconify/react';
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
-const { ivory, coral, brown, red, darkbrown } = color;
+import color from '../util/color';
 
-interface UserData {
+const { ivory, brown, red } = color;
+
+export interface Roles {
   0: string;
   1: string;
 }
 
-export interface Info {
+export interface TokenInfo {
   petName: string;
   petNameSpan: string;
   petId: number;
   exp: number;
   code: number;
-  roles: UserData[] | null;
+  roles: Roles[] | null;
 }
 
-const Login: React.FC = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [id, setId] = useState<string>('');
   const [petId, setPetId] = useState<string>('');
@@ -61,11 +61,11 @@ const Login: React.FC = () => {
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/login`, body);
         const jwtToken = response.headers.authorization as string;
-        const jwtToken_decode = jwt_decode(jwtToken) as Info;
+        const jwtToken_decode = jwt_decode(jwtToken) as TokenInfo;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
         const code = jwtToken_decode.code as number;
-        const admin = jwtToken_decode.roles as unknown as UserData;
+        const admin = jwtToken_decode.roles as unknown as Roles;
         setPetId(petid.toString());
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);

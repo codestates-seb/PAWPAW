@@ -23,12 +23,6 @@ interface FormData {
   profileImage: Blob | null;
 }
 
-export interface IProps {
-  address: number | null;
-  setAddress: (address: number | null) => void;
-  setIsOpen: (isOpen: boolean) => void;
-}
-
 interface Info {
   petName: string;
   isMale: 'MALE' | 'FEMALE';
