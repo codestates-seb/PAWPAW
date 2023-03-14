@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import color from '../util/color';
 import Friend from './Friend';

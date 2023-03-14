@@ -1,62 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import color from '../util/color';
 import headers from '../util/headers';
 import ModalReview from './ModalReview';
 import ModalReviewWrite from './ModalReviewWrite';
+import { MapData, BookmarkReqData, Review, ModalProps } from '../types';
 
 const { ivory, lightgrey, brown, bordergrey, yellow, mediumgrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
 
-interface IReqData {
-  petId: number;
-  infoMapId: number;
-}
-
-interface IDetaills {
-  infoUrl: string;
-  name: string;
-  mapAddress: string;
-  category: string;
-  operationTime: string;
-  tel: string;
-  homepage: string;
-  myPick: boolean;
-}
-
-export interface IReview {
-  petId: number;
-  commentId: number;
-  profileImage: string;
-  petName: string;
-  contents: string;
-  createdAt: string;
-}
-
-interface IPageInfo {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-interface MapData {
-  details: IDetaills;
-  reviews: IReview[] | null;
-  pageInfo: IPageInfo;
-}
-
-type MProps = {
-  click: boolean;
-  setClick: (classname: boolean) => void;
-  title: string;
-  id: number;
-};
-
-const Modal = ({ click, setClick, id }: MProps) => {
+const Modal = ({ click, setClick, id }: ModalProps) => {
   const [editActivate, setEditActivate] = useState<number>(0);
   const [mapdata, setMapdata] = useState<MapData | null>(null);
 
@@ -76,24 +32,24 @@ const Modal = ({ click, setClick, id }: MProps) => {
   }
 
   const bookmarkHandler = () => {
-    const reqData: IReqData = {
+    const bookmarkReqData: BookmarkReqData = {
       petId: Number(petId),
       infoMapId: id,
     };
     if (!mapdata?.details?.myPick) {
-      addPlace(reqData).then(() => getData());
+      addPlace(bookmarkReqData).then(() => getData());
     } else {
-      deletePlace(reqData).then(() => getData());
+      deletePlace(bookmarkReqData).then(() => getData());
     }
   };
 
-  async function addPlace(reqData: IReqData) {
-    await axios.post(`${url}/maps/addplace`, JSON.stringify(reqData), { headers });
+  async function addPlace(bookmarkReqData: BookmarkReqData) {
+    await axios.post(`${url}/maps/addplace`, JSON.stringify(bookmarkReqData), { headers });
   }
 
-  async function deletePlace(reqData: IReqData) {
+  async function deletePlace(bookmarkReqData: BookmarkReqData) {
     await axios.delete(`${url}/maps/cancel`, {
-      data: reqData,
+      data: bookmarkReqData,
       headers,
     });
   }
@@ -176,7 +132,7 @@ const Modal = ({ click, setClick, id }: MProps) => {
                       리뷰가 없어요.. <br />첫 번째 리뷰를 남겨주세요 🐾
                     </EmptyMessage>
                   ) : (
-                    mapdata.reviews.map((review: IReview) => (
+                    mapdata.reviews.map((review: Review) => (
                       <ModalReview
                         key={review.commentId}
                         review={review}

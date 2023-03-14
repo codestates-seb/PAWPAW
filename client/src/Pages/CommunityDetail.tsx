@@ -1,114 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useParams, Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-import color from '../util/color';
-import axios from 'axios';
-import headers from '../util/headers';
+import CommunityComment from '../Components/CommunityComment';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import load from '../img/paw.gif';
-import { PostDELETE } from '../util/PostReviewApi';
-import CommunityReview from '../Components/CommunityReview';
-
-export interface PostList {
-  post: {
-    authorId: number;
-    postId: number;
-    title: string;
-    content: string;
-    imageUrl: string | null;
-    petName: string;
-    createdAt: string;
-    likesCnt: number;
-    likeActive: boolean;
-  };
-  comments: Comment[] | null;
-}
-
-export interface Comment {
-  commentId: number;
-  petId: number;
-  petName: string;
-  content: string;
-  profileImageUrl: string | undefined; // null
-  createdAt: string;
-}
-
-export interface UserList {
-  myPosts: UserData[] | null;
-  pageInfo: {
-    page: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
-  petInfo: {
-    age: number;
-    code: number;
-    gender: 'MALE' | 'FEMALE';
-    petId: number;
-    petName: string;
-    profileImage: string;
-    species: 'CAT' | 'DOG';
-  };
-}
-
-interface UserData {
-  contents: string;
-  createdAt: string;
-  likesCnt: 10;
-  petName: string;
-  postId: number;
-  title: string;
-}
+import color from '../util/color';
+import { PostDELETE } from '../util/CommunityCommentApi';
+import headers from '../util/headers';
+import { PostDetail, UserData } from '../types';
 
 const { ivory, darkivory, brown, bordergrey, lightgrey, mediumgrey, darkgrey, red, yellow } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = Number(localStorage.getItem('petId') as string);
 
-const CommunityDetail: React.FC = () => {
+const CommunityDetail = () => {
   const navigate = useNavigate();
-  const [like, setLike] = useState(true);
-  const [postDetail, setPostDetail] = useState<PostList>({
-    post: {
-      authorId: 0,
-      content: '',
-      createdAt: '',
-      imageUrl: null,
-      likeActive: false,
-      likesCnt: 0,
-      petName: '',
-      postId: 0,
-      title: '',
-    },
-    comments: [],
-  });
-  const [userData, setUserData] = useState<UserList>({
-    myPosts: [],
-    pageInfo: {
-      page: 0,
-      size: 0,
-      totalElements: 0,
-      totalPages: 0,
-    },
-    petInfo: {
-      age: 0,
-      code: 0,
-      gender: 'MALE',
-      petId: 0,
-      petName: '',
-      profileImage: '',
-      species: 'CAT',
-    },
-  });
+  const postId = useParams().id;
 
-  const id = useParams();
-  const postId = id.id;
+  const [like, setLike] = useState(true);
+  const [postDetail, setPostDetail] = useState<PostDetail | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     getData();
@@ -119,7 +37,7 @@ const CommunityDetail: React.FC = () => {
       .get(`${url}/posts/${postId}`, { headers })
       .then((res) => {
         setPostDetail(res.data);
-        setLike(postDetail.post.likeActive);
+        setLike(res.data.post.likeActive);
       })
       .catch((error) => {
         console.error(error);
@@ -208,23 +126,23 @@ const CommunityDetail: React.FC = () => {
           <PostContainer>
             <div>
               <Tag>자유</Tag>
-              <Title>{postDetail.post.title}</Title>
+              <Title>{postDetail?.post.title}</Title>
               <NameCreatedAtConatiner>
-                <Link to={`/mypage/${postDetail.post.authorId}`}>
-                  <NameBox>{postDetail.post.petName}</NameBox>
+                <Link to={`/mypage/${postDetail?.post.authorId}`}>
+                  <NameBox>{postDetail?.post.petName}</NameBox>
                 </Link>
-                <CreatedAtBox>{postDetail.post.createdAt}</CreatedAtBox>
+                <CreatedAtBox>{postDetail?.post.createdAt}</CreatedAtBox>
               </NameCreatedAtConatiner>
             </div>
             <ImageDiv>
-              {postDetail.post.imageUrl === null ? (
+              {postDetail?.post.imageUrl === null ? (
                 <ImageTop src={load} />
               ) : (
-                <ImageTop src={postDetail.post.imageUrl[0]} />
+                <ImageTop src={postDetail?.post.imageUrl[0]} />
               )}
             </ImageDiv>
             <EditorContainer>
-              <ReactQuill value={postDetail.post.content} readOnly={true} theme={'bubble'} />
+              <ReactQuill value={postDetail?.post.content} readOnly={true} theme={'bubble'} />
             </EditorContainer>
             <FooterDiv>
               <ButtonsDiv>
@@ -235,28 +153,30 @@ const CommunityDetail: React.FC = () => {
                       color={'#FFBF71'}
                       style={{ fontSize: '25px' }}
                     />
-                    <LikeCnt>{postDetail.post.likesCnt}</LikeCnt>
+                    <LikeCnt>{postDetail?.post.likesCnt}</LikeCnt>
                   </LikeButton>
                 ) : (
                   <LikeButton onClick={likeUp}>
                     <FixedIcon icon='ph:paw-print' color={'#'} style={{ fontSize: '25px' }} />
-                    <LikeCnt>{postDetail.post.likesCnt}</LikeCnt>
+                    <LikeCnt>{postDetail?.post.likesCnt}</LikeCnt>
                   </LikeButton>
                 )}
               </ButtonsDiv>
-              {petId === postDetail.post.authorId && (
+              {petId === postDetail?.post.authorId && (
                 <ButtonsDiv>
                   <Button onClick={goToEdit}>수정</Button>
                   <DeleteButton onClick={postDeleteHandler}>삭제</DeleteButton>
                 </ButtonsDiv>
               )}
             </FooterDiv>
-            <CommunityReview
-              getData={getData}
-              postId={postId}
-              postDetail={postDetail}
-              userData={userData}
-            />
+            {postDetail && userData && (
+              <CommunityComment
+                getData={getData}
+                postId={postId}
+                postDetail={postDetail}
+                userData={userData}
+              />
+            )}
           </PostContainer>
         </Body>
       </Container>

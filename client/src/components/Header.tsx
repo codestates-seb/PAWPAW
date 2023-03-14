@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import color from '../util/color';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import color from '../util/color';
 
 const { ivory, brown, yellow } = color;
 const petId = localStorage.getItem('petId');
 
-const Header: React.FC = () => {
+const Header = () => {
   const navigate = useNavigate();
 
   const goToMap = () => {
@@ -27,6 +26,7 @@ const Header: React.FC = () => {
       navigate('/');
     }
   };
+
   const goToCommunity = () => {
     const jwtToken = localStorage.getItem('Authorization');
     if (jwtToken !== null) {
@@ -38,11 +38,11 @@ const Header: React.FC = () => {
 
   return (
     <Container>
-      <HeaderLeftBox>
+      <LeftBox>
         <LogoImg onClick={goToMap} />
-      </HeaderLeftBox>
+      </LeftBox>
 
-      <HeaderRightButtons>
+      <RightBox>
         <IconSpan onClick={goToMap}>
           <Icon icon='material-symbols:map' style={{ fontSize: '35px' }} />
         </IconSpan>
@@ -52,7 +52,7 @@ const Header: React.FC = () => {
         <IconSpan onClick={goToMyPage}>
           <Icon icon='mdi:user-circle' style={{ fontSize: '35px' }} />
         </IconSpan>
-      </HeaderRightButtons>
+      </RightBox>
     </Container>
   );
 };
@@ -66,7 +66,7 @@ const Container = styled.header`
   position: absolute;
   z-index: 100;
 `;
-const HeaderLeftBox = styled.button`
+const LeftBox = styled.button`
   all: unset;
   display: flex;
   align-items: center;
@@ -83,7 +83,7 @@ const LogoImg = styled.img`
   }
 `;
 
-const HeaderRightButtons = styled.button`
+const RightBox = styled.button`
   all: unset;
   margin-right: 10px;
   display: flex;

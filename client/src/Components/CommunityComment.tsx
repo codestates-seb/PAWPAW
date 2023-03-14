@@ -2,29 +2,22 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
-import { PostReviewEdit } from '../util/PostReviewApi';
-import { PostList, UserList } from '../Pages/CommunityDetail';
-import Review from './Review';
-
-type CProps = {
-  getData(): void;
-  postId: string | undefined;
-  postDetail: PostList;
-  userData: UserList;
-};
+import { CommunityCommentEdit } from '../util/CommunityCommentApi';
+import Comment, { InputProps } from './Comment';
+import { CommunityCommentProps } from '../types';
 
 const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
 
-const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
-  const [review, setReview] = useState<string>('');
+const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCommentProps) => {
+  const [comment, setComment] = useState<string>('');
   const [editingCommentId, setEditingCommentId] = useState<number>(0);
 
-  const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setReview((e.target as HTMLInputElement).value);
+  const commentHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setComment(e.target.value);
   };
 
-  const reviewPostHandler = () => {
-    if (review === '') {
+  const commentSubmitHandler = () => {
+    if (comment === '') {
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -37,7 +30,7 @@ const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
       });
       return;
     } else {
-      PostReviewEdit(Number(postId), review).then(() => getData());
+      CommunityCommentEdit(Number(postId), comment).then(() => getData());
       Swal.fire({
         position: 'center',
         icon: 'warning',
@@ -48,7 +41,7 @@ const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
         showConfirmButton: false,
         timer: 1500,
       });
-      setReview('');
+      setComment('');
     }
   };
 
@@ -56,14 +49,14 @@ const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
     <Container>
       <Title>댓글 {postDetail.comments?.length}</Title>
       {postDetail.comments && (
-        <Reviews>
+        <Comments>
           {postDetail.comments.length === 0 ? (
             <EmptyMessage>
               댓글이 없어요.. <br />첫 번째 댓글을 남겨주세요 🐾
             </EmptyMessage>
           ) : (
             postDetail.comments.map((comment: any) => (
-              <Review
+              <Comment
                 key={comment.commentId}
                 comment={comment}
                 getData={getData}
@@ -72,26 +65,27 @@ const CommunityReview = ({ getData, postId, postDetail, userData }: CProps) => {
               />
             ))
           )}
-        </Reviews>
+        </Comments>
       )}
 
-      <ReviewWrite>
-        <ReviewUserBox>
-          <ReviewUserImage src={userData.petInfo.profileImage} />
-          <ReviewUserName>{userData.petInfo.petName}</ReviewUserName>
-        </ReviewUserBox>
-        <ReviewInputTextBox>
-          <ReviewInputBox>
-            <ReviewInput
+      <CommentWrite>
+        <LeftBox>
+          <UserImage src={userData.petInfo.profileImage} />
+          <UserName>{userData.petInfo.petName}</UserName>
+        </LeftBox>
+
+        <RightBox>
+          <InputBox>
+            <Input
               type='text'
-              value={review}
+              value={comment}
               placeholder='댓글을 남겨주세요. '
-              onChange={reviewHandler}
+              onChange={commentHandler}
             />
-          </ReviewInputBox>
-          <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
-        </ReviewInputTextBox>
-      </ReviewWrite>
+          </InputBox>
+          <SubmitButton onClick={commentSubmitHandler}>작성</SubmitButton>
+        </RightBox>
+      </CommentWrite>
     </Container>
   );
 };
@@ -101,7 +95,7 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const Reviews = styled.div`
+const Comments = styled.div`
   height: calc(100vh - 537px - 50px - 100px);
   overflow-y: scroll;
   ::-webkit-scrollbar {
@@ -124,7 +118,7 @@ const Title = styled.div`
   padding: 15px 10px;
 `;
 
-const ReviewUserBox = styled.div`
+const LeftBox = styled.div`
   width: 70px;
   display: flex;
   flex-direction: column;
@@ -132,28 +126,28 @@ const ReviewUserBox = styled.div`
   align-items: center;
 `;
 
-const ReviewUserImage = styled.img`
+const UserImage = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background-size: cover;
 `;
 
-const ReviewUserName = styled.div`
+const UserName = styled.div`
   margin-top: 8px;
   color: ${brown};
   font-size: 14px;
   font-weight: Bold;
 `;
 
-const ReviewInputBox = styled.div`
+const InputBox = styled.div`
   flex-grow: 1;
   color: ${brown};
   font-size: 14px;
   font-weight: 500;
 `;
 
-const ReviewInput = styled.input<Props>`
+const Input = styled.input<InputProps>`
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -170,7 +164,7 @@ const ReviewInput = styled.input<Props>`
     color: ${lightgrey};
   }
 `;
-const ReviewButton = styled.button`
+const SubmitButton = styled.button`
   margin-left: 4px;
   margin-right: 4px;
   padding: 7px 10px;
@@ -185,27 +179,14 @@ const ReviewButton = styled.button`
     background-color: ${darkbrown};
   }
 `;
-const ReviewInputTextBox = styled.div`
+const RightBox = styled.div`
   padding: 10px;
   width: calc(100% - 70px);
   display: flex;
   align-items: center;
 `;
 
-const CloseBox = styled.div`
-  position: fixed;
-  z-index: 999;
-  top: 48%;
-  left: 357px;
-  bottom: 0;
-  right: 0;
-  opacity: 0.8;
-  .close {
-    cursor: pointer;
-  }
-`;
-
-const ReviewWrite = styled.div`
+const CommentWrite = styled.div`
   width: 100%;
   height: 100px;
   display: flex;
@@ -220,10 +201,4 @@ const EmptyMessage = styled.div`
   color: ${brown};
 `;
 
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-export default CommunityReview;
+export default CommunityComment;

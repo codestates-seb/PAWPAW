@@ -1,18 +1,18 @@
-import React, { FC, useState, useRef } from 'react';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-
-import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
+import color from '../util/color';
+
 const { ivory, yellow, brown, red } = color;
 
-const SignUp: FC = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [petName, setPetName] = useState<string>('');

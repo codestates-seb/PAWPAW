@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../util/color';
+import { NavProps } from '../types';
+
 const { brown, yellow } = color;
 
-interface INav {
-  type: string;
-}
-
-const Nav = ({ type }: INav) => {
+const Nav = ({ type }: NavProps) => {
   const [selected, setSelected] = useState('');
 
   return (

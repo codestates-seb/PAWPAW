@@ -1,14 +1,5 @@
-import React from 'react';
-import color from '../../util/color';
-import styled from 'styled-components';
-import { MapMarker, Map, MapInfoWindow, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
-
-const IconBox = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2px;
-`;
+import styled from 'styled-components';
 
 const ParkMarker = () => {
   return (
@@ -22,5 +13,11 @@ const ParkMarker = () => {
     </IconBox>
   );
 };
+
+const IconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2px;
+`;
 
 export default ParkMarker;

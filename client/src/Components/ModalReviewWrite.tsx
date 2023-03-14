@@ -1,44 +1,28 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { getUserInfo } from '../util/UserApi';
-import { mapReviewPOST } from '../util/MapApi';
 import color from '../util/color';
-const petId = localStorage.getItem('petId') as string;
+import { mapReviewPOST } from '../util/MapApi';
+import { getUserInfo } from '../util/UserApi';
+import { InputProps } from './Comment';
+import { ModalReviewWriteProps, ModalUserInfo, ModalResData, ProfileImageFormData } from '../types';
 
 const { yellow, lightgrey, brown, darkbrown, bordergrey } = color;
+const petId = localStorage.getItem('petId') as string;
 
-interface ResponseData {
-  petInfo: petInfo;
-}
-
-interface petInfo {
-  petName: string | null;
-  profileImage: File | null;
-}
-
-interface FormData {
-  profileImage: Blob | null;
-}
-
-type MProps = {
-  getData(): void;
-  id: number;
-};
-
-const ModalReviewWrite = ({ getData, id }: MProps) => {
+const ModalReviewWrite = ({ getData, id }: ModalReviewWriteProps) => {
   const [review, setReview] = useState<string>('');
   const { responseData, error } = getUserInfo(petId);
-  const [userInfo, setUserInfo] = useState<petInfo>({
+  const [userInfo, setUserInfo] = useState<ModalUserInfo>({
     petName: null,
     profileImage: null,
   });
 
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [formData, setFormData] = useState<ProfileImageFormData>({ profileImage: null });
   const [count, setCount] = useState<number>(0);
 
   if (!error && responseData && count === 0) {
-    const { petInfo } = responseData as ResponseData;
+    const { petInfo } = responseData as ModalResData;
     const { petName, profileImage } = petInfo;
     setUserInfo({ ...userInfo, petName });
     setFormData({ profileImage });
@@ -81,34 +65,35 @@ const ModalReviewWrite = ({ getData, id }: MProps) => {
   };
 
   return (
-    <ReviewWrite>
-      <ReviewUserBox>
-        <ReviewUserImage src={UserImg} />
-        <ReviewUserName>{userInfo.petName}</ReviewUserName>
-      </ReviewUserBox>
-      <ReviewInputTextBox>
-        <ReviewInputBox>
-          <ReviewInput
+    <Container>
+      <LeftBox>
+        <UserImage src={UserImg} />
+        <UserName>{userInfo.petName}</UserName>
+      </LeftBox>
+
+      <RightBox>
+        <InputContainer>
+          <Input
             type='text'
             value={review}
             placeholder='이 공간이 어땠나요?'
             onChange={reviewInputHandler}
           />
-        </ReviewInputBox>
-        <ReviewButton onClick={reviewPostHandler}>작성</ReviewButton>
-      </ReviewInputTextBox>
-    </ReviewWrite>
+        </InputContainer>
+        <SubmitButton onClick={reviewPostHandler}>작성</SubmitButton>
+      </RightBox>
+    </Container>
   );
 };
 
-const ReviewWrite = styled.div`
+const Container = styled.div`
   width: 100%;
   height: 100px;
   display: flex;
   background-color: white;
 `;
 
-const ReviewUserBox = styled.div`
+const LeftBox = styled.div`
   width: 70px;
   display: flex;
   flex-direction: column;
@@ -116,14 +101,14 @@ const ReviewUserBox = styled.div`
   align-items: center;
 `;
 
-const ReviewUserImage = styled.img`
+const UserImage = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background-size: cover;
 `;
 
-const ReviewUserName = styled.div`
+const UserName = styled.div`
   margin-top: 8px;
   color: ${brown};
   font-size: 14px;
@@ -136,20 +121,14 @@ const ReviewTextBox = styled.div`
   min-height: 80px;
 `;
 
-const ReviewInputBox = styled.div`
+const InputContainer = styled.div`
   flex-grow: 1;
   color: ${brown};
   font-size: 14px;
   font-weight: 500;
 `;
 
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const ReviewInput = styled.input<Props>`
+const Input = styled.input<InputProps>`
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -167,7 +146,7 @@ const ReviewInput = styled.input<Props>`
   }
 `;
 
-const ReviewButton = styled.button`
+const SubmitButton = styled.button`
   margin-left: 4px;
   margin-right: 4px;
   padding: 7px 10px;
@@ -183,7 +162,7 @@ const ReviewButton = styled.button`
   }
 `;
 
-const ReviewInputTextBox = styled.div`
+const RightBox = styled.div`
   padding: 10px;
   width: calc(100% - 70px);
   display: flex;

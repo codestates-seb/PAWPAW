@@ -1,14 +1,10 @@
 import axios from 'axios';
-const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
+import headers from './headers';
+
 const petId = localStorage.getItem('petId') as string;
 const url = process.env.REACT_APP_API_ROOT;
-const headers = {
-  Authorization: jwtToken,
-  Refresh: refreshToken,
-};
 
-export const PostReviewEdit = async (postId: number, contents: string) => {
+export const CommunityCommentEdit = async (postId: number, contents: string) => {
   try {
     await axios.post(
       `${url}/posts/comment`,
@@ -24,7 +20,7 @@ export const PostReviewEdit = async (postId: number, contents: string) => {
   }
 };
 
-export const PostReviewUPDATE = async (postId: number, contents: string) => {
+export const CommunityCommentUPDATE = async (postId: number, contents: string) => {
   try {
     await axios.patch(
       `${url}/posts/comment/${postId}`,
@@ -39,7 +35,7 @@ export const PostReviewUPDATE = async (postId: number, contents: string) => {
   }
 };
 
-export const PostReviewDELETE = async (postId: number) => {
+export const CommunityCommentDELETE = async (postId: number) => {
   try {
     await axios.delete(`${url}/posts/comment/${postId}`, { headers });
   } catch (error) {

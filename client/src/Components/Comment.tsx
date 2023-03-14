@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { Comment } from '../Pages/CommunityDetail';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
-import { PostReviewUPDATE, PostReviewDELETE } from '../util/PostReviewApi';
-import { Link } from 'react-router-dom';
-
-type RProps = {
-  comment: Comment;
-  getData(): void;
-  editingCommentId: number;
-  setEditingCommentId(commentId: number): void;
-};
+import { CommunityCommentDELETE, CommunityCommentUPDATE } from '../util/CommunityCommentApi';
+import { CommentProps } from '../types';
 
 const { ivory, brown, bordergrey, lightgrey, yellow, darkbrown } = color;
 const petId = Number(localStorage.getItem('petId') as string);
 
-const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RProps) => {
+const Comment = ({ comment, getData, editingCommentId, setEditingCommentId }: CommentProps) => {
   const [newText, setNewText] = useState<string>('');
 
-  const reviewEditHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setNewText((e.target as HTMLInputElement).value);
+  const commentEditHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setNewText(e.target.value);
   };
 
-  const reviewUpdateHandler = (commentId: number) => {
+  const commentUpdateHandler = (commentId: number) => {
     if (newText === '') {
       Swal.fire({
         position: 'center',
@@ -56,7 +49,7 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
             confirmButtonColor: yellow,
             confirmButtonText: '<b>확인</b>',
           });
-          PostReviewUPDATE(commentId, newText).then(() => getData());
+          CommunityCommentUPDATE(commentId, newText).then(() => getData());
           setEditingCommentId(0);
           setNewText('');
         }
@@ -64,12 +57,12 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
     }
   };
 
-  const reviewEditCancelHandler = () => {
+  const commentEditCancelHandler = () => {
     setEditingCommentId(0);
     setNewText('');
   };
 
-  const reviewDeleteHandler = (commentId: number) => {
+  const commentDeleteHandler = (commentId: number) => {
     Swal.fire({
       title: '정말 삭제하시겠어요?',
       icon: 'warning',
@@ -88,7 +81,7 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
           confirmButtonColor: yellow,
           confirmButtonText: '<b>확인</b>',
         });
-        PostReviewDELETE(commentId).then(() => getData());
+        CommunityCommentDELETE(commentId).then(() => getData());
       }
     });
   };
@@ -111,7 +104,7 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
                   <button onClick={() => setEditingCommentId(comment.commentId)}>
                     <Icon icon='mdi:pencil' style={{ fontSize: '15px' }} />
                   </button>
-                  <button onClick={() => reviewDeleteHandler(comment.commentId)}>
+                  <button onClick={() => commentDeleteHandler(comment.commentId)}>
                     <Icon
                       icon='material-symbols:delete-outline-rounded'
                       style={{ fontSize: '15px' }}
@@ -134,14 +127,14 @@ const Review = ({ comment, getData, editingCommentId, setEditingCommentId }: RPr
               <Input
                 type='text'
                 placeholder={comment.content}
-                onChange={reviewEditHandler}
-                id='basereview'
+                onChange={commentEditHandler}
+                id='basecomment'
               ></Input>
             </InputBox>
-            <CheckButton onClick={() => reviewUpdateHandler(comment.commentId)}>
+            <CheckButton onClick={() => commentUpdateHandler(comment.commentId)}>
               <Icon icon='mdi:check-bold' color='#ffc57e' style={{ fontSize: '20px' }} />
             </CheckButton>
-            <XButton onClick={reviewEditCancelHandler}>
+            <XButton onClick={commentEditCancelHandler}>
               <Icon icon='mdi:cancel-bold' color='#f79483' style={{ fontSize: '22px' }} />
             </XButton>
           </InputTextBox>
@@ -216,7 +209,13 @@ const InputBox = styled.div`
   font-weight: 500;
 `;
 
-const Input = styled.input<Props>`
+export interface InputProps {
+  type: string;
+  placeholder: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Input = styled.input<InputProps>`
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -290,10 +289,4 @@ const XButton = styled.button`
   }
 `;
 
-type Props = {
-  type: string;
-  placeholder: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-export default Review;
+export default Comment;
