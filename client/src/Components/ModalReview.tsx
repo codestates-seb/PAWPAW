@@ -5,18 +5,10 @@ import Swal from 'sweetalert2';
 import color from '../util/color';
 import { mapReviewDELETE, mapReviewUPDATE } from '../util/MapApi';
 import { InputProps } from './Comment';
-import { Review } from './Modal';
+import { ModalReviewProps } from '../types';
 
 const { ivory, lightgrey, brown, darkbrown, bordergrey, yellow } = color;
 const petId = Number(localStorage.getItem('petId') as string);
-
-interface ModalReviewProps {
-  review: Review;
-  editActivate: number;
-  setEditActivate: React.Dispatch<React.SetStateAction<number>>;
-  reviewActivateHandler(commentId: number): void;
-  getData(): void;
-}
 
 const ModalReview = ({
   review,

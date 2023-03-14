@@ -17,28 +17,17 @@ import { codeToAddress } from '../util/ConvertAddress';
 import headers from '../util/formDataHeaders';
 import { petDelete } from '../util/UserApi';
 import AddressModal from './AddressModal';
-import { TokenInfo } from './Login';
+import { ProfileImageFormData, UserInfo, TokenInfo } from '../types';
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId');
 
-interface FormData {
-  profileImage: Blob | null;
-}
-
-interface Info {
-  petName: string;
-  isMale: 'MALE' | 'FEMALE';
-  isCat: 'CAT' | 'DOG';
-  age: number;
-}
-
 const UserInfoEdit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { petName, age, isMale, isCat, code, profileImage } = location.state;
-  const [info, setInfo] = useState<Info>({
+  const [info, setInfo] = useState<UserInfo>({
     petName: petName,
     isMale: isMale,
     isCat: isCat,
@@ -48,7 +37,7 @@ const UserInfoEdit = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [fileImage, setFileImage] = useState<string>();
   const [address, setAddress] = useState<number | null>(code);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [formData, setFormData] = useState<ProfileImageFormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const localStorageCode = localStorage.getItem('code');
 

@@ -1,3 +1,4 @@
+// icontify로 대체하기
 interface PawIconSVGProps {
   width: string;
   height: string;

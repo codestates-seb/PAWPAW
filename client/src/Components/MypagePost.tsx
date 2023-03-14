@@ -2,15 +2,10 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import sanitizeHtml from 'sanitize-html';
 import styled from 'styled-components';
-import { Post } from '../Pages/Mypage';
 import color from '../util/color';
+import { MyPagePostProps } from '../types';
 
 const { ivory, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
-
-interface MyPagePostProps {
-  key: number;
-  post: Post;
-}
 
 const MypagePost = ({ post }: MyPagePostProps) => {
   return (

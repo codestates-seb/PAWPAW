@@ -5,25 +5,10 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import color from '../util/color';
 import { CommunityCommentDELETE, CommunityCommentUPDATE } from '../util/CommunityCommentApi';
+import { CommentProps } from '../types';
 
 const { ivory, brown, bordergrey, lightgrey, yellow, darkbrown } = color;
 const petId = Number(localStorage.getItem('petId') as string);
-
-interface CommentProps {
-  comment: Comment;
-  getData(): void;
-  editingCommentId: number;
-  setEditingCommentId: React.Dispatch<React.SetStateAction<number>>;
-}
-
-export interface Comment {
-  commentId: number;
-  petId: number;
-  petName: string;
-  content: string;
-  profileImageUrl: string | undefined;
-  createdAt: string;
-}
 
 const Comment = ({ comment, getData, editingCommentId, setEditingCommentId }: CommentProps) => {
   const [newText, setNewText] = useState<string>('');

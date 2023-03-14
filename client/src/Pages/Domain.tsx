@@ -8,7 +8,7 @@ import CommunityDetail from './CommunityDetail';
 import Login from './Login';
 import Mypage from './Mypage';
 import NotFound from './NotFound';
-import Post from './Post';
+import PostWrite from './PostWrite';
 import PostEdit from './PostEdit';
 import SignUp from './SignUp';
 import UserInfo from './UserInfo';
@@ -30,7 +30,7 @@ export default function Router() {
           <Route path='/mypage/:petId' element={<Mypage />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
-          <Route path='/post' element={<Post />} />
+          <Route path='/post' element={<PostWrite />} />
           <Route path='/postedit' element={<PostEdit />} />
           <Route path='/addmarker' element={<AddMarker />} />
           <Route path='*' element={<NotFound />} />

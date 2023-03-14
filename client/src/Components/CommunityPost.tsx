@@ -2,15 +2,10 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import sanitizeHtml from 'sanitize-html';
 import styled from 'styled-components';
-import { PostData } from '../Pages/Community';
 import color from '../util/color';
+import { CommunityPostProps } from '../types';
 
 const { darkgrey, brown, mediumgrey, bordergrey, ivory } = color;
-
-interface CommunityPostProps {
-  key: number;
-  post: PostData;
-}
 
 const CommunityPost = ({ post }: CommunityPostProps) => {
   return (

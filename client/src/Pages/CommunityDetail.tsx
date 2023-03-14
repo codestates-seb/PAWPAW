@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { Comment } from '../Components/Comment';
 import CommunityComment from '../Components/CommunityComment';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
@@ -15,43 +14,19 @@ import load from '../img/paw.gif';
 import color from '../util/color';
 import { PostDELETE } from '../util/CommunityCommentApi';
 import headers from '../util/headers';
-import { PageInfo } from './Community';
-import { PetInfo } from './Mypage';
+import { PostDetail, UserData } from '../types';
 
 const { ivory, darkivory, brown, bordergrey, lightgrey, mediumgrey, darkgrey, red, yellow } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = Number(localStorage.getItem('petId') as string);
 
-export interface PostDetail {
-  post: {
-    authorId: number;
-    content: string;
-    createdAt: string;
-    imageUrl: string | null;
-    likeActive: boolean;
-    likesCnt: number;
-    petName: string;
-    petStatus: string;
-    postId: number;
-    title: string;
-  };
-  comments: Comment[] | null;
-}
-
-export interface UserData {
-  myPosts: UserData[] | null;
-  pageInfo: PageInfo;
-  petInfo: PetInfo;
-}
-
 const CommunityDetail = () => {
   const navigate = useNavigate();
+  const postId = useParams().id;
+
   const [like, setLike] = useState(true);
   const [postDetail, setPostDetail] = useState<PostDetail | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-
-  const id = useParams();
-  const postId = id.id;
 
   useEffect(() => {
     getData();

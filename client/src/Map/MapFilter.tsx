@@ -2,13 +2,9 @@ import { Icon } from '@iconify/react';
 import React from 'react';
 import styled from 'styled-components';
 import color from '../util/color';
+import { MapFilterProps } from '../types';
 
 const { ivory, yellow } = color;
-
-export interface MapFilterProps {
-  selected: string;
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
-}
 
 const MapFilter = ({ selected, setSelected }: MapFilterProps) => {
   const showFilteredMarkers = (e: React.MouseEvent) => {

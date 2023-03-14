@@ -2,12 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../util/color';
+import { NavProps } from '../types';
 
 const { brown, yellow } = color;
-
-interface NavProps {
-  type: string;
-}
 
 const Nav = ({ type }: NavProps) => {
   const [selected, setSelected] = useState('');

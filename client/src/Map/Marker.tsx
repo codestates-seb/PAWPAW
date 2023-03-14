@@ -4,7 +4,7 @@ import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
 import Modal from '../Components/Modal';
 import color from '../util/color';
-import { Data } from './HomeMap';
+import { Place } from '../types';
 import CafeMarker from './Marker/CafeMarker';
 import CampMarker from './Marker/CampMarker';
 import FoodMarker from './Marker/FoodMarker';
@@ -15,7 +15,15 @@ import PoolMarker from './Marker/PoolMarker';
 
 const { brown, yellow } = color;
 
-const Marker = ({ id, category, name, latitude, longitude, isModalOpen, setIsModalOpen }: Data) => {
+const Marker = ({
+  id,
+  category,
+  name,
+  latitude,
+  longitude,
+  isModalOpen,
+  setIsModalOpen,
+}: Place) => {
   const [click, setClick] = useState<boolean>(false);
 
   const selectHandler = () => {

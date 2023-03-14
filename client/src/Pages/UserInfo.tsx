@@ -13,33 +13,23 @@ import color from '../util/color';
 import { codeToAddress } from '../util/ConvertAddress';
 import headers from '../util/formDataHeaders';
 import AddressModal from './AddressModal';
+import { ProfileImageFormData, UserInfo as IUserInfo } from '../types';
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
-
-interface FormData {
-  profileImage: Blob | null;
-}
-
-interface Info {
-  petName: string;
-  isMale: 'MALE' | 'FEMALE';
-  isCat: 'CAT' | 'DOG';
-  age: number;
-}
 
 const UserInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, petname, password } = location.state;
-  const [info, setInfo] = useState<Info>({
-    petName: petname,
+  const [info, setInfo] = useState<IUserInfo>({
+    petName: '',
     isMale: 'MALE',
     isCat: 'CAT',
     age: 0,
   });
   const [address, setAddress] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [formData, setFormData] = useState<ProfileImageFormData>({ profileImage: null });
   const [fileImage, setFileImage] = useState<string>();
 
   const [ageErrorMessage, setAgeErrorMessage] = useState<string>('');

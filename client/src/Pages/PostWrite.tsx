@@ -10,19 +10,14 @@ import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../util/color';
 import headers from '../util/formDataHeaders';
+import { PostWriteData } from '../types';
 
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
 
-interface Data {
-  petId: string | null;
-  title: string;
-  content: string;
-}
-
-const Post = () => {
+const PostWrite = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState<Data>({
+  const [data, setData] = useState<PostWriteData>({
     petId: petId,
     title: '',
     content: '',
@@ -368,4 +363,4 @@ const CancelButton = styled.button`
   }
 `;
 
-export default Post;
+export default PostWrite;

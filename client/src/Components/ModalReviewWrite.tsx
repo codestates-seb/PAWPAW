@@ -5,41 +5,24 @@ import color from '../util/color';
 import { mapReviewPOST } from '../util/MapApi';
 import { getUserInfo } from '../util/UserApi';
 import { InputProps } from './Comment';
+import { ModalReviewWriteProps, ModalUserInfo, ModalResData, ProfileImageFormData } from '../types';
 
 const { yellow, lightgrey, brown, darkbrown, bordergrey } = color;
 const petId = localStorage.getItem('petId') as string;
 
-interface ResponseData {
-  petInfo: petInfo;
-}
-
-interface petInfo {
-  petName: string | null;
-  profileImage: File | null;
-}
-
-interface FormData {
-  profileImage: Blob | null;
-}
-
-interface ModalContainerProps {
-  getData(): void;
-  id: number;
-}
-
-const ModalContainer = ({ getData, id }: ModalContainerProps) => {
+const ModalReviewWrite = ({ getData, id }: ModalReviewWriteProps) => {
   const [review, setReview] = useState<string>('');
   const { responseData, error } = getUserInfo(petId);
-  const [userInfo, setUserInfo] = useState<petInfo>({
+  const [userInfo, setUserInfo] = useState<ModalUserInfo>({
     petName: null,
     profileImage: null,
   });
 
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [formData, setFormData] = useState<ProfileImageFormData>({ profileImage: null });
   const [count, setCount] = useState<number>(0);
 
   if (!error && responseData && count === 0) {
-    const { petInfo } = responseData as ResponseData;
+    const { petInfo } = responseData as ModalResData;
     const { petName, profileImage } = petInfo;
     setUserInfo({ ...userInfo, petName });
     setFormData({ profileImage });
@@ -186,4 +169,4 @@ const RightBox = styled.div`
   align-items: center;
 `;
 
-export default ModalContainer;
+export default ModalReviewWrite;

@@ -7,37 +7,11 @@ import Header from '../Components/Header';
 import MypagePost from '../Components/MypagePost';
 import color from '../util/color';
 import headers from '../util/headers';
-import { PageInfo } from './Community';
 import Profile from './Profile';
+import { MyPageData, MyPagePost } from '../types';
 
 const { brown } = color;
 const url = process.env.REACT_APP_API_ROOT;
-
-interface MyPageData {
-  myPosts: Post[] | null;
-  pageInfo: PageInfo;
-  petInfo: PetInfo;
-}
-
-export interface Post {
-  contents: string;
-  createdAt: string;
-  likesCnt: number;
-  commentCnt: number;
-  petName: string;
-  postId: number;
-  title: string;
-}
-
-export interface PetInfo {
-  age: number;
-  code: number;
-  gender: 'MALE' | 'FEMALE';
-  petId: number;
-  petName: string;
-  profileImage: string;
-  species: 'CAT' | 'DOG';
-}
 
 const Mypage = () => {
   const params = useParams();
@@ -72,7 +46,9 @@ const Mypage = () => {
             {myPageData?.myPosts.length === 0 ? (
               <EmptyMessage>작성한 글이 없어요 🐾</EmptyMessage>
             ) : (
-              myPageData?.myPosts.map((post: Post) => <MypagePost key={post.postId} post={post} />)
+              myPageData?.myPosts.map((post: MyPagePost) => (
+                <MypagePost key={post.postId} post={post} />
+              ))
             )}
           </PostsContainer>
         )}

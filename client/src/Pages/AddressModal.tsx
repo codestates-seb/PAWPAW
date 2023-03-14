@@ -4,14 +4,9 @@ import styled from 'styled-components';
 import Button from '../Components/Button';
 import color from '../util/color';
 import jsonData from '../util/seoul-geojson.json';
+import { AddressModalProps } from '../types';
 
 const { yellow, brown, ivory } = color;
-
-interface AddressModalProps {
-  address: number | null;
-  setAddress: React.Dispatch<React.SetStateAction<number | null>>;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 const AddressModal = ({ address, setAddress, setIsOpen }: AddressModalProps) => {
   const [areas, setAreas] = useState(jsonData.features);

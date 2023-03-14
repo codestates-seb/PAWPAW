@@ -9,31 +9,16 @@ import { addressToCode, codeToAddress } from '../util/ConvertAddress';
 import { getAll, getCenter, getFilter, getMyPick } from '../util/MapFilterApi';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
+import { Place, CurrentLocation } from '../types';
 
 const { coral, brown } = color;
 const code = localStorage.getItem('code') as string;
-
-export interface Data {
-  id: number;
-  category: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  code: number;
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export interface CurrentLocation {
-  lat: number;
-  lng: number;
-}
 
 const HomeMap = () => {
   const { kakao } = window;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>('all');
-  const [data, setData] = useState<Data[] | null>(null);
+  const [data, setData] = useState<Place[] | null>(null);
 
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation>({ lat: 0, lng: 0 });
   const [address, setAddress] = useState<string | undefined>(code);

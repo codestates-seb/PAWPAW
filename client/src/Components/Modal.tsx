@@ -6,55 +6,11 @@ import color from '../util/color';
 import headers from '../util/headers';
 import ModalReview from './ModalReview';
 import ModalReviewWrite from './ModalReviewWrite';
+import { MapData, BookmarkReqData, Review, ModalProps } from '../types';
 
 const { ivory, lightgrey, brown, bordergrey, yellow, mediumgrey } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId') as string;
-
-interface IReqData {
-  petId: number;
-  infoMapId: number;
-}
-
-interface Detail {
-  infoUrl: string;
-  name: string;
-  mapAddress: string;
-  category: string;
-  operationTime: string;
-  tel: string;
-  homepage: string;
-  myPick: boolean;
-}
-
-export interface Review {
-  petId: number;
-  commentId: number;
-  profileImage: string;
-  petName: string;
-  contents: string;
-  createdAt: string;
-}
-
-interface PageInfo {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-interface MapData {
-  details: Detail;
-  reviews: Review[];
-  pageInfo: PageInfo;
-}
-
-interface ModalProps {
-  click: boolean;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
-  id: number;
-}
 
 const Modal = ({ click, setClick, id }: ModalProps) => {
   const [editActivate, setEditActivate] = useState<number>(0);
@@ -76,24 +32,24 @@ const Modal = ({ click, setClick, id }: ModalProps) => {
   }
 
   const bookmarkHandler = () => {
-    const reqData: IReqData = {
+    const bookmarkReqData: BookmarkReqData = {
       petId: Number(petId),
       infoMapId: id,
     };
     if (!mapdata?.details?.myPick) {
-      addPlace(reqData).then(() => getData());
+      addPlace(bookmarkReqData).then(() => getData());
     } else {
-      deletePlace(reqData).then(() => getData());
+      deletePlace(bookmarkReqData).then(() => getData());
     }
   };
 
-  async function addPlace(reqData: IReqData) {
-    await axios.post(`${url}/maps/addplace`, JSON.stringify(reqData), { headers });
+  async function addPlace(bookmarkReqData: BookmarkReqData) {
+    await axios.post(`${url}/maps/addplace`, JSON.stringify(bookmarkReqData), { headers });
   }
 
-  async function deletePlace(reqData: IReqData) {
+  async function deletePlace(bookmarkReqData: BookmarkReqData) {
     await axios.delete(`${url}/maps/cancel`, {
-      data: reqData,
+      data: bookmarkReqData,
       headers,
     });
   }

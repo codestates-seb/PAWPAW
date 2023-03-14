@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { PostDetail, UserData } from '../Pages/CommunityDetail';
 import color from '../util/color';
 import { CommunityCommentEdit } from '../util/CommunityCommentApi';
 import Comment, { InputProps } from './Comment';
+import { CommunityCommentProps } from '../types';
 
 const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
-
-interface CommunityCommentProps {
-  getData(): void;
-  postId?: string;
-  postDetail: PostDetail;
-  userData: UserData;
-}
 
 const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCommentProps) => {
   const [comment, setComment] = useState<string>('');

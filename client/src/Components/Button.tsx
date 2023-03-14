@@ -1,13 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import color from '../util/color';
+import { ButtonProps } from '../types';
 
 const { brown, darkbrown } = color;
-
-interface ButtonProps {
-  text: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}
 
 const Button = ({ text, onClick }: ButtonProps) => {
   return <StyledButton onClick={onClick}>{text} </StyledButton>;

@@ -13,32 +13,10 @@ import SearchBar from '../Components/SearchBar';
 import SortModal from '../Components/SortModal';
 import color from '../util/color';
 import headers from '../util/headers';
+import { PostData, PostList } from '../types';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
-
-export interface PostData {
-  id: number;
-  petName: string;
-  petId: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  likesCnt: number;
-  commentCnt: number;
-}
-
-export interface PageInfo {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-interface PostList {
-  posts: PostData[] | null;
-  pageInfo: PageInfo;
-}
 
 const Community = () => {
   const navigate = useNavigate();
@@ -109,13 +87,13 @@ const Community = () => {
             </SortButton>
             {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
           </SortButtonBox>
-          <PostList>
+          <PostsContainer>
             {postData?.posts === null || postData?.posts.length === 0 ? (
               <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
             ) : (
               postData?.posts.map((post: PostData) => <CommunityPost key={post.id} post={post} />)
             )}
-          </PostList>
+          </PostsContainer>
 
           <Footer>
             <SearchBar search={search} />
@@ -206,7 +184,7 @@ const SortButton = styled.button`
   }
 `;
 
-const PostList = styled.div`
+const PostsContainer = styled.div`
   margin-top: 10px;
   height: 100%;
 `;

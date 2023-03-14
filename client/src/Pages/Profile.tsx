@@ -7,16 +7,12 @@ import Dog from '../img/dogface.png';
 import color from '../util/color';
 import { codeToAddress } from '../util/ConvertAddress';
 import { petLogout } from '../util/UserApi';
-import { PetInfo } from './Mypage';
+import { ProfileProps } from '../types';
 
 const { ivory, yellow, red, darkgrey, brown } = color;
 const petId = localStorage.getItem('petId') as string;
 
-interface PetInfoProps {
-  petInfo?: PetInfo;
-}
-
-const Profile = ({ petInfo }: PetInfoProps) => {
+const Profile = ({ petInfo }: ProfileProps) => {
   const navigate = useNavigate();
   const params = useParams();
 

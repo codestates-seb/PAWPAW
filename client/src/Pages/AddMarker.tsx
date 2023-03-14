@@ -13,6 +13,7 @@ import color from '../util/color';
 import { codeToAddress } from '../util/ConvertAddress';
 import headers from '../util/formDataHeaders';
 import AddressModal from './AddressModal';
+import { PlaceImageFormData, MarkerInfo } from '../types';
 
 const { red, ivory, darkgrey, lightgrey, brown, darkbrown, yellow, bordergrey } = color;
 const isAdmin = localStorage.getItem('Admin');
@@ -20,22 +21,6 @@ const isAdmin = localStorage.getItem('Admin');
 interface Position {
   lat: number;
   lng: number;
-}
-
-interface FormData {
-  placeImage: Blob | null;
-}
-
-interface Info {
-  name: string;
-  code: number;
-  category: string;
-  homepage: string;
-  mapAddress: string;
-  latitude: number;
-  longitude: number;
-  operationTime: string;
-  tel: string;
 }
 
 const AddMarker = () => {
@@ -46,7 +31,7 @@ const AddMarker = () => {
   const [click, setClick] = useState(false);
   const [position, setPosition] = useState<Position>();
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({ placeImage: null });
+  const [formData, setFormData] = useState<PlaceImageFormData>({ placeImage: null });
   const [fileImage, setFileImage] = useState<string>();
   const [address, setAddress] = useState<number | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -64,7 +49,7 @@ const AddMarker = () => {
     codeErrorMessage: '',
   });
 
-  const [info, setInfo] = useState<Info>({
+  const [info, setInfo] = useState<MarkerInfo>({
     name: '',
     code: 0,
     category: '',

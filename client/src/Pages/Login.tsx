@@ -12,22 +12,9 @@ import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
 import color from '../util/color';
+import { Roles, TokenInfo } from '../types';
 
 const { ivory, brown, red } = color;
-
-export interface Roles {
-  0: string;
-  1: string;
-}
-
-export interface TokenInfo {
-  petName: string;
-  petNameSpan: string;
-  petId: number;
-  exp: number;
-  code: number;
-  roles: Roles[] | null;
-}
 
 const Login = () => {
   const navigate = useNavigate();
