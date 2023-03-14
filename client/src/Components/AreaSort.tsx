@@ -1,91 +1,87 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
-const Button = (el: string, testSwitch: boolean, setTestSwitch: any) => {
-  const [newSwitch, setNewSwitch] = useState<boolean>(false);
-  return testSwitch ? (
-    // 전체 버튼이 켜져 있을 때
-    <AreaNameCircle>
-      <AreaButton
-        onClick={() => {
-          setNewSwitch(true);
-          setTestSwitch(false);
-        }}
-      >
-        {el}
-      </AreaButton>
-    </AreaNameCircle>
-  ) : newSwitch ? (
-    <AreaNameCircleOn>
-      <AreaButton onClick={() => setNewSwitch(false)}>{el}</AreaButton>
-    </AreaNameCircleOn>
-  ) : (
-    <AreaNameCircle>
-      <AreaButton onClick={() => setNewSwitch(true)}>{el}</AreaButton>
-    </AreaNameCircle>
-  );
-};
-
-const WholeButton = (el: string, testSwitch: boolean, setTestSwitch: any) => {
-  return testSwitch ? (
-    <AreaNameCircleOn>
-      <AreaButton>{el}</AreaButton>
-    </AreaNameCircleOn>
-  ) : (
-    <AreaNameCircle>
-      <AreaButton onClick={() => setTestSwitch(true)}>{el}</AreaButton>
-    </AreaNameCircle>
-  );
-};
-
+const area = [
+  '강남구',
+  '강동구',
+  '강북구',
+  '강서구',
+  '관악구',
+  '광진구',
+  '구로구',
+  '금천구',
+  '노원구',
+  '도봉구',
+  '동대문구',
+  '동작구',
+  '마포구',
+  '서대문구',
+  '서초구',
+  '성동구',
+  '성북구',
+  '송파구',
+  '양천구',
+  '영등포구',
+  '용산구',
+  '은평구',
+  '종로구',
+  '중구',
+  '중랑구',
+];
 const AreaSort: React.FC = () => {
-  const [testSwitch, setTestSwitch] = useState<boolean>(true);
+  const [checkedList, setCheckedList] = useState<string[]>([]);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isWholeChecked, setIsWholeChecked] = useState<boolean>(true);
+  const checkedItemHandler = (value: string, isChecked: boolean) => {
+    checkedList.length === 0 && !value ? setIsWholeChecked(true) : setIsWholeChecked(false);
+    if (isChecked) {
+      setCheckedList((prev) => [...prev, value]);
+      return;
+    }
+    if (!isChecked && checkedList.includes(value)) {
+      setCheckedList(checkedList.filter((el) => el !== value));
+      return;
+    }
+    return;
+  };
+  const checkedWholeHandler = () => {
+    setCheckedList([]);
+    setIsWholeChecked(true);
+  };
+  const checkedHandler = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    setIsChecked(!isChecked);
+    checkedItemHandler(value, e.target.checked);
+    console.log(value, e.target.checked);
+  };
+
+  const onSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      console.log('가보자구', checkedList);
+    },
+    [checkedList],
+  );
   return (
     <>
       <AreaBox>
         <TextBox></TextBox>
-        <RowBox>
-          {WholeButton('전체', testSwitch, setTestSwitch)}
-          {Button('강남구', testSwitch, setTestSwitch)}
-          {Button('강동구', testSwitch, setTestSwitch)}
-          {Button('강북구', testSwitch, setTestSwitch)}
-        </RowBox>
-        <RowBox>
-          {Button('강서구', testSwitch, setTestSwitch)}
-          {Button('관악구', testSwitch, setTestSwitch)}
-          {Button('광진구', testSwitch, setTestSwitch)}
-          {Button('구로구', testSwitch, setTestSwitch)}
-        </RowBox>
-        <RowBox>
-          {Button('금천구', testSwitch, setTestSwitch)}
-          {Button('노원구', testSwitch, setTestSwitch)}
-          {Button('도봉구', testSwitch, setTestSwitch)}
-          {Button('동대문구', testSwitch, setTestSwitch)}
-        </RowBox>
-        <RowBox>
-          {Button('동작구', testSwitch, setTestSwitch)}
-          {Button('마포구', testSwitch, setTestSwitch)}
-          {Button('서대문구', testSwitch, setTestSwitch)}
-          {Button('서초구', testSwitch, setTestSwitch)}
-        </RowBox>
-        <RowBox>
-          {Button('성동구', testSwitch, setTestSwitch)}
-          {Button('성북구', testSwitch, setTestSwitch)}
-          {Button('송파구', testSwitch, setTestSwitch)}
-          {Button('양천구', testSwitch, setTestSwitch)}
-        </RowBox>
-        <RowBox>
-          {Button('영등포구', testSwitch, setTestSwitch)}
-          {Button('용산구', testSwitch, setTestSwitch)}
-          {Button('은평구', testSwitch, setTestSwitch)}
-          {Button('종로구', testSwitch, setTestSwitch)}
-        </RowBox>
-        <RowBox>
-          {Button('중구', testSwitch, setTestSwitch)}
-          {Button('중랑구', testSwitch, setTestSwitch)}
-          <BlankCircle />
-          <BlankCircle />
-        </RowBox>
+        <AreaNameCircle check={isWholeChecked}>
+          <WholeButton onClick={() => checkedWholeHandler()}>전체</WholeButton>
+        </AreaNameCircle>
+        <ButtonCarrier onSubmit={onSubmit}>
+          {area.map((item, idx) => (
+            <AreaNameCircle key={idx} check={checkedList.includes(item)}>
+              <AreaButton
+                type={'checkbox'}
+                id={item}
+                checked={checkedList.includes(item)}
+                onChange={(el) => checkedHandler(el, item)}
+              />
+              <ButtonLabel htmlFor={item}>{item}</ButtonLabel>
+            </AreaNameCircle>
+          ))}
+          <button type='submit'>가보자구</button>
+        </ButtonCarrier>
       </AreaBox>
     </>
   );
@@ -104,41 +100,52 @@ const AreaBox = styled.div`
     width: 10px;
   }
 `;
-const RowBox = styled.div`
-  display: flex;
-`;
+
 const TextBox = styled.div`
   width: 100%;
   height: 150px;
   background-color: gray;
 `;
-const AreaNameCircle = styled.div`
+
+const AreaNameCircle = styled.div<{ check: boolean }>`
   width: 60px;
   height: 60px;
   border-radius: 35px;
   border: solid 3px #bfbfbf;
-  margin: 0 10px 10px 10px;
+  margin: 0 10px 0 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => (props.check ? '#FFF8F0' : 'white')};
 `;
-const BlankCircle = styled.div`
+const ButtonCarrier = styled.form`
+  display: flex;
+  height: 500px;
+  flex-wrap: wrap;
+`;
+const WholeButton = styled.button`
+  all: unset;
+  cursor: pointer;
   width: 60px;
   height: 60px;
-  border-radius: 35px;
-  margin: 0 10px 10px 10px;
+  text-align: center;
 `;
-const AreaButton = styled.button`
+const AreaButton = styled.input`
   all: unset;
+  cursor: pointer;
+  input[type='checkbox'] {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+  }
+`;
+const ButtonLabel = styled.label`
+  all: unset;
+  text-align: row;
   color: #7b7b7b;
   font-size: 12px;
   font-weight: bold;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-`;
-const AreaNameCircleOn = styled(AreaNameCircle)`
-  background-color: #fff8f0;
+  cursor: pointer;
 `;
 
 export default AreaSort;
