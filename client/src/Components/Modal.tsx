@@ -51,7 +51,7 @@ interface MapData {
 
 interface ModalProps {
   click: boolean;
-  setClick: (classname: boolean) => void;
+  setClick: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   id: number;
 }

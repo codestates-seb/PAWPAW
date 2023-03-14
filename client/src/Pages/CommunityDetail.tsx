@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import CommunityReview from '../Components/CommunityReview';
+import CommunityComment from '../Components/CommunityComment';
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import { Comment } from '../Components/Review';
@@ -195,7 +195,7 @@ const CommunityDetail = () => {
               )}
             </FooterDiv>
             {postDetail && userData && (
-              <CommunityReview
+              <CommunityComment
                 getData={getData}
                 postId={postId}
                 postDetail={postDetail}

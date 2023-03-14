@@ -13,7 +13,7 @@ const petId = Number(localStorage.getItem('petId') as string);
 interface ModalReviewProps {
   review: Review;
   editActivate: number;
-  setEditActivate(state: number): void;
+  setEditActivate: React.Dispatch<React.SetStateAction<number>>;
   reviewActivateHandler(commentId: number): void;
   getData(): void;
 }

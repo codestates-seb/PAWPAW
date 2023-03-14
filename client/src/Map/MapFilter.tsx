@@ -1,16 +1,16 @@
-import React, { useRef, useEffect } from 'react';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import React from 'react';
+import styled from 'styled-components';
 import color from '../util/color';
 
 const { ivory, yellow } = color;
 
-export interface FProps {
+export interface MapFilterProps {
   selected: string;
-  setSelected: (classname: string) => void;
+  setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const MapFilter = ({ selected, setSelected }: FProps) => {
+const MapFilter = ({ selected, setSelected }: MapFilterProps) => {
   const showFilteredMarkers = (e: React.MouseEvent) => {
     const target = e.target as HTMLDivElement;
     const tag = target.classList[2];

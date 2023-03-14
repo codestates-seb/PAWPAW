@@ -6,7 +6,7 @@ import color from '../util/color';
 import { PostReviewEdit } from '../util/PostReviewApi';
 import Review, { InputProps } from './Review';
 
-interface CommunityReviewProps {
+interface CommunityCommentProps {
   getData(): void;
   postId?: string;
   postDetail: PostDetail;
@@ -15,12 +15,12 @@ interface CommunityReviewProps {
 
 const { yellow, brown, bordergrey, lightgrey, darkbrown } = color;
 
-const CommunityReview = ({ getData, postId, postDetail, userData }: CommunityReviewProps) => {
+const CommunityComment = ({ getData, postId, postDetail, userData }: CommunityCommentProps) => {
   const [review, setReview] = useState<string>('');
   const [editingCommentId, setEditingCommentId] = useState<number>(0);
 
   const reviewHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setReview((e.target as HTMLInputElement).value);
+    setReview(e.target.value);
   };
 
   const reviewPostHandler = () => {
@@ -208,4 +208,4 @@ const EmptyMessage = styled.div`
   color: ${brown};
 `;
 
-export default CommunityReview;
+export default CommunityComment;

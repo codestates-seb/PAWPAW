@@ -13,7 +13,7 @@ interface ReviewProps {
   comment: Comment;
   getData(): void;
   editingCommentId: number;
-  setEditingCommentId(commentId: number): void;
+  setEditingCommentId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface Comment {

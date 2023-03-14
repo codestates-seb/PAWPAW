@@ -1,29 +1,21 @@
-import React, { useState } from 'react';
-import color from '../util/color';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
-import ParkMarker from './Marker/ParkMarker';
+import styled from 'styled-components';
+import Modal from '../Components/Modal';
+import color from '../util/color';
+import { Data } from './HomeMap';
 import CafeMarker from './Marker/CafeMarker';
-import MyMarker from './Marker/MyMarker';
-import HospitalMarker from './Marker/HospitalMarker';
 import CampMarker from './Marker/CampMarker';
 import FoodMarker from './Marker/FoodMarker';
-import PropTypes from 'prop-types';
+import HospitalMarker from './Marker/HospitalMarker';
+import MyMarker from './Marker/MyMarker';
+import ParkMarker from './Marker/ParkMarker';
 import PoolMarker from './Marker/PoolMarker';
-import { IProps } from './HomeMap';
-import Modal from '../Components/Modal';
 
 const { brown, yellow } = color;
 
-const Marker = ({
-  id,
-  category,
-  name,
-  latitude,
-  longitude,
-  isModalOpen,
-  setIsModalOpen,
-}: IProps) => {
+const Marker = ({ id, category, name, latitude, longitude, isModalOpen, setIsModalOpen }: Data) => {
   const [click, setClick] = useState<boolean>(false);
 
   const selectHandler = () => {

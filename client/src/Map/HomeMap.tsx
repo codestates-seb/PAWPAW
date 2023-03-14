@@ -1,19 +1,20 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import styled from 'styled-components';
-import { Map } from 'react-kakao-maps-sdk';
 import { Icon } from '@iconify/react';
+import { useEffect, useMemo, useState } from 'react';
+import { Map } from 'react-kakao-maps-sdk';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-import color from '../util/color';
 import Header from '../Components/Header';
+import color from '../util/color';
+import { addressToCode, codeToAddress } from '../util/ConvertAddress';
+import { getAll, getCenter, getFilter, getMyPick } from '../util/MapFilterApi';
 import MapFilter from './MapFilter';
 import Marker from './Marker';
-import { addressToCode, codeToAddress } from '../util/ConvertAddress';
-import { getCenter, getAll, getMyPick, getFilter } from '../util/MapFilterApi';
+
 const { coral, brown } = color;
 const code = localStorage.getItem('code') as string;
 
-export interface IProps {
+export interface Data {
   id: number;
   category: string;
   name: string;
@@ -21,10 +22,10 @@ export interface IProps {
   longitude: number;
   code: number;
   isModalOpen: boolean;
-  setIsModalOpen: (isModalOpen: boolean) => void;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface ICurLocation {
+export interface CurrentLocation {
   lat: number;
   lng: number;
 }
@@ -33,9 +34,9 @@ const HomeMap = () => {
   const { kakao } = window;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>('all');
-  const [data, setData] = useState<IProps[] | null>(null);
+  const [data, setData] = useState<Data[] | null>(null);
 
-  const [currentLocation, setCurrentLocation] = useState<ICurLocation>({ lat: 0, lng: 0 });
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation>({ lat: 0, lng: 0 });
   const [address, setAddress] = useState<string | undefined>(code);
 
   const [newLocation, setNewLocation] = useState(currentLocation);
