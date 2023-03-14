@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Button = (el: string) => {
-  return <AreaButton onClick={() => console.log(`${el}`)}>{el}</AreaButton>;
+  const [newSwitch, setNewSwitch] = useState<boolean>(false);
+  return newSwitch ? (
+    <AreaNameCircleOn>
+      <AreaButton onClick={() => setNewSwitch(!newSwitch)}>{el}</AreaButton>
+    </AreaNameCircleOn>
+  ) : (
+    <AreaNameCircle>
+      <AreaButton onClick={() => setNewSwitch(!newSwitch)}>{el}</AreaButton>
+    </AreaNameCircle>
+  );
 };
 
 const AreaSort: React.FC = () => {
@@ -11,90 +20,44 @@ const AreaSort: React.FC = () => {
       <AreaBox>
         <TextBox></TextBox>
         <RowBox>
-          <AreaNameCircle>{Button('전체')}</AreaNameCircle>
-          <AreaNameCircle>{Button('강남구')}</AreaNameCircle>
-          <AreaNameCircle>{Button('강동구')}</AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>강북구</AreaButton>
-          </AreaNameCircle>
+          {Button('전체')}
+          {Button('강남구')}
+          {Button('강동구')}
+          {Button('강북구')}
         </RowBox>
         <RowBox>
-          <AreaNameCircle>
-            <AreaButton>강서구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>관악구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>광진구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>구로구</AreaButton>
-          </AreaNameCircle>
+          {Button('강서구')}
+          {Button('관악구')}
+          {Button('광진구')}
+          {Button('구로구')}
         </RowBox>
         <RowBox>
-          <AreaNameCircle>
-            <AreaButton>금천구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>노원구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>도봉구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>동대문구</AreaButton>
-          </AreaNameCircle>
+          {Button('금천구')}
+          {Button('노원구')}
+          {Button('도봉구')}
+          {Button('동대문구')}
         </RowBox>
         <RowBox>
-          <AreaNameCircle>
-            <AreaButton>동작구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>마포구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>서대문구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>서초구</AreaButton>
-          </AreaNameCircle>
+          {Button('동작구')}
+          {Button('마포구')}
+          {Button('서대문구')}
+          {Button('서초구')}
         </RowBox>
         <RowBox>
-          <AreaNameCircle>
-            <AreaButton>성동구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>성북구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>송파구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>양천구</AreaButton>
-          </AreaNameCircle>
+          {Button('성동구')}
+          {Button('성북구')}
+          {Button('송파구')}
+          {Button('양천구')}
         </RowBox>
         <RowBox>
-          <AreaNameCircle>
-            <AreaButton>영등포구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>용산구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>은평구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>종로구</AreaButton>
-          </AreaNameCircle>
+          {Button('영등포구')}
+          {Button('용산구')}
+          {Button('은평구')}
+          {Button('종로구')}
         </RowBox>
         <RowBox>
-          <AreaNameCircle>
-            <AreaButton>중구</AreaButton>
-          </AreaNameCircle>
-          <AreaNameCircle>
-            <AreaButton>중랑구</AreaButton>
-          </AreaNameCircle>
+          {Button('중구')}
+          {Button('중랑구')}
           <BlankCircle />
           <BlankCircle />
         </RowBox>
@@ -146,4 +109,8 @@ const AreaButton = styled.button`
   font-size: 12px;
   font-weight: bold;
 `;
+const AreaNameCircleOn = styled(AreaNameCircle)`
+  background-color: #fff8f0;
+`;
+
 export default AreaSort;
