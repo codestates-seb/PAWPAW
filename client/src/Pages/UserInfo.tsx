@@ -1,18 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
-import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import AddressModal from './AddressModal';
-import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+import color from '../util/color';
+import { codeToAddress } from '../util/ConvertAddress';
+import AddressModal from './AddressModal';
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const headers = {
@@ -30,7 +30,7 @@ interface Info {
   age: number;
 }
 
-const UserInfo: React.FC = () => {
+const UserInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, petname, password } = location.state;

@@ -1,7 +1,7 @@
-import _ from 'lodash';
 import axios from 'axios';
+import _ from 'lodash';
+import { Data } from '../Map/HomeMap';
 import headers from '../util/headers';
-import { IProps } from '../Map/HomeMap';
 
 const url = process.env.REACT_APP_API_ROOT;
 
@@ -35,22 +35,22 @@ export async function getFilter(address: string, selected: string) {
   return filterByAddress(filterBySelected(merge(resData, resMyPickData), selected), address);
 }
 
-function merge(arr1: IProps[], arr2: IProps[]) {
+function merge(arr1: Data[], arr2: Data[]) {
   const mergedArr = [...arr2, ...arr1];
   const dedupedArr = _.uniqBy(mergedArr, 'id');
   return dedupedArr;
 }
 
-function filterBySelected(arr: IProps[], selected: string) {
+function filterBySelected(arr: Data[], selected: string) {
   return arr.filter((el) => el.category === selectedToCategory(selected));
 }
 
-function filterByAddress(arr: IProps[], address: string) {
+function filterByAddress(arr: Data[], address: string) {
   return arr.filter((el) => el.code === Number(address));
 }
 
-function addBookmark(arr: IProps[], value: boolean) {
-  return arr.map((el: IProps) => {
+function addBookmark(arr: Data[], value: boolean) {
+  return arr.map((el: Data) => {
     return { ...el, bookmark: value };
   });
 }

@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
-import React, { FC, useState, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import React, { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
 
-import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import AddressModal from './AddressModal';
-import { codeToAddress } from '../util/ConvertAddress';
-import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+import color from '../util/color';
+import { codeToAddress } from '../util/ConvertAddress';
+import { petDelete } from '../util/UserApi';
+import AddressModal from './AddressModal';
 import { TokenInfo } from './Login';
 
 const jwtToken = localStorage.getItem('Authorization');
@@ -39,7 +39,7 @@ interface Info {
   age: number;
 }
 
-const UserInfoEdit: FC = () => {
+const UserInfoEdit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { petName, age, isMale, isCat, code, profileImage } = location.state;

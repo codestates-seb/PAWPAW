@@ -187,12 +187,11 @@ const PostEdit = () => {
     };
   }, []);
 
-  const type = 'board';
   return (
     <Container>
       <Header />
       <Body>
-        <Nav type={type} />
+        <Nav type='board' />
         {data.title && (
           <PostContainer>
             <div>

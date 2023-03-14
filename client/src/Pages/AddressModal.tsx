@@ -9,8 +9,8 @@ const { yellow, brown, ivory } = color;
 
 interface AddressModalProps {
   address: number | null;
-  setAddress: (address: number | null) => void;
-  setIsOpen: (isOpen: boolean) => void;
+  setAddress: React.Dispatch<React.SetStateAction<number | null>>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AddressModal = ({ address, setAddress, setIsOpen }: AddressModalProps) => {
