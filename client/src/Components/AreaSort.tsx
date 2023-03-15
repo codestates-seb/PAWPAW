@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { addressToCode } from '../util/ConvertAddress';
+import { Icon } from '@iconify/react';
 
 const AreaSort: React.FC = () => {
   const [checkedList, setCheckedList] = useState<string[]>([]);
@@ -43,9 +44,9 @@ const AreaSort: React.FC = () => {
     <>
       <AreaBox>
         <TextBox></TextBox>
-        <AreaNameCircle check={isWholeChecked}>
+        <WholeCircle check={isWholeChecked}>
           <WholeButton onClick={() => checkedWholeHandler()}>전체</WholeButton>
-        </AreaNameCircle>
+        </WholeCircle>
         <ButtonCarrier onSubmit={onSubmit}>
           {area.map((item, idx) => (
             <AreaNameCircle key={idx} check={checkedList.includes(item)}>
@@ -56,12 +57,26 @@ const AreaSort: React.FC = () => {
                 onChange={(el) => checkedHandler(el, item)}
               />
               <CheckBox check={checkedList.includes(item)}>
-                {checkedList.includes(item) ? 'O' : 'X'}
+                {checkedList.includes(item) ? (
+                  <Icon
+                    icon='material-symbols:check-small-rounded'
+                    color='7D5A5A'
+                    width='35'
+                    height='35'
+                  />
+                ) : (
+                  <Icon
+                    icon='material-symbols:check-small-rounded'
+                    color='#bfbfbf'
+                    width='35'
+                    height='35'
+                  />
+                )}
               </CheckBox>
               <ButtonLabel htmlFor={item}>{item}</ButtonLabel>
             </AreaNameCircle>
           ))}
-          <button type='submit'>가보자구</button>
+          <SubmitButton type='submit'>가보자구</SubmitButton>
         </ButtonCarrier>
       </AreaBox>
     </>
@@ -69,17 +84,12 @@ const AreaSort: React.FC = () => {
 };
 
 const AreaBox = styled.div`
-  width: 380px;
+  width: 358px;
   height: 700px;
   margin: 30px;
   padding: 22px;
   border: solid 1px black;
   border-radius: 20px;
-  overflow: scroll;
-  overflow-x: hidden;
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
 `;
 
 const TextBox = styled.div`
@@ -89,8 +99,8 @@ const TextBox = styled.div`
 `;
 
 const AreaNameCircle = styled.div<{ check: boolean }>`
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   border-radius: 35px;
   border: solid 3px #bfbfbf;
   margin: 0 10px 0 10px;
@@ -100,9 +110,15 @@ const AreaNameCircle = styled.div<{ check: boolean }>`
   background-color: ${(props) => (props.check ? '#FFF8F0' : 'white')};
   position: relative;
 `;
+const WholeCircle = styled(AreaNameCircle)`
+  width: 130px;
+  height: 40px;
+  border-radius: 18px;
+  margin: 10px;
+`;
 const ButtonCarrier = styled.form`
   display: flex;
-  height: 500px;
+  height: 450px;
   flex-wrap: wrap;
   margin-top: 10px;
 `;
@@ -122,6 +138,12 @@ const AreaButton = styled.input`
     text-align: center;
   }
 `;
+const SubmitButton = styled.button`
+  margin-left: 5px;
+  width: 215px;
+  height: 55px;
+  border-radius: 26px;
+`;
 const ButtonLabel = styled.label`
   all: unset;
   text-align: row;
@@ -132,15 +154,18 @@ const ButtonLabel = styled.label`
 `;
 
 const CheckBox = styled.div<{ check: boolean }>`
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 12px;
   border: solid 3px #bfbfbf;
   position: absolute;
-  bottom: 38px;
-  left: 30px;
+  bottom: 36px;
+  left: 28px;
   text-align: center;
   background-color: ${(props) => (props.check ? '#FFF8F0' : 'white')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const area = [
   '강남구',
