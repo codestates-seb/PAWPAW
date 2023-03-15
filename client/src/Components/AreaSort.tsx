@@ -5,9 +5,10 @@ import { Icon } from '@iconify/react';
 
 interface AreaSortProps {
   setAreaSorting: React.Dispatch<React.SetStateAction<string[]>>;
+  setIsArea: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AreaSort: React.FC<AreaSortProps> = ({ setAreaSorting }) => {
+const AreaSort: React.FC<AreaSortProps> = ({ setAreaSorting, setIsArea }) => {
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isWholeChecked, setIsWholeChecked] = useState<boolean>(true);
@@ -38,6 +39,7 @@ const AreaSort: React.FC<AreaSortProps> = ({ setAreaSorting }) => {
       e.preventDefault();
       console.log('가보자구', checkedList);
       setAreaSorting(checkedList);
+      setIsArea(false);
     },
     [checkedList, setAreaSorting],
   );

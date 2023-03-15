@@ -110,7 +110,7 @@ const Community: React.FC = () => {
             <AreaSortButtonBox>
               <AreaSortButton onClick={() => setIsArea(!isArea)}>보고싶은 동내 설정</AreaSortButton>
             </AreaSortButtonBox>
-            {isArea ? <AreaSort setAreaSorting={setAreaSorting} /> : ''}
+            {isArea ? <AreaSort setAreaSorting={setAreaSorting} setIsArea={setIsArea} /> : ''}
             <SortButtonBox>
               <SortButton onClick={() => setIsOpen(!isOpen)}>
                 <span className='text'>
