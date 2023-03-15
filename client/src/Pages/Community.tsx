@@ -13,6 +13,8 @@ import FriendRecommend from '../Components/FriendRecommend';
 import CommunityPost from '../Components/CommunityPost';
 import SortModal from '../Components/SortModal';
 import SearchBar from '../Components/SearchBar';
+import AreaSort from '../Components/AreaSort';
+import { addressToCode } from '../util/ConvertAddress';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
@@ -43,21 +45,39 @@ const Community: React.FC = () => {
   const [postData, setPostData] = useState<PostList | null>(null);
   const [page, setPage] = useState(1);
   const [sorting, setSorting] = useState<string>('newest');
+  const [areaSorting, setAreaSorting] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const [isArea, setIsArea] = useState<boolean>(false);
+  console.log('test');
   useEffect(() => {
     getData();
-  }, [page, sorting]);
+  }, [page, sorting, areaSorting]);
 
   async function getData() {
-    await axios
-      .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
-      .then((res) => {
-        setPostData(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    let test = '';
+    for (const el of areaSorting) {
+      test = test + '&code=' + addressToCode(el);
+      console;
+    }
+    if (areaSorting.length === 0) {
+      await axios
+        .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
+        .then((res) => {
+          setPostData(res.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      await axios
+        .get(`${url}/posts?page=${page}&sort=${sorting}${test}`, { headers })
+        .then((res) => {
+          setPostData(res.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
   const handlePageChange = (page: React.SetStateAction<number>) => {
@@ -86,27 +106,33 @@ const Community: React.FC = () => {
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
           {page === 1 && <FriendRecommend />}
-          <SortButtonBox>
-            <SortButton onClick={() => setIsOpen(!isOpen)}>
-              <span className='text'>
-                {isOpen
-                  ? '정렬'
-                  : sorting === 'newest'
-                  ? '최신순'
-                  : sorting === 'likes'
-                  ? '인기순'
-                  : '댓글 많은 순'}
-              </span>
-              <span className='icon'>
-                {isOpen ? (
-                  <Icon icon='octicon:triangle-up-16' />
-                ) : (
-                  <Icon icon='octicon:triangle-down-16' />
-                )}
-              </span>
-            </SortButton>
-            {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
-          </SortButtonBox>
+          <ButtonContainer>
+            <AreaSortButtonBox>
+              <AreaSortButton onClick={() => setIsArea(!isArea)}>보고싶은 동내 설정</AreaSortButton>
+            </AreaSortButtonBox>
+            {isArea ? <AreaSort setAreaSorting={setAreaSorting} /> : ''}
+            <SortButtonBox>
+              <SortButton onClick={() => setIsOpen(!isOpen)}>
+                <span className='text'>
+                  {isOpen
+                    ? '정렬'
+                    : sorting === 'newest'
+                    ? '최신순'
+                    : sorting === 'likes'
+                    ? '인기순'
+                    : '댓글 많은 순'}
+                </span>
+                <span className='icon'>
+                  {isOpen ? (
+                    <Icon icon='octicon:triangle-up-16' />
+                  ) : (
+                    <Icon icon='octicon:triangle-down-16' />
+                  )}
+                </span>
+              </SortButton>
+              {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
+            </SortButtonBox>
+          </ButtonContainer>
           <PostList>
             {postData?.posts === null || postData?.posts.length === 0 ? (
               <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
@@ -176,7 +202,29 @@ const CommunityBanner = styled.div`
     color: ${darkbrown};
   }
 `;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const AreaSortButtonBox = styled.div`
+  margin-top: 15px;
+  border: 2px solid ${darkbrown};
+  border-radius: 50px;
+`;
+const AreaSortButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${brown};
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 
+  &:hover {
+    color: ${darkbrown};
+  }
+`;
 const SortButtonBox = styled.div`
   margin-top: 15px;
   display: flex;

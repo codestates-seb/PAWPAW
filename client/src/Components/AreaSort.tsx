@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { addressToCode } from '../util/ConvertAddress';
 import { Icon } from '@iconify/react';
 
-const AreaSort: React.FC = () => {
+interface AreaSortProps {
+  setAreaSorting: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const AreaSort: React.FC<AreaSortProps> = ({ setAreaSorting }) => {
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isWholeChecked, setIsWholeChecked] = useState<boolean>(true);
@@ -32,18 +36,18 @@ const AreaSort: React.FC = () => {
   const onSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const newArr = [];
-      for (const el of checkedList) {
-        newArr.push(addressToCode(el));
-      }
-      console.log('가보자구', newArr);
+      console.log('가보자구', checkedList);
+      setAreaSorting(checkedList);
     },
-    [checkedList],
+    [checkedList, setAreaSorting],
   );
   return (
     <>
       <AreaBox>
-        <TextBox></TextBox>
+        <TextBox>
+          <TextTop>다른 동네 친구들이 궁금해요</TextTop>
+          <TextBottom>원하는 지역의 게시글만 볼 수 있어요</TextBottom>
+        </TextBox>
         <WholeCircle check={isWholeChecked}>
           <WholeButton onClick={() => checkedWholeHandler()}>전체</WholeButton>
         </WholeCircle>
@@ -85,18 +89,26 @@ const AreaSort: React.FC = () => {
 
 const AreaBox = styled.div`
   width: 358px;
-  height: 700px;
+  height: 630px;
   margin: 30px;
   padding: 22px;
   border: solid 1px black;
   border-radius: 20px;
+  z-index: 1000;
+  position: fixed;
+  background: white;
+  left: 10px;
+  top: 10px;
 `;
-
 const TextBox = styled.div`
   width: 100%;
-  height: 150px;
+  height: 80px;
   background-color: gray;
 `;
+const TextTop = styled.div`
+  text-align: center;
+`;
+const TextBottom = styled(TextTop)``;
 
 const AreaNameCircle = styled.div<{ check: boolean }>`
   width: 55px;
@@ -152,7 +164,6 @@ const ButtonLabel = styled.label`
   font-weight: bold;
   cursor: pointer;
 `;
-
 const CheckBox = styled.div<{ check: boolean }>`
   width: 22px;
   height: 22px;
@@ -167,6 +178,7 @@ const CheckBox = styled.div<{ check: boolean }>`
   justify-content: center;
   align-items: center;
 `;
+
 const area = [
   '강남구',
   '강동구',

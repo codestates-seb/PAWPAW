@@ -13,7 +13,6 @@ import AddMarker from './AddMarker';
 import NotFound from './NotFound';
 import PrivateRoute from '../Components/PrivateRouter';
 import { axiosRefresh } from '../util/GlobalAxios';
-import AutoLogout from '../util/autoLogout';
 
 export default function Router() {
   axiosRefresh;
