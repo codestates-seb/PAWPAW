@@ -94,10 +94,10 @@ const AreaSort: React.FC<AreaSortProps> = ({ areaSorting, setAreaSorting, setIsA
 
 const AreaBox = styled.div`
   width: 358px;
-  height: 630px;
+  height: 610px;
   margin: 30px;
   padding: 22px;
-  border: solid 1px black;
+  border: solid 2px black;
   border-radius: 20px;
   z-index: 1000;
   position: absolute;
@@ -107,13 +107,22 @@ const AreaBox = styled.div`
 `;
 const TextBox = styled.div`
   width: 100%;
-  height: 80px;
-  background-color: gray;
+  height: 60px;
+  padding-left: 15px;
+  padding-right: 15px;
 `;
 const TextTop = styled.div`
   text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
 `;
-const TextBottom = styled(TextTop)``;
+const TextBottom = styled(TextTop)`
+  font-weight: bold;
+  font-size: 14px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid black;
+`;
 
 const AreaNameCircle = styled.div<{ check: boolean }>`
   width: 55px;
@@ -165,8 +174,13 @@ const ButtonLabel = styled.label`
   all: unset;
   text-align: row;
   color: #7b7b7b;
+  width: 100%;
+  height: 100%;
   font-size: 12px;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 `;
 const CheckBox = styled.div<{ check: boolean }>`

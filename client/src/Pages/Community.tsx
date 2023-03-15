@@ -107,18 +107,23 @@ const Community: React.FC = () => {
           <CommunityBanner>자유게시판</CommunityBanner>
           {page === 1 && <FriendRecommend />}
           <ButtonContainer>
-            <AreaSortButtonBox>
-              <AreaSortButton onClick={() => setIsArea(!isArea)}>보고싶은 동내 설정</AreaSortButton>
-              {isArea ? (
-                <AreaSort
-                  areaSorting={areaSorting}
-                  setAreaSorting={setAreaSorting}
-                  setIsArea={setIsArea}
-                />
-              ) : (
-                ''
-              )}
-            </AreaSortButtonBox>
+            <LeftButtonContainer>
+              <MapIcon icon='mdi:map-check' color='#7d5a5a' width='35' height='35' />
+              <AreaSortButtonBox>
+                <AreaSortButton onClick={() => setIsArea(!isArea)}>
+                  보고싶은 동내 설정
+                </AreaSortButton>
+                {isArea ? (
+                  <AreaSort
+                    areaSorting={areaSorting}
+                    setAreaSorting={setAreaSorting}
+                    setIsArea={setIsArea}
+                  />
+                ) : (
+                  ''
+                )}
+              </AreaSortButtonBox>
+            </LeftButtonContainer>
             <SortButtonBox>
               <SortButton onClick={() => setIsOpen(!isOpen)}>
                 <span className='text'>
@@ -214,11 +219,24 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+const LeftButtonContainer = styled.div`
+  display: flex;
+`;
+
+const MapIcon = styled(Icon)`
+  margin: 15px 5px 0 5px;
+`;
 const AreaSortButtonBox = styled.div`
   margin-top: 15px;
-  border: 2px solid ${darkbrown};
+  border: 2px solid ${brown};
   border-radius: 50px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    border: 2px solid ${darkbrown};
+  }
 `;
 const AreaSortButton = styled.button`
   background: none;
@@ -226,8 +244,6 @@ const AreaSortButton = styled.button`
   font-size: 15px;
   font-weight: 700;
   color: ${brown};
-  display: flex;
-  align-items: center;
   cursor: pointer;
 
   &:hover {
