@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class FileUploadService {
 
     //기존 확장자명을 유지한 채, 유니크한 파일의 이름을 생성하는 로직
     private String createFileName(String originalFileName)  {
-        String fileExtension = getFileExtension(originalFileName);
+        String fileExtension = getFileExtension(originalFileName).toLowerCase();
 
         String fileName;
 

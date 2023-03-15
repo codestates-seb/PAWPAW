@@ -37,6 +37,8 @@ public enum ExceptionCode {
 
     INVALID_FILE_TYPE(400, "Invalid file type"),
 
+    FILE_IS_EMPTY(400, "File is empty"),
+
     SEARCH_TYPE_REQUIRES_CONTENT(400, "Search type requires content"),
 
     INVALID_SORT_TYPE(400, "Invalid sort type");
