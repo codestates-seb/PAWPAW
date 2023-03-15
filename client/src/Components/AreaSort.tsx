@@ -4,14 +4,17 @@ import { addressToCode } from '../util/ConvertAddress';
 import { Icon } from '@iconify/react';
 
 interface AreaSortProps {
+  areaSorting: string[];
   setAreaSorting: React.Dispatch<React.SetStateAction<string[]>>;
   setIsArea: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AreaSort: React.FC<AreaSortProps> = ({ setAreaSorting, setIsArea }) => {
-  const [checkedList, setCheckedList] = useState<string[]>([]);
+const AreaSort: React.FC<AreaSortProps> = ({ areaSorting, setAreaSorting, setIsArea }) => {
+  const [checkedList, setCheckedList] = useState<string[]>(areaSorting);
   const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [isWholeChecked, setIsWholeChecked] = useState<boolean>(true);
+  const [isWholeChecked, setIsWholeChecked] = useState<boolean>(
+    areaSorting.length === 0 ? true : false,
+  );
   const checkedItemHandler = (value: string, isChecked: boolean) => {
     checkedList.length === 0 && !value ? setIsWholeChecked(true) : setIsWholeChecked(false);
     if (isChecked) {
@@ -97,9 +100,9 @@ const AreaBox = styled.div`
   border: solid 1px black;
   border-radius: 20px;
   z-index: 1000;
-  position: fixed;
+  position: absolute;
   background: white;
-  left: 10px;
+  left: -34px;
   top: 10px;
 `;
 const TextBox = styled.div`

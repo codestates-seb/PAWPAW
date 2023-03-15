@@ -109,8 +109,16 @@ const Community: React.FC = () => {
           <ButtonContainer>
             <AreaSortButtonBox>
               <AreaSortButton onClick={() => setIsArea(!isArea)}>보고싶은 동내 설정</AreaSortButton>
+              {isArea ? (
+                <AreaSort
+                  areaSorting={areaSorting}
+                  setAreaSorting={setAreaSorting}
+                  setIsArea={setIsArea}
+                />
+              ) : (
+                ''
+              )}
             </AreaSortButtonBox>
-            {isArea ? <AreaSort setAreaSorting={setAreaSorting} setIsArea={setIsArea} /> : ''}
             <SortButtonBox>
               <SortButton onClick={() => setIsOpen(!isOpen)}>
                 <span className='text'>
@@ -210,6 +218,7 @@ const AreaSortButtonBox = styled.div`
   margin-top: 15px;
   border: 2px solid ${darkbrown};
   border-radius: 50px;
+  position: relative;
 `;
 const AreaSortButton = styled.button`
   background: none;
