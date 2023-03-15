@@ -28,10 +28,10 @@ public class AwsS3UploadService implements UploadService {
 
     @Override
     public void deleteFile(String fileName, String folderName){
-        amazonS3.deleteObject(new DeleteObjectRequest(component.getBucket() + "/" + folderName, fileName));
+        String key = fileName.substring(fileName.lastIndexOf("/") + 1);
+        amazonS3.deleteObject(new DeleteObjectRequest(component.getBucket() + "/" + folderName, key));
     }
 
-    //아래 getFileUrl()메소드는 업로드한 파일의 URI를 가져오는 메소드이다.
     @Override
     public  String getFileUrl(String fileName, String folderName) {
         return amazonS3.getUrl(component.getBucket() + "/" + folderName, fileName).toString();
