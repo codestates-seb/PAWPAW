@@ -1,33 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { addressToCode } from '../util/ConvertAddress';
 
-const area = [
-  '강남구',
-  '강동구',
-  '강북구',
-  '강서구',
-  '관악구',
-  '광진구',
-  '구로구',
-  '금천구',
-  '노원구',
-  '도봉구',
-  '동대문구',
-  '동작구',
-  '마포구',
-  '서대문구',
-  '서초구',
-  '성동구',
-  '성북구',
-  '송파구',
-  '양천구',
-  '영등포구',
-  '용산구',
-  '은평구',
-  '종로구',
-  '중구',
-  '중랑구',
-];
 const AreaSort: React.FC = () => {
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -57,7 +31,11 @@ const AreaSort: React.FC = () => {
   const onSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log('가보자구', checkedList);
+      const newArr = [];
+      for (const el of checkedList) {
+        newArr.push(addressToCode(el));
+      }
+      console.log('가보자구', newArr);
     },
     [checkedList],
   );
@@ -147,5 +125,33 @@ const ButtonLabel = styled.label`
   font-weight: bold;
   cursor: pointer;
 `;
+
+const area = [
+  '강남구',
+  '강동구',
+  '강북구',
+  '강서구',
+  '관악구',
+  '광진구',
+  '구로구',
+  '금천구',
+  '노원구',
+  '도봉구',
+  '동대문구',
+  '동작구',
+  '마포구',
+  '서대문구',
+  '서초구',
+  '성동구',
+  '성북구',
+  '송파구',
+  '양천구',
+  '영등포구',
+  '용산구',
+  '은평구',
+  '종로구',
+  '중구',
+  '중랑구',
+];
 
 export default AreaSort;
