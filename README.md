@@ -51,46 +51,228 @@ http://pawpaw.com.s3-website.ap-northeast-2.amazonaws.com/
 
 <br />
 <hr />
+<br/>
 
-## 서비스 화면
+## 서비스 화면 🎥
 
-|                                                     회원가입                                                      |                                                      로그인                                                      |                                                    마이페이지                                                     |
-| :---------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
-| ![SignUp](https://user-images.githubusercontent.com/108467211/217247596-0b0fc6d4-751d-4960-bfc7-7322aac16542.gif) | ![LogIn](https://user-images.githubusercontent.com/108467211/217248656-1e6e62ad-e8df-4d32-a60f-07a97065e420.gif) | ![MyPage](https://user-images.githubusercontent.com/108467211/217249198-7db7c6ac-a76d-4c34-b414-87b69e4c9795.gif) |
+<details>
+<summary><strong>👤 유저 관리</strong></summary>
+<div>
+<details>
+<summary>회원가입</summary>
+<div>
 
+![SignUp](https://user-images.githubusercontent.com/108467211/217247596-0b0fc6d4-751d-4960-bfc7-7322aac16542.gif)
 
+</div>
+</details>
 
-|                                                        지도                                                        |                                                     지도 필터                                                     |                                                    지도 모달                                                     |
-| :----------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------: |
-| ![Map (1)](https://user-images.githubusercontent.com/108467211/217258579-34cc2e98-995c-40fe-a725-ed277256f11b.gif) | ![Filter](https://user-images.githubusercontent.com/108467211/217258876-d52be18f-7546-4a59-99ba-287892802b92.gif) | ![Modal](https://user-images.githubusercontent.com/108467211/217256170-96914bb8-422f-47b0-b39b-ce3b86dcf30f.gif) |
+<details>
+<summary>로그인</summary>
+<div>
 
-|                                                         리뷰 CRUD                                                          |                                                         북마크                                                          |                                                      커뮤니티탭                                                      |
-| :------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------: |
-| ![Review CRUD (1)](https://user-images.githubusercontent.com/108467211/217262293-3327ce01-a35f-46ba-88ad-ecbe748910c2.gif) | ![Bookmark (1)](https://user-images.githubusercontent.com/108467211/217256528-cdb19c21-bdac-4ea9-9495-f9f977c4ffa6.gif) | ![Community](https://user-images.githubusercontent.com/108467211/217263013-62742531-135d-4766-abae-bce207bfc9da.gif) |
+![LogIn](https://user-images.githubusercontent.com/108467211/217248656-1e6e62ad-e8df-4d32-a60f-07a97065e420.gif)
 
-|                                                   게시물 조회                                                   |                                                    게시물 작성                                                     |                                                    게시물 수정 및 삭제                                                    |
-| :-------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: |
-| ![Post](https://user-images.githubusercontent.com/108467211/217263028-9e6224b3-5d16-4d15-b5d4-01d36cda25a4.gif) | ![PostAdd](https://user-images.githubusercontent.com/108467211/217264126-2adfeac2-5b07-4bdb-88b0-c4e2f6bab6a1.gif) | ![PostEditDelete](https://user-images.githubusercontent.com/108467211/217264509-3bb63893-7b43-4e85-b9ae-b529e43074fc.gif) |
+</div>
+</details>
 
-|                                                          내 정보 수정                                                          |                                                         로그아웃                                                         |                                                         회원 탈퇴                                                          |
-| :----------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: |
-| ![내 정보 수정](https://user-images.githubusercontent.com/108467211/217254561-52410715-6350-4296-8012-1d628c138e46.gif) | ![로그아웃](https://user-images.githubusercontent.com/108467211/217253295-2e5b8cde-728a-4fe4-a055-a48ec83bca8d.gif) | ![회원 탈퇴](https://user-images.githubusercontent.com/108467211/217252776-6fcfbfcb-19f9-4cf5-bece-894912d00981.gif) |
+<details>
+<summary>마이페이지</summary>
+<div>
 
-|                                                    게시물 댓글                                                     |                                                    관리자 권한 요청                                                     |                                                    장소 추가하기                                                    |
-| :----------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: |
-| ![Comment](https://user-images.githubusercontent.com/108467211/217266872-6434b1ac-84a1-4e8b-b6ce-c757cbfa51fd.gif) | ![AdminRequest](https://user-images.githubusercontent.com/108467211/217267018-97796459-9b72-4cf5-85ed-c2d1f2acd64d.gif) | ![AddPlace](https://user-images.githubusercontent.com/108467211/217266905-9483c56d-1a50-4958-bda6-da949d782dd5.gif) |
+![MyPage](https://user-images.githubusercontent.com/108467211/217249198-7db7c6ac-a76d-4c34-b414-87b69e4c9795.gif)
 
+</div>
+</details>
+
+<details>
+<summary>내 정보 수정</summary>
+<div>
+
+![내 정보 수정](https://user-images.githubusercontent.com/108467211/217254561-52410715-6350-4296-8012-1d628c138e46.gif)
+
+</div>
+</details>
+
+<details>
+<summary>로그아웃</summary>
+<div>
+
+![로그아웃](https://user-images.githubusercontent.com/108467211/217253295-2e5b8cde-728a-4fe4-a055-a48ec83bca8d.gif)
+
+</div>
+</details>
+
+<details>
+<summary>회원 탈퇴</summary>
+<div>
+
+![회원 탈퇴](https://user-images.githubusercontent.com/108467211/217252776-6fcfbfcb-19f9-4cf5-bece-894912d00981.gif)
+
+</div>
+</details>
+
+<details>
+<summary>관리자 권한 요청</summary>
+<div>
+
+![AdminRequest](https://user-images.githubusercontent.com/108467211/217267018-97796459-9b72-4cf5-85ed-c2d1f2acd64d.gif)
+
+</div>
+</details>
+
+</div>
+</details>
+
+<br />
+
+<details>
+<summary><strong>🗺 지도</strong></summary>
+<div>
+
+<details>
+<summary>지도</summary>
+<div>
+
+![Map (1)](https://user-images.githubusercontent.com/108467211/217258579-34cc2e98-995c-40fe-a725-ed277256f11b.gif)
+
+</div>
+</details>
+
+<details>
+<summary>지도 필터</summary>
+<div>
+
+![Filter](https://user-images.githubusercontent.com/108467211/217258876-d52be18f-7546-4a59-99ba-287892802b92.gif)
+
+</div>
+</details>
+
+<details>
+<summary>지도 모달</summary>
+<div>
+
+![Modal](https://user-images.githubusercontent.com/108467211/217256170-96914bb8-422f-47b0-b39b-ce3b86dcf30f.gif)
+
+</div>
+</details>
+
+<details>
+<summary>리뷰 CRUD</summary>
+<div>
+
+![Review CRUD (1)](https://user-images.githubusercontent.com/108467211/217262293-3327ce01-a35f-46ba-88ad-ecbe748910c2.gif)
+
+</div>
+</details>
+
+<details>
+<summary>북마크</summary>
+<div>
+
+![Bookmark (1)](https://user-images.githubusercontent.com/108467211/217256528-cdb19c21-bdac-4ea9-9495-f9f977c4ffa6.gif)
+
+</div>
+</details>
+
+</div>
+</details>
+
+<br />
+
+<details>
+<summary><strong>💬 커뮤니티</strong></summary>
+<div>
+
+<details>
+<summary>커뮤니티 메인</summary>
+<div>
+
+![Community](https://user-images.githubusercontent.com/108467211/217263013-62742531-135d-4766-abae-bce207bfc9da.gif)
+
+</div>
+</details>
+
+<details>
+<summary>게시물 조회</summary>
+<div>
+
+![Post](https://user-images.githubusercontent.com/108467211/217263028-9e6224b3-5d16-4d15-b5d4-01d36cda25a4.gif)
+
+</div>
+</details>
+
+<details>
+<summary>게시물 작성</summary>
+<div>
+
+![PostAdd](https://user-images.githubusercontent.com/108467211/217264126-2adfeac2-5b07-4bdb-88b0-c4e2f6bab6a1.gif)
+
+</div>
+</details>
+
+<details>
+<summary>게시물 수정 및 삭제</summary>
+<div>
+
+![PostEditDelete](https://user-images.githubusercontent.com/108467211/217264509-3bb63893-7b43-4e85-b9ae-b529e43074fc.gif)
+
+</div>
+</details>
+
+<details>
+<summary>댓글 CRUD</summary>
+<div>
+
+![Comment](https://user-images.githubusercontent.com/108467211/217266872-6434b1ac-84a1-4e8b-b6ce-c757cbfa51fd.gif)
+
+</div>
+</details>
+
+<details>
+<summary>게시글 검색</summary>
+<div>
+
+![검색](https://user-images.githubusercontent.com/108467211/225259705-b31d45de-c50c-4256-966a-c1fca339669e.gif)
+
+</div>
+</details>
+
+<details>
+<summary>게시글 정렬</summary>
+<div>
+
+![정렬](https://user-images.githubusercontent.com/108467211/225259707-a6979728-c84c-49a6-9619-78f15e9e4798.gif)
+
+</div>
+</details>
+
+<details>
+<summary>장소 추가하기</summary>
+<div>
+
+![AddPlace](https://user-images.githubusercontent.com/108467211/217266905-9483c56d-1a50-4958-bda6-da949d782dd5.gif)
+
+</div>
+</details>
+
+</div>
+</details>
+
+<br/>
 <hr />
+<br/>
 
 ## 팀원 소개 🤼
 
 <div align="center">
 
-|                                                                                                                                                                                                                                                                                                  이건희 <br> 팀장 FE                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                          김수진 <br>팀원 FE                                                                                                                                                                                                                                                           |                                                                                                                                                                                                                                                                                      천지은 <br>팀원 FE                                                                                                                                                                                                                                                                                      |                                                                                                                                                                                                                                                      김현동 <br>팀장 BE                                                                                                                                                                                                                                                      |                                                                                                                                                                                                                                                                          김채원 <br>팀원 BE                                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                                      오수빈 <br>팀원 BE                                                                                                                                                                                                                                                                                                      |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/49fa2660-ebc3-4c9a-a7e8-827818cd0625/%E1%84%8B%E1%85%A8%E1%84%88%E1%85%B5.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230202T022234Z&X-Amz-Expires=86400&X-Amz-Signature=8a5d61b96b77fe201a5730d9f323577621d1ffb1ccce3b0da6cf95a1eb3f6d4c&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25E1%2584%258B%25E1%2585%25A8%25E1%2584%2588%25E1%2585%25B5.jpg%22&x-id=GetObject" width="100px" /> | <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/0ef0de59-4920-44e3-a036-77c00042fc2b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230202T021233Z&X-Amz-Expires=86400&X-Amz-Signature=354d3bb987531ad1589483e881ee33a890576b359e3b19f9b5cb8ee87d4adff6&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject" width="100px" /> | <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/97b02e4b-347e-4064-b035-722d588a114c/KakaoTalk_Photo_2023-01-03-14-02-47.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230202T021429Z&X-Amz-Expires=86400&X-Amz-Signature=62219f0caa5d0051fce6599a4529b6d803111a731eeb33e52a7ae7dcdf575368&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22KakaoTalk_Photo_2023-01-03-14-02-47.jpeg%22&x-id=GetObject" width='100px'/> | <img src='https://s3.us-west-2.amazonaws.com/secure.notion-static.com/57c4206e-5ce0-444a-b49d-69209819bba1/asdf.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230202T021854Z&X-Amz-Expires=86400&X-Amz-Signature=6ddd4d1f10816fbbcf921bf465532ac4036db6d7e01523f0c19b6931f9904564&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22asdf.jpg%22&x-id=GetObject' width='100px'/> | <img src='https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ddf5fd12-f037-45b1-9ad9-085305564482/%E3%85%81%E3%85%87.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230202T021503Z&X-Amz-Expires=86400&X-Amz-Signature=a8fa82bf32a50ce647943e0ef5c16f376b1b3d803768eb183a4195bda3a91c41&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25E3%2585%2581%25E3%2585%2587.jpg%22&x-id=GetObject' width='100px'/> | <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3d5b60d4-776b-48eb-a471-800c5219ed00/%ED%8F%AC%EC%BD%94_%EC%82%B0%ED%83%801.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230202T022307Z&X-Amz-Expires=86400&X-Amz-Signature=c1e8755fef11d29b35306323d52ef0459480f1c77439021a2b3e7503017aa46c&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25ED%258F%25AC%25EC%25BD%2594%2520%25EC%2582%25B0%25ED%2583%25801.jpg%22&x-id=GetObject" width="100px"/> |
+|                                                                                                       이건희 <br> 팀장 FE                                                                                                        |                                                                                                            김수진 <br>팀원 FE                                                                                                             |                                                                                                        천지은 <br>팀원 FE                                                                                                         |                                                                                                       김현동 <br>팀장 BE                                                                                                       |                                                                                                        김채원 <br>팀원 BE                                                                                                         |                                                                                                      오수빈 <br>팀원 BE                                                                                                      |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <div style="width: 90px"><img width="473" alt="이건희" src="https://user-images.githubusercontent.com/108467211/225253665-66879198-dc70-4c54-9e38-b0a65d1ec5e6.png"><a href="https://github.com/LEEKH109">LEEKH109</a></div> | <div style="width: 90px"><img width="473" alt="김수진" src="https://user-images.githubusercontent.com/108467211/225253672-a0291294-75c3-4ae9-9e4b-484261a124ee.png"><a href="https://github.com/SujinKim1127">SujinKim1127</a></div> | <div style="width: 90px"><img width="473" alt="천지은" src="https://user-images.githubusercontent.com/108467211/225253681-00aff29f-acb1-4e89-bb6f-07a256cf3a73.png"><a href="https://github.com/JaneChun">JaneChun</a></div> | <div style="width: 90px"><img width="473" alt="김현동" src="https://user-images.githubusercontent.com/108467211/225253702-1ac6c448-b59f-4290-a872-662399a6b06a.png"><a href="https://github.com/khd325">khd325</a></div> | <div style="width: 90px"><img width="473" alt="김채원" src="https://user-images.githubusercontent.com/108467211/225253709-dbb1195f-ac3a-44d9-94e7-4fd8bd89fd09.png"><a href="https://github.com/SEBBEKCW">SEBBEKCW</a></div> | <div style="width: 90px"><img width="473" alt="오수빈" src="https://user-images.githubusercontent.com/108467211/225253719-b841ffba-45a6-48da-b6cf-7aaa19cc75f1.png"><a href="https://github.com/subimm">subimm</a></div> |
 
 </div>
+
 <br />
 <hr />
 <br/>
@@ -104,15 +286,15 @@ http://pawpaw.com.s3-website.ap-northeast-2.amazonaws.com/
 </div>
 
 <br/>
-
 <hr/>
+<br/>
 
 ## 🖥 프론트 엔드
 
 | 팀원 명 | 담당 기능                                                                                                 |
 | :-----: | :-------------------------------------------------------------------------------------------------------- |
-| 이건희  | 회원가입-탈퇴, 로그인-아웃, 관리자권한, 리프레쉬 토큰, 댓글 CRUD, 게시글 추천, 프라이빗 라우터, css, 배포 |
-| 천지은  | 홈 지도, 게시글 CRUD, 필터, 장소 북마크, 회원 정보 수정, sweetalert2, CSS                                 |
+| 이건희  | 회원가입-탈퇴, 로그인-아웃, 관리자권한, 리프레쉬 토큰, 댓글 CRUD, 게시글 추천, 프라이빗 라우터, CSS, 배포 |
+| 천지은  | 홈 지도, 지도 필터, 게시글 CRUD, 게시글 검색 및 정렬, 장소 북마크, 회원 정보 수정, sweetalert2, CSS       |
 | 김수진  | 장소 리뷰 CRUD, 지도 Modal, 장소 추가, 마이페이지, 커뮤니티, sweetalert2, CSS                             |
 
 <br/>
@@ -125,31 +307,54 @@ http://pawpaw.com.s3-website.ap-northeast-2.amazonaws.com/
 | 오수빈  | 회원 등록, 회원 정보 수정, 회원 삭제, 마이페이지 조회, 관리자 권한 추가, 배포 자동화        |
 | 김채원  | 게시판 CRUD, S3 이미지 업로드, 이미지 삭제                                                  |
 
+<br/>
 <hr />
 <br/>
 
-## 🗃 디렉토리 구조
+## Userflow 🔀
 
-### 📂 Client
+<img width="2306" alt="UserFlow" src="https://user-images.githubusercontent.com/108467211/225266577-c70f6c53-9733-44d2-a9cc-c9bf847f07ef.png">
+
+[🔗 Figma Link](https://www.figma.com/file/CbVwsgoGb4SJgEFgmilkym/%EB%8F%99%EB%AC%BC-%ED%8A%B9%EA%B3%B5%EB%8C%80?node-id=0%3A1&t=l4QwYU22u0kKZqwN-1)
+
+<br/>
+<hr />
+<br/>
+
+## 디렉토리 구조 🗃
+
+<details>
+<summary><strong>📂  Client</strong></summary>
+<div>
 
 ```
-📁 src
- ┣ 📁 Components
+📦 src
+ ┣ 📂 Components
  ┃ ┣ 📄 Box.tsx
  ┃ ┣ 📄 Button.tsx
+ ┃ ┣ 📄 Comment.tsx
+ ┃ ┣ 📄 CommunityComment.tsx
+ ┃ ┣ 📄 CommunityPost.tsx
+ ┃ ┣ 📄 Friend.tsx
+ ┃ ┣ 📄 FriendRecommend.tsx
  ┃ ┣ 📄 Header.tsx
  ┃ ┣ 📄 Input.tsx
  ┃ ┣ 📄 Modal.tsx
+ ┃ ┣ 📄 ModalReview.tsx
+ ┃ ┣ 📄 ModalReviewWrite.tsx
+ ┃ ┣ 📄 MypagePost.tsx
  ┃ ┣ 📄 Nav.tsx
  ┃ ┣ 📄 NoAuth.tsx
  ┃ ┣ 📄 PawIconSVG.tsx
- ┃ ┗ 📄 PrivateRouter.tsx
- ┣ 📁 Map
- ┃ ┣ 📁 Marker
+ ┃ ┣ 📄 PrivateRouter.tsx
+ ┃ ┣ 📄 SearchBar.tsx
+ ┃ ┗ 📄 SortModal.tsx
+ ┣ 📂 Map
  ┃ ┣ 📄 HomeMap.tsx
+ ┃ ┣ 📄 Icons.tsx
  ┃ ┣ 📄 MapFilter.tsx
  ┃ ┗ 📄 Marker.tsx
- ┣ 📁 Pages
+ ┣ 📂 Pages
  ┃ ┣ 📄 AddMarker.tsx
  ┃ ┣ 📄 AddressModal.tsx
  ┃ ┣ 📄 Community.tsx
@@ -158,105 +363,111 @@ http://pawpaw.com.s3-website.ap-northeast-2.amazonaws.com/
  ┃ ┣ 📄 Login.tsx
  ┃ ┣ 📄 Mypage.tsx
  ┃ ┣ 📄 NotFound.tsx
- ┃ ┣ 📄 Post.tsx
  ┃ ┣ 📄 PostEdit.tsx
+ ┃ ┣ 📄 PostWrite.tsx
+ ┃ ┣ 📄 Profile.tsx
  ┃ ┣ 📄 SignUp.tsx
  ┃ ┣ 📄 UserInfo.tsx
  ┃ ┗ 📄 UserInfoEdit.tsx
- ┣ 📁 img
- ┣ 📁 util
+ ┣ 📂 img
+ ┣ 📂 util
+ ┃ ┣ 📄 CommunityCommentApi.tsx
  ┃ ┣ 📄 ConvertAddress.tsx
+ ┃ ┣ 📄 GlobalAxios.tsx
  ┃ ┣ 📄 Inter.tsx
  ┃ ┣ 📄 MapApi.tsx
  ┃ ┣ 📄 MapFilterApi.tsx
- ┃ ┣ 📄 PostReviewApi.tsx
  ┃ ┣ 📄 UserApi.tsx
  ┃ ┣ 📄 color.tsx
+ ┃ ┣ 📄 formDataHeaders.tsx
  ┃ ┣ 📄 headers.tsx
  ┃ ┗ 📄 seoul-geojson.json
  ┣ 📄 App.css
  ┣ 📄 App.tsx
  ┣ 📄 index.css
- ┗ 📄 index.tsx
+ ┣ 📄 index.tsx
+ ┗ 📄 types.ts
 ```
 
-<hr />
-<br/>
+</div>
+</details>
 
-### 📂 Server
+<details>
+<summary><strong>📂  Server</strong></summary>
+<div>
 
 ```
-📁 src
- ┣ 📁 main
- ┃ ┣ 📁 java
- ┃ ┃ ┗ 📁 animalsquad
- ┃ ┃ ┃ ┗ 📁 server
- ┃ ┃ ┃ ┃ ┣ 📁 domain
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 address
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 entity
+📦 src
+ ┣ 📂main
+ ┃ ┣ 📂  java
+ ┃ ┃ ┗ 📂 animalsquad
+ ┃ ┃ ┃ ┗ 📂 server
+ ┃ ┃ ┃ ┃ ┣ 📂 domain
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 address
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 entity
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 Address.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 repository
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 AddressRepository.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁 service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 AddressService.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 infomap
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 controller
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 infomap
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 controller
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 InfoMapController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 dto
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapCommentPatchDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapCommentPostDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapDetailsResponseDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapPostDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapsResponseDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 InfoMapsWithCenterResponseDto.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 entity
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMap.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapCategory.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 InfoMapComment.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 mapper
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 mapper
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapCommentsMapper.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 InfoMapMapper.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 repository
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapCommentRepository.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 InfoMapRepository.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁 service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 InfoMapCommentService.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 InfoMapService.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 pet
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 controller
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 pet
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 controller
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 dto
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PetPatchDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PetPostAdminDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PetPostDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetResponseDto.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 entity
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 Gender.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 Pet.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 Species.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 mapper
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 mapper
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetMapper.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 repository
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetRepository.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁 service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetService.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 petmap
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 controller
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 petmap
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 controller
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetMapController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 dto
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 MyPlaceDto.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 entity
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetMap.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 mapper
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 mapper
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetMapMapper.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 repository
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetMapRepository.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetMapService.java
- ┃ ┃ ┃ ┃ ┃ ┗ 📁 post
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 controller
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂 post
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 controller
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PostController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 dto
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostCommentPatchDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostCommentPostDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostCommentResponseDto.java
@@ -266,88 +477,84 @@ http://pawpaw.com.s3-website.ap-northeast-2.amazonaws.com/
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostLikesDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostPatchDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PostsResponseDto.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 entity
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 Post.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostComment.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostImage.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PostLikes.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 mapper
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 mapper
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostCommentMapper.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostLikesMapper.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PostMapper.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 repository
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostCommentRepository.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostImageRepository.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostLikesRepository.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PostRepository.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostCommentService.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostImageService.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PostLikesService.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PostService.java
- ┃ ┃ ┃ ┃ ┣ 📁 global
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 advice
+ ┃ ┃ ┃ ┃ ┣ 📂 global
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 advice
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 GlobalExceptionAdvice.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 audit
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 audit
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 Auditable.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 auth
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 controller
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 auth
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 controller
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 AuthController.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 dto
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 AuthRequestDto.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 AuthResponseDto.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 handler
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 handler
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PetAccessDeniedHandler.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PetAuthenticationEntryPoint.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 PetAuthenticationFailureHandler.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetAuthenticationSuccessHandler.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 jwt
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 jwt
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 JwtAuthenticationFilter.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 JwtExceptionFilter.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 JwtTokenProvider.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 JwtVerificationFilter.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 AuthService.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 userdetails
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 userdetails
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PetDetailsService.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁 utils
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 utils
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 ErrorResponder.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 config
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 config
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 OpenEntityManagerConfig.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 RedisRepositoryConfig.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 S3Config.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 SecurityConfiguration.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 dto
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄PageInfo.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 enums
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 PageInfo.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 enums
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 Role.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 exception
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 exception
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 BusinessLogicException.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 ExceptionCode.java
- ┃ ┃ ┃ ┃ ┃ ┣ 📁 response
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂 response
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 ErrorResponse.java
- ┃ ┃ ┃ ┃ ┃ ┗ 📁 s3
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📁 component
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂 s3
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂 component
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 S3Component.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📁 service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂 service
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 AwsS3UploadService.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📄 FileUploadService.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📄 UploadService.java
  ┃ ┃ ┃ ┃ ┗ 📄 ServerApplication.java
- ┃ ┣ 📁 resources-dev
+ ┃ ┣ 📂 resources-dev
  ┃ ┃ ┗ 📄 application.yml
- ┃ ┗ 📁 resources-prod
+ ┃ ┗ 📂 resources-prod
  ┃ ┃ ┗ 📄 application.yml
- ┗ 📁test
- ┃ ┗ 📁 java
- ┃ ┃ ┗ 📁animalsquad
- ┃ ┃ ┃ ┗ 📁 server
+ ┗ 📂 test
+ ┃ ┗ 📂 java
+ ┃ ┃ ┗ 📂 animalsquad
+ ┃ ┃ ┃ ┗ 📂 server
  ┃ ┃ ┃ ┃ ┗ 📄 ServerApplicationTests.java
- 📄 .gitignore
- 📄 .keep
- 📄 appspec.yml
- 📄 build.gradle
- 📄 gradlew
- 📄 gradlew.bat
- 📄 settings.gradle
 ```
+
+</div>
+</details>
