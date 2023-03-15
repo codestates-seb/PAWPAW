@@ -55,6 +55,9 @@ const AreaSort: React.FC = () => {
                 checked={checkedList.includes(item)}
                 onChange={(el) => checkedHandler(el, item)}
               />
+              <CheckBox check={checkedList.includes(item)}>
+                {checkedList.includes(item) ? 'O' : 'X'}
+              </CheckBox>
               <ButtonLabel htmlFor={item}>{item}</ButtonLabel>
             </AreaNameCircle>
           ))}
@@ -95,11 +98,13 @@ const AreaNameCircle = styled.div<{ check: boolean }>`
   justify-content: center;
   align-items: center;
   background-color: ${(props) => (props.check ? '#FFF8F0' : 'white')};
+  position: relative;
 `;
 const ButtonCarrier = styled.form`
   display: flex;
   height: 500px;
   flex-wrap: wrap;
+  margin-top: 10px;
 `;
 const WholeButton = styled.button`
   all: unset;
@@ -126,6 +131,17 @@ const ButtonLabel = styled.label`
   cursor: pointer;
 `;
 
+const CheckBox = styled.div<{ check: boolean }>`
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  border: solid 3px #bfbfbf;
+  position: absolute;
+  bottom: 38px;
+  left: 30px;
+  text-align: center;
+  background-color: ${(props) => (props.check ? '#FFF8F0' : 'white')};
+`;
 const area = [
   '강남구',
   '강동구',
