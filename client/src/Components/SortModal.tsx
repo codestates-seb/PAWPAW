@@ -42,6 +42,7 @@ const Button = styled.button`
   padding: 5px;
   color: ${brown};
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
 
   border-bottom: 1px solid ${darkivory};
