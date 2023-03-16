@@ -91,17 +91,16 @@ const Community = () => {
               <MapIcon icon='mdi:map-check' color='#7d5a5a' width='35' height='35' />
               <AreaSortButtonBox>
                 <AreaSortButton onClick={() => setIsArea(!isArea)}>
-                  보고싶은 동내 설정
+                  보고싶은 동네 설정
                 </AreaSortButton>
-                {isArea ? (
+                {isArea && (
                   <AreaSort
                     areaSorting={areaSorting}
                     setAreaSorting={setAreaSorting}
                     setIsArea={setIsArea}
                   />
-                ) : (
-                  ''
                 )}
+              </AreaSortButtonBox>
             </LeftButtonContainer>
             <SortButtonBox>
               <SortButton onClick={() => setIsOpen(!isOpen)}>
@@ -125,7 +124,7 @@ const Community = () => {
               {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
             </SortButtonBox>
           </ButtonContainer>
-          
+
           <PostsContainer>
             {postData?.posts === null || postData?.posts.length === 0 ? (
               <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
