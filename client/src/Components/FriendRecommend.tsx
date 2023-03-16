@@ -1,21 +1,33 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import color from '../util/color';
 import Friend from './Friend';
 
 const { ivory, darkbrown } = color;
 
-const FriendRecommend = () => {
+interface FriendRecommendProps {
+  friends?: {
+    petId: number;
+    profileImageUrl: string;
+    petName: string;
+    petAge: number;
+    gender: 'Male' | 'Female';
+    addressName: string;
+  }[];
+}
+
+const FriendRecommend: React.FC<FriendRecommendProps> = ({ friends }) => {
+  const recommendedFriends = friends?.slice(0, 7);
+
   return (
     <Container>
       <TitleDiv>우리 동네 친구들 🐕🐈‍⬛</TitleDiv>
       <UsersDiv>
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
+        {recommendedFriends === undefined ? (
+          <div>검색 결과가 없어요..🐾</div>
+        ) : (
+          recommendedFriends.map((friend) => <Friend key={friend.petId} friend={friend} />)
+        )}
       </UsersDiv>
     </Container>
   );

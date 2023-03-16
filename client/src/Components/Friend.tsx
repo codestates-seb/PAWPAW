@@ -1,24 +1,52 @@
+import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import styled from 'styled-components';
 import color from '../util/color';
 
 const { darkbrown } = color;
 
-const Friend = () => {
+interface FriendProps {
+  friend: {
+    petId: number;
+    profileImageUrl: string;
+    petName: string;
+    petAge: number;
+    gender: string;
+    addressName: string;
+  };
+}
+
+const Friend: React.FC<FriendProps> = ({ friend }) => {
+  const { profileImageUrl, petName, petAge, gender } = friend;
   return (
     <Container>
-      <Image src='https://i0.wp.com/katzenworld.co.uk/wp-content/uploads/2019/06/funny-cat.jpeg?fit=1020%2C1020&ssl=1'></Image>
+      <Image src={profileImageUrl}></Image>
       <InfoDiv>
-        <NameSpan>냥냥이</NameSpan>
+        <NameSpan>{petName}</NameSpan>
         <AgeGenderSpan>
-          <AgeSpan>1살,</AgeSpan>
+          <AgeSpan>{petAge}살</AgeSpan>
           <GenderSpan>
-            <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '12px' }} />
+            {gender === 'Male' ? (
+              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '12px' }} />
+            ) : (
+              <Icon icon='mdi:gender-female' color='#6C92F2' style={{ fontSize: '12px' }} />
+            )}
           </GenderSpan>
         </AgeGenderSpan>
       </InfoDiv>
     </Container>
   );
+};
+
+Friend.propTypes = {
+  friend: PropTypes.shape({
+    petId: PropTypes.number.isRequired,
+    profileImageUrl: PropTypes.string.isRequired,
+    petName: PropTypes.string.isRequired,
+    petAge: PropTypes.number.isRequired,
+    gender: PropTypes.oneOf(['Male', 'Female']).isRequired,
+    addressName: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const Container = styled.div``;

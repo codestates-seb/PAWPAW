@@ -83,6 +83,7 @@ export interface AddressModalProps {
 
 // Community
 export interface PostList {
+  friends: Friend[] | null;
   posts: PostData[] | null;
   pageInfo: PageInfo;
 }
@@ -96,6 +97,15 @@ export interface PostData {
   createdAt: string;
   likesCnt: number;
   commentCnt: number;
+}
+
+interface Friend {
+  petId: number;
+  profileImageUrl: string;
+  petName: string;
+  petAge: number;
+  gender: 'Male' | 'Female';
+  addressName: string;
 }
 
 export interface PageInfo {

@@ -81,7 +81,7 @@ const Community = () => {
         <Nav type='board' />
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
-          {page === 1 && <FriendRecommend />}
+          {page === 1 && postData?.friends && <FriendRecommend friends={postData.friends} />}
           <ButtonContainer>
             <LeftButtonContainer>
               <MapIcon icon='mdi:map-check' color='#7d5a5a' width='35' height='35' />
