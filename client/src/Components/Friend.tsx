@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
 import { Icon } from '@iconify/react';
 import styled from 'styled-components';
 import color from '../util/color';
@@ -36,17 +36,6 @@ const Friend: React.FC<FriendProps> = ({ friend }) => {
       </InfoDiv>
     </Container>
   );
-};
-
-Friend.propTypes = {
-  friend: PropTypes.shape({
-    petId: PropTypes.number.isRequired,
-    profileImageUrl: PropTypes.string.isRequired,
-    petName: PropTypes.string.isRequired,
-    petAge: PropTypes.number.isRequired,
-    gender: PropTypes.oneOf(['Male', 'Female']).isRequired,
-    addressName: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 const Container = styled.div``;
