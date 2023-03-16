@@ -1,46 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import Header from '../Components/Header';
-import styled from 'styled-components';
-import color from '../util/color';
-import Pagination from 'react-js-pagination';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-import headers from '../util/headers';
-import Nav from '../Components/Nav';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useNavigate } from 'react-router';
+import styled from 'styled-components';
 import '../App.css';
-import FriendRecommend from '../Components/FriendRecommend';
 import CommunityPost from '../Components/CommunityPost';
-import SortModal from '../Components/SortModal';
+import FriendRecommend from '../Components/FriendRecommend';
+import Header from '../Components/Header';
+import Nav from '../Components/Nav';
 import SearchBar from '../Components/SearchBar';
 import AreaSort from '../Components/AreaSort';
 import { addressToCode } from '../util/ConvertAddress';
+import SortModal from '../Components/SortModal';
+import color from '../util/color';
+import headers from '../util/headers';
+import { PostData, PostList } from '../types';
 
 const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 
-export interface PostData {
-  id: number;
-  petName: string;
-  petId: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  likesCnt: number;
-  commentCnt: number;
-}
-
-interface PostList {
-  posts: PostData[] | null;
-  pageInfo: {
-    page: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
-}
-
-const Community: React.FC = () => {
+const Community = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState<PostList | null>(null);
   const [page, setPage] = useState(1);
@@ -122,7 +102,6 @@ const Community: React.FC = () => {
                 ) : (
                   ''
                 )}
-              </AreaSortButtonBox>
             </LeftButtonContainer>
             <SortButtonBox>
               <SortButton onClick={() => setIsOpen(!isOpen)}>
@@ -146,13 +125,14 @@ const Community: React.FC = () => {
               {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
             </SortButtonBox>
           </ButtonContainer>
-          <PostList>
+          
+          <PostsContainer>
             {postData?.posts === null || postData?.posts.length === 0 ? (
               <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
             ) : (
               postData?.posts.map((post: PostData) => <CommunityPost key={post.id} post={post} />)
             )}
-          </PostList>
+          </PostsContainer>
 
           <Footer>
             <SearchBar search={search} />
@@ -277,7 +257,7 @@ const SortButton = styled.button`
   }
 `;
 
-const PostList = styled.div`
+const PostsContainer = styled.div`
   margin-top: 10px;
   height: 100%;
 `;

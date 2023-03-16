@@ -1,18 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import SignUp from './SignUp';
-import UserInfo from './UserInfo';
-import UserInfoEdit from './UserInfoEdit';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PrivateRoute from '../Components/PrivateRouter';
 import HomeMap from '../Map/HomeMap';
-import Mypage from './Mypage';
+import { axiosRefresh } from '../util/GlobalAxios';
+import AddMarker from './AddMarker';
 import Community from './Community';
 import CommunityDetail from './CommunityDetail';
-import Post from './Post';
-import PostEdit from './PostEdit';
-import AddMarker from './AddMarker';
+import Login from './Login';
+import Mypage from './Mypage';
 import NotFound from './NotFound';
 import PrivateRoute from '../Components/PrivateRouter';
 import { axiosRefresh } from '../util/GlobalAxios';
+import PostWrite from './PostWrite';
+import PostEdit from './PostEdit';
+import SignUp from './SignUp';
+import UserInfo from './UserInfo';
+import UserInfoEdit from './UserInfoEdit';
 
 export default function Router() {
   axiosRefresh;
@@ -30,7 +32,7 @@ export default function Router() {
           <Route path='/mypage/:petId' element={<Mypage />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
-          <Route path='/post' element={<Post />} />
+          <Route path='/post' element={<PostWrite />} />
           <Route path='/postedit' element={<PostEdit />} />
           <Route path='/addmarker' element={<AddMarker />} />
           <Route path='*' element={<NotFound />} />

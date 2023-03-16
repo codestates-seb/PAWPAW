@@ -1,61 +1,33 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
-import React, { FC, useState, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import React, { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-
-import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import AddressModal from './AddressModal';
-import { codeToAddress } from '../util/ConvertAddress';
-import { petDelete } from '../util/UserApi';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
-const jwtToken = localStorage.getItem('Authorization');
-const headers = {
-  Authorization: jwtToken,
-};
+import color from '../util/color';
+import { codeToAddress } from '../util/ConvertAddress';
+import headers from '../util/formDataHeaders';
+import { petDelete } from '../util/UserApi';
+import AddressModal from './AddressModal';
+import { ProfileImageFormData, UserInfo, TokenInfo } from '../types';
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const url = process.env.REACT_APP_API_ROOT;
 const petId = localStorage.getItem('petId');
 
-interface FormData {
-  profileImage: Blob | null;
-}
-
-interface Info {
-  petName: string;
-  isMale: 'MALE' | 'FEMALE';
-  isCat: 'CAT' | 'DOG';
-  age: number;
-}
-
-interface UserData {
-  0: string;
-  1: string;
-}
-
-export interface TokenInfo {
-  petName: string;
-  petNameSpan: string;
-  petId: number;
-  exp: number;
-  code: number;
-  roles: UserData[] | null;
-}
-
-const UserInfoEdit: FC = () => {
+const UserInfoEdit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { petName, age, isMale, isCat, code, profileImage } = location.state;
-  const [info, setInfo] = useState<Info>({
+  const [info, setInfo] = useState<UserInfo>({
     petName: petName,
     isMale: isMale,
     isCat: isCat,
@@ -65,7 +37,7 @@ const UserInfoEdit: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [fileImage, setFileImage] = useState<string>();
   const [address, setAddress] = useState<number | null>(code);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [formData, setFormData] = useState<ProfileImageFormData>({ profileImage: null });
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const localStorageCode = localStorage.getItem('code');
 

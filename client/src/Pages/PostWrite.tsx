@@ -1,32 +1,23 @@
-import React, { useState, useMemo } from 'react';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import React, { useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import styled from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
-
 import Header from '../Components/Header';
 import Nav from '../Components/Nav';
 import color from '../util/color';
+import headers from '../util/formDataHeaders';
+import { PostWriteData } from '../types';
+
 const { yellow, brown, darkbrown, bordergrey, lightgrey, red } = color;
 const petId = localStorage.getItem('petId');
-const jwtToken = localStorage.getItem('Authorization');
-const headers = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: jwtToken,
-};
 
-export interface IPost {
-  petId: string | null;
-  title: string;
-  content: string;
-}
-
-const Post = () => {
+const PostWrite = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState<IPost>({
+  const [data, setData] = useState<PostWriteData>({
     petId: petId,
     title: '',
     content: '',
@@ -158,13 +149,11 @@ const Post = () => {
     };
   }, []);
 
-  const type = 'board';
-
   return (
     <Container>
       <Header />
       <Body>
-        <Nav type={type} />
+        <Nav type='board' />
         <PostContainer>
           <div>
             <Title>제목</Title>
@@ -374,4 +363,4 @@ const CancelButton = styled.button`
   }
 `;
 
-export default Post;
+export default PostWrite;

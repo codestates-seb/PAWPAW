@@ -1,54 +1,35 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
-import { Icon } from '@iconify/react';
 import Swal from 'sweetalert2';
-
-import color from '../util/color';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
-import AddressModal from './AddressModal';
-import { codeToAddress } from '../util/ConvertAddress';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
+import color from '../util/color';
+import { codeToAddress } from '../util/ConvertAddress';
+import headers from '../util/formDataHeaders';
+import AddressModal from './AddressModal';
+import { ProfileImageFormData, UserInfo as IUserInfo } from '../types';
 
 const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
-const headers = {
-  'Content-Type': 'multipart/form-data',
-};
 
-interface FormData {
-  profileImage: Blob | null;
-}
-
-export interface IProps {
-  address: number | null;
-  setAddress: (address: number | null) => void;
-  setIsOpen: (isOpen: boolean) => void;
-}
-
-interface Info {
-  petName: string;
-  isMale: 'MALE' | 'FEMALE';
-  isCat: 'CAT' | 'DOG';
-  age: number;
-}
-
-const UserInfo: React.FC = () => {
+const UserInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, petname, password } = location.state;
-  const [info, setInfo] = useState<Info>({
-    petName: petname,
+  const [info, setInfo] = useState<IUserInfo>({
+    petName: '',
     isMale: 'MALE',
     isCat: 'CAT',
     age: 0,
   });
   const [address, setAddress] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({ profileImage: null });
+  const [formData, setFormData] = useState<ProfileImageFormData>({ profileImage: null });
   const [fileImage, setFileImage] = useState<string>();
 
   const [ageErrorMessage, setAgeErrorMessage] = useState<string>('');

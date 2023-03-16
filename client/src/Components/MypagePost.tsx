@@ -1,19 +1,13 @@
-import React from 'react';
+import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import sanitizeHtml from 'sanitize-html';
-import { Icon } from '@iconify/react';
 import styled from 'styled-components';
 import color from '../util/color';
-import { PostData } from '../Pages/Mypage';
+import { MyPagePostProps } from '../types';
 
 const { ivory, darkgrey, brown, darkbrown, mediumgrey, bordergrey } = color;
 
-type MProps = {
-  key: number;
-  post: PostData;
-};
-
-const MypagePost = ({ post }: MProps) => {
+const MypagePost = ({ post }: MyPagePostProps) => {
   return (
     <Container>
       <LeftBox>

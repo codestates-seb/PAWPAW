@@ -15,7 +15,7 @@ const color = {
   pool: '#6CB2F2',
   camping: '#93C246',
   hospital: '#FF6C6C',
-  myfavo: '#FCB838'
+  myfavo: '#FCB838',
 };
 
 export default color;

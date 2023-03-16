@@ -1,22 +1,18 @@
-import React from 'react';
+import { Icon } from '@iconify/react';
+import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import { Icon } from '@iconify/react';
-import { petLogout } from '../util/UserApi';
-import { codeToAddress } from '../util/ConvertAddress';
-import { useNavigate, useParams } from 'react-router';
 import Cat from '../img/catface.png';
 import Dog from '../img/dogface.png';
 import color from '../util/color';
-import { PetInfo } from './Mypage';
+import { codeToAddress } from '../util/ConvertAddress';
+import { petLogout } from '../util/UserApi';
+import { ProfileProps } from '../types';
+
 const { ivory, yellow, red, darkgrey, brown } = color;
 const petId = localStorage.getItem('petId') as string;
 
-type PProps = {
-  petInfo: PetInfo | undefined;
-};
-
-const Profile = ({ petInfo }: PProps) => {
+const Profile = ({ petInfo }: ProfileProps) => {
   const navigate = useNavigate();
   const params = useParams();
 
