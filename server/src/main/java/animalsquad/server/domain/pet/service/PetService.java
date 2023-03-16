@@ -59,14 +59,13 @@ public class PetService {
         Address address = verifiedAddress(code);
         pet.setAddress(address);
 
-        if (file == null && pet.getSpecies() == Species.DOG) {
-            pet.setProfileImage(defaultDogImageUrl);
-        } else if (file == null && pet.getSpecies() == Species.CAT) {
-            pet.setProfileImage(defaultCatImageUrl);
+        if(file == null) {
+            setDefaultImage(pet);
         } else {
             String imageUrl = fileUploadService.uploadImage(file, folder);
             pet.setProfileImage(imageUrl);
         }
+
         return petRepository.save(pet);
     }
 
@@ -90,20 +89,10 @@ public class PetService {
                 });
 
         // 프로필 이미지 수정, 디폴트 이미지, 종에 따라 디폴트 이미지 변경
-        if (file != null && !file.isEmpty()) {
-            String beforeImage = findPet.getProfileImage();
-            fileUploadService.deleteFile(beforeImage, folder);
-
-            String imageUrl = fileUploadService.uploadImage(file, folder);
-            findPet.setProfileImage(imageUrl);
-
-        } else if (file != null && findPet.getProfileImage().contains("default")) {
-            String imageUrl = fileUploadService.uploadImage(file, folder);
-            findPet.setProfileImage(imageUrl);
-        } else if (file == null && findPet.getProfileImage().contains("default") && findPet.getSpecies() == Species.DOG) {
-            findPet.setProfileImage(defaultDogImageUrl);
-        } else if (file == null && findPet.getProfileImage().contains("default") && findPet.getSpecies() == Species.CAT) {
-            findPet.setProfileImage(defaultCatImageUrl);
+        if(file == null && findPet.getProfileImage().contains("default")) {
+           setDefaultImage(findPet);
+        } else if (file != null) {
+            findPet.setProfileImage(updateProfileImage(findPet, file));
         }
 
         Pet savedPet = petRepository.save(findPet);
@@ -136,11 +125,16 @@ public class PetService {
 
         String findPetLoginId = findPet.getLoginId();
         redisTemplate.delete("RT:" + findPetLoginId);
-        // S3에서 image삭제
+
+        // S3에서 image삭제 후 기본 이미지로 변경
         if (!findPet.getProfileImage().contains("default")) {
             String image = findPet.getProfileImage();
             fileUploadService.deleteFile(image, folder);
+
+            setDefaultImage(findPet);
+
         }
+        petRepository.save(findPet);
     }
 
     // 관리자 권한 승인 요청
@@ -166,10 +160,31 @@ public class PetService {
 
         redisTemplate.opsForValue().set("RT:" + findPet.getLoginId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
     }
-
     public List<Pet> findFriends(List<Integer> code,long id) {
         List<Pet> friends = petRepository.findFriends(code,id);
         return friends;
+    }
+
+    private void setDefaultImage(Pet pet) {
+
+            if(pet.getSpecies() == Species.DOG) {
+                pet.setProfileImage(defaultDogImageUrl);
+            }else {
+                pet.setProfileImage(defaultCatImageUrl);
+            }
+    }
+
+    private String updateProfileImage(Pet pet, MultipartFile file) {
+
+        if(file.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.FILE_IS_EMPTY);
+        }
+
+        if(!pet.getProfileImage().contains("default")) {
+            String beforeImageUrl = pet.getProfileImage();
+            fileUploadService.deleteFile(beforeImageUrl, folder);
+        }
+        return fileUploadService.uploadImage(file, folder);
     }
 
     private void verifiedToken(Pet pet, long petId) {
