@@ -8,7 +8,6 @@ import CommunityDetail from './CommunityDetail';
 import Login from './Login';
 import Mypage from './Mypage';
 import NotFound from './NotFound';
-// import PrivateRoute from '../Components/PrivateRouter';
 import PostWrite from './PostWrite';
 import PostEdit from './PostEdit';
 import SignUp from './SignUp';
