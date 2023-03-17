@@ -34,11 +34,7 @@ const Community = () => {
   }, [page, sorting, areaSorting]);
 
   async function getData() {
-    let test = '';
-    for (const el of areaSorting) {
-      test = test + '&code=' + addressToCode(el);
-      console;
-    }
+    const area = areaSorting.reduce((total, now) => total + '&code=' + addressToCode(now), '');
     if (areaSorting.length === 0) {
       await axios
         .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
@@ -50,7 +46,7 @@ const Community = () => {
         });
     } else {
       await axios
-        .get(`${url}/posts?page=${page}&sort=${sorting}${test}`, { headers })
+        .get(`${url}/posts?page=${page}&sort=${sorting}${area}`, { headers })
         .then((res) => {
           setPostData(res.data);
         })
@@ -85,7 +81,7 @@ const Community = () => {
         <Nav type='board' />
         <CommunityContainer>
           <CommunityBanner>자유게시판</CommunityBanner>
-          {page === 1 && <FriendRecommend />}
+          {page === 1 && postData?.friends && <FriendRecommend friends={postData.friends} />}
           <ButtonContainer>
             <LeftButtonContainer>
               <MapIcon icon='mdi:map-check' color='#7d5a5a' width='35' height='35' />

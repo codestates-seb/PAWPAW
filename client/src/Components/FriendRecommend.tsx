@@ -1,21 +1,34 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import color from '../util/color';
 import Friend from './Friend';
 
-const { ivory, darkbrown } = color;
+const { ivory, darkbrown, brown } = color;
 
-const FriendRecommend = () => {
+interface FriendRecommendProps {
+  friends?: {
+    petId: number;
+    profileImageUrl: string;
+    petName: string;
+    petAge: number;
+    gender: 'Male' | 'Female';
+    addressName: string;
+  }[];
+}
+
+const FriendRecommend: React.FC<FriendRecommendProps> = ({ friends }) => {
+  const recommendedFriends = friends?.slice(0, 7);
+  const Length = recommendedFriends?.length !== 7 ? true : false;
+
   return (
     <Container>
       <TitleDiv>우리 동네 친구들 🐕🐈‍⬛</TitleDiv>
-      <UsersDiv>
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
-        <Friend />
+      <UsersDiv Length={Length}>
+        {recommendedFriends === undefined || recommendedFriends?.length === 0 ? (
+          <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
+        ) : (
+          recommendedFriends.map((friend) => <Friend key={friend.petId} friend={friend} />)
+        )}
       </UsersDiv>
     </Container>
   );
@@ -39,9 +52,18 @@ const TitleDiv = styled.div`
   color: ${darkbrown};
 `;
 
-const UsersDiv = styled.div`
+const UsersDiv = styled.div<{ Length: boolean }>`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(Length) => (Length ? 'space-evenly' : 'space-between')};
+`;
+
+const EmptyMessage = styled.div`
+  height: 116px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: ${brown};
 `;
 
 export default FriendRecommend;
