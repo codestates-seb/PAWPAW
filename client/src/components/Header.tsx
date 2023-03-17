@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import color from '../util/color';
 
 const { ivory, brown, yellow } = color;
-const petId = localStorage.getItem('petId');
 
 const Header = () => {
   const navigate = useNavigate();
@@ -20,6 +19,7 @@ const Header = () => {
 
   const goToMyPage = () => {
     const jwtToken = localStorage.getItem('Authorization');
+    const petId = localStorage.getItem('petId');
     if (jwtToken !== null) {
       navigate(`/mypage/${petId}`);
     } else {
