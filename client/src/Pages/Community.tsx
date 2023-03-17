@@ -40,6 +40,7 @@ const Community = () => {
         .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
         .then((res) => {
           setPostData(res.data);
+          console.log(res.data.friends);
         })
         .catch((error) => {
           console.error(error);
@@ -49,6 +50,7 @@ const Community = () => {
         .get(`${url}/posts?page=${page}&sort=${sorting}${area}`, { headers })
         .then((res) => {
           setPostData(res.data);
+          console.log(res.data.friends);
         })
         .catch((error) => {
           console.error(error);
