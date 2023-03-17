@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../util/color';
 
@@ -11,29 +12,31 @@ interface FriendProps {
     profileImageUrl: string;
     petName: string;
     petAge: number;
-    gender: string;
+    gender: 'MALE' | 'FEMALE';
     addressName: string;
   };
 }
 
 const Friend: React.FC<FriendProps> = ({ friend }) => {
-  const { profileImageUrl, petName, petAge, gender } = friend;
+  const { petId, profileImageUrl, petName, petAge, gender } = friend;
   return (
     <Container>
-      <Image src={profileImageUrl}></Image>
-      <InfoDiv>
-        <NameSpan>{petName}</NameSpan>
-        <AgeGenderSpan>
-          <AgeSpan>{petAge}살</AgeSpan>
-          <GenderSpan>
-            {gender === 'Male' ? (
-              <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '12px' }} />
-            ) : (
-              <Icon icon='mdi:gender-female' color='#6C92F2' style={{ fontSize: '12px' }} />
-            )}
-          </GenderSpan>
-        </AgeGenderSpan>
-      </InfoDiv>
+      <Link to={`/friendpage/${petId}`}>
+        <Image src={profileImageUrl}></Image>
+        <InfoDiv>
+          <NameSpan>{petName}</NameSpan>
+          <AgeGenderSpan>
+            <AgeSpan>{petAge}살</AgeSpan>
+            <GenderSpan>
+              {gender === 'MALE' ? (
+                <Icon icon='mdi:gender-male' color='#6C92F2' style={{ fontSize: '12px' }} />
+              ) : (
+                <Icon icon='mdi:gender-female' color='#6C92F2' style={{ fontSize: '12px' }} />
+              )}
+            </GenderSpan>
+          </AgeGenderSpan>
+        </InfoDiv>
+      </Link>
     </Container>
   );
 };
