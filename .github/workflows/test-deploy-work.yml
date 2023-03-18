@@ -1,43 +1,39 @@
-name: test
-
+name: client
 on:
   push:
     branches:
-      - areaSort # frontRefactoring 브랜치에서 push 이벤트가 일어났을 때 실행
-  pull_request:
-    branches:
-      - areaSort
-
+      - s3Build
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@master
-
-      # 실행 속도를 빠르게 하기 위해 설치된 Node 모듈을 캐시하도록 설정합니다.
-      - name: Cache node modules
-        uses: actions/cache@v2
+      - name: Checkout source code.
+        uses: actions/checkout@v2
+      - name: Set up Node.js 16
+        uses: actions/setup-node@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install Dependencies
-        run: yarn
-
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./client
       - name: Build
-        run: yarn build
-        env:
-          CI: ''
-
-      - name: Deploy
+        run: npm run build
+        working-directory: ./client
+      - name: SHOW AWS CLI VERSION
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
         run: |
-          aws s3 cp \
-          --recursive \
-          --region ap-northeast-2 \
-          build s3://pawpaw.test2
+          aws --version
+      - name: Sync Bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws s3 sync \
+            --region ap-northeast-2 \
+            build s3://test2 \
+            --delete
+        working-directory: ./client
