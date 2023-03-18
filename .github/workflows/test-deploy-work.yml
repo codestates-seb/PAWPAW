@@ -20,9 +20,9 @@ jobs:
         run: npm run build
         working-directory: ./client
         env:
-        CI: false
-        REACT_APP_KAKAO_API: ${{ secrets.REACT_APP_KAKAO_API }}
-        REACT_APP_API_ROOT: ${{ secrets.REACT_APP_API_ROOT }}
+          CI: false
+          REACT_APP_KAKAO_API: ${{ secrets.REACT_APP_KAKAO_API }}
+          REACT_APP_API_ROOT: ${{ secrets.REACT_APP_API_ROOT }}
       - name: SHOW AWS CLI VERSION
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -38,6 +38,6 @@ jobs:
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
-            build s3://test2 \
+            build s3://pawpaw.test2 \
             --delete
         working-directory: ./client
