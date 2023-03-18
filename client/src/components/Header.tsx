@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import color from '../util/color';
 
-const { ivory, brown, yellow } = color;
+const { ivory, brown, yellow, red } = color;
 
 const Header = () => {
   const navigate = useNavigate();
