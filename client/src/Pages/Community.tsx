@@ -63,17 +63,33 @@ const Community = () => {
   };
 
   const search = (searchType: string, searchContent: string) => {
-    axios
-      .get(
-        `${url}/posts?page=${page}&sort=${sorting}&searchType=${searchType}&searchContent=${searchContent}`,
-        { headers },
-      )
-      .then((res) => {
-        setPostData(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const area = areaSorting.reduce((total, now) => total + '&code=' + addressToCode(now), '');
+    if (areaSorting.length === 0) {
+      axios
+        .get(
+          `${url}/posts?page=${page}&sort=${sorting}&searchType=${searchType}&searchContent=${searchContent}`,
+          { headers },
+        )
+        .then((res) => {
+          setPostData(res.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      axios
+        .get(
+          `${url}/posts?page=${page}&sort=${sorting}${area}&searchType=${searchType}&searchContent=${searchContent}`,
+          { headers },
+        )
+        .then((res) => {
+          setPostData(res.data);
+          console.log(res.data.friends);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   };
 
   return (
