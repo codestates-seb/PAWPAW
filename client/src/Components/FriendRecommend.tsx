@@ -18,12 +18,12 @@ interface FriendRecommendProps {
 
 const FriendRecommend: React.FC<FriendRecommendProps> = ({ friends }) => {
   const recommendedFriends = friends?.slice(0, 7);
-  const Length = recommendedFriends?.length !== 7 ? true : false;
+  const friendsLength = recommendedFriends?.length !== 7 ? true : false;
 
   return (
     <Container>
       <TitleDiv>우리 동네 친구들 🐕🐈‍⬛</TitleDiv>
-      <UsersDiv Length={Length}>
+      <UsersDiv Length={friendsLength}>
         {recommendedFriends === undefined || recommendedFriends?.length === 0 ? (
           <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
         ) : (
