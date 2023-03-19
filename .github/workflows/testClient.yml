@@ -2,7 +2,7 @@ name: client
 on:
   push:
     branches:
-      - frontRefactoring
+      - areaSort
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -25,19 +25,32 @@ jobs:
           REACT_APP_API_ROOT: ${{ secrets.REACT_APP_API_ROOT }}
       - name: SHOW AWS CLI VERSION
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_CLIENT_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_CLIENT_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
         run: |
           aws --version
       - name: Sync Bucket
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_CLIENT_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_CLIENT_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
-            build s3://pawpaw.test \
+            build s3://pawpaw.test2 \
             --delete
         working-directory: ./client
+        - uses: actions/setup-ruby@v1
+        - name: Send Webhook Notification
+          if: always()
+          env:
+            JOB_STATUS: ${{ job.status }}
+            WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+            HOOK_OS_NAME: ${{ runner.os }}
+            WORKFLOW_NAME: ${{ github.workflow }}
+          run: |
+            echo Status: $JOB_STATUS
+            git clone $WEBHOOK_REPO webhook
+            bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
