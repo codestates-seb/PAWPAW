@@ -11,19 +11,19 @@ interface FriendRecommendProps {
     profileImageUrl: string;
     petName: string;
     petAge: number;
-    gender: 'Male' | 'Female';
+    gender: 'MALE' | 'FEMALE';
     addressName: string;
   }[];
 }
 
 const FriendRecommend: React.FC<FriendRecommendProps> = ({ friends }) => {
   const recommendedFriends = friends?.slice(0, 7);
-  const Length = recommendedFriends?.length !== 7 ? true : false;
+  const friendsLength = recommendedFriends?.length !== 7 ? true : false;
 
   return (
     <Container>
       <TitleDiv>우리 동네 친구들 🐕🐈‍⬛</TitleDiv>
-      <UsersDiv Length={Length}>
+      <UsersDiv friendsLength={friendsLength}>
         {recommendedFriends === undefined || recommendedFriends?.length === 0 ? (
           <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
         ) : (
@@ -52,9 +52,9 @@ const TitleDiv = styled.div`
   color: ${darkbrown};
 `;
 
-const UsersDiv = styled.div<{ Length: boolean }>`
+const UsersDiv = styled.div<{ friendsLength: boolean }>`
   display: flex;
-  justify-content: ${(Length) => (Length ? 'space-evenly' : 'space-between')};
+  justify-content: ${(friendsLength) => (friendsLength ? 'space-evenly' : 'space-between')};
 `;
 
 const EmptyMessage = styled.div`

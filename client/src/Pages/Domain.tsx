@@ -7,6 +7,7 @@ import Community from './Community';
 import CommunityDetail from './CommunityDetail';
 import Login from './Login';
 import Mypage from './Mypage';
+import Friendpage from './Friendpage';
 import NotFound from './NotFound';
 import PostWrite from './PostWrite';
 import PostEdit from './PostEdit';
@@ -28,6 +29,7 @@ export default function Router() {
           <Route path='/userinfoedit' element={<UserInfoEdit />} />
           <Route path='/map' element={<HomeMap />} />
           <Route path='/mypage/:petId' element={<Mypage />} />
+          <Route path='/friendpage/:petId' element={<Friendpage />} />
           <Route path='/community' element={<Community />} />
           <Route path='/community/:id' element={<CommunityDetail />} />
           <Route path='/post' element={<PostWrite />} />

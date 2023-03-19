@@ -77,7 +77,6 @@ const LogoImg = styled.img`
   height: 50px;
   cursor: pointer;
   content: url('https://ifh.cc/g/5zP1VD.png');
-
   &:hover {
     content: url('https://ifh.cc/g/4ffBQ7.png');
   }
@@ -95,7 +94,6 @@ const IconSpan = styled.span`
   margin: 0px 8px;
   color: ${brown};
   cursor: pointer;
-
   &:hover {
     color: ${yellow};
   }

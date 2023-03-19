@@ -104,7 +104,7 @@ interface Friend {
   profileImageUrl: string;
   petName: string;
   petAge: number;
-  gender: 'Male' | 'Female';
+  gender: 'MALE' | 'FEMALE';
   addressName: string;
 }
 
