@@ -24,22 +24,21 @@ jobs:
           REACT_APP_KAKAO_API: ${{ secrets.REACT_APP_KAKAO_API }}
           REACT_APP_API_ROOT: ${{ secrets.REACT_APP_API_ROOT }}
       - name: Show AWS CLI version
+        uses: aws-actions/configure-aws-credentials@v1
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_EC2_METADATA_DISABLED: true
+          AWS_REGION: ap-northeast-2
         run: |
           aws --version
       - name: Sync bucket
+        uses: aws-actions/aws-cli@v2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_EC2_METADATA_DISABLED: true
-        run: |
-          aws s3 sync \
-            --region ap-northeast-2 \
-            build s3://pawpaw.test2 \
-            --delete
+          AWS_REGION: ap-northeast-2
+        with:
+          args: s3 sync build s3://pawpaw.test2 --delete
         working-directory: ./client
       - name: Send Discord notification
         if: always()
