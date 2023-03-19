@@ -1,8 +1,8 @@
-name: client
+name: clientMain
 on:
   push:
     branches:
-      - areaSort
+      - main
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -38,6 +38,19 @@ jobs:
         run: |
           aws s3 sync \
             --region ap-northeast-2 \
-            build s3://pawpaw.test2 \
+            build s3://pawpaw.fun \
             --delete
         working-directory: ./client
+      - name: Discord Alert Success
+        uses: sarisia/actions-status-discord@v1
+        if: success()
+        with:
+          webhook: ${{ secrets.WEBHOOK_URL }}
+          description: '사이트가 배포되었습니다! (branch: main)'
+
+      - name: Discord Alert Failure
+        uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.WEBHOOK_URL }}
+          description: '사이트 배포를 실패하였습니다.... (branch: main)'

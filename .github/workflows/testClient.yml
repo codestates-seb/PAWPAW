@@ -41,3 +41,16 @@ jobs:
             build s3://pawpaw.test \
             --delete
         working-directory: ./client
+      - name: Discord Alert Success
+        uses: sarisia/actions-status-discord@v1
+        if: success()
+        with:
+          webhook: ${{ secrets.WEBHOOK_URL }}
+          description: '사이트가 배포되었습니다! (branch: frontRefactoring)'
+
+      - name: Discord Alert Failure
+        uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.WEBHOOK_URL }}
+          description: '사이트 배포를 실패하였습니다.... (branch: frontRefactoring)'
