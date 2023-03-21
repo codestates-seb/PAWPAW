@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import color from '../util/color';
+import { useEffect, useState } from 'react';
 import { Map, Polygon } from 'react-kakao-maps-sdk';
-import jsonData from '../util/seoul-geojson.json';
+import styled from 'styled-components';
 import Button from '../Components/Button';
-import { IProps } from './UserInfo';
+import color from '../util/color';
+import jsonData from '../util/seoul-geojson.json';
+import { AddressModalProps } from '../types';
 
-const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
+const { yellow, brown, ivory } = color;
+
+const AddressModal = ({ address, setAddress, setIsOpen }: AddressModalProps) => {
   const [areas, setAreas] = useState(jsonData.features);
   const [clickedCode, setClickedCode] = useState<number | null>(null);
 
@@ -200,8 +202,6 @@ const AddressModal = ({ address, setAddress, setIsOpen }: IProps) => {
     </Container>
   );
 };
-
-const { yellow, brown, ivory } = color;
 
 const Container = styled.div`
   position: absolute;

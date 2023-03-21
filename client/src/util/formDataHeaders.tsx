@@ -2,7 +2,7 @@ const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 
 const headers = {
-  'Content-Type': 'application/json',
+  'Content-Type': 'multipart/form-data',
   Authorization: jwtToken,
   Refresh: refreshToken,
 };
