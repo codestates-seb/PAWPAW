@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 
 @Getter
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 public class PetPostDto {
 
     @NotBlank(message = "아이디 입력해 주세요.")
+    @Pattern(regexp = "^([a-zA-Z0-9]*)$", message = "아이디는 영문, 숫자만 사용 가능합니다.")
     private String loginId;
     @NotBlank(message = "비밀번호를 입력해 주세요.")
     private String password;

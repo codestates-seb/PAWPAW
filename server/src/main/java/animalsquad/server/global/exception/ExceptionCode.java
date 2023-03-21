@@ -12,12 +12,15 @@ public enum ExceptionCode {
     REFRESH_TOKEN_NOT_FOUND(404, "Refresh token not found"),
     INVALID_REFRESH_TOKEN(400, "Invalid refresh token"),
 
+    FILE_UPLOAD_FAIL(500, "file upload fail"),
+
     ADDRESS_NOT_FOUND(404, "Address not found"),
     FILTER_NAME_INCORRECT(400, "Filter name incorrect"),
 
     TOKEN_AND_ID_NOT_MATCH(403, "Token and id not match"),
     NOT_HAVE_PERMISSION_TO_EDIT(403, "Not have permission to edit"),
     ADMIN_CODE_NOT_MATCH(403, "Admin Code not match"),
+    WITHDRAWN_MEMBER(401, "Withdraw member"),
 
     INFO_MAP_NOT_FOUND(404, "Info map not found"),
     INFO_MAP_COMMENT_NOT_FOUND(404, "Info map comment not found"),
@@ -32,7 +35,14 @@ public enum ExceptionCode {
 
     ALREADY_LIKED(400,"Already Liked"),
 
-    INVALID_FILE_TYPE(400, "Invalid file type");
+    INVALID_FILE_TYPE(400, "Invalid file type"),
+
+    FILE_IS_EMPTY(400, "File is empty"),
+
+    SEARCH_TYPE_REQUIRES_CONTENT(400, "Search type requires content"),
+
+    INVALID_SORT_TYPE(400, "Invalid sort type");
+
     @Getter
     private int status;
 

@@ -62,6 +62,7 @@ public interface PetMapper {
         petInfo.setAge(pet.getAge());
         petInfo.setGender(pet.getGender());
         petInfo.setSpecies(pet.getSpecies());
+        petInfo.setPetStatus(pet.getPetStatus());
 
         return petInfo;
     }
@@ -75,6 +76,7 @@ public interface PetMapper {
                     postInfo.setPetName(post.getPet().getPetName());
                     postInfo.setCreatedAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
                     postInfo.setLikesCnt(post.getLikesCnt());
+                    postInfo.setCommentCnt(post.getPostComments().size());
                     return postInfo;
                 }).collect(Collectors.toList());
     }

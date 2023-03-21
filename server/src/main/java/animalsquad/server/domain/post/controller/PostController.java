@@ -1,5 +1,7 @@
 package animalsquad.server.domain.post.controller;
 
+import animalsquad.server.domain.pet.entity.Pet;
+import animalsquad.server.domain.pet.service.PetService;
 import animalsquad.server.domain.post.dto.*;
 import animalsquad.server.domain.post.entity.Post;
 import animalsquad.server.domain.post.entity.PostComment;
@@ -20,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Validated
 @RestController
@@ -38,10 +40,12 @@ public class PostController {
     private final PostCommentMapper commentMapper;
     private final PostLikesMapper likesMapper;
 
+    private final PetService petService;
+
 
     @PostMapping
     public ResponseEntity postPost(@Valid PostDto postDto,
-                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
 
         long petId = principal.getId();
         Post post = postService.createPost(mapper.postDtoToPost(postDto), postDto.getFile(), petId);
@@ -50,7 +54,7 @@ public class PostController {
 
     @PatchMapping("/{post-id}")
     public ResponseEntity patchPost(@PathVariable("post-id") long id, PostPatchDto postPatchDto,
-                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         postPatchDto.setId(id);
 
         Post post = mapper.patchDtoToPost(postPatchDto);
@@ -62,11 +66,29 @@ public class PostController {
     }
 
 
+//    @GetMapping
+//    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page) {
+//        int size = 7;
+//        Page<Post> posts = postService.findPosts(page - 1, size);
+//        PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts);
+//        return new ResponseEntity(postsResponseDto, HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity getPosts(@Positive @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity getPosts(@ModelAttribute PostSearchDto postSearchDto,
+                                   @RequestParam(defaultValue = "1") int page,
+                                   @RequestParam(defaultValue = "newest") String sort,
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
+
         int size = 7;
-        Page<Post> posts = postService.findPosts(page - 1, size);
-        PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts);
+        Page<Post> posts = postService.findPosts(page - 1, size, postSearchDto, sort);
+
+        Integer code = principal.getAddress().getCode();
+        long id = principal.getId();
+        List<Integer> localCode = postSearchDto.getCode() == null ? List.of(code) : postSearchDto.getCode();
+        List<Pet> friends = petService.findFriends(localCode,id);
+
+        PostsResponseDto postsResponseDto = mapper.postsToPostsResponseDto(posts,friends);
         return new ResponseEntity(postsResponseDto, HttpStatus.OK);
     }
 
@@ -81,6 +103,7 @@ public class PostController {
         return new ResponseEntity(postDetailsResponseDto, HttpStatus.OK);
 
     }
+
     @DeleteMapping("/{post-id}")
     public ResponseEntity deletePost(@PathVariable("post-id") long id,
                                      @AuthenticationPrincipal PetDetailsService.PetDetails principal) {

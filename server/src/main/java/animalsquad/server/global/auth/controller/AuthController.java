@@ -25,8 +25,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/reissue")
-    public ResponseEntity reissue(@RequestBody @Valid AuthRequestDto.ReIssue reIssue, HttpServletResponse response) {
-        authService.reIssue(reIssue, response);
+    public ResponseEntity reissue(@RequestBody @Valid AuthRequestDto.ReIssue reIssue) {
+        authService.reIssue(reIssue);
         return new ResponseEntity(HttpStatus.OK);
     }
 

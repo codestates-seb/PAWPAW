@@ -31,6 +31,8 @@ public class Post extends Auditable {
 
     private int likesCnt;
 
+    private int code;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostComment> postComments = new ArrayList<>();
 

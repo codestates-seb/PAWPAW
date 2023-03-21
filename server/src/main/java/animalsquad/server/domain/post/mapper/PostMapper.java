@@ -41,7 +41,7 @@ public interface PostMapper {
     }
 
 
-    default PostsResponseDto postsToPostsResponseDto(Page<Post> posts) {
+    default PostsResponseDto postsToPostsResponseDto(Page<Post> posts, List<Pet> friends) {
         List<Post> contents = posts.getContent();
 
         List<PostsResponseDto.PostResponseDto> responseDtos = contents.stream()
@@ -51,13 +51,30 @@ public interface PostMapper {
                     postResponseDto.setTitle(content.getTitle());
                     postResponseDto.setContent(content.getContents());
                     postResponseDto.setCreatedAt(content.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
+                    postResponseDto.setPetId(content.getPet().getId());
                     postResponseDto.setPetName(content.getPet().getPetName());
                     postResponseDto.setLikesCnt(content.getLikesCnt());
+                    postResponseDto.setCommentCnt(content.getPostComments().size());
+                    postResponseDto.setCode(content.getCode());
+                    postResponseDto.setPetStatus(content.getPet().getPetStatus());
 
                     return postResponseDto;
                 }).collect(Collectors.toList());
 
-        return new PostsResponseDto(responseDtos, posts);
+        List<PostsResponseDto.FriendsDto> friendsDtos = friends.stream()
+                .map(friend -> {
+                    PostsResponseDto.FriendsDto friendsDto = new PostsResponseDto.FriendsDto();
+                    friendsDto.setPetId(friend.getId());
+                    friendsDto.setProfileImageUrl(friend.getProfileImage());
+                    friendsDto.setPetName(friend.getPetName());
+                    friendsDto.setPetAge(friend.getAge());
+                    friendsDto.setGender(friend.getGender());
+                    friendsDto.setAddressName(friend.getAddress().getName());
+
+                    return friendsDto;
+                }).collect(Collectors.toList());
+
+        return new PostsResponseDto(friendsDtos,responseDtos, posts);
     }
 
     default PostDetailsResponseDto postToPostDetailsDto(Post post, long petId) {
@@ -71,6 +88,7 @@ public interface PostMapper {
                 .collect(Collectors.toList());
         postResponseDto.setImageUrl(images);
         postResponseDto.setPetName(post.getPet().getPetName());
+        postResponseDto.setPetStatus(post.getPet().getPetStatus());
         postResponseDto.setCreatedAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));
         postResponseDto.setLikesCnt(post.getLikesCnt());
         List<PostLikes> postLikes = post.getPostLikes();
@@ -84,6 +102,7 @@ public interface PostMapper {
                     comment.setCommentId(postComment.getId());
                     comment.setPetId(pet.getId());
                     comment.setPetName(pet.getPetName());
+                    comment.setPetStatus(pet.getPetStatus());
                     comment.setContent(postComment.getContents());
                     comment.setProfileImageUrl(pet.getProfileImage());
                     comment.setCreatedAt(postComment.getCreatedAt().format(DateTimeFormatter.ofPattern("yy-MM-dd")));

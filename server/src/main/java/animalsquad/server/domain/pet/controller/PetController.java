@@ -13,10 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.HashMap;
@@ -32,40 +32,40 @@ public class PetController {
     private final PetMapper mapper;
 
     @PostMapping("/signup")
-    public ResponseEntity postPet(@Valid PetPostDto petPostDto) throws IllegalAccessException {
+    public ResponseEntity postPet(@Valid PetPostDto petPostDto, BindingResult bindingResult) {
         Pet pet = petService.createPet(mapper.petPostToPet(petPostDto), petPostDto.getProfileImage());
         long id = pet.getId();
+
         return new ResponseEntity(id, HttpStatus.CREATED);
     }
 
     @GetMapping("/check/{login-id}")
-    public ResponseEntity<Boolean> checkPet(@PathVariable ("login-id") String loginId) {
+    public ResponseEntity<Boolean> checkPet(@PathVariable("login-id") String loginId) {
         Boolean result = petService.checkLoginId(loginId);
 
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    @PostMapping ("/admin/{pet-id}")
+    @PostMapping("/admin/{pet-id}")
     public ResponseEntity verifiedAdmin(@PathVariable("pet-id") long id,
                                         @RequestBody PetPostAdminDto petPostAdminDto,
-                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal,
-                                        HttpServletResponse response) {
+                                        @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
-        petService.verifiedAdmin(id, petId, petPostAdminDto, response);
+        petService.verifiedAdmin(id, petId, petPostAdminDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/{pet-id}")
     public ResponseEntity patchPet(@PathVariable("pet-id") long id,
-                                    PetPatchDto petPatchDto,
-                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                   PetPatchDto petPatchDto,
+                                   @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
         petPatchDto.setId(id);
 
-        Pet response = petService.updatePet(mapper.petPatchToPet(petPatchDto), petId ,petPatchDto.getProfileImage());
+        Pet response = petService.updatePet(mapper.petPatchToPet(petPatchDto), petId, petPatchDto.getProfileImage());
 
         int addressCode = response.getAddress().getCode();
         Map<String, Integer> map = new HashMap<>();
@@ -77,18 +77,17 @@ public class PetController {
     @GetMapping("/{pet-id}")
     public ResponseEntity getPet(@PathVariable("pet-id") long id,
                                  @Positive @RequestParam(defaultValue = "1") int page,
-                                 @Positive @RequestParam(defaultValue = "15") int size,
-                                 @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
-        long petId = principal.getId();
+                                 @Positive @RequestParam(defaultValue = "15") int size) {
 
-        Pet findPet = petService.petVerifiedToken(id, petId);
-        Page<Post> posts = petService.findPost(page -1, size, id);
+        Pet findPet = petService.findPet(id);
+        Page<Post> posts = petService.findPost(page - 1, size, id);
 
-        return new ResponseEntity(mapper.petToPetResponseDto(findPet, posts),HttpStatus.OK);
+        return new ResponseEntity(mapper.petToPetResponseDto(findPet, posts), HttpStatus.OK);
     }
+
     @DeleteMapping("/{pet-id}")
     public ResponseEntity deletePet(@PathVariable("pet-id") long id,
-                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) throws IllegalAccessException {
+                                    @AuthenticationPrincipal PetDetailsService.PetDetails principal) {
         long petId = principal.getId();
 
         petService.deletePet(id, petId);

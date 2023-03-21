@@ -1,5 +1,6 @@
 package animalsquad.server.domain.infomap.dto;
 
+import animalsquad.server.domain.pet.entity.PetStatus;
 import animalsquad.server.global.dto.PageInfo;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class InfoMapDetailsResponseDto {
         private long commentId;
         private String profileImage;
         private String petName;
+        private PetStatus petStatus;
         private String contents;
         private String createdAt;
     }

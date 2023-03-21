@@ -1,6 +1,7 @@
 package animalsquad.server.global.auth.userdetails;
 
 import animalsquad.server.domain.pet.entity.Pet;
+import animalsquad.server.domain.pet.entity.PetStatus;
 import animalsquad.server.domain.pet.repository.PetRepository;
 import animalsquad.server.global.exception.BusinessLogicException;
 import animalsquad.server.global.exception.ExceptionCode;
@@ -41,6 +42,7 @@ public class PetDetailsService implements UserDetailsService {
             setRoles(pet.getRoles());
             setPetName(pet.getPetName());
             setAddress(pet.getAddress());
+            setPetStatus(pet.getPetStatus());
         }
 
         @Override
@@ -72,7 +74,7 @@ public class PetDetailsService implements UserDetailsService {
 
         @Override
         public boolean isEnabled() {
-            return true;
+            return this.getPetStatus() == PetStatus.PET_ACTIVE;
         }
     }
 }
