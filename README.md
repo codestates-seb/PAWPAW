@@ -47,7 +47,7 @@
 
 ## 🔗 배포 링크
 
-http://pawpaw.com.s3-website.ap-northeast-2.amazonaws.com/
+http://pawpaw.fun
 
 <br />
 <hr />
