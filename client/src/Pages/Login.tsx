@@ -1,34 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable camelcase */
-import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { Icon } from '@iconify/react';
-
-import color from '../util/color';
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { Background, Box, LeftDiv, RightDiv } from '../Components/Box';
 import Button from '../Components/Button';
 import Input from '../Components/Input';
 import { PawIconSVG } from '../Components/PawIconSVG';
+import color from '../util/color';
+import { Roles, TokenInfo } from '../types';
+
 const { ivory, brown, red } = color;
 
-interface UserData {
-  0: string;
-  1: string;
-}
-
-export interface Info {
-  petName: string;
-  petNameSpan: string;
-  petId: number;
-  exp: number;
-  code: number;
-  roles: UserData[] | null;
-}
-
-const Login: React.FC = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [id, setId] = useState<string>('');
   const [petId, setPetId] = useState<string>('');
@@ -60,11 +48,11 @@ const Login: React.FC = () => {
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/login`, body);
         const jwtToken = response.headers.authorization as string;
-        const jwtToken_decode = jwt_decode(jwtToken) as Info;
+        const jwtToken_decode = jwt_decode(jwtToken) as TokenInfo;
         // @ts-ignore
         const petid = jwtToken_decode.petId as string;
         const code = jwtToken_decode.code as number;
-        const admin = jwtToken_decode.roles as unknown as UserData;
+        const admin = jwtToken_decode.roles as unknown as Roles;
         setPetId(petid.toString());
         const refreshToken = response.headers.refresh as string;
         localStorage.setItem('Authorization', jwtToken);
@@ -75,9 +63,17 @@ const Login: React.FC = () => {
           localStorage.setItem('Admin', admin[1]);
         }
         navigate('/map');
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error', error);
-        setPwErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다.');
+        error.response.data.message === 'Withdraw member'
+          ? Swal.fire({
+              title: '탈퇴 회원',
+              text: '탈퇴한 회원입니다. 로그인이 불가능합니다.',
+              icon: 'warning',
+              confirmButtonColor: red,
+              confirmButtonText: '<b>확인</b>',
+            })
+          : setPwErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다.');
         if (pwRef.current) {
           pwRef.current.focus();
           pwRef.current.value = '';
@@ -100,6 +96,11 @@ const Login: React.FC = () => {
     } else {
       setPwErrorMessage('');
     }
+  };
+
+  const guestLoginHandler = () => {
+    setId('guest1234');
+    setPassword('1234');
   };
 
   return (
@@ -157,6 +158,10 @@ const Login: React.FC = () => {
             <ButtonDiv>
               <Button text='로그인' />
             </ButtonDiv>
+            <GuestLoginBtn onClick={guestLoginHandler}>
+              <Icon icon='material-symbols:login' fontSize={'20px'} />
+              <TextSpan>게스트 로그인</TextSpan>
+            </GuestLoginBtn>
           </form>
           <SignUpA href='/signup'>회원가입</SignUpA>
         </RightDiv>
@@ -269,6 +274,27 @@ const MessageDiv = styled.div`
   position: absolute;
   top: 73%;
   text-align: center;
+`;
+
+const GuestLoginBtn = styled.button`
+  border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  color: ${brown};
+  top: -25px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+`;
+const TextSpan = styled.span`
+  margin-left: 7px;
 `;
 
 export default Login;

@@ -1,50 +1,26 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-
-import Header from '../Components/Header';
-import Nav from '../Components/Nav';
+import React, { useRef, useState } from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
+import Header from '../Components/Header';
 import Input from '../Components/Input';
-import AddressModal from './AddressModal';
-import { codeToAddress } from '../util/ConvertAddress';
-import color from '../util/color';
+import Nav from '../Components/Nav';
 import NoAuth from '../Components/NoAuth';
+import color from '../util/color';
+import { codeToAddress } from '../util/ConvertAddress';
+import headers from '../util/formDataHeaders';
+import AddressModal from './AddressModal';
+import { PlaceImageFormData, MarkerInfo } from '../types';
 
 const { red, ivory, darkgrey, lightgrey, brown, darkbrown, yellow, bordergrey } = color;
-
-const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
 const isAdmin = localStorage.getItem('Admin');
 
-const headers = {
-  'Content-Type': 'multipart/form-data',
-  Authorization: jwtToken,
-  Refresh: refreshToken,
-};
-
-interface IPos {
+interface Position {
   lat: number;
   lng: number;
-}
-
-interface FormData {
-  placeImage: Blob | null;
-}
-
-interface Info {
-  name: string;
-  code: number;
-  category: string;
-  homepage: string;
-  mapAddress: string;
-  latitude: number;
-  longitude: number;
-  operationTime: string;
-  tel: string;
 }
 
 const AddMarker = () => {
@@ -53,9 +29,9 @@ const AddMarker = () => {
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(-1);
   const [click, setClick] = useState(false);
-  const [position, setPosition] = useState<IPos>();
+  const [position, setPosition] = useState<Position>();
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({ placeImage: null });
+  const [formData, setFormData] = useState<PlaceImageFormData>({ placeImage: null });
   const [fileImage, setFileImage] = useState<string>();
   const [address, setAddress] = useState<number | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -73,7 +49,7 @@ const AddMarker = () => {
     codeErrorMessage: '',
   });
 
-  const [info, setInfo] = useState<Info>({
+  const [info, setInfo] = useState<MarkerInfo>({
     name: '',
     code: 0,
     category: '',
@@ -219,12 +195,11 @@ const AddMarker = () => {
     }
   };
 
-  const type = 'addplace';
   return (
     <WholeFlex>
       <Header />
       <Body>
-        <Nav type={type} />
+        <Nav type='addplace' />
         <Container>
           {isAdmin === 'ROLE_ADMIN' ? (
             <>

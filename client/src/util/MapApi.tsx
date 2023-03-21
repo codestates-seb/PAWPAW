@@ -1,14 +1,10 @@
 import axios from 'axios';
-const jwtToken = localStorage.getItem('Authorization');
-const refreshToken = localStorage.getItem('Refresh');
+import headers from './headers';
+
 const petId = localStorage.getItem('petId') as string;
 const url = process.env.REACT_APP_API_ROOT;
-const headers = {
-  Authorization: jwtToken,
-  Refresh: refreshToken,
-};
 
-export const mapReviewEdit = async (infoMapId: number, contents: string) => {
+export const mapReviewPOST = async (infoMapId: number, contents: string) => {
   try {
     await axios.post(
       `${url}/maps/review`,

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import headers from './formDataHeaders';
+
 const jwtToken = localStorage.getItem('Authorization');
 const refreshToken = localStorage.getItem('Refresh');
 const url = process.env.REACT_APP_API_ROOT;
@@ -15,11 +17,6 @@ export const getUserInfo = (id: string): FetchHook => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const headers = {
-      'Content-Type': 'multipart/form-data',
-      Authorization: jwtToken,
-      Refresh: refreshToken,
-    };
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -48,11 +45,6 @@ export const petUpdate = async (
   navigate: any,
 ) => {
   if (!formData.profileImage) return;
-  const headers = {
-    'Content-Type': 'multipart/form-data',
-    Authorization: jwtToken,
-    Refresh: refreshToken,
-  };
   const data = new FormData();
   data.append('petName', petname);
   data.append('age', age.toString());
@@ -70,9 +62,6 @@ export const petUpdate = async (
 };
 
 export const petLogout = async () => {
-  const headers = {
-    Authorization: jwtToken,
-  };
   try {
     await axios.post(
       `${url}/logout`,
@@ -95,10 +84,6 @@ export const petLogout = async () => {
 };
 
 export const petDelete = async (id: string) => {
-  const headers = {
-    Authorization: jwtToken,
-    Refresh: refreshToken,
-  };
   try {
     await axios.delete(`${url}/pets/${id}`, { headers });
   } catch (error) {

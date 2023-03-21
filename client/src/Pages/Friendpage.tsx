@@ -13,7 +13,7 @@ import { MyPageData, MyPagePost } from '../types';
 const { brown } = color;
 const url = process.env.REACT_APP_API_ROOT;
 
-const Mypage = () => {
+const Friendpage = () => {
   const params = useParams();
   const [myPageData, setMyPageData] = useState<MyPageData | null>(null);
 
@@ -89,4 +89,4 @@ const EmptyMessage = styled.div`
   color: ${brown};
 `;
 
-export default Mypage;
+export default Friendpage;

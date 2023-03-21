@@ -1,146 +1,177 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
-import Header from '../Components/Header';
-import styled from 'styled-components';
-import color from '../util/color';
-import Pagination from 'react-js-pagination';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-import sanitizeHtml from 'sanitize-html';
-import headers from '../util/headers';
-import Nav from '../Components/Nav';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useNavigate } from 'react-router';
+import styled from 'styled-components';
 import '../App.css';
+import CommunityPost from '../Components/CommunityPost';
+import FriendRecommend from '../Components/FriendRecommend';
+import Header from '../Components/Header';
+import Nav from '../Components/Nav';
+import SearchBar from '../Components/SearchBar';
+import AreaSort from '../Components/AreaSort';
+import { addressToCode } from '../util/ConvertAddress';
+import SortModal from '../Components/SortModal';
+import color from '../util/color';
+import headers from '../util/headers';
+import { PostData, PostList } from '../types';
 
-const { yellow, darkgrey, brown, darkbrown, mediumgrey, bordergrey, ivory } = color;
+const { yellow, brown, darkbrown, ivory } = color;
 const url = process.env.REACT_APP_API_ROOT;
 
-interface PostData {
-  postId: number;
-  petname: string;
-  content: string;
-  createdAt: string;
-  likesCnt: 10;
-}
-interface PostList {
-  posts: PostData[] | null;
-  pageInfo: {
-    page: number;
-    size: number;
-    totalElements: number;
-    totalPages: number;
-  };
-}
-
-const Community: React.FC = () => {
+const Community = () => {
   const navigate = useNavigate();
-  const [postData, setPostData] = useState<PostList>({
-    posts: [],
-    pageInfo: {
-      page: 1,
-      size: 15,
-      totalElements: 0,
-      totalPages: 1,
-    },
-  });
+  const [postData, setPostData] = useState<PostList | null>(null);
   const [page, setPage] = useState(1);
+  const [sorting, setSorting] = useState<string>('newest');
+  const [areaSorting, setAreaSorting] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isArea, setIsArea] = useState<boolean>(false);
+  console.log('test');
   useEffect(() => {
     getData();
-  }, [page]);
+  }, [page, sorting, areaSorting]);
 
   async function getData() {
-    await axios
-      .get(`${url}/posts?page=${page}`, { headers })
-      .then((res) => {
-        setPostData(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const area = areaSorting.reduce((total, now) => total + '&code=' + addressToCode(now), '');
+    if (areaSorting.length === 0) {
+      await axios
+        .get(`${url}/posts?page=${page}&sort=${sorting}`, { headers })
+        .then((res) => {
+          setPostData(res.data);
+          console.log(res.data.friends);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      await axios
+        .get(`${url}/posts?page=${page}&sort=${sorting}${area}`, { headers })
+        .then((res) => {
+          setPostData(res.data);
+          console.log(res.data.friends);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
   const handlePageChange = (page: React.SetStateAction<number>) => {
     setPage(page);
   };
 
-  const goToEditPage = () => {
-    navigate('/post');
+  const search = (searchType: string, searchContent: string) => {
+    const area = areaSorting.reduce((total, now) => total + '&code=' + addressToCode(now), '');
+    if (areaSorting.length === 0) {
+      axios
+        .get(
+          `${url}/posts?page=${page}&sort=${sorting}&searchType=${searchType}&searchContent=${searchContent}`,
+          { headers },
+        )
+        .then((res) => {
+          setPostData(res.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      axios
+        .get(
+          `${url}/posts?page=${page}&sort=${sorting}${area}&searchType=${searchType}&searchContent=${searchContent}`,
+          { headers },
+        )
+        .then((res) => {
+          setPostData(res.data);
+          console.log(res.data.friends);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   };
 
-  const type = 'board';
-
   return (
-    <>
-      <Container>
-        <Header />
-        <Body>
-          <Nav type={type} />
-          <CommunityContainer>
-            <CommunityBanner>자유게시판</CommunityBanner>
-            <PostList>
-              {postData.posts === null ? (
-                <EmptyMessage>
-                  글이 없어요.. <br />첫 번째 글을 남겨주세요 🐾
-                </EmptyMessage>
-              ) : (
-                postData.posts.map((el: any) => {
-                  return (
-                    <PostBox key={el.id}>
-                      <WriteBox>
-                        <div className='top'>
-                          <Link to={`/community/${el.id}`}>
-                            <TitleBox>{el.title}</TitleBox>
-                          </Link>
-                          <DayBox>{el.createdAt}</DayBox>
-                        </div>
-                        <ContentBox
-                          dangerouslySetInnerHTML={{
-                            __html: sanitizeHtml(el.content, {
-                              allowedTags: [],
-                              allowedAttributes: false,
-                            }),
-                          }}
-                        />
-                      </WriteBox>
-                      <RightBox>
-                        <NameDiv>{el.petName}</NameDiv>
-                        <LikeContainer>
-                          <Icon
-                            className='icon'
-                            icon='ph:paw-print-fill'
-                            color='#FFBF71'
-                            style={{ fontSize: '15px' }}
-                          />
-                          <span>{el.likesCnt}</span>
-                        </LikeContainer>
-                      </RightBox>
-                    </PostBox>
-                  );
-                })
-              )}
-            </PostList>
+    <Container>
+      <Header />
+      <Body>
+        <Nav type='board' />
+        <CommunityContainer>
+          <CommunityBanner>자유게시판</CommunityBanner>
+          {page === 1 && postData?.friends && <FriendRecommend friends={postData.friends} />}
+          <ButtonContainer>
+            <LeftButtonContainer>
+              <MapIcon icon='mdi:map-check' color='#7d5a5a' width='35' height='35' />
+              <AreaSortButtonBox>
+                <AreaSortButton onClick={() => setIsArea(!isArea)}>
+                  보고싶은 동네 설정
+                </AreaSortButton>
+                {isArea && (
+                  <AreaSort
+                    areaSorting={areaSorting}
+                    setAreaSorting={setAreaSorting}
+                    setIsArea={setIsArea}
+                  />
+                )}
+              </AreaSortButtonBox>
+            </LeftButtonContainer>
+            <SortButtonBox>
+              <SortButton onClick={() => setIsOpen(!isOpen)}>
+                <span className='text'>
+                  {isOpen
+                    ? '정렬'
+                    : sorting === 'newest'
+                    ? '최신순'
+                    : sorting === 'likes'
+                    ? '인기순'
+                    : '댓글 많은 순'}
+                </span>
+                <span className='icon'>
+                  {isOpen ? (
+                    <Icon icon='octicon:triangle-up-16' />
+                  ) : (
+                    <Icon icon='octicon:triangle-down-16' />
+                  )}
+                </span>
+              </SortButton>
+              {isOpen && <SortModal setSorting={setSorting} setIsOpen={setIsOpen} />}
+            </SortButtonBox>
+          </ButtonContainer>
+
+          <PostsContainer>
+            {postData?.posts === null || postData?.posts.length === 0 ? (
+              <EmptyMessage>검색 결과가 없어요..🐾</EmptyMessage>
+            ) : (
+              postData?.posts.map((post: PostData) => <CommunityPost key={post.id} post={post} />)
+            )}
+          </PostsContainer>
+
+          <Footer>
+            <SearchBar search={search} />
             <PageContainer>
               <Pagination
                 activePage={page}
                 itemsCountPerPage={15}
-                totalItemsCount={postData.pageInfo.totalPages * 15}
+                totalItemsCount={
+                  postData?.pageInfo.totalPages ? postData?.pageInfo.totalPages * 15 : 15
+                }
                 pageRangeDisplayed={10}
-                prevPageText={'‹'}
-                nextPageText={'›'}
+                prevPageText={'<'}
+                nextPageText={'>'}
                 onChange={handlePageChange}
               />
             </PageContainer>
-          </CommunityContainer>
-          <EditButton onClick={goToEditPage}>
-            <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
-          </EditButton>
-        </Body>
-      </Container>
-    </>
+          </Footer>
+        </CommunityContainer>
+
+        <PostWriteBtn onClick={() => navigate('/post')}>
+          <Icon icon='mdi:pencil' color={brown} style={{ fontSize: '25px' }} />
+        </PostWriteBtn>
+      </Body>
+    </Container>
   );
 };
-
-export default Community;
 
 const Container = styled.div`
   height: 100%;
@@ -164,8 +195,9 @@ const CommunityContainer = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
+
 const CommunityBanner = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   color: ${brown};
   font-size: 32px;
   font-weight: 800;
@@ -176,106 +208,81 @@ const CommunityBanner = styled.div`
     color: ${darkbrown};
   }
 `;
-const SortButtonContainer = styled.div`
-  height: 1.5vh;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
-const PostList = styled.div`
+const LeftButtonContainer = styled.div`
+  display: flex;
+`;
+
+const MapIcon = styled(Icon)`
+  margin: 15px 5px 0 5px;
+`;
+const AreaSortButtonBox = styled.div`
+  margin-top: 15px;
+  border: 2px solid ${brown};
+  border-radius: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    border: 2px solid ${darkbrown};
+  }
+`;
+const AreaSortButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${brown};
+  cursor: pointer;
+
+  &:hover {
+    color: ${darkbrown};
+  }
+`;
+const SortButtonBox = styled.div`
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+`;
+
+const SortButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${brown};
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${darkbrown};
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const PostsContainer = styled.div`
+  margin-top: 10px;
   height: 100%;
 `;
 
-const PostBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border-bottom: 1px solid ${bordergrey};
-`;
-
-const WriteBox = styled.div`
-  max-width: 795px;
-  min-height: 160px;
-  padding: 10px;
-  .top {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 8px;
-  }
-  height: 80px;
-  flex-grow: 1;
-`;
-
-const TitleBox = styled.div`
-  color: ${brown};
-  font-weight: 600;
-  font-size: 20px;
-
-  &:hover {
-    color: #dfb895;
-  }
-`;
-
-const DayBox = styled.div`
-  color: ${mediumgrey};
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-`;
-
-const ContentBox = styled.div`
-  color: ${darkgrey};
-  font-size: 16px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-`;
-
-const RightBox = styled.div`
-  padding: 15px 10px;
-  height: 30px;
-  line-height: 30px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const NameDiv = styled.div`
-  margin-right: 3px;
-  padding: 0px 5px;
-  height: 30px;
-  color: ${darkgrey};
-  font-weight: bold;
-  white-space: nowrap;
-`;
-
-const LikeContainer = styled.div`
-  height: 30px;
-  border-radius: 10px;
-  background-color: ${ivory};
-  padding: 15px 7px;
-
-  display: flex;
-  align-items: center;
-
-  .icon {
-    margin-right: 5px;
-  }
-
-  span {
-    font-size: 14px;
-  }
-`;
-
 const PageContainer = styled.div`
-  margin-top: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 `;
 
-const EditButton = styled.button`
+const PostWriteBtn = styled.button`
   width: 50px;
   height: 50px;
   background-color: ${ivory};
@@ -287,18 +294,24 @@ const EditButton = styled.button`
   bottom: 5%;
   cursor: pointer;
 
-  /* @media (min-height: 1200px) {
-    right: 100px;
-    top: 55vh;
-  } */
-
   &:hover {
     background-color: ${yellow};
   }
 `;
 
 const EmptyMessage = styled.div`
-  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
   color: ${brown};
 `;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export default Community;

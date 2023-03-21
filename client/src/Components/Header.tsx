@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import color from '../util/color';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import color from '../util/color';
 
 const { ivory, brown, yellow } = color;
+const petId = localStorage.getItem('petId');
 
-const Header: React.FC = () => {
+const Header = () => {
   const navigate = useNavigate();
 
   const goToMap = () => {
@@ -21,11 +21,12 @@ const Header: React.FC = () => {
   const goToMyPage = () => {
     const jwtToken = localStorage.getItem('Authorization');
     if (jwtToken !== null) {
-      navigate('/mypage');
+      navigate(`/mypage/${petId}`);
     } else {
       navigate('/');
     }
   };
+
   const goToCommunity = () => {
     const jwtToken = localStorage.getItem('Authorization');
     if (jwtToken !== null) {
@@ -37,11 +38,11 @@ const Header: React.FC = () => {
 
   return (
     <Container>
-      <HeaderLeftBox>
+      <LeftBox>
         <LogoImg onClick={goToMap} />
-      </HeaderLeftBox>
+      </LeftBox>
 
-      <HeaderRightButtons>
+      <RightBox>
         <IconSpan onClick={goToMap}>
           <Icon icon='material-symbols:map' style={{ fontSize: '35px' }} />
         </IconSpan>
@@ -51,7 +52,7 @@ const Header: React.FC = () => {
         <IconSpan onClick={goToMyPage}>
           <Icon icon='mdi:user-circle' style={{ fontSize: '35px' }} />
         </IconSpan>
-      </HeaderRightButtons>
+      </RightBox>
     </Container>
   );
 };
@@ -65,7 +66,7 @@ const Container = styled.header`
   position: absolute;
   z-index: 100;
 `;
-const HeaderLeftBox = styled.button`
+const LeftBox = styled.button`
   all: unset;
   display: flex;
   align-items: center;
@@ -76,13 +77,12 @@ const LogoImg = styled.img`
   height: 50px;
   cursor: pointer;
   content: url('https://ifh.cc/g/5zP1VD.png');
-
   &:hover {
     content: url('https://ifh.cc/g/4ffBQ7.png');
   }
 `;
 
-const HeaderRightButtons = styled.button`
+const RightBox = styled.button`
   all: unset;
   margin-right: 10px;
   display: flex;
@@ -94,7 +94,6 @@ const IconSpan = styled.span`
   margin: 0px 8px;
   color: ${brown};
   cursor: pointer;
-
   &:hover {
     color: ${yellow};
   }
