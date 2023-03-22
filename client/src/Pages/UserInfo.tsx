@@ -20,9 +20,9 @@ const { ivory, brown, yellow, darkivory, bordergrey, red } = color;
 const UserInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id, petname, password } = location.state;
+  const { id, petName, password } = location.state;
   const [info, setInfo] = useState<IUserInfo>({
-    petName: '',
+    petName: petName,
     isMale: 'MALE',
     isCat: 'CAT',
     age: 0,
@@ -86,6 +86,13 @@ const UserInfo = () => {
       if (formData.profileImage) {
         data.append('profileImage', formData.profileImage);
       }
+      console.log(info.petName);
+      for (const key of data.keys()) {
+        console.log(key);
+      }
+      for (const value of data.values()) {
+        console.log(value);
+      }
 
       try {
         await axios.post(`${process.env.REACT_APP_API_ROOT}/pets/signup`, data, { headers });
@@ -147,7 +154,7 @@ const UserInfo = () => {
               ></img>
             )}
           </AvatarDiv>
-          <NameDiv>{petname}</NameDiv>
+          <NameDiv>{petName}</NameDiv>
           <PlusDiv>
             <form>
               <label className='input-file-button' htmlFor='input-file'>
