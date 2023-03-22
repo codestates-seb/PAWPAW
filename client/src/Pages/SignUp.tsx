@@ -114,7 +114,7 @@ const SignUp = () => {
       errorMessage.pwCnfmErrorMessage === '' &&
       isUniqueId
     ) {
-      navigate('/userinfo', { state: { id: id, password: password, petname: petName } });
+      navigate('/userinfo', { state: { id: id, password: password, petName: petName } });
     }
   };
 
